@@ -1,0 +1,27 @@
+{
+  "name": "aoc",
+  "version": "0.0.1",
+  "description": "my advent of code attempts",
+  "main": "index.ts",
+  "repository": "https://github.com/jonpulsifer/aoc",
+  "author": "Jonathan Pulsifer <jonathan@pulsifer.ca>",
+  "private": true,
+  "devDependencies": {
+    "@jest/globals": "^29.2.1",
+    "@types/jest": "29.2.0",
+    "@types/node": "16.11.68",
+    "cross-fetch": "3.1.5",
+    "eslint-config-custom": "workspace:*",
+    "jest": "29.2.1",
+    "ts-jest": "29.0.3",
+    "ts-node": "10.9.1",
+    "tsconfig": "workspace*",
+    "typescript": "4.8.4"
+  },
+  "scripts": {
+    "lint": "eslint --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "fetch": "ts-node index.ts"
+  }
+}

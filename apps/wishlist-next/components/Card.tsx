@@ -1,0 +1,74 @@
+import React, { FormEvent, MouseEvent } from 'react';
+
+export interface CardAction {
+  icon?: string;
+  title: string;
+  danger?: boolean;
+  fn: (e: MouseEvent | FormEvent) => void;
+}
+
+export interface CardProps {
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  children?: React.ReactNode;
+  action?: CardAction | CardAction[];
+}
+
+const Card = ({ title, subtitle, action, children }: CardProps) => {
+  const titleMarkup = (
+    <div className="px-4 pt-4">
+      <h1 className="font-semibold text-lg">{title}</h1>
+      <h4 className="text-xs text-gray-400">{subtitle}</h4>
+    </div>
+  );
+
+  const actions: CardAction[] = [];
+  if (action && Array.isArray(action)) {
+    actions.push(...action);
+  } else if (action) {
+    actions.push(action);
+  }
+
+  const actionsMarkup = actions.length
+    ? actions.map((action, idx) => {
+        const actionIcon = action.icon ? (
+          <div className="flex">
+            <i className={`fa ${action.icon} pr-2`} />
+          </div>
+        ) : null;
+        const baseButtonClass =
+          'font-semibold text-white rounded p-2 flex flex-row text-center items-center justify-center mr-4';
+        const dangerClass = `bg-red-500 ${baseButtonClass}`;
+        const infoClass = `bg-blue-600 ${baseButtonClass}`;
+        const buttonClass = action.danger ? dangerClass : infoClass;
+        return (
+          <button
+            className={buttonClass}
+            onClick={action?.fn ? (e) => action.fn(e) : undefined}
+            key={`fb-${idx}`}
+          >
+            {actionIcon}
+            <div className="">{action?.title}</div>
+          </button>
+        );
+      })
+    : null;
+
+  const footer = (
+    <div className="border-t border-gray-200 py-2">
+      <div className="flex flex-row-reverse">{actionsMarkup}</div>
+    </div>
+  );
+
+  const headerMarkup = title ? titleMarkup : null;
+  const footerMarkup = actions.length ? footer : null;
+  return (
+    <div className="flex flex-col sm:max-w-2xl bg-white rounded-lg shadow shadow-md border-transparent">
+      {headerMarkup}
+      {children}
+      {footerMarkup}
+    </div>
+  );
+};
+
+export default Card;

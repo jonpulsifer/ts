@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthed() {
+      return request.auth.uid != null;
+    }
+
+    match /users/{uid} {
+      allow create: if true;
+      allow list, read: if isAuthed();
+      allow update, write: if uid == request.auth.uid;
+    }
+
+    match /families/{fid} {
+      allow read: if isAuthed();
+    }
+
+    match /gifts/{gid} {
+      allow create, read: if isAuthed();
+      allow update: if isAuthed()
+        && (resource.data.claimed_by == '' || resource.data.claimed_by == request.auth.uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["claimed_by"]);
+      allow update, delete: if resource.data.owner == request.auth.uid;
+    }
+  }
+}
