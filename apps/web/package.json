@@ -18,7 +18,7 @@
     "@babel/core": "7.19.6",
     "eslint-config-custom": "workspace:*",
     "eslint": "7.32.0",
-    "next-transpile-modules": "9.0.0",
+    "next-transpile-modules": "9.1.0",
     "tsconfig": "workspace:*",
     "@types/node": "17.0.45",
     "@types/react": "18.0.17",
