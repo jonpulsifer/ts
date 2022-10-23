@@ -96,7 +96,11 @@ const AuthProvider = ({ children }: Props) => {
   const signInWithEmail = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const result = await signInWithEmailAndPassword(firebase.auth, email, password);
+      const result = await signInWithEmailAndPassword(
+        firebase.auth,
+        email,
+        password,
+      );
       return handleUserCredential(result);
     } catch (e) {
       setLoading(false);
@@ -150,12 +154,12 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const user = firebase.auth.currentUser;
-      console.log(`refreshing token for ${user?.email}`)
+      console.log(`refreshing token for ${user?.email}`);
       if (user) persistUser(user);
     }, 10 * 1000);
 
     return () => clearInterval(interval);
-  }, [])
+  }, []);
 
   const value = {
     user,

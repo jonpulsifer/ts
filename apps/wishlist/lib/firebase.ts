@@ -5,9 +5,10 @@ import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-const databaseURL = process.env.NODE_ENV === 'development'
-? `http://${process.env.FIREBASE_FIRESTORE_EMULATOR_HOST}:${process.env.FIREBASE_FIRESTORE_EMULATOR_PORT}`
-: `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseio.com`;
+const databaseURL =
+  process.env.NODE_ENV === 'development'
+    ? `http://${process.env.FIREBASE_FIRESTORE_EMULATOR_HOST}:${process.env.FIREBASE_FIRESTORE_EMULATOR_PORT}`
+    : `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseio.com`;
 
 // Your web app's Firebase configuration
 const firebaseConfig: FirebaseOptions = {

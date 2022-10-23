@@ -1,6 +1,6 @@
-import { describe, it, expect } from '@jest/globals';
-import { part1, part2 } from './day02';
-import { readInput } from './lib';
+import { describe, it, expect } from "@jest/globals";
+import { part1, part2 } from "./day02";
+import { readInput } from "./lib";
 
 describe("tests day two", () => {
   const input = `

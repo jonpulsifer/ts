@@ -1,42 +1,42 @@
 name: CI
- 
+
 on:
   push:
     branches: ["main"]
   pull_request:
     types: [opened, synchronize]
- 
+
 jobs:
   build:
-      name: Build and Test
-      timeout-minutes: 15
-      runs-on: ubuntu-latest
-      env:
-        NODE_ENV: test
-        TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        TURBO_TEAM: ${{ secrets.VERCEL_ID }}
+    name: Build and Test
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      TURBO_TEAM: ${{ secrets.VERCEL_ID }}
 
-      steps:
-        - name: Check out code
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 2
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
-        - uses: pnpm/action-setup@v2.2.4
-          with:
-            version: 7
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
 
-        - name: Setup Node.js environment
-          uses: actions/setup-node@v3
-          with:
-            node-version: 18
-            cache: 'pnpm'
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
 
-        - name: Install dependencies
-          run: pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
-        - name: Build
-          run: pnpm build
+      - name: Build
+        run: pnpm build
 
-        - name: Test
-          run: pnpm test
+      - name: Test
+        run: pnpm test

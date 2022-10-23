@@ -1,10 +1,12 @@
 function parse(s: string): number[] {
-  return s.trim().split(',').map(Number);
+  return s.trim().split(",").map(Number);
 }
 
 export function part1(input: string, premium: boolean = false): number {
   const crabs = parse(input);
-  const rate = premium ? (fuel: number) => fuel * (fuel + 1) / 2 : (fuel: number) => fuel;
+  const rate = premium
+    ? (fuel: number) => (fuel * (fuel + 1)) / 2
+    : (fuel: number) => fuel;
   const min = Math.min(...crabs);
   const max = Math.max(...crabs);
 

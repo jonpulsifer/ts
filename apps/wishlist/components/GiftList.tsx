@@ -201,14 +201,14 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
           className="border-t hover:bg-gray-50 transition ease-in-out duration-300"
         >
           <td className={`px-4 py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
-            <div className="flex flex-col">
-              <Link href={`/gift/${gift.id}`}>
-                <a>
+            <Link href={`/gift/${gift.id}`}>
+              <a>
+                <div className="flex flex-col">
                   <div className="font-semibold text-xl">{name}</div>
                   <div className="text-xs text-gray-400">{owner_name}</div>
-                </a>
-              </Link>
-            </div>
+                </div>
+              </a>
+            </Link>
           </td>
           <td className={`px-4 py-2 ${isLast ? 'rounded-br-lg' : ''}`}>
             <div className="text-right">{giftActions(gift, idx)}</div>

@@ -1,6 +1,6 @@
-import { describe, it, expect } from '@jest/globals';
-import { readInput } from './lib';
-import { part1, part2 } from './day03';
+import { describe, it, expect } from "@jest/globals";
+import { readInput } from "./lib";
+import { part1, part2 } from "./day03";
 
 describe("tests day 3", () => {
   const input = `
@@ -16,7 +16,7 @@ describe("tests day 3", () => {
 11001
 00010
 01010
-`
+`;
 
   it("calculates the correct power consumption and life support", () => {
     expect(part1(input)).toBe(198);

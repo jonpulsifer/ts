@@ -1,6 +1,5 @@
 import { User } from 'firebase/auth';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -13,7 +12,6 @@ const Login = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(true);
 
   const { signInWithEmail, signInWithGoogle, signUpWithEmail } = useAuth();
-  const router = useRouter();
 
   const welcome = (user: User) => {
     const person = user ? user.displayName || user.email : null;
@@ -109,7 +107,7 @@ const Login = () => {
             />
           </g>
         </svg>
-        Continue with Google
+        {isLoggingIn ? 'Continue with Google' : 'Sign up with Google'}
       </button>
       <div className="flex items-center before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
         <p className="text-center font-semibold mx-4 mb-0">OR</p>

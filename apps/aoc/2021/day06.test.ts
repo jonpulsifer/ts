@@ -1,11 +1,11 @@
-import { describe, expect, it } from '@jest/globals';
-import { readInput } from './lib';
-import { part1 } from './day06';
+import { describe, expect, it } from "@jest/globals";
+import { readInput } from "./lib";
+import { part1 } from "./day06";
 
 describe("tests day 6 sample", () => {
   const input = `
 3,4,3,1,2
-`
+`;
   it("grows lanternfish", () => {
     expect(part1(input, 18)).toBe(26);
     expect(part1(input, 80)).toBe(5934);

@@ -1,30 +1,33 @@
 function parse(s: string): Array<[string, number]> {
-  return s.trim().split('\n').map((e) => {
-    const [direction, amount] = e.split(" ");
-    return [direction, Number(amount)];
-  });
-};
+  return s
+    .trim()
+    .split("\n")
+    .map((e) => {
+      const [direction, amount] = e.split(" ");
+      return [direction, Number(amount)];
+    });
+}
 
 export function part1(input: string): number {
   let distance = 0;
   let depth = 0;
 
   const movements = parse(input);
-  for(let [direction, amount] of movements){
-    switch(direction) {
+  for (let [direction, amount] of movements) {
+    switch (direction) {
       case "forward":
-	distance += amount;
-	break;
+        distance += amount;
+        break;
       case "down":
-	depth += amount;
-	break;
+        depth += amount;
+        break;
       case "up":
-	depth -= amount;
-	break;
+        depth -= amount;
+        break;
     }
   }
   return depth * distance;
-};
+}
 
 export function part2(input: string): number {
   let aim = 0;
@@ -32,19 +35,19 @@ export function part2(input: string): number {
   let depth = 0;
 
   const movements = parse(input);
-  for(let [direction, amount] of movements){
-    switch(direction){
+  for (let [direction, amount] of movements) {
+    switch (direction) {
       case "forward":
-	distance += amount;
-	depth += (aim * amount);
-	break;
+        distance += amount;
+        depth += aim * amount;
+        break;
       case "down":
-	aim += amount;
-	break;
+        aim += amount;
+        break;
       case "up":
-	aim -= amount;
-	break;
+        aim -= amount;
+        break;
     }
-  };
+  }
   return depth * distance;
-};
+}

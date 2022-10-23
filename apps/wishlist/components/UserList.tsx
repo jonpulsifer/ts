@@ -49,37 +49,39 @@ const UserList = ({ users, user }: Props) => {
       return (
         <tr
           key={uid}
-          className="border-t hover:bg-gray-50 transition ease-in-out duration-300"
+          className="border-t hover:bg-gray-50 transition ease-in-out duration-300 select-none"
         >
-          <Link href={`/user/${uid}`}>
-            <td className={`w-full py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
-              <div className="flex items-center space-x-4 p-2 px-4">
-                <div
-                  className={`inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full ${
-                    photoUrl ? '' : 'bg-gray-200'
-                  }`}
-                >
-                  {photoUrl ? (
-                    <Image
-                      src={photoUrl}
-                      alt="Profile Photo"
-                      className="rounded-full"
-                      fill
-                    />
-                  ) : (
-                    <span className="font-medium noselect text-gray-600">
-                      {(name || email)[0].toUpperCase()}
-                    </span>
-                  )}
-                </div>
+          <td className={`w-full py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
+            <Link href={`/user/${uid}`}>
+              <a>
+                <div className="flex items-center space-x-4 p-2 px-4">
+                  <div
+                    className={`inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full ${
+                      photoUrl ? '' : 'bg-gray-200'
+                    }`}
+                  >
+                    {photoUrl ? (
+                      <Image
+                        src={photoUrl}
+                        alt="Profile Photo"
+                        className="rounded-full"
+                        fill
+                      />
+                    ) : (
+                      <span className="font-medium noselect text-gray-600">
+                        {(name || email)[0].toUpperCase()}
+                      </span>
+                    )}
+                  </div>
 
-                <a>
-                  <div className="font-semibold text-xl">{name || email}</div>
-                  {/* <div className="text-xs text-gray-400">{email}</div> */}
-                </a>
-              </div>
-            </td>
-          </Link>
+                  <a>
+                    <div className="font-semibold text-xl">{name || email}</div>
+                    {/* <div className="text-xs text-gray-400">{email}</div> */}
+                  </a>
+                </div>
+              </a>
+            </Link>
+          </td>
         </tr>
       );
     });

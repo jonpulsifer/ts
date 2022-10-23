@@ -1,6 +1,6 @@
 function parse(s: string): [number[], any] {
-  const lines = s.trim().split('\n');
-  const numbers: number[] = lines[0].split(',').map(Number);
+  const lines = s.trim().split("\n");
+  const numbers: number[] = lines[0].split(",").map(Number);
   let cards = [];
   for (let l = 2; l < lines.length; l = l + 6) {
     let card = [];
@@ -11,9 +11,12 @@ function parse(s: string): [number[], any] {
     cards.push(card);
   }
   return [numbers, cards];
-};
+}
 
-function mark(called: number, cards: Array<Array<number[]>>): Array<Array<number[]>> {
+function mark(
+  called: number,
+  cards: Array<Array<number[]>>
+): Array<Array<number[]>> {
   for (let card of cards) {
     for (let row of card) {
       for (let i in row) {
@@ -26,13 +29,19 @@ function mark(called: number, cards: Array<Array<number[]>>): Array<Array<number
   return cards;
 }
 
-function check(cards: Array<Array<number[]>>): [Array<Array<number[]>>, Array<Array<number[]>>] {
+function check(
+  cards: Array<Array<number[]>>
+): [Array<Array<number[]>>, Array<Array<number[]>>] {
   let winners: Array<Array<number[]>> = [];
   for (let i = cards.length - 1; i >= 0; i--) {
     let winner = false;
     // if (winners.length > 0) break;
     for (const row of cards[i]) {
-      if (row.every((v) => { return v === Number.POSITIVE_INFINITY })) {
+      if (
+        row.every((v) => {
+          return v === Number.POSITIVE_INFINITY;
+        })
+      ) {
         winners.push(cards[i]);
         cards.splice(i, 1);
         winner = true;
@@ -45,7 +54,11 @@ function check(cards: Array<Array<number[]>>): [Array<Array<number[]>>, Array<Ar
       for (const row of cards[i]) {
         entries.push(row[col]);
       }
-      if (entries.every((v) => { return v === Number.POSITIVE_INFINITY })) {
+      if (
+        entries.every((v) => {
+          return v === Number.POSITIVE_INFINITY;
+        })
+      ) {
         winners.push(cards[i]);
         cards.splice(i, 1);
         break;
@@ -62,7 +75,7 @@ export function part1(input: string): number {
   let winners: Array<Array<number[]>> = [];
   for (const called of numbers) {
     // mark numbers
-    cards = mark(called, cards)
+    cards = mark(called, cards);
 
     // check winners
     let results = check(cards);
@@ -75,12 +88,14 @@ export function part1(input: string): number {
           if (num !== Number.POSITIVE_INFINITY) unmarked.push(num);
         }
       }
-      const sum = unmarked.reduce((p, v) => { return (Number(p) + Number(v)); });
+      const sum = unmarked.reduce((p, v) => {
+        return Number(p) + Number(v);
+      });
       return sum * called;
     }
   }
   return 0;
-};
+}
 
 export function part2(input: string): number {
   const [numbers, c] = parse(input);
@@ -92,14 +107,13 @@ export function part2(input: string): number {
     if (cards.length > 0) {
       last = called;
       // mark numbers
-      cards = mark(called, cards)
+      cards = mark(called, cards);
 
       // check winners
       let results = check(cards);
       winners = winners.concat(results[0]);
       cards = results[1];
-    }
-    else {
+    } else {
       break;
     }
   }
@@ -110,6 +124,8 @@ export function part2(input: string): number {
       if (num !== Number.POSITIVE_INFINITY) unmarked.push(num);
     }
   }
-  const sum = unmarked.reduce((p, v) => { return (Number(p) + Number(v)); });
+  const sum = unmarked.reduce((p, v) => {
+    return Number(p) + Number(v);
+  });
   return sum * last;
-};
+}

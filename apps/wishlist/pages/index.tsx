@@ -22,7 +22,7 @@ const Home: NextPage = () => {
       <Head>
         <title>wishin.app</title>
       </Head>
-      {!user ? <Login /> : null}
+      <Login />
     </>
   );
 };
