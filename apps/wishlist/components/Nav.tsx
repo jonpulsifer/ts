@@ -66,6 +66,7 @@ export default function Nav({ title }: Props) {
       onClick: () =>
         signOut().then(() => {
           setShowNav(!showNav);
+          router.push('/');
         }),
       icon: 'fa-sign-out',
     },
