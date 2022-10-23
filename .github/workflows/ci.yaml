@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: test
+      TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.VERCEL_TURBOREPO_SIGNATURE }}
       TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       TURBO_TEAM: ${{ secrets.VERCEL_ID }}
 
