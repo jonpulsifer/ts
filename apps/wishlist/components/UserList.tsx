@@ -14,10 +14,7 @@ interface Props {
 }
 
 const UserList = ({ users, user }: Props) => {
-  const { loading } = useAuth();
   const router = useRouter();
-  if (!users || loading) return <Loading />;
-
   const action: CardAction = {
     title: 'Join a Family',
     icon: 'fa-people-roof',

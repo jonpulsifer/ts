@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "concurrently --kill-others \"firebase emulators:start --only=auth,firestore\" \"next dev\"",
+    "dev": "concurrently --kill-others \"firebase emulators:start --project=demo-wishin-app --only=auth,firestore\" \"next dev --port 3000\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix"

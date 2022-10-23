@@ -16,12 +16,12 @@ interface Props {
   gifts: Gift[];
 }
 
-const ProfilePage: NextPage<Props> = ({ user, gifts }) => {
-  const { user: currentUser, loading } = useAuth();
+const ProfilePage: NextPage<Props> = ({ user: appUser, gifts }) => {
+  const { user, loading } = useAuth();
   const router = useRouter();
-  if (!currentUser || loading) return <Loading />;
+  if (!user || loading) return <Loading />;
 
-  const isUserProfile = currentUser?.uid === user.uid;
+  const isUserProfile = user?.uid === appUser.uid;
 
   if (!user) return <Card title="User Not Found" />;
 
@@ -34,7 +34,7 @@ const ProfilePage: NextPage<Props> = ({ user, gifts }) => {
     shoe_size,
     pant_size,
     gift_theme,
-  } = user;
+  } = appUser;
   const fields = [
     {
       icon: 'fa-signature',

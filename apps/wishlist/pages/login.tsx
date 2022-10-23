@@ -11,7 +11,10 @@ const LoginPage: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user) router.push('/people');
+    if (user) {
+      console.log('login: user found pushing to /people');
+      router.push('/people');
+    }
   }, [user, router]);
 
   if (loading || user) return <Loading />;

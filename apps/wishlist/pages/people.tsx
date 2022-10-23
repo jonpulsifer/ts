@@ -6,8 +6,11 @@ import { auth, db, isFirebaseError } from '../lib/firebase-ssr';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { AppUser } from '../types';
+import { useAuth } from '../components/AuthProvider';
+import { useRouter } from 'next/router';
+import Loading from '../components/Loading';
 
 interface Props {
   user: AppUser;
@@ -15,6 +18,16 @@ interface Props {
 }
 
 const PeoplePage: NextPage<Props> = ({ users, user }) => {
+  const { user: currentUser, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log('/people, no user, pushing to login (client)')
+    if (!currentUser) router.push('/login');
+  }, [currentUser, router]);
+
+  if (!users || loading) return <Loading />;
+
   return (
     <>
       <Head>

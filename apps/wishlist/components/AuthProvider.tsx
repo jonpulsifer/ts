@@ -137,10 +137,14 @@ const AuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebase.auth, (user) => {
-      if (user) persistUser(user);
+      if (user) {
+        persistUser(user);
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
-    return unsubscribe;
+    return unsubscribe();
   }, []);
 
   const value = {
