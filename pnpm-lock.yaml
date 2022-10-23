@@ -102,7 +102,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.40.1
       '@typescript-eslint/parser': 5.40.1
       autoprefixer: 10.4.12
-      concurrently: 7.4.0
+      concurrently: 7.5.0
       csstype: 3.1.1
       eslint-config-custom: workspace:*
       eslint-plugin-prettier: 4.2.1
@@ -136,7 +136,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.40.1_c4zyna56jjjrggqkyejnaxjxfu
       '@typescript-eslint/parser': 5.40.1_wyqvi574yv7oiwfeinomdzmc3m
       autoprefixer: 10.4.12_postcss@8.4.18
-      concurrently: 7.4.0
+      concurrently: 7.5.0
       eslint-config-custom: link:../../packages/eslint-config-custom
       eslint-plugin-prettier: 4.2.1_5t6g5rrqvlktilv3n3sw5svbdi
       eslint-plugin-simple-import-sort: 8.0.0_eslint@8.26.0
@@ -3084,8 +3084,8 @@ packages:
   /concat-map/0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  /concurrently/7.4.0:
-    resolution: {integrity: sha512-M6AfrueDt/GEna/Vg9BqQ+93yuvzkSKmoTixnwEJkH0LlcGrRC2eCmjeG1tLLHIYfpYJABokqSGyMcXjm96AFA==}
+  /concurrently/7.5.0:
+    resolution: {integrity: sha512-5E3mwiS+i2JYBzr5BpXkFxOnleZTMsG+WnE/dCG4/P+oiVXrbmrBwJ2ozn4SxwB2EZDrKR568X+puVohxz3/Mg==}
     engines: {node: ^12.20.0 || ^14.13.0 || >=16.0.0}
     hasBin: true
     dependencies:
