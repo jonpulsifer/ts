@@ -9,14 +9,10 @@ const databaseURL = process.env.NODE_ENV === 'development'
 ? `http://${process.env.FIREBASE_FIRESTORE_EMULATOR_HOST}:${process.env.FIREBASE_FIRESTORE_EMULATOR_PORT}`
 : `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseio.com`;
 
-const authDomain = process.env.NODE_ENV === 'development'
-? 'localhost'
-: `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseio.com`;
-
 // Your web app's Firebase configuration
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'localhost',
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
