@@ -156,7 +156,7 @@ const AuthProvider = ({ children }: Props) => {
       const user = firebase.auth.currentUser;
       console.log(`refreshing token for ${user?.email}`);
       if (user) persistUser(user);
-    }, 10 * 1000);
+    }, 10 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, []);
