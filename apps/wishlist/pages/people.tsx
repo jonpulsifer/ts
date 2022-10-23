@@ -19,14 +19,7 @@ interface Props {
 
 const PeoplePage: NextPage<Props> = ({ users, user }) => {
   const { user: currentUser, loading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log('/people, no user, pushing to login (client)')
-    if (!currentUser) router.push('/login');
-  }, [currentUser, router]);
-
-  if (!users || loading) return <Loading />;
+  if (loading || !currentUser) return <Loading />;
 
   return (
     <>

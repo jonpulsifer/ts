@@ -1,5 +1,5 @@
 import 'styles/globals.css';
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import { AuthProvider } from '../components/AuthProvider';
 import Layout from '../components/Layout';

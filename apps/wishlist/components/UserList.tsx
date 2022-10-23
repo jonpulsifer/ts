@@ -4,9 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import type { AppUser } from '../types';
 
-import { useAuth } from './AuthProvider';
 import Card, { CardAction } from './Card';
-import Loading from './Loading';
 
 interface Props {
   user: AppUser;
@@ -22,7 +20,6 @@ const UserList = ({ users, user }: Props) => {
   };
 
   if (!users.length) {
-    console.log(user?.email);
     const content =
       user?.families && user.families.length ? (
         <>

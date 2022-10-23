@@ -147,6 +147,16 @@ const AuthProvider = ({ children }: Props) => {
     return unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const user = firebase.auth.currentUser;
+      console.log(`refreshing token for ${user?.email}`)
+      if (user) persistUser(user);
+    }, 10 * 1000);
+
+    return () => clearInterval(interval);
+  }, [])
+
   const value = {
     user,
     loading,

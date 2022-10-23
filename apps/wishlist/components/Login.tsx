@@ -1,5 +1,6 @@
 import { User } from 'firebase/auth';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -12,6 +13,7 @@ const Login = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(true);
 
   const { signInWithEmail, signInWithGoogle, signUpWithEmail } = useAuth();
+  const router = useRouter();
 
   const welcome = (user: User) => {
     const person = user ? user.displayName || user.email : null;
@@ -25,6 +27,11 @@ const Login = () => {
   const handleSignInResults = (results: SignInResults) => {
     const { error, user, isNewUser } = results;
     if (error) toast.error(error.message);
+    if (!user) {
+      console.log('something went wrong');
+      return;
+    }
+
     if (user && isNewUser) {
       const toastMarkup = (
         <>
