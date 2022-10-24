@@ -17,7 +17,6 @@
   "devDependencies": {
     "@babel/core": "7.19.6",
     "eslint-config-custom": "workspace:*",
-    "eslint": "8.26.0",
     "next-transpile-modules": "9.1.0",
     "tsconfig": "workspace:*",
     "@types/node": "18.11.5",

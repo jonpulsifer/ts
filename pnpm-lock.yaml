@@ -39,7 +39,6 @@ importers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
       '@types/react': 18.0.22
-      eslint: 8.26.0
       eslint-config-custom: workspace:*
       next: 12.3.1
       next-transpile-modules: 9.1.0
@@ -57,7 +56,6 @@ importers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
       '@types/react': 18.0.22
-      eslint: 8.26.0
       eslint-config-custom: link:../../packages/eslint-config-custom
       next-transpile-modules: 9.1.0
       tsconfig: link:../../packages/tsconfig
@@ -68,7 +66,6 @@ importers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
       '@types/react': 18.0.22
-      eslint: 8.26.0
       eslint-config-custom: workspace:*
       next: 12.3.1
       next-transpile-modules: 9.1.0
@@ -86,7 +83,6 @@ importers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
       '@types/react': 18.0.22
-      eslint: 8.26.0
       eslint-config-custom: link:../../packages/eslint-config-custom
       next-transpile-modules: 9.1.0
       tsconfig: link:../../packages/tsconfig
@@ -103,21 +99,18 @@ importers:
       concurrently: 7.5.0
       csstype: 3.1.1
       eslint-config-custom: workspace:*
-      eslint-plugin-prettier: 4.2.1
-      eslint-plugin-simple-import-sort: 8.0.0
       firebase: 9.12.1
       firebase-admin: 11.2.0
       firebase-tools: 11.15.0
-      next: latest
+      next: 13.0.0
       nookies: 2.5.2
       postcss: 8.4.18
-      prettier: 2.7.1
       react: 18.2.0
       react-dom: 18.2.0
       react-toastify: 9.0.8
       tailwindcss: 3.2.1
       tsconfig: workspace:*
-      typescript: latest
+      typescript: 4.8.4
     dependencies:
       csstype: 3.1.1
       firebase: 9.12.1
@@ -136,11 +129,8 @@ importers:
       autoprefixer: 10.4.12_postcss@8.4.18
       concurrently: 7.5.0
       eslint-config-custom: link:../../packages/eslint-config-custom
-      eslint-plugin-prettier: 4.2.1_5t6g5rrqvlktilv3n3sw5svbdi
-      eslint-plugin-simple-import-sort: 8.0.0_eslint@8.26.0
       firebase-tools: 11.15.0
       postcss: 8.4.18
-      prettier: 2.7.1
       tailwindcss: 3.2.1_postcss@8.4.18
       tsconfig: link:../../packages/tsconfig
       typescript: 4.8.4
@@ -4097,22 +4087,6 @@ packages:
       semver: 6.3.0
     dev: false
 
-  /eslint-plugin-prettier/4.2.1_5t6g5rrqvlktilv3n3sw5svbdi:
-    resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      eslint: '>=7.28.0'
-      eslint-config-prettier: '*'
-      prettier: '>=2.0.0'
-    peerDependenciesMeta:
-      eslint-config-prettier:
-        optional: true
-    dependencies:
-      eslint: 8.26.0
-      prettier: 2.7.1
-      prettier-linter-helpers: 1.0.0
-    dev: true
-
   /eslint-plugin-react-hooks/4.6.0_eslint@8.26.0:
     resolution: {integrity: sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==}
     engines: {node: '>=10'}
@@ -4144,14 +4118,6 @@ packages:
       semver: 6.3.0
       string.prototype.matchall: 4.0.7
     dev: false
-
-  /eslint-plugin-simple-import-sort/8.0.0_eslint@8.26.0:
-    resolution: {integrity: sha512-bXgJQ+lqhtQBCuWY/FUWdB27j4+lqcvXv5rUARkzbeWLwea+S5eBZEQrhnO+WgX3ZoJHVj0cn943iyXwByHHQw==}
-    peerDependencies:
-      eslint: '>=5.0.0'
-    dependencies:
-      eslint: 8.26.0
-    dev: true
 
   /eslint-plugin-turbo/0.0.4_eslint@8.26.0:
     resolution: {integrity: sha512-dfmYE/iPvoJInQq+5E/0mj140y/rYwKtzZkn3uVK8+nvwC5zmWKQ6ehMWrL4bYBkGzSgpOndZM+jOXhPQ2m8Cg==}
@@ -4423,10 +4389,6 @@ packages:
 
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
-
-  /fast-diff/1.2.0:
-    resolution: {integrity: sha512-xJuoT5+L99XlZ8twedaRf6Ax2TgQVxvgZOYoPKqZufmJib0tL2tegPBOZb1pVNgIhlqDlA0eO0c3wBvQcmzx4w==}
-    dev: true
 
   /fast-glob/3.2.12:
     resolution: {integrity: sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==}
@@ -7487,17 +7449,11 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /prettier-linter-helpers/1.0.0:
-    resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
-    engines: {node: '>=6.0.0'}
-    dependencies:
-      fast-diff: 1.2.0
-    dev: true
-
   /prettier/2.7.1:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+    dev: false
 
   /pretty-format/29.2.1:
     resolution: {integrity: sha512-Y41Sa4aLCtKAXvwuIpTvcFBkyeYp2gdFWzXGA+ZNES3VwURIB165XO/z7CjETwzCCS53MjW/rLMyyqEnTtaOfA==}
