@@ -92,30 +92,30 @@ export default function Nav({ title }: Props) {
       }
       const isActive = router.asPath === link.link;
       linx.push(
-        <Link key={link.title} href={link.link} prefetch={false}>
-          <a
-            onClick={() => setShowNav(!showNav)}
-            key={link.title}
-            className={
-              isActive
-                ? `${linkStyle} bg-white border border-gray-200 shadow-sm`
-                : linkStyle
-            }
+        <Link
+          className={
+            isActive
+              ? `${linkStyle} bg-white border border-gray-200 shadow-sm`
+              : linkStyle
+          }
+          key={link.title}
+          href={link.link}
+          onClick={() => setShowNav(!showNav)}
+          prefetch={false}
+        >
+          <div
+            className={`flex flex-row items-center justify-center ${
+              isActive ? 'text-blue-600' : ''
+            }`}
           >
-            <div
-              className={`flex flex-row items-center justify-center ${
-                isActive ? 'text-blue-600' : ''
-              }`}
-            >
-              <div className="flex">
-                <i
-                  key={link.title}
-                  className={`fa ${link.icon} w-10 text-gray-600`}
-                ></i>
-              </div>
-              <div className="flex flex-grow">{link.title}</div>
+            <div className="flex">
+              <i
+                key={link.title}
+                className={`fa ${link.icon} w-10 text-gray-600`}
+              ></i>
             </div>
-          </a>
+            <div className="flex flex-grow">{link.title}</div>
+          </div>
         </Link>,
       );
     });

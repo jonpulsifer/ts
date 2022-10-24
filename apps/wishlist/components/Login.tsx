@@ -34,11 +34,12 @@ const Login = () => {
       const toastMarkup = (
         <>
           Make sure to
-          <Link href={`/user/${user.uid}/edit`}>
-            <a className="font-semibold text-blue-600">
-              {' '}
-              complete your profile{' '}
-            </a>
+          <Link
+            className="font-semibold text-blue-600"
+            href={`/user/${user.uid}/edit`}
+          >
+            {' '}
+            complete your profile{' '}
           </Link>
           with some extra festive details!
         </>

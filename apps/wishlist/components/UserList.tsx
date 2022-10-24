@@ -31,8 +31,8 @@ const UserList = ({ users, user }: Props) => {
       ) : (
         <>
           The elves couldn&apos;t find anyone. Have you{' '}
-          <Link href="/family/join">
-            <a className="text-blue-600 font-semibold">joined a family?</a>
+          <Link className="text-blue-600 font-semibold" href="/family/join">
+            joined a family?
           </Link>
         </>
       );
@@ -53,33 +53,28 @@ const UserList = ({ users, user }: Props) => {
         >
           <td className={`w-full py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
             <Link href={`/user/${uid}`}>
-              <a>
-                <div className="flex items-center space-x-4 p-2 px-4">
-                  <div
-                    className={`inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full ${
-                      photoUrl ? '' : 'bg-gray-200'
-                    }`}
-                  >
-                    {photoUrl ? (
-                      <Image
-                        src={photoUrl}
-                        alt="Profile Photo"
-                        className="rounded-full"
-                        fill
-                      />
-                    ) : (
-                      <span className="font-medium noselect text-gray-600">
-                        {(name || email)[0].toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-
-                  <a>
-                    <div className="font-semibold text-xl">{name || email}</div>
-                    {/* <div className="text-xs text-gray-400">{email}</div> */}
-                  </a>
+              <div className="flex items-center space-x-4 p-2 px-4">
+                <div
+                  className={`inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full ${
+                    photoUrl ? '' : 'bg-gray-200'
+                  }`}
+                >
+                  {photoUrl ? (
+                    <Image
+                      src={photoUrl}
+                      alt="Profile Photo"
+                      className="rounded-full"
+                      fill
+                    />
+                  ) : (
+                    <span className="font-medium noselect text-gray-600">
+                      {(name || email)[0].toUpperCase()}
+                    </span>
+                  )}
                 </div>
-              </a>
+                <div className="font-semibold text-xl">{name || email}</div>
+                {/* <div className="text-xs text-gray-400">{email}</div> */}
+              </div>
             </Link>
           </td>
         </tr>

@@ -34,8 +34,8 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
         return (
           <p>
             You haven&apos;t added any gifts. Go to the{' '}
-            <Link href="/gift/new">
-              <a className="font-semibold text-blue-600">add gift page</a>
+            <Link className="font-semibold text-blue-600" href="/gift/new">
+              add gift page
             </Link>{' '}
             and add one now!
           </p>
@@ -51,8 +51,8 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
         return (
           <p>
             You haven&apos;t added any gifts. Go to the{' '}
-            <Link href="/gift/new">
-              <a className="font-semibold text-blue-600">add gift page</a>
+            <Link className="font-semibold text-blue-600" href="/gift/new">
+              add gift page
             </Link>{' '}
             and add one now!
           </p>
@@ -61,8 +61,8 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
         return (
           <p>
             You haven&apos;t claimed any gifts. Go to the{' '}
-            <Link href="/gifts">
-              <a className="font-semibold text-blue-600">gift list</a>
+            <Link className="font-semibold text-blue-600" href="/gifts">
+              gift list
             </Link>{' '}
             and claim one before they&apos;re all gone.
           </p>
@@ -202,12 +202,10 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
         >
           <td className={`px-4 py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
             <Link href={`/gift/${gift.id}`}>
-              <a>
-                <div className="flex flex-col">
-                  <div className="font-semibold text-xl">{name}</div>
-                  <div className="text-xs text-gray-400">{owner_name}</div>
-                </div>
-              </a>
+              <div className="flex flex-col">
+                <div className="font-semibold text-xl">{name}</div>
+                <div className="text-xs text-gray-400">{owner_name}</div>
+              </div>
             </Link>
           </td>
           <td className={`px-4 py-2 ${isLast ? 'rounded-br-lg' : ''}`}>

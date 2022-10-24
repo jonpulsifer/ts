@@ -153,10 +153,12 @@ const GiftPage: NextPage<Props> = ({ gift }) => {
                     <p className="font-semibold text-lg">Link</p>
                   </div>
                   <div className="truncate">
-                    <Link target="gift" href={url}>
-                      <a className="text-lg text-blue-600 font-medium hover:text-blue-600">
-                        {url}
-                      </a>
+                    <Link
+                      className="text-lg text-blue-600 font-medium hover:text-blue-600"
+                      target="gift"
+                      href={url}
+                    >
+                      {url}
                     </Link>
                   </div>
                 </div>
