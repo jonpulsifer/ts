@@ -6,10 +6,9 @@ import { auth, db, isFirebaseError } from '../lib/firebase-ssr';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { AppUser } from '../types';
 import { useAuth } from '../components/AuthProvider';
-import { useRouter } from 'next/router';
 import Loading from '../components/Loading';
 
 interface Props {

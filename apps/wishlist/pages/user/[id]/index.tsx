@@ -85,7 +85,7 @@ const ProfilePage: NextPage<Props> = ({ user: appUser, gifts }) => {
       {
         icon: 'fa-user-edit',
         title: 'Edit Profile',
-        fn: () => router.push(`/user/${uid}/edit`).then(() => {}),
+        fn: () => router.push(`/user/${uid}/edit`),
       },
       {
         title: 'Join a Family',
