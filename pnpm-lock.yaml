@@ -38,7 +38,7 @@ importers:
     specifiers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       eslint-config-custom: workspace:*
       next: 13.0.0
       next-transpile-modules: 9.1.0
@@ -55,7 +55,7 @@ importers:
     devDependencies:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       eslint-config-custom: link:../../packages/eslint-config-custom
       next-transpile-modules: 9.1.0
       tsconfig: link:../../packages/tsconfig
@@ -65,7 +65,7 @@ importers:
     specifiers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       eslint-config-custom: workspace:*
       next: 13.0.0
       next-transpile-modules: 9.1.0
@@ -82,7 +82,7 @@ importers:
     devDependencies:
       '@babel/core': 7.19.6
       '@types/node': 18.11.5
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       eslint-config-custom: link:../../packages/eslint-config-custom
       next-transpile-modules: 9.1.0
       tsconfig: link:../../packages/tsconfig
@@ -91,7 +91,7 @@ importers:
   apps/wishlist:
     specifiers:
       '@types/node': 18.11.5
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       '@types/react-dom': 18.0.7
       '@typescript-eslint/eslint-plugin': 5.40.1
       '@typescript-eslint/parser': 5.40.1
@@ -122,7 +122,7 @@ importers:
       react-toastify: 9.0.8_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/node': 18.11.5
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       '@types/react-dom': 18.0.7
       '@typescript-eslint/eslint-plugin': 5.40.1_c4zyna56jjjrggqkyejnaxjxfu
       '@typescript-eslint/parser': 5.40.1_wyqvi574yv7oiwfeinomdzmc3m
@@ -163,7 +163,7 @@ importers:
 
   packages/ui:
     specifiers:
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       '@types/react-dom': 18.0.7
       eslint: 8.26.0
       eslint-config-custom: workspace:*
@@ -171,7 +171,7 @@ importers:
       tsconfig: workspace:*
       typescript: 4.8.4
     devDependencies:
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       '@types/react-dom': 18.0.7
       eslint: 8.26.0
       eslint-config-custom: link:../eslint-config-custom
@@ -1915,11 +1915,11 @@ packages:
   /@types/react-dom/18.0.7:
     resolution: {integrity: sha512-HaXc+BbqAZE1RdsK3tC8SbkFy6UL2xF76lT9rQs5JkPrJg3rWA3Ou/Lhw3YJQzEDkBpmJ79nBsfnd05WrBd2QQ==}
     dependencies:
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
     dev: true
 
-  /@types/react/18.0.22:
-    resolution: {integrity: sha512-4yWc5PyCkZN8ke8K9rQHkTXxHIWHxLzzW6RI1kXVoepkD3vULpKzC2sDtAMKn78h92BRYuzf+7b/ms7ajE6hFw==}
+  /@types/react/18.0.23:
+    resolution: {integrity: sha512-R1wTULtCiJkudAN2DJGoYYySbGtOdzZyUWAACYinKdiQC8auxso4kLDUhQ7AJ2kh3F6A6z4v69U6tNY39hihVQ==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
