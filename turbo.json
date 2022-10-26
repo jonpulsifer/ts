@@ -34,7 +34,7 @@
     }
   },
   "remoteCache": {
-    "signature": true
+    "signature": false
   },
   "globalEnv": ["NODE_ENV"]
 }
