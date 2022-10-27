@@ -38,7 +38,7 @@ importers:
     specifiers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.7
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       eslint-config-custom: workspace:*
       next: 13.0.0
       next-transpile-modules: 9.1.0
@@ -55,7 +55,7 @@ importers:
     devDependencies:
       '@babel/core': 7.19.6
       '@types/node': 18.11.7
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       eslint-config-custom: link:../../packages/eslint-config-custom
       next-transpile-modules: 9.1.0
       tsconfig: link:../../packages/tsconfig
@@ -65,7 +65,7 @@ importers:
     specifiers:
       '@babel/core': 7.19.6
       '@types/node': 18.11.7
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       eslint-config-custom: workspace:*
       next: 13.0.0
       next-transpile-modules: 9.1.0
@@ -82,7 +82,7 @@ importers:
     devDependencies:
       '@babel/core': 7.19.6
       '@types/node': 18.11.7
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       eslint-config-custom: link:../../packages/eslint-config-custom
       next-transpile-modules: 9.1.0
       tsconfig: link:../../packages/tsconfig
@@ -91,7 +91,7 @@ importers:
   apps/wishlist:
     specifiers:
       '@types/node': 18.11.7
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       '@types/react-dom': 18.0.7
       autoprefixer: 10.4.12
       concurrently: 7.5.0
@@ -120,7 +120,7 @@ importers:
       react-toastify: 9.0.8_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/node': 18.11.7
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       '@types/react-dom': 18.0.7
       autoprefixer: 10.4.12_postcss@8.4.18
       concurrently: 7.5.0
@@ -161,14 +161,14 @@ importers:
 
   packages/ui:
     specifiers:
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       '@types/react-dom': 18.0.7
       eslint-config-custom: workspace:*
       react: 18.2.0
       tsconfig: workspace:*
       typescript: 4.8.4
     devDependencies:
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       '@types/react-dom': 18.0.7
       eslint-config-custom: link:../eslint-config-custom
       react: 18.2.0
@@ -1915,11 +1915,11 @@ packages:
   /@types/react-dom/18.0.7:
     resolution: {integrity: sha512-HaXc+BbqAZE1RdsK3tC8SbkFy6UL2xF76lT9rQs5JkPrJg3rWA3Ou/Lhw3YJQzEDkBpmJ79nBsfnd05WrBd2QQ==}
     dependencies:
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
     dev: true
 
-  /@types/react/18.0.23:
-    resolution: {integrity: sha512-R1wTULtCiJkudAN2DJGoYYySbGtOdzZyUWAACYinKdiQC8auxso4kLDUhQ7AJ2kh3F6A6z4v69U6tNY39hihVQ==}
+  /@types/react/18.0.24:
+    resolution: {integrity: sha512-wRJWT6ouziGUy+9uX0aW4YOJxAY0bG6/AOk5AW5QSvZqI7dk6VBIbXvcVgIw/W5Jrl24f77df98GEKTJGOLx7Q==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
