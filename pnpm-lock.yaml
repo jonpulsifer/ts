@@ -105,7 +105,7 @@ importers:
       postcss: 8.4.18
       react: 18.2.0
       react-dom: 18.2.0
-      react-toastify: 9.0.8
+      react-toastify: 9.1.0
       tailwindcss: 3.2.1
       tsconfig: workspace:*
       typescript: 4.8.4
@@ -117,7 +117,7 @@ importers:
       nookies: 2.5.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-toastify: 9.0.8_biqbaboplfbrettd7655fr4n2y
+      react-toastify: 9.1.0_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/node': 18.11.9
       '@types/react': 18.0.24
@@ -7701,8 +7701,8 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
 
-  /react-toastify/9.0.8_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-EwM+teWt49HSHx+67qI08yLAW1zAsBxCXLCsUfxHYv1W7/R3ZLhrqKalh7j+kjgPna1h5LQMSMwns4tB4ww2yQ==}
+  /react-toastify/9.1.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-63i/5SROvfYz9yzdkmxIrpndtggTdif/5ZpswY3VH+s2/S1Hxo/hiv+oGXnPH6UO2pJBOgfcLNeyVh7okRmnhg==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
