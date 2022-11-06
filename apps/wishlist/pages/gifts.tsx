@@ -59,15 +59,17 @@ export const getServerSideProps: GetServerSideProps = async (
     const snapshot = await db
       .collection('gifts')
       .where('claimed_by', '==', '')
-      .where('owner', 'in', familyUserIds)
       .get();
 
     const gifts: Gift[] = [];
     for (const doc of snapshot.docs) {
-      const user = familyUsers.find((u) => u.id === doc.get('owner'));
+      const gift = doc.data() as Gift;
+      if (!familyUserIds.includes(gift.owner)) continue;
+
+      const user = familyUsers.find((u) => u.id === gift.owner);
       const owner_name = user?.get('name') || user?.get('email');
       gifts.push({
-        ...(doc.data() as Gift),
+        ...gift,
         id: doc.id,
         owner_name,
       });
