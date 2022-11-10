@@ -98,7 +98,7 @@ importers:
       csstype: 3.1.1
       eslint-config-custom: workspace:*
       firebase: 9.13.0
-      firebase-admin: 11.2.0
+      firebase-admin: 11.2.1
       firebase-tools: 11.16.0
       next: 13.0.2
       nookies: 2.5.2
@@ -112,7 +112,7 @@ importers:
     dependencies:
       csstype: 3.1.1
       firebase: 9.13.0
-      firebase-admin: 11.2.0_@firebase+app-types@0.8.1
+      firebase-admin: 11.2.1_@firebase+app-types@0.8.1
       next: 13.0.2_biqbaboplfbrettd7655fr4n2y
       nookies: 2.5.2
       react: 18.2.0
@@ -658,10 +658,6 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /@firebase/app-types/0.8.0:
-    resolution: {integrity: sha512-Lec3VVquUwXPn2UReGSsfTxuMBVRmzGIwA/CJnF0LQuPgv9kOmXk9mVqsDMfHxHtqjai0n6wWHR2TqjdVV/bYA==}
-    dev: false
-
   /@firebase/app-types/0.8.1:
     resolution: {integrity: sha512-p75Ow3QhB82kpMzmOntv866wH9eZ3b4+QbUY+8/DA5Zzdf1c8Nsk8B7kbFpzJt4wwHMdy5LTF5YUnoTc1JiWkw==}
     dev: false
@@ -695,16 +691,6 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
-    dev: false
-
-  /@firebase/auth-interop-types/0.1.6_gvmjrhyybaw4g33f3aybo5ynii:
-    resolution: {integrity: sha512-etIi92fW3CctsmR9e3sYM3Uqnoq861M0Id9mdOPF6PWIg38BXL5k4upCNBggGUpLIS0H1grMOvy/wn1xymwe2g==}
-    peerDependencies:
-      '@firebase/app-types': 0.x
-      '@firebase/util': 1.x
-    dependencies:
-      '@firebase/app-types': 0.8.1
-      '@firebase/util': 1.7.2
     dev: false
 
   /@firebase/auth-interop-types/0.1.7_ng4u4jtoxpyfdkxsmbmyeoj754:
@@ -745,13 +731,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@firebase/component/0.5.20:
-    resolution: {integrity: sha512-wP51tQBlPFprfAWxWjzC/56hG4APhl43jFsgwuqCl3bhVbiKcr278QbrbGNmIXDeGKo4sGZLAnH9whl2apeCmA==}
-    dependencies:
-      '@firebase/util': 1.7.2
-      tslib: 2.4.0
-    dev: false
-
   /@firebase/component/0.5.21:
     resolution: {integrity: sha512-12MMQ/ulfygKpEJpseYMR0HunJdlsLrwx2XcEs40M18jocy2+spyzHHEwegN3x/2/BLFBjR5247Etmz0G97Qpg==}
     dependencies:
@@ -772,26 +751,6 @@ packages:
       - '@firebase/app-types'
     dev: false
 
-  /@firebase/database-compat/0.2.9_@firebase+app-types@0.8.1:
-    resolution: {integrity: sha512-zzyFM3+jW/qYtHojiQirHXGXYyElbqVngEEn/i2gXoSzcK0Y2AL5oHAqGYXLaaW0+t4Zwnssh3HnQJM8C1D0fw==}
-    dependencies:
-      '@firebase/component': 0.5.20
-      '@firebase/database': 0.13.9_@firebase+app-types@0.8.1
-      '@firebase/database-types': 0.9.16
-      '@firebase/logger': 0.3.3
-      '@firebase/util': 1.7.2
-      tslib: 2.4.0
-    transitivePeerDependencies:
-      - '@firebase/app-types'
-    dev: false
-
-  /@firebase/database-types/0.9.16:
-    resolution: {integrity: sha512-dK/uFgHisrVijSoHf9RLJ7NwvlOul2rO/z9ufOSbGd8/TqFVASXz+19mynhDIoSEnyQtJC/NTyBzSPfjz0w61w==}
-    dependencies:
-      '@firebase/app-types': 0.8.0
-      '@firebase/util': 1.7.2
-    dev: false
-
   /@firebase/database-types/0.9.17:
     resolution: {integrity: sha512-YQm2tCZyxNtEnlS5qo5gd2PAYgKCy69tUKwioGhApCFThW+mIgZs7IeYeJo2M51i4LCixYUl+CvnOyAnb/c3XA==}
     dependencies:
@@ -806,19 +765,6 @@ packages:
       '@firebase/component': 0.5.21
       '@firebase/logger': 0.3.4
       '@firebase/util': 1.7.3
-      faye-websocket: 0.11.4
-      tslib: 2.4.0
-    transitivePeerDependencies:
-      - '@firebase/app-types'
-    dev: false
-
-  /@firebase/database/0.13.9_@firebase+app-types@0.8.1:
-    resolution: {integrity: sha512-raQEBgQQybaEoMloJL8wWHQywGQ9mF2VbitvHydsbSNn+KL/xRDjXeQZPuuSbRjkYV6mR8jvQB7gpnzQQNE8Qg==}
-    dependencies:
-      '@firebase/auth-interop-types': 0.1.6_gvmjrhyybaw4g33f3aybo5ynii
-      '@firebase/component': 0.5.20
-      '@firebase/logger': 0.3.3
-      '@firebase/util': 1.7.2
       faye-websocket: 0.11.4
       tslib: 2.4.0
     transitivePeerDependencies:
@@ -943,12 +889,6 @@ packages:
       '@firebase/component': 0.5.21
       '@firebase/util': 1.7.3
       idb: 7.0.1
-      tslib: 2.4.0
-    dev: false
-
-  /@firebase/logger/0.3.3:
-    resolution: {integrity: sha512-POTJl07jOKTOevLXrTvJD/VZ0M6PnJXflbAh5J9VGkmtXPXNG6MdZ9fmRgqYhXKTaDId6AQenQ262uwgpdtO0Q==}
-    dependencies:
       tslib: 2.4.0
     dev: false
 
@@ -1095,12 +1035,6 @@ packages:
       tslib: 2.4.0
     transitivePeerDependencies:
       - encoding
-    dev: false
-
-  /@firebase/util/1.7.2:
-    resolution: {integrity: sha512-P3aTihYEMoz2QQlcn0T7av7HLEK9gsTc1ZiN9VA8wnUtEJscUNemCmTmP3RRysqEb3Z+tVVoycztY8f6R36rRw==}
-    dependencies:
-      tslib: 2.4.0
     dev: false
 
   /@firebase/util/1.7.3:
@@ -4558,13 +4492,13 @@ packages:
       path-exists: 4.0.0
     dev: false
 
-  /firebase-admin/11.2.0_@firebase+app-types@0.8.1:
-    resolution: {integrity: sha512-EGr8w4ZDXPXdwUgDZc/InSP/ciu5/FlaAmT8hw9qBnIbKHOuETYqKnzx8hxLlF8VIg7OQKsxb/PEQik6dVAIgQ==}
+  /firebase-admin/11.2.1_@firebase+app-types@0.8.1:
+    resolution: {integrity: sha512-Tz1GiZXjXAWyTFjzHXvj6KKoT45FraimYCQ1tIUkXXBKSJRCNb6utnQX14EEH/M1IzTM1dEbeMOiUc1RMil1qg==}
     engines: {node: '>=14'}
     dependencies:
       '@fastify/busboy': 1.1.0
-      '@firebase/database-compat': 0.2.9_@firebase+app-types@0.8.1
-      '@firebase/database-types': 0.9.16
+      '@firebase/database-compat': 0.2.10_@firebase+app-types@0.8.1
+      '@firebase/database-types': 0.9.17
       '@types/node': 18.11.9
       jsonwebtoken: 8.5.1
       jwks-rsa: 2.1.5
