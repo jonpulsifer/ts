@@ -106,7 +106,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       react-toastify: 9.1.1
-      tailwindcss: 3.2.2
+      tailwindcss: 3.2.3
       tsconfig: workspace:*
       typescript: 4.8.4
     dependencies:
@@ -127,7 +127,7 @@ importers:
       eslint-config-custom: link:../../packages/eslint-config-custom
       firebase-tools: 11.16.0
       postcss: 8.4.18
-      tailwindcss: 3.2.2_postcss@8.4.18
+      tailwindcss: 3.2.3_postcss@8.4.18
       tsconfig: link:../../packages/tsconfig
       typescript: 4.8.4
 
@@ -8556,8 +8556,8 @@ packages:
   /taffydb/2.6.2:
     resolution: {integrity: sha512-y3JaeRSplks6NYQuCOj3ZFMO3j60rTwbuKCvZxsAraGYH2epusatvZ0baZYA01WsGqJBq/Dl6vOrMUJqyMj8kA==}
 
-  /tailwindcss/3.2.2_postcss@8.4.18:
-    resolution: {integrity: sha512-c2GtSdqg+harR4QeoTmex0Ngfg8IIHNeLQH5yr2B9uZbZR1Xt1rYbjWOWTcj3YLTZhrmZnPowoQDbSRFyZHQ5Q==}
+  /tailwindcss/3.2.3_postcss@8.4.18:
+    resolution: {integrity: sha512-Xt9D4PK4zuuQCEB8bwK9JUCKmTgUwyac/6b0/42Vqhgl6YJkep+Wf5wq+5uXYfmrupdAD0YY2NY1hyZp1HjRrg==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
