@@ -92,7 +92,7 @@ importers:
     specifiers:
       '@types/node': 18.11.9
       '@types/react': 18.0.25
-      '@types/react-dom': 18.0.8
+      '@types/react-dom': 18.0.9
       autoprefixer: 10.4.13
       concurrently: 7.5.0
       csstype: 3.1.1
@@ -121,7 +121,7 @@ importers:
     devDependencies:
       '@types/node': 18.11.9
       '@types/react': 18.0.25
-      '@types/react-dom': 18.0.8
+      '@types/react-dom': 18.0.9
       autoprefixer: 10.4.13_postcss@8.4.19
       concurrently: 7.5.0
       eslint-config-custom: link:../../packages/eslint-config-custom
@@ -162,14 +162,14 @@ importers:
   packages/ui:
     specifiers:
       '@types/react': 18.0.25
-      '@types/react-dom': 18.0.8
+      '@types/react-dom': 18.0.9
       eslint-config-custom: workspace:*
       react: 18.2.0
       tsconfig: workspace:*
       typescript: 4.8.4
     devDependencies:
       '@types/react': 18.0.25
-      '@types/react-dom': 18.0.8
+      '@types/react-dom': 18.0.9
       eslint-config-custom: link:../eslint-config-custom
       react: 18.2.0
       tsconfig: link:../tsconfig
@@ -1905,8 +1905,8 @@ packages:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
     dev: false
 
-  /@types/react-dom/18.0.8:
-    resolution: {integrity: sha512-C3GYO0HLaOkk9dDAz3Dl4sbe4AKUGTCfFIZsz3n/82dPNN8Du533HzKatDxeUYWu24wJgMP1xICqkWk1YOLOIw==}
+  /@types/react-dom/18.0.9:
+    resolution: {integrity: sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==}
     dependencies:
       '@types/react': 18.0.25
     dev: true
