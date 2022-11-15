@@ -99,7 +99,7 @@ importers:
       eslint-config-custom: workspace:*
       firebase: 9.14.0
       firebase-admin: 11.2.1
-      firebase-tools: 11.16.0
+      firebase-tools: 11.16.1
       next: 13.0.3
       nookies: 2.5.2
       postcss: 8.4.19
@@ -125,7 +125,7 @@ importers:
       autoprefixer: 10.4.13_postcss@8.4.19
       concurrently: 7.5.0
       eslint-config-custom: link:../../packages/eslint-config-custom
-      firebase-tools: 11.16.0
+      firebase-tools: 11.16.1
       postcss: 8.4.19
       tailwindcss: 3.2.4_postcss@8.4.19
       tsconfig: link:../../packages/tsconfig
@@ -1636,6 +1636,7 @@ packages:
   /@npmcli/move-file/2.0.1:
     resolution: {integrity: sha512-mJd2Z5TjYWq/ttPLLGqArdtnC74J6bOzg4rMDnN+p1xTacZ2yPRCk2y0oSWQtygLR9YVQXgOcONrwtnk3JupxQ==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
+    deprecated: This functionality has been moved to @npmcli/fs
     dependencies:
       mkdirp: 1.0.4
       rimraf: 3.0.2
@@ -4490,8 +4491,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools/11.16.0:
-    resolution: {integrity: sha512-fT8yeco/ksIjA3fdpqWoI+v58tUCzH7YXY+WZdBq6DsbJ27EOSgVcO9uUzn7GYfWEP3A0OdsBwoi/i78RMGlkQ==}
+  /firebase-tools/11.16.1:
+    resolution: {integrity: sha512-vi8NRUeeBXy7Be+Hk7DK0+ClF+snhjYa5s3fwPRYCGXbCX47E+jreahS6jXJIxeqMbHPmhPZrJXsy7Tdp1Ryug==}
     engines: {node: ^14.18.0 || >=16.4.0}
     hasBin: true
     dependencies:
