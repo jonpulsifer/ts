@@ -98,7 +98,7 @@ importers:
       csstype: 3.1.1
       eslint-config-custom: workspace:*
       firebase: 9.14.0
-      firebase-admin: 11.2.1
+      firebase-admin: 11.3.0
       firebase-tools: 11.16.1
       next: 13.0.3
       nookies: 2.5.2
@@ -112,7 +112,7 @@ importers:
     dependencies:
       csstype: 3.1.1
       firebase: 9.14.0
-      firebase-admin: 11.2.1_@firebase+app-types@0.8.1
+      firebase-admin: 11.3.0_@firebase+app-types@0.8.1
       next: 13.0.3_biqbaboplfbrettd7655fr4n2y
       nookies: 2.5.2
       react: 18.2.0
@@ -4470,8 +4470,8 @@ packages:
       path-exists: 4.0.0
     dev: false
 
-  /firebase-admin/11.2.1_@firebase+app-types@0.8.1:
-    resolution: {integrity: sha512-Tz1GiZXjXAWyTFjzHXvj6KKoT45FraimYCQ1tIUkXXBKSJRCNb6utnQX14EEH/M1IzTM1dEbeMOiUc1RMil1qg==}
+  /firebase-admin/11.3.0_@firebase+app-types@0.8.1:
+    resolution: {integrity: sha512-8ENXUu9Lm6YTc5zzOqlF222M/KwsV/EDZ5UwwPPEU5XfCa1Ebj7K/SgLFdinjGu1NxkSnqu07UDpPhmAtW3b5w==}
     engines: {node: '>=14'}
     dependencies:
       '@fastify/busboy': 1.1.0
