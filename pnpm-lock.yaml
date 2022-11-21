@@ -94,7 +94,7 @@ importers:
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.9
       autoprefixer: 10.4.13
-      concurrently: 7.5.0
+      concurrently: 7.6.0
       csstype: 3.1.1
       eslint-config-custom: workspace:*
       firebase: 9.14.0
@@ -123,7 +123,7 @@ importers:
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.9
       autoprefixer: 10.4.13_postcss@8.4.19
-      concurrently: 7.5.0
+      concurrently: 7.6.0
       eslint-config-custom: link:../../packages/eslint-config-custom
       firebase-tools: 11.16.1
       postcss: 8.4.19
@@ -3119,8 +3119,8 @@ packages:
   /concat-map/0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  /concurrently/7.5.0:
-    resolution: {integrity: sha512-5E3mwiS+i2JYBzr5BpXkFxOnleZTMsG+WnE/dCG4/P+oiVXrbmrBwJ2ozn4SxwB2EZDrKR568X+puVohxz3/Mg==}
+  /concurrently/7.6.0:
+    resolution: {integrity: sha512-BKtRgvcJGeZ4XttiDiNcFiRlxoAeZOseqUvyYRUp/Vtd+9p1ULmeoSqGsDA+2ivdeDFpqrJvGvmI+StKfKl5hw==}
     engines: {node: ^12.20.0 || ^14.13.0 || >=16.0.0}
     hasBin: true
     dependencies:
