@@ -13,7 +13,7 @@ importers:
   apps/aoc:
     specifiers:
       '@jest/globals': 29.3.1
-      '@types/jest': 29.2.3
+      '@types/jest': 29.2.4
       '@types/node': 18.11.10
       cross-fetch: 3.1.5
       eslint-config-custom: workspace:*
@@ -24,7 +24,7 @@ importers:
       typescript: 4.9.3
     devDependencies:
       '@jest/globals': 29.3.1
-      '@types/jest': 29.2.3
+      '@types/jest': 29.2.4
       '@types/node': 18.11.10
       cross-fetch: 3.1.5
       eslint-config-custom: link:../../packages/eslint-config-custom
@@ -1854,8 +1854,8 @@ packages:
       '@types/istanbul-lib-report': 3.0.0
     dev: true
 
-  /@types/jest/29.2.3:
-    resolution: {integrity: sha512-6XwoEbmatfyoCjWRX7z0fKMmgYKe9+/HrviJ5k0X/tjJWHGAezZOfYaxqQKuzG/TvQyr+ktjm4jgbk0s4/oF2w==}
+  /@types/jest/29.2.4:
+    resolution: {integrity: sha512-PipFB04k2qTRPePduVLTRiPzQfvMeLwUN3Z21hsAKaB/W9IIzgB2pizCL466ftJlcyZqnHoC9ZHpxLGl3fS86A==}
     dependencies:
       expect: 29.3.1
       pretty-format: 29.3.1
