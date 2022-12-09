@@ -1,0 +1,24 @@
+{
+  "name": "authme",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint --fix"
+  },
+  "dependencies": {
+    "@types/node": "18.11.12",
+    "@types/react": "18.0.26",
+    "@types/react-dom": "18.0.9",
+    "eslint": "8.29.0",
+    "eslint-config-custom": "workspace:*",
+    "google-auth-library": "8.7.0",
+    "next": "13.0.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tsconfig": "workspace:*",
+    "typescript": "4.9.4"
+  }
+}

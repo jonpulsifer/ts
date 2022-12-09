@@ -34,6 +34,32 @@ importers:
       tsconfig: link:../../packages/tsconfig
       typescript: 4.9.4
 
+  apps/authme:
+    specifiers:
+      '@types/node': 18.11.12
+      '@types/react': 18.0.26
+      '@types/react-dom': 18.0.9
+      eslint: 8.29.0
+      eslint-config-custom: workspace:*
+      google-auth-library: ^8.7.0
+      next: 13.0.6
+      react: 18.2.0
+      react-dom: 18.2.0
+      tsconfig: workspace:*
+      typescript: 4.9.4
+    dependencies:
+      '@types/node': 18.11.12
+      '@types/react': 18.0.26
+      '@types/react-dom': 18.0.9
+      eslint: 8.29.0
+      eslint-config-custom: link:../../packages/eslint-config-custom
+      google-auth-library: 8.7.0
+      next: 13.0.6_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      tsconfig: link:../../packages/tsconfig
+      typescript: 4.9.4
+
   apps/docs:
     specifiers:
       '@babel/core': 7.20.5
@@ -1968,7 +1994,6 @@ packages:
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
-    dev: true
 
   /@types/qs/6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
@@ -1982,7 +2007,6 @@ packages:
     resolution: {integrity: sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==}
     dependencies:
       '@types/react': 18.0.26
-    dev: true
 
   /@types/react/18.0.26:
     resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
@@ -1990,7 +2014,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
-    dev: true
 
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
@@ -2000,7 +2023,6 @@ packages:
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
-    dev: true
 
   /@types/semver/7.3.12:
     resolution: {integrity: sha512-WwA1MW0++RfXmCr12xeYOOC5baSC9mSb0ZqCquFzKhcoF4TvHu5MKOuXsncgZcpVFhB1pXd5hZmM0ryAoCp12A==}
@@ -5099,6 +5121,24 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  /google-auth-library/8.7.0:
+    resolution: {integrity: sha512-1M0NG5VDIvJZEnstHbRdckLZESoJwguinwN8Dhae0j2ZKIQFIV63zxm6Fo6nM4xkgqUr2bbMtV5Dgo+Hy6oo0Q==}
+    engines: {node: '>=12'}
+    dependencies:
+      arrify: 2.0.1
+      base64-js: 1.5.1
+      ecdsa-sig-formatter: 1.0.11
+      fast-text-encoding: 1.0.6
+      gaxios: 5.0.2
+      gcp-metadata: 5.0.1
+      gtoken: 6.1.2
+      jws: 4.0.0
+      lru-cache: 6.0.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
 
   /google-gax/3.5.2:
     resolution: {integrity: sha512-AyP53w0gHcWlzxm+jSgqCR3Xu4Ld7EpSjhtNBnNhzwwWaIUyphH9kBGNIEH+i4UGkTUXOY29K/Re8EiAvkBRGw==}
