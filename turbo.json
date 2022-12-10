@@ -24,6 +24,13 @@
       ],
       "outputs": ["dist/**", ".next/**"]
     },
+    "authme#build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "JWT_EXPECTED_AUDIENCE"
+      ],
+      "outputs": ["dist/**", ".next/**"]
+    },
     "lint": {},
     "test": {
       "dependsOn": ["build"],

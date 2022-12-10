@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import Image from 'next/image';
-import validateIdToken from '../lib/auth';
+import verifyIdToken from '../lib/auth';
 import styles from './page.module.css';
 
 export default async function Home() {
@@ -17,7 +17,7 @@ export default async function Home() {
         </main>
       </div>
     );
-  const identity = await validateIdToken(token);
+  const identity = await verifyIdToken(token);
 
   return (
     <div className={styles.container}>

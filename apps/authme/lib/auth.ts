@@ -1,14 +1,7 @@
 import { OAuth2Client } from 'google-auth-library';
 
-export default async function validateIdToken(idToken: string) {
-  const expectedAudience = `32555940559.apps.googleusercontent.com`;
-  const issuers = ['https://accounts.google.com'];
+export default async function verifyIdToken(idToken: string) {
+  const audience = process.env.JWT_EXPECTED_AUDIENCE;
   const oAuth2Client = new OAuth2Client();
-  const response = await oAuth2Client.getFederatedSignonCertsAsync();
-  return oAuth2Client.verifySignedJwtWithCertsAsync(
-    idToken,
-    response.certs,
-    expectedAudience,
-    issuers,
-  );
+  return oAuth2Client.verifyIdToken({ idToken, audience });
 }
