@@ -1,0 +1,19 @@
+{
+  "extends": "tsconfig/nextjs.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
