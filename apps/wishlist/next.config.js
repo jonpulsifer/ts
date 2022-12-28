@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    appDir: true,
+  },
   reactStrictMode: true,
   swcMinify: true,
   images: {
@@ -17,7 +20,7 @@ const nextConfig = {
 
 const ContentSecurityPolicy = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' apis.google.com;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' apis.google.com;
     frame-src 'self' ${
       process.env.NODE_ENV === 'development' ? '*' : 'firebees.firebaseapp.com'
     };

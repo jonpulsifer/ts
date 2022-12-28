@@ -1,3 +1,5 @@
+'use client';
+
 import { FirebaseError } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
@@ -23,6 +25,7 @@ interface SignInResults {
 interface AuthContextProps {
   user: User | null;
   loading: boolean;
+  refreshUserToken: (user: User) => void;
   signInWithGoogle: () => Promise<SignInResults>;
   signInWithEmail: (email: string, password: string) => Promise<SignInResults>;
   signUpWithEmail: (email: string, password: string) => Promise<SignInResults>;
@@ -139,6 +142,13 @@ const AuthProvider = ({ children }: Props) => {
     }
   };
 
+  const refreshUserToken = (user: User) => {
+    setLoading(true);
+    console.log(`refreshing token for ${user?.email}`);
+    if (user) persistUser(user);
+    setLoading(false);
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebase.auth, (user) => {
       if (user) {
@@ -164,6 +174,7 @@ const AuthProvider = ({ children }: Props) => {
   const value = {
     user,
     loading,
+    refreshUserToken,
     signOut,
     signInWithGoogle,
     signInWithEmail,

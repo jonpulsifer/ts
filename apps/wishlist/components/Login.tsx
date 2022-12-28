@@ -1,17 +1,28 @@
+'use client';
+
 import { User } from 'firebase/auth';
 import Link from 'next/link';
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { SignInResults, useAuth } from './AuthProvider';
 import Card from './Card';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
+  const { user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(true);
 
+  const router = useRouter();
   const { signInWithEmail, signInWithGoogle, signUpWithEmail } = useAuth();
+
+  useEffect(() => {
+    if (user) router.push('/people');
+  }, [router, user]);
 
   const welcome = (user: User) => {
     const person = user ? user.displayName || user.email : null;
@@ -48,7 +59,9 @@ const Login = () => {
       toast(toastMarkup, {
         autoClose: false,
         position: toast.POSITION.BOTTOM_CENTER,
-        icon: <i className="fa fa-user text-blue-600 text-lg" />,
+        icon: (
+          <FontAwesomeIcon icon={faUser} className="text-blue-600 text-lg" />
+        ),
       });
     }
     if (user && !isNewUser) welcome(user);

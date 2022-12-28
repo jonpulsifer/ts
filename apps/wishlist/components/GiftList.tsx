@@ -1,14 +1,21 @@
+'use client';
+
 import { deleteDoc, doc, FirestoreError, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Gift } from '../types';
 
 import { useAuth } from './AuthProvider';
 import Card from './Card';
-import Loading from './Loading';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faMinusSquare,
+  faPlusSquare,
+  faTrashCan,
+} from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   gifts: Gift[];
@@ -18,17 +25,22 @@ interface Props {
 const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
   const [gifts, setGifts] = useState(giftsFromProps);
   const { user } = useAuth();
-  const router = useRouter();
+  const path = usePathname();
 
   useEffect(() => {
     setGifts(giftsFromProps);
   }, [giftsFromProps]);
 
   if (!user) return null;
-  if (!giftsFromProps) return <Loading />;
 
   const noGiftText = () => {
-    const path = router.asPath;
+    const defaultMarkup = (
+      <p>
+        The elves couldn&apos;t find any gifts in Santa&apos;s gift database.
+        People need to add more gifts to their wishlists.
+      </p>
+    );
+    if (!path) return defaultMarkup;
     switch (path) {
       case `/user/${user.uid}`:
         return (
@@ -68,12 +80,7 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
           </p>
         );
       default:
-        return (
-          <p>
-            The elves couldn&apos;t find any gifts in Santa&apos;s gift
-            database. People need to add more gifts to their wishlists.
-          </p>
-        );
+        return defaultMarkup;
     }
   };
 
@@ -129,7 +136,10 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
     toast.error(<ToastMarkup gift={gift} idx={idx} />, {
       position: toast.POSITION.BOTTOM_CENTER,
       icon: (
-        <i className="fa fa-trash-can text-xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600" />
+        <FontAwesomeIcon
+          icon={faTrashCan}
+          className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600"
+        />
       ),
     });
   };
@@ -173,20 +183,29 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
           className="text-right"
           onClick={() => handleConfirmDelete(gift, idx)}
         >
-          <i className="fa fa-trash-can text-2xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600" />
+          <FontAwesomeIcon
+            icon={faTrashCan}
+            className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600"
+          />
         </div>
       );
     if (gift.claimed_by && gift.claimed_by !== user.uid) return null;
     if (gift.claimed_by === user.uid) {
       return (
         <div onClick={() => handleUnclaim(gift, idx)}>
-          <i className="fa fa-minus-square text-3xl text-blue-600" />
+          <FontAwesomeIcon
+            icon={faMinusSquare}
+            className="text-3xl text-blue-600"
+          />
         </div>
       );
     }
     return (
       <div onClick={() => handleClaim(gift, idx)}>
-        <i className="fa fa-plus-square text-3xl text-blue-600" />
+        <FontAwesomeIcon
+          icon={faPlusSquare}
+          className="text-3xl text-blue-600"
+        />
       </div>
     );
   };

@@ -1,9 +1,23 @@
+'use client';
+
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Suspense, useState } from 'react';
 
 import { useAuth } from './AuthProvider';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faGifts,
+  faListCheck,
+  faPeopleGroup,
+  faPersonRays,
+  faPlusSquare,
+  faSignOut,
+  faUser,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
+import Loading from './Loading';
+import { Finger_Paint } from '@next/font/google';
 interface Props {
   title: string;
 }
@@ -11,47 +25,55 @@ interface Props {
 type NavLink = {
   title: string;
   link?: string;
-  icon: string;
+  icon: IconDefinition;
   onClick?: () => void;
 };
+
+const daysUntilChristmas = () => {
+  const day = 1000 * 60 * 60 * 24;
+  const d1 = new Date();
+  const d2 = new Date(d1.getFullYear(), 11, 25);
+  return Math.round(Math.abs((d2.getTime() - d1.getTime()) / day));
+};
+
+const fingerPaint = Finger_Paint({
+  weight: '400',
+  subsets: ['latin'],
+});
+
+const logoStyle = `${fingerPaint.className} select-none font-semibold text-xl text-black`;
 
 export default function Nav({ title }: Props) {
   const [showNav, setShowNav] = useState(false);
   const { user, signOut } = useAuth();
   const router = useRouter();
-
-  const daysUntilChristmas = () => {
-    const day = 1000 * 60 * 60 * 24;
-    const d1 = new Date();
-    const d2 = new Date(d1.getFullYear(), 11, 25);
-    return Math.round(Math.abs((d2.getTime() - d1.getTime()) / day));
-  };
+  const path = usePathname();
 
   const links = [
     {
       title: 'Add Gift',
       link: '/gift/new',
-      icon: 'fa-plus-square',
+      icon: faPlusSquare,
     },
     {
       title: 'Gifts',
       link: '/gifts',
-      icon: 'fa-gifts',
+      icon: faGifts,
     },
     {
       title: 'Claimed Gifts',
       link: '/claimed',
-      icon: 'fa-list-check',
+      icon: faListCheck,
     },
     {
       title: 'People',
       link: '/people',
-      icon: 'fa-people-group',
+      icon: faPeopleGroup,
     },
     {
       title: 'My Wishlist',
       link: '/mine',
-      icon: 'fa-person-rays',
+      icon: faPersonRays,
     },
   ];
 
@@ -59,7 +81,7 @@ export default function Nav({ title }: Props) {
     {
       title: 'Profile',
       link: `/user/${user?.uid}`,
-      icon: 'fa-user',
+      icon: faUser,
     },
     {
       title: 'Sign out',
@@ -68,7 +90,7 @@ export default function Nav({ title }: Props) {
           setShowNav(!showNav);
           router.push('/');
         }),
-      icon: 'fa-sign-out',
+      icon: faSignOut,
     },
   ];
 
@@ -82,7 +104,11 @@ export default function Nav({ title }: Props) {
           <a onClick={link.onClick} key={link.title} className={linkStyle}>
             <div className="flex flex-row items-center justify-center">
               <div className="flex">
-                <i key={link.title} className={`fa ${link.icon} w-10`}></i>
+                <FontAwesomeIcon
+                  icon={link.icon}
+                  className="w-10"
+                  key={link.title}
+                />
               </div>
               <div className="flex flex-grow">{link.title}</div>
             </div>
@@ -90,7 +116,7 @@ export default function Nav({ title }: Props) {
         );
         return;
       }
-      const isActive = router.asPath === link.link;
+      const isActive = path === link.link;
       linx.push(
         <Link
           className={
@@ -109,10 +135,11 @@ export default function Nav({ title }: Props) {
             }`}
           >
             <div className="flex">
-              <i
+              <FontAwesomeIcon
                 key={link.title}
-                className={`fa ${link.icon} w-10 text-gray-600`}
-              ></i>
+                icon={link.icon}
+                className="w-10 text-gray-600"
+              />
             </div>
             <div className="flex flex-grow">{link.title}</div>
           </div>
@@ -147,9 +174,7 @@ export default function Nav({ title }: Props) {
       className="bg-[url('/santa.png')] items-center bg-contain bg-no-repeat bg-right-top h-24 flex flex-row space-x-4 p-2"
     >
       <div className="">{burgerButton}</div>
-      <h1 className="font-title select-none font-semibold text-xl text-black">
-        wishin.app
-      </h1>
+      <h1 className={logoStyle}>wishin.app</h1>
     </div>
   );
 
@@ -163,14 +188,14 @@ export default function Nav({ title }: Props) {
         <div className="flex flex-1 truncate justify-end">
           <p className="text-xs text-right truncate">
             <span className="font-semibold text-blue-600">
-              {daysUntilChristmas()}
+              {`${daysUntilChristmas()}`}
             </span>{' '}
             days until Christmas
           </p>
         </div>
       </header>
       <aside
-        className={`flex flex-col absolute z-10 min-h-screen h-full border-r border-gray-300 w-60 h-full transition-all duration-300 bg-gray-50 overflow-y-auto ${
+        className={`top-0 flex flex-col absolute z-10 border-r border-gray-300 w-60 transition-all duration-300 bg-gray-50 overflow-y-auto ${
           !showNav ? '-ml-60' : ''
         }`}
       >
@@ -178,9 +203,11 @@ export default function Nav({ title }: Props) {
         <nav className="flex flex-col flex-1 space-y-2 p-2">
           {linksMarkup(links)}
         </nav>
-        <nav className="flex flex-col flex-end pb-20 space-y-2 p-2">
-          {linksMarkup(signOutLink)}
-        </nav>
+        <Suspense fallback={<Loading />}>
+          <nav className="flex flex-col flex-end pb-20 space-y-2 p-2">
+            {linksMarkup(signOutLink)}
+          </nav>
+        </Suspense>
       </aside>
     </>
   );

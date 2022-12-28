@@ -1,7 +1,9 @@
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FormEvent, MouseEvent } from 'react';
 
 export interface CardAction {
-  icon?: string;
+  icon?: IconDefinition;
   title: string;
   danger?: boolean;
   fn: (e: MouseEvent | FormEvent) => void;
@@ -33,7 +35,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
     ? actions.map((action, idx) => {
         const actionIcon = action.icon ? (
           <div className="flex">
-            <i className={`fa ${action.icon} pr-2`} />
+            <FontAwesomeIcon icon={action.icon} className="pr-2" />
           </div>
         ) : null;
         const baseButtonClass =

@@ -1,7 +1,9 @@
+'use client';
+
+import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+import { useRouter } from 'next/navigation';
 import type { AppUser } from '../types';
 
 import Card, { CardAction } from './Card';
@@ -15,11 +17,11 @@ const UserList = ({ users, user }: Props) => {
   const router = useRouter();
   const action: CardAction = {
     title: 'Join a Family',
-    icon: 'fa-people-roof',
+    icon: faPeopleRoof,
     fn: () => router.push('/family/join'),
   };
 
-  if (!users.length) {
+  if (!users || !users.length) {
     const content =
       user?.families && user.families.length ? (
         <>

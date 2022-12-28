@@ -1,12 +1,15 @@
+'use client';
+
 import { FirebaseError } from 'firebase/app';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { useRouter } from 'next/router';
-import React, { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import { AppUser } from '../types';
 
 import Card from './Card';
+import { faUserCheck } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   user: AppUser;
@@ -63,7 +66,7 @@ const UserForm = ({ user }: Props) => {
       title="Let Santa know a little bit about you..."
       action={{
         title: 'Save Profile',
-        icon: 'fa-user-check',
+        icon: faUserCheck,
         fn: (e) => submit(e),
       }}
     >
