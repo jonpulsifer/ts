@@ -16,7 +16,7 @@
     "@fortawesome/free-regular-svg-icons": "6.2.0",
     "@fortawesome/free-solid-svg-icons": "6.2.0",
     "@fortawesome/react-fontawesome": "0.2.0",
-    "@next/font": "13.0.2",
+    "@next/font": "13.1.1",
     "firebase": "9.15.0",
     "firebase-admin": "11.4.1",
     "next": "13.1.1",

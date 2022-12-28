@@ -144,7 +144,7 @@ importers:
       '@fortawesome/free-regular-svg-icons': 6.2.0
       '@fortawesome/free-solid-svg-icons': 6.2.0
       '@fortawesome/react-fontawesome': 0.2.0
-      '@next/font': 13.0.2
+      '@next/font': 13.1.1
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
@@ -169,7 +169,7 @@ importers:
       '@fortawesome/free-regular-svg-icons': 6.2.0
       '@fortawesome/free-solid-svg-icons': 6.2.0
       '@fortawesome/react-fontawesome': 0.2.0_6j2wdqxompc6mcokhxkpep2gqu
-      '@next/font': 13.0.2
+      '@next/font': 13.1.1
       csstype: 3.1.1
       firebase: 9.15.0
       firebase-admin: 11.4.1_@firebase+app-types@0.9.0
@@ -1669,8 +1669,8 @@ packages:
       glob: 7.1.7
     dev: false
 
-  /@next/font/13.0.2:
-    resolution: {integrity: sha512-tLbyZCA1uF8HjbUEN5c4zB453yEzt5aT9VDhXPw1/eJhX4U0Q4lD3s3Bs+gpCjuLrEgILd56jQuzxgrMnWHH8A==}
+  /@next/font/13.1.1:
+    resolution: {integrity: sha512-amygRorS05hYK1/XQRZo5qBl7l2fpHnezeKU/cNveWU5QJg+sg8gMGkUXHtvesNKpiKIJshBRH1TzvO+2sKpvQ==}
     dev: false
 
   /@next/swc-android-arm-eabi/13.1.1:
