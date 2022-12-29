@@ -2,7 +2,7 @@
 
 import { User } from 'firebase/auth';
 import Link from 'next/link';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { SignInResults, useAuth } from './AuthProvider';
@@ -10,15 +10,14 @@ import Card from './Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
+import { Finger_Paint } from '@next/font/google';
+
+const logoFont = Finger_Paint({ weight: '400' });
 
 const Login = () => {
   const { user } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(true);
-
   const router = useRouter();
-  const { signInWithEmail, signInWithGoogle, signUpWithEmail } = useAuth();
+  const { signInWithGoogle } = useAuth();
 
   useEffect(() => {
     if (user) router.push('/people');
@@ -67,18 +66,6 @@ const Login = () => {
     if (user && !isNewUser) welcome(user);
   };
 
-  const handleSubmit = (e: MouseEvent | FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) {
-      toast.error('Missing email or password', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-    } else {
-      const signin = isLoggingIn ? signInWithEmail : signUpWithEmail;
-      signin(email, password).then((results) => handleSignInResults(results));
-    }
-  };
-
   const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
     e.preventDefault();
     signInWithGoogle().then((results) => handleSignInResults(results));
@@ -86,11 +73,11 @@ const Login = () => {
 
   const loginMarkup = (
     <form
-      onSubmit={(e) => handleSubmit(e)}
+      onSubmit={(e) => handleGoogle(e)}
       className="p-6 space-y-6 w-80 max-w-screen"
     >
       <button
-        className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3 px-4 border rounded-lg border-gray-700 text-center inline-flex items-center w-full text-lg hover:bg-black hover:text-white transition ease-in-out duration-300"
+        className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3 px-4 border rounded-lg border-gray-700 text-center inline-flex items-center w-full text-lg bg-black text-white hover:bg-white hover:text-black transition ease-in-out duration-300"
         onClick={(e) => {
           handleGoogle(e);
         }}
@@ -121,67 +108,21 @@ const Login = () => {
             />
           </g>
         </svg>
-        {isLoggingIn ? 'Continue with Google' : 'Sign up with Google'}
+        Continue with Google
       </button>
-      <div className="flex items-center before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
-        <p className="text-center font-semibold mx-4 mb-0">OR</p>
-      </div>
-
-      <div className="">
-        <input
-          type="text"
-          autoComplete="username"
-          className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email Address"
-        />
-      </div>
-
-      <div className="">
-        <input
-          type="password"
-          autoComplete={isLoggingIn ? 'current-password' : 'new-password'}
-          className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <button
-        className="inline-block px-4 py-3 bg-blue-600 text-white font-medium text-lg leading-snug rounded-lg hover:bg-blue-900 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-300 ease-in-out w-full"
-        data-mdb-ripple="true"
-        data-mdb-ripple-color="light"
-        type="submit"
-      >
-        {isLoggingIn ? 'Sign In' : 'Create Account'}
-      </button>
-
-      <p
-        onClick={() => setIsLoggingIn(!isLoggingIn)}
-        className="text-base text-gray-500"
-      >
-        {isLoggingIn ? (
-          <>
-            Don’t have an account yet?{' '}
-            <a className="font-bold text-blue-600" href="#">
-              Sign Up
-            </a>
-          </>
-        ) : (
-          <>
-            Already have an account?{' '}
-            <a className="font-bold text-blue-600" href="#">
-              Sign In
-            </a>
-          </>
-        )}
-      </p>
     </form>
   );
 
-  return <Card>{loginMarkup}</Card>;
+  return (
+    <Card>
+      <div className="bg-[url('/santa.png')] bg-no-repeat bg-right-top">
+        <h1 className={`p-6 select-none text-6xl ${logoFont.className}`}>
+          <span className="drop-shadow drop-shadow-2xl">wishin.app</span>
+        </h1>
+        {loginMarkup}
+      </div>
+    </Card>
+  );
 };
 
 export default Login;

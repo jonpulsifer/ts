@@ -36,12 +36,8 @@ const daysUntilChristmas = () => {
   return Math.round(Math.abs((d2.getTime() - d1.getTime()) / day));
 };
 
-const fingerPaint = Finger_Paint({
-  weight: '400',
-  subsets: ['latin'],
-});
-
-const logoStyle = `${fingerPaint.className} select-none font-semibold text-xl text-black`;
+const logoFont = Finger_Paint({ weight: '400' });
+const logoStyle = `${logoFont.className} select-none font-semibold text-xl text-black`;
 
 export default function Nav({ title }: Props) {
   const [showNav, setShowNav] = useState(false);

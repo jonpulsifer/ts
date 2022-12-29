@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { Noto_Sans } from '@next/font/google';
 import ErrorBoundary from '../components/ErrorBoundary';
 
-const noto = Noto_Sans({ weight: '400', subsets: ['latin'] });
+const noto = Noto_Sans({ weight: '400' });
 const bodyClassName = `${noto.className} bg-gradient-to-br from-violet-500 to-blue-900`;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
