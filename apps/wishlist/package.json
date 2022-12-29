@@ -17,6 +17,7 @@
     "@fortawesome/free-solid-svg-icons": "6.2.1",
     "@fortawesome/react-fontawesome": "0.2.0",
     "@next/font": "13.1.1",
+    "@vercel/analytics": "0.1.6",
     "firebase": "9.15.0",
     "firebase-admin": "11.4.1",
     "next": "13.1.1",
