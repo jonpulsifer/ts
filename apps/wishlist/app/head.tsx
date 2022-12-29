@@ -1,8 +1,9 @@
+import DefaultTags from './DefaultTags';
+
 export default function Head() {
   return (
     <>
-      <link rel="manifest" href="/site.webmanifest" />
-      <link rel="icon" href="/favicon.ico" />
+      <DefaultTags />
       <title>wishin.app</title>
     </>
   );

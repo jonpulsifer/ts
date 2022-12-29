@@ -1,4 +1,5 @@
 import { getUser } from '../../../../lib/firebase-ssr';
+import DefaultTags from '../../../DefaultTags';
 
 interface Props {
   params: { [K in string]: string };
@@ -12,6 +13,7 @@ export default async function Head({ params }: Props) {
 
   return (
     <>
+      <DefaultTags />
       <title>{titleMarkup}</title>
     </>
   );
