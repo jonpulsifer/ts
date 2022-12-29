@@ -17,7 +17,6 @@ import { AppUser, Gift } from '../types';
 import { useAuth } from './AuthProvider';
 import Card, { CardAction } from './Card';
 import GiftList from './GiftList';
-import Loading from './Spinner';
 
 interface Props {
   gifts: Gift[];
@@ -25,9 +24,8 @@ interface Props {
 }
 
 export const UserProfile = ({ gifts, appUser }: Props) => {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
-  if (loading) return <Loading />;
   if (!user) return <Card title="User Not Found" />;
 
   const isUserProfile = user.uid === appUser.uid;

@@ -8,7 +8,6 @@ import { db } from '../lib/firebase';
 import { AppUser, Family } from '../types';
 import { useAuth } from './AuthProvider';
 import Card from './Card';
-import Loading from './Spinner';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandshake, faTrashCan } from '@fortawesome/free-solid-svg-icons';
@@ -24,10 +23,8 @@ type PinValues = {
 
 const FamilyList = ({ families, user }: Props) => {
   const [pin, setPin] = useState<PinValues>({});
-  const { user: currentUser, loading } = useAuth();
+  const { user: currentUser } = useAuth();
   const router = useRouter();
-
-  if (!currentUser || loading) return <Loading />;
 
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -46,7 +43,7 @@ const FamilyList = ({ families, user }: Props) => {
     const family = families.find((f) => f.id === id);
     const pinMatch = family?.pin === pin[id];
     if (pinMatch) {
-      const ref = doc(db, `/users/${currentUser.uid}`);
+      const ref = doc(db, `/users/${currentUser?.uid}`);
       const localFamilies: string[] =
         user.families && user.families.length ? [...user.families] : [];
 

@@ -8,13 +8,12 @@ import { useRouter } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 
 const Home = () => {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (user) router.push('/people');
   }, [router, user]);
-  if (loading) return <Loading />;
   return (
     <Suspense fallback={<Loading />}>
       <Login />
