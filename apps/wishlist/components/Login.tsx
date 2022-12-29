@@ -10,9 +10,6 @@ import Card from './Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
-import { Finger_Paint } from '@next/font/google';
-
-const logoFont = Finger_Paint({ weight: '400' });
 
 const Login = () => {
   const { user } = useAuth();
@@ -77,7 +74,7 @@ const Login = () => {
       className="p-6 space-y-6 w-80 max-w-screen"
     >
       <button
-        className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3 px-4 border rounded-lg border-gray-700 text-center inline-flex items-center w-full text-lg bg-black text-white hover:bg-white hover:text-black transition ease-in-out duration-300"
+        className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3 px-4 border rounded-lg border-gray-700 text-center inline-flex items-center w-full text-lg bg-white text-black hover:bg-black hover:text-white transition ease-in-out duration-300"
         onClick={(e) => {
           handleGoogle(e);
         }}
@@ -114,13 +111,8 @@ const Login = () => {
   );
 
   return (
-    <Card>
-      <div className="bg-[url('/santa.png')] bg-no-repeat bg-right-top">
-        <h1 className={`p-6 select-none text-6xl ${logoFont.className}`}>
-          <span className="drop-shadow drop-shadow-2xl">wishin.app</span>
-        </h1>
-        {loginMarkup}
-      </div>
+    <Card title="Sign In" subtitle="Continue with Google to get started">
+      {loginMarkup}
     </Card>
   );
 };
