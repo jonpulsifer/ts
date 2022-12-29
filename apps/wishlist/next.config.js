@@ -23,7 +23,7 @@ const nextConfig = {
 
 const ContentSecurityPolicy = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' apis.google.com;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' apis.google.com cdn.vercel-insights.com;
     frame-src 'self' ${
       process.env.NODE_ENV === 'development' ? '*' : 'firebees.firebaseapp.com'
     };

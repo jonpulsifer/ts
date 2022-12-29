@@ -194,7 +194,7 @@ export default function Nav({ title }: Props) {
         </div>
       </header>
       <aside
-        className={`top-0 flex flex-col absolute z-10 border-r border-gray-300 w-60 transition-all duration-300 bg-gray-50 overflow-y-auto ${
+        className={`top-0 flex flex-col absolute z-10 border-r border-gray-300 w-60 transition-all duration-300 bg-gray-50 flex-grow-0 overflow-y-auto h-full ${
           !showNav ? '-ml-60' : ''
         }`}
       >

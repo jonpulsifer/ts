@@ -245,7 +245,7 @@ const getUserGifts = async (id: string) => {
     const doc = snapshot.data() as AppUser;
     const uid = snapshot.id;
 
-    if (!doc) return notFound();
+    if (!doc) notFound();
 
     const user: AppUser = {
       ...doc,
@@ -274,7 +274,7 @@ const getUserGifts = async (id: string) => {
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
   }
-  return redirect('/login');
+  redirect('/login');
 };
 
 export {
