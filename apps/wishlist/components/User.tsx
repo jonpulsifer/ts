@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
+import { Suspense } from 'react';
 import { AppUser, Gift } from '../types';
 import { useAuth } from './AuthProvider';
 import Card, { CardAction } from './Card';
@@ -26,9 +27,7 @@ interface Props {
 export const UserProfile = ({ gifts, appUser }: Props) => {
   const { user } = useAuth();
   const router = useRouter();
-  if (!user) return <Card title="User Not Found" />;
-
-  const isUserProfile = user.uid === appUser.uid;
+  const isUserProfile = user?.uid === appUser.uid;
 
   const {
     uid,
@@ -103,12 +102,12 @@ export const UserProfile = ({ gifts, appUser }: Props) => {
       },
     );
   return (
-    <>
+    <Suspense fallback={<Card title="Loading..." />}>
       <Card action={actions}>{fieldsMarkup}</Card>
       <GiftList
         title={isUserProfile ? undefined : `${name || email}'s Wishlist`}
         gifts={gifts}
       />
-    </>
+    </Suspense>
   );
 };

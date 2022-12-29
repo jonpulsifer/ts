@@ -1,4 +1,4 @@
-import { getUserGifts } from '../../../lib/firebase-ssr';
+import { getUser } from '../../../lib/firebase-ssr';
 import DefaultTags from '../../DefaultTags';
 
 interface Props {
@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default async function Head({ params }: Props) {
-  const { user } = await getUserGifts(params.id);
+  const { user } = await getUser(params.id);
   const titleMarkup = user?.name
     ? `Edit Profile | ${user.name}`
     : 'Edit Profile';
