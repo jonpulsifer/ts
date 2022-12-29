@@ -30,10 +30,13 @@ type NavLink = {
 };
 
 const daysUntilChristmas = () => {
-  const day = 1000 * 60 * 60 * 24;
-  const d1 = new Date();
-  const d2 = new Date(d1.getFullYear(), 11, 25);
-  return Math.round(Math.abs((d2.getTime() - d1.getTime()) / day));
+  const today = new Date();
+  const christmas = new Date(today.getFullYear(), 11, 25);
+  if (today.getMonth() === 11 && today.getDate() > 25) {
+    christmas.setFullYear(christmas.getFullYear() + 1);
+  }
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.ceil((christmas.getTime() - today.getTime()) / oneDay);
 };
 
 const logoFont = Finger_Paint({ weight: '400' });
