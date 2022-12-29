@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 
 import { useAuth } from './AuthProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,6 @@ import {
   faUser,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
-import Loading from './Spinner';
 import { Finger_Paint } from '@next/font/google';
 interface Props {
   title: string;
@@ -202,11 +201,9 @@ export default function Nav({ title }: Props) {
         <nav className="flex flex-col flex-1 space-y-2 p-2">
           {linksMarkup(links)}
         </nav>
-        <Suspense fallback={<Loading />}>
-          <nav className="flex flex-col flex-end pb-20 space-y-2 p-2">
-            {linksMarkup(signOutLink)}
-          </nav>
-        </Suspense>
+        <nav className="flex flex-col flex-end pb-20 space-y-2 p-2">
+          {linksMarkup(signOutLink)}
+        </nav>
       </aside>
     </>
   );
