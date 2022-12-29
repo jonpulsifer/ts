@@ -1,4 +1,4 @@
-import GiftSpinner from '../../../../components/Loading';
+import Spinner from '../../../../components/Spinner';
 export default function Loading() {
-  return <GiftSpinner />;
+  return <Spinner />;
 }

@@ -1,7 +1,7 @@
 import Frame from '../../components/Frame';
 import UserList from '../../components/UserList';
 import { Suspense } from 'react';
-import Loading from '../../components/Loading';
+import Loading from './loading';
 import { redirect } from 'next/navigation';
 import { getPeopleForUser } from '../../lib/firebase-ssr';
 

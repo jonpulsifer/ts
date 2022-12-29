@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '../components/AuthProvider';
-import Loading from '../components/Loading';
+import Loading from './loading';
 import Login from './login/page';
 
 import { useRouter } from 'next/navigation';

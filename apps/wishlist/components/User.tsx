@@ -17,7 +17,7 @@ import { AppUser, Gift } from '../types';
 import { useAuth } from './AuthProvider';
 import Card, { CardAction } from './Card';
 import GiftList from './GiftList';
-import Loading from './Loading';
+import Loading from './Spinner';
 
 interface Props {
   gifts: Gift[];

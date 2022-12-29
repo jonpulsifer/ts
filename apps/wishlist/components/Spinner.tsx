@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGift } from '@fortawesome/free-solid-svg-icons';
 
-const Loading = () => (
+const Spinner = () => (
   <div className="flex justify-center items-center h-screen">
     <div>
       <FontAwesomeIcon
@@ -13,4 +13,4 @@ const Loading = () => (
   </div>
 );
 
-export default Loading;
+export default Spinner;

@@ -16,7 +16,7 @@ import {
   faUser,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
-import Loading from './Loading';
+import Loading from './Spinner';
 import { Finger_Paint } from '@next/font/google';
 interface Props {
   title: string;

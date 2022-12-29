@@ -1,6 +1,6 @@
 import Card from '../../../../components/Card';
 import Frame from '../../../../components/Frame';
-import Loading from '../../../../components/Loading';
+import Loading from './loading';
 import UserForm from '../../../../components/UserForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt } from '@fortawesome/free-solid-svg-icons';

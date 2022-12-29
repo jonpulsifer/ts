@@ -2,7 +2,7 @@ import Frame from '../../../components/Frame';
 import { getGift, getUser } from '../../../lib/firebase-ssr';
 import { GiftCard } from '../../../components/Gift';
 import { Suspense } from 'react';
-import Loading from '../../../components/Loading';
+import Loading from './loading';
 
 interface Props {
   params: { [K in string]: string };

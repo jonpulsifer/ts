@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import Frame from '../../../components/Frame';
-import Loading from '../../../components/Loading';
+import Loading from './loading';
 import { UserProfile } from '../../../components/User';
 import { getUserGifts } from '../../../lib/firebase-ssr';
 

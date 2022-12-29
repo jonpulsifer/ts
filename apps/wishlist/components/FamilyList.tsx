@@ -8,7 +8,7 @@ import { db } from '../lib/firebase';
 import { AppUser, Family } from '../types';
 import { useAuth } from './AuthProvider';
 import Card from './Card';
-import Loading from './Loading';
+import Loading from './Spinner';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandshake, faTrashCan } from '@fortawesome/free-solid-svg-icons';
