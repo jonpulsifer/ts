@@ -17,7 +17,7 @@
     "turbo": "1.6.3"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {},
   "packageManager": "pnpm@7.21.0"
