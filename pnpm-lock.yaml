@@ -18,7 +18,7 @@ importers:
       cross-fetch: 3.1.5
       eslint-config-custom: workspace:*
       jest: 29.3.1
-      ts-jest: 29.0.4
+      ts-jest: 29.0.5
       ts-node: 10.9.1
       tsconfig: workspace*
       typescript: 4.9.4
@@ -29,7 +29,7 @@ importers:
       cross-fetch: 3.1.5
       eslint-config-custom: link:../../packages/eslint-config-custom
       jest: 29.3.1_zfha7dvnw4nti6zkbsmhmn6xo4
-      ts-jest: 29.0.4_b6ud3wjfzxmze5tmlpgpdpo43e
+      ts-jest: 29.0.5_b6ud3wjfzxmze5tmlpgpdpo43e
       ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
       tsconfig: link:../../packages/tsconfig
       typescript: 4.9.4
@@ -8655,8 +8655,8 @@ packages:
     resolution: {integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==}
     dev: true
 
-  /ts-jest/29.0.4_b6ud3wjfzxmze5tmlpgpdpo43e:
-    resolution: {integrity: sha512-YdNofkoyzeinwjIqLSYQeAM+GTmFQ7xFNtWcR5OyitY5VLzzNINrNmfhP5H3daA/V+RGQR7O3g1K6ysRgu5xIQ==}
+  /ts-jest/29.0.5_b6ud3wjfzxmze5tmlpgpdpo43e:
+    resolution: {integrity: sha512-PL3UciSgIpQ7f6XjVOmbi96vmDHUqAyqDr8YxzopDqX3kfgYtX1cuNeBjP+L9sFXi6nzsGGA6R3fP3DDDJyrxA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
     peerDependencies:
