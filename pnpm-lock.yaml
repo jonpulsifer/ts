@@ -148,7 +148,7 @@ importers:
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
-      '@vercel/analytics': 0.1.7
+      '@vercel/analytics': 0.1.8
       autoprefixer: 10.4.13
       concurrently: 7.6.0
       csstype: 3.1.1
@@ -171,7 +171,7 @@ importers:
       '@fortawesome/free-solid-svg-icons': 6.2.1
       '@fortawesome/react-fontawesome': 0.2.0_z27bm67dtmuyyvss23ckjdrcuy
       '@next/font': 13.1.1
-      '@vercel/analytics': 0.1.7_react@18.2.0
+      '@vercel/analytics': 0.1.8_react@18.2.0
       csstype: 3.1.1
       firebase: 9.15.0
       firebase-admin: 11.4.1_@firebase+app-types@0.9.0
@@ -2293,8 +2293,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: false
 
-  /@vercel/analytics/0.1.7_react@18.2.0:
-    resolution: {integrity: sha512-vaHVFggK1lPBbm73NRONI/D6oBM/Ot1zIXI9IpjxgUsvQMZrO4JpPEIDvGihgnAWbzH7LfpjOOJccxRoaDRtDA==}
+  /@vercel/analytics/0.1.8_react@18.2.0:
+    resolution: {integrity: sha512-PQrOI8BJ9qUiVJuQfnKiJd15eDjDJH9TBKsNeMrtelT4NAk7d9mBVz1CoZkvoFnHQ0OW7Xnqmr1F2nScfAnznQ==}
     peerDependencies:
       react: ^16.8||^17||^18
     dependencies:
