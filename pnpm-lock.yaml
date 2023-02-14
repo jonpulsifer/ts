@@ -155,7 +155,7 @@ importers:
       eslint-config-custom: workspace:*
       firebase: 9.17.1
       firebase-admin: 11.5.0
-      firebase-tools: 11.22.0
+      firebase-tools: 11.23.0
       next: 13.1.6
       nookies: 2.5.2
       postcss: 8.4.21
@@ -187,7 +187,7 @@ importers:
       autoprefixer: 10.4.13_postcss@8.4.21
       concurrently: 7.6.0
       eslint-config-custom: link:../../packages/eslint-config-custom
-      firebase-tools: 11.22.0
+      firebase-tools: 11.23.0
       postcss: 8.4.21
       tailwindcss: 3.2.6_postcss@8.4.21
       tsconfig: link:../../packages/tsconfig
@@ -3140,14 +3140,14 @@ packages:
       delayed-stream: 1.0.0
     dev: true
 
+  /commander/10.0.0:
+    resolution: {integrity: sha512-zS5PnTI22FIRM6ylNW8G4Ap0IEOyk62fhLSD0+uHRT9McRCLGpkVNvao4bjimpK/GShynyQkFFxHhwMcETmduA==}
+    engines: {node: '>=14'}
+    dev: true
+
   /commander/4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
-    dev: true
-
-  /commander/9.4.1:
-    resolution: {integrity: sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==}
-    engines: {node: ^12.20.0 || >=14}
     dev: true
 
   /compress-commons/4.1.1:
@@ -4383,8 +4383,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools/11.22.0:
-    resolution: {integrity: sha512-wTM/bjceNKipTQTk1ocpAvqg9075L/wWAzScLB+M9uzYSBaz8xA0lfOPo0e6L0AoXpOXJBkOBTlcJ6No0LQ66w==}
+  /firebase-tools/11.23.0:
+    resolution: {integrity: sha512-gRv4XxMIZDJmO4KYDY0OabFYEu+pxlBbNgYLWMcrdt0b4kz1D7DKkIwDA2936+po8Prkn/+n3t8i/WeBy3l1xQ==}
     engines: {node: ^14.18.0 || >=16.4.0}
     hasBin: true
     dependencies:
@@ -4436,7 +4436,7 @@ packages:
       stream-chain: 2.2.5
       stream-json: 1.7.4
       strip-ansi: 6.0.1
-      superstatic: 9.0.2
+      superstatic: 9.0.3
       tar: 6.1.11
       tcp-port-used: 1.0.2
       tmp: 0.2.1
@@ -6546,6 +6546,13 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
 
+  /minimatch/6.2.0:
+    resolution: {integrity: sha512-sauLxniAmvnhhRjFwPNnJKaPFYyddAgbYdeUpHULtCT/GhzdCx/MDNy+Y40lBxTQUrMzDE8e0S43Z5uqfO0REg==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: true
+
   /minimist/1.2.7:
     resolution: {integrity: sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==}
 
@@ -8236,13 +8243,13 @@ packages:
       react: 18.2.0
     dev: false
 
-  /superstatic/9.0.2:
-    resolution: {integrity: sha512-eKX9qubOaJbtdxn4gWhVVMXuno8cn0WPKOYgLAmLwYiHafrASXAIXHzL3Jx7w06yXiaM5e1DA2Ezeb08iV28+A==}
+  /superstatic/9.0.3:
+    resolution: {integrity: sha512-e/tmW0bsnQ/33ivK6y3CapJT0Ovy4pk/ohNPGhIAGU2oasoNLRQ1cv6enua09NU9w6Y0H/fBu07cjzuiWvLXxw==}
     engines: {node: ^14.18.0 || >=16.4.0}
     hasBin: true
     dependencies:
       basic-auth-connect: 1.0.0
-      commander: 9.4.1
+      commander: 10.0.0
       compression: 1.7.4
       connect: 3.7.0
       destroy: 1.2.0
@@ -8252,7 +8259,7 @@ packages:
       join-path: 1.1.1
       lodash: 4.17.21
       mime-types: 2.1.35
-      minimatch: 5.1.0
+      minimatch: 6.2.0
       morgan: 1.10.0
       on-finished: 2.4.1
       on-headers: 1.0.2
