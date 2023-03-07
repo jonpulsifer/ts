@@ -155,7 +155,7 @@ importers:
       eslint-config-custom: workspace:*
       firebase: 9.17.2
       firebase-admin: 11.5.0
-      firebase-tools: 11.24.0
+      firebase-tools: 11.24.1
       next: 13.2.3
       nookies: 2.5.2
       postcss: 8.4.21
@@ -187,7 +187,7 @@ importers:
       autoprefixer: 10.4.13_postcss@8.4.21
       concurrently: 7.6.0
       eslint-config-custom: link:../../packages/eslint-config-custom
-      firebase-tools: 11.24.0
+      firebase-tools: 11.24.1
       postcss: 8.4.21
       tailwindcss: 3.2.7_postcss@8.4.21
       tsconfig: link:../../packages/tsconfig
@@ -4390,8 +4390,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools/11.24.0:
-    resolution: {integrity: sha512-fqwI6rBCvMs3E2pLYEzJYPIB+cmLxV9l+bX7VZHpxhUvbZZrM7271C8sjiBdIh97ue+BvgXHqTDlsW88ZZXt1g==}
+  /firebase-tools/11.24.1:
+    resolution: {integrity: sha512-X9p15dZLaR3jbMKvtQgj364khq9EEeC3+PXK0Bo8lwe0XasFmq3d5XsD7XS+a5iziCC7sqzhIiuiUfn5yjYgAg==}
     engines: {node: ^14.18.0 || >=16.4.0}
     hasBin: true
     dependencies:
