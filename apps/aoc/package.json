@@ -16,7 +16,7 @@
     "ts-jest": "29.0.5",
     "ts-node": "10.9.1",
     "tsconfig": "workspace*",
-    "typescript": "4.9.5"
+    "typescript": "5.0.2"
   },
   "scripts": {
     "lint": "eslint --fix",
