@@ -37,6 +37,6 @@
     "postcss": "8.4.21",
     "tailwindcss": "3.3.1",
     "tsconfig": "workspace:*",
-    "typescript": "5.0.2"
+    "typescript": "5.0.3"
   }
 }
