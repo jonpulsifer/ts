@@ -3,10 +3,10 @@ import Image from 'next/image';
 import styles from './page.module.css';
 
 export default async function Home() {
-  let markup = '';
+  let headersMarkup = '';
   for (const [key, value] of headers().entries()) {
     const line = `${key}: ${value}\n`;
-    markup = markup.concat(line);
+    headersMarkup = headersMarkup.concat(line);
   }
   return (
     <div className={styles.container}>
@@ -15,9 +15,23 @@ export default async function Home() {
 
         <div className={styles.grid}>
           <a href="#" className={styles.card}>
+            <h2>k8s &darr;</h2>
+            <code className={styles.code}>
+              <pre>
+                {`Node: ${process.env.NODE_NAME}
+Node IP: ${process.env.NODE_IP}
+Pod: ${process.env.POD_NAME}
+Pod IP: ${process.env.POD_IP}`}
+              </pre>
+            </code>
+          </a>
+        </div>
+
+        <div className={styles.grid}>
+          <a href="#" className={styles.card}>
             <h2>Request Headers &darr;</h2>
             <code className={styles.code}>
-              <pre>{markup}</pre>
+              <pre>{headersMarkup}</pre>
             </code>
           </a>
         </div>

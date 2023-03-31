@@ -11,7 +11,7 @@ RUN turbo prune --scope=headerz --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:alpine AS installer
 RUN apk add --no-cache libc6-compat
-RUN yarn global add pnpm
+RUN yarn global add pnpm turbo
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
@@ -21,7 +21,9 @@ COPY --from=builder /app/out/pnpm-* ./
 RUN pnpm i
 
 # Build the project
-COPY --from=builder /app/out/full ./
+COPY --from=builder /app/out/full/ .
+COPY .prettierrc.json .
+COPY --from=builder /app/out ./out
 COPY turbo.json turbo.json
 
 # Uncomment and use build args to enable remote caching
@@ -31,7 +33,7 @@ COPY turbo.json turbo.json
 # ARG TURBO_TOKEN
 # ENV TURBO_TOKEN=$TURBO_TOKEN
 
-RUN pnpm turbo run build --filter=headerz...
+RUN turbo run build --scope=headerz --include-dependencies --no-deps
 
 FROM cgr.dev/chainguard/node:latest AS runner
 WORKDIR /app
@@ -42,4 +44,4 @@ COPY --from=installer --chown=65532:65532 /app/apps/headerz/.next/standalone ./
 COPY --from=installer --chown=65532:65532 /app/apps/headerz/.next/static ./apps/headerz/.next/static
 COPY --from=installer --chown=65532:65532 /app/apps/headerz/public ./apps/headerz/public
 
-CMD ["node", "apps/headerz/server.js"]
+CMD ["apps/headerz/server.js"]

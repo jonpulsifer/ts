@@ -46,6 +46,17 @@
         ".next/**"
       ]
     },
+    "headerz#build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "NODE_IP",
+        "NODE_NAME",
+        "POD_IP",
+        "POD_NAME"
+      ]
+    },
     "lint": {},
     "test": {
       "dependsOn": [
