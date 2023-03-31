@@ -15,7 +15,7 @@
     "ui": "workspace:*"
   },
   "devDependencies": {
-    "@babel/core": "7.21.3",
+    "@babel/core": "7.21.4",
     "eslint-config-custom": "workspace:*",
     "next-transpile-modules": "10.0.0",
     "tsconfig": "workspace:*",
