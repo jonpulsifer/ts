@@ -8,17 +8,19 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "clean": "turbo run clean",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "test": "turbo run test"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
-    "turbo": "1.8.8"
+    "turbo": "latest"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=7.0.0"
   },
-  "dependencies": {},
   "packageManager": "pnpm@8.1.0"
 }
