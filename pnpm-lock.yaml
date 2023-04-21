@@ -50,8 +50,8 @@ importers:
         specifier: 18.15.13
         version: 18.15.13
       '@types/react':
-        specifier: 18.0.37
-        version: 18.0.37
+        specifier: 18.0.38
+        version: 18.0.38
       '@types/react-dom':
         specifier: 18.0.11
         version: 18.0.11
@@ -102,8 +102,8 @@ importers:
         specifier: 18.15.13
         version: 18.15.13
       '@types/react':
-        specifier: 18.0.37
-        version: 18.0.37
+        specifier: 18.0.38
+        version: 18.0.38
       eslint-config-custom:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
@@ -123,8 +123,8 @@ importers:
         specifier: 18.15.13
         version: 18.15.13
       '@types/react':
-        specifier: 18.0.37
-        version: 18.0.37
+        specifier: 18.0.38
+        version: 18.0.38
       '@types/react-dom':
         specifier: 18.0.11
         version: 18.0.11
@@ -172,8 +172,8 @@ importers:
         specifier: 18.15.13
         version: 18.15.13
       '@types/react':
-        specifier: 18.0.37
-        version: 18.0.37
+        specifier: 18.0.38
+        version: 18.0.38
       eslint-config-custom:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
@@ -236,8 +236,8 @@ importers:
         specifier: 18.15.13
         version: 18.15.13
       '@types/react':
-        specifier: 18.0.37
-        version: 18.0.37
+        specifier: 18.0.38
+        version: 18.0.38
       '@types/react-dom':
         specifier: 18.0.11
         version: 18.0.11
@@ -305,8 +305,8 @@ importers:
   packages/ui:
     devDependencies:
       '@types/react':
-        specifier: 18.0.37
-        version: 18.0.37
+        specifier: 18.0.38
+        version: 18.0.38
       '@types/react-dom':
         specifier: 18.0.11
         version: 18.0.11
@@ -2147,14 +2147,14 @@ packages:
   /@types/react-dom@18.0.11:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
     dependencies:
-      '@types/react': 18.0.37
+      '@types/react': 18.0.38
 
-  /@types/react@18.0.37:
-    resolution: {integrity: sha512-4yaZZtkRN3ZIQD3KSEwkfcik8s0SWV+82dlJot1AbGYHCzJkWP3ENBY6wYeDRmKZ6HkrgoGAmR2HqdwYGp6OEw==}
+  /@types/react@18.0.38:
+    resolution: {integrity: sha512-ExsidLLSzYj4cvaQjGnQCk4HFfVT9+EZ9XZsQ8Hsrcn8QNgXtpZ3m9vSIC2MWtx7jHictK6wYhQgGh6ic58oOw==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
-      csstype: 3.1.1
+      csstype: 3.1.2
 
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
@@ -3432,12 +3432,8 @@ packages:
     hasBin: true
     dev: true
 
-  /csstype@3.1.1:
-    resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
-
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
-    dev: false
 
   /csv-parse@5.3.1:
     resolution: {integrity: sha512-R4Hv6eGJNzgcKdThZ6XORbSQ873HVcNke74QIq+LbwpT90LaZ8Xzl7KKiuIP16xq/P7ofzRt0h7S0xm+fVScsw==}
