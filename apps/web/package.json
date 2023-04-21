@@ -20,7 +20,7 @@
     "next-transpile-modules": "10.0.0",
     "tsconfig": "workspace:*",
     "@types/node": "18.15.13",
-    "@types/react": "18.0.37",
+    "@types/react": "18.0.38",
     "typescript": "5.0.4"
   }
 }
