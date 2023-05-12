@@ -16,7 +16,7 @@ import {
   faUser,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
-import { Finger_Paint } from '@next/font/google';
+import { Finger_Paint } from 'next/font/google';
 interface Props {
   title: string;
 }
@@ -38,7 +38,7 @@ const daysUntilChristmas = () => {
   return Math.ceil((christmas.getTime() - today.getTime()) / oneDay);
 };
 
-const logoFont = Finger_Paint({ weight: '400' });
+const logoFont = Finger_Paint({ weight: '400', subsets: ['latin'] });
 const logoStyle = `${logoFont.className} select-none font-semibold text-xl text-black`;
 
 export default function Nav({ title }: Props) {

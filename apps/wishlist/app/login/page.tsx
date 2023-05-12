@@ -1,7 +1,7 @@
 import Login from '../../components/Login';
-import { Finger_Paint } from '@next/font/google';
+import { Finger_Paint } from 'next/font/google';
 
-const logoFont = Finger_Paint({ weight: '400' });
+const logoFont = Finger_Paint({ weight: '400', subsets: ['latin'] });
 const LoginPage = () => {
   return (
     <>

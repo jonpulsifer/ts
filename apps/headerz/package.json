@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix"
@@ -14,7 +14,7 @@
     "@types/react-dom": "18.2.1",
     "eslint": "8.39.0",
     "eslint-config-custom": "workspace:*",
-    "next": "13.2.4",
+    "next": "13.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tsconfig": "workspace:*",
