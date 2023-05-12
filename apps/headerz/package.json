@@ -9,7 +9,7 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "@types/node": "18.16.1",
+    "@types/node": "18.16.8",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "eslint": "8.39.0",
