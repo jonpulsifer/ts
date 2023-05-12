@@ -253,6 +253,9 @@ importers:
       postcss:
         specifier: 8.4.23
         version: 8.4.23
+      prettier-plugin-tailwindcss:
+        specifier: ^0.1.12
+        version: 0.1.12(prettier@2.8.8)
       tailwindcss:
         specifier: 3.3.1
         version: 3.3.1(postcss@8.4.23)
@@ -7165,11 +7168,19 @@ packages:
       fast-diff: 1.2.0
     dev: false
 
+  /prettier-plugin-tailwindcss@0.1.12(prettier@2.8.8):
+    resolution: {integrity: sha512-pEZ6tppwknCeq3ObR9g8t61AhWtVRRR3I0EQNeiRrrJ3D42FJGeUDxiFc/LJRYEeAx5JOxagsF0MICwuWOJa+w==}
+    engines: {node: '>=12.17.0'}
+    peerDependencies:
+      prettier: '>=2.2.0'
+    dependencies:
+      prettier: 2.8.8
+    dev: true
+
   /prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
-    dev: false
 
   /pretty-format@29.5.0:
     resolution: {integrity: sha512-V2mGkI31qdttvTFX7Mt4efOqHXqJWMu4/r66Xh3Z3BwZaPfPJgp6/gbwoujRpPUtfEF6AUUWx3Jim3GCw5g/Qw==}
