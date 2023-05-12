@@ -33,7 +33,7 @@
     "concurrently": "8.0.1",
     "eslint-config-custom": "workspace:*",
     "firebase-tools": "11.30.0",
-    "postcss": "8.4.22",
+    "postcss": "8.4.23",
     "tailwindcss": "3.3.1",
     "tsconfig": "workspace:*",
     "typescript": "5.0.4"
