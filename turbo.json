@@ -46,7 +46,7 @@
         ".next/**"
       ]
     },
-    "headerz#build": {
+    "request-headers#build": {
       "dependsOn": [
         "^build"
       ],
@@ -62,10 +62,12 @@
       "dependsOn": [
         "build"
       ],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"],
       "outputs": []
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "clean": {
       "cache": false
@@ -74,6 +76,7 @@
   "remoteCache": {
     "signature": false
   },
+  "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "NODE_ENV"
   ]

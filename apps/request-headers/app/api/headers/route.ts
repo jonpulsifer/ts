@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
-export async function GET(request: Request) {
+export async function GET() {
   const res = Object.create(null);
   for (const [key, value] of headers().entries()) {
     res[key] = value;

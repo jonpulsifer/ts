@@ -6,7 +6,7 @@ RUN apk update
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope=headerz --docker
+RUN turbo prune --scope=request-headers --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:alpine AS installer
@@ -33,15 +33,15 @@ COPY turbo.json turbo.json
 # ARG TURBO_TOKEN
 # ENV TURBO_TOKEN=$TURBO_TOKEN
 
-RUN turbo run build --scope=headerz --include-dependencies --no-deps
+RUN turbo run build --scope=request-headers --include-dependencies --no-deps
 
 FROM cgr.dev/chainguard/node:latest AS runner
 WORKDIR /app
 
-COPY --from=installer /app/apps/headerz/next.config.js .
-COPY --from=installer /app/apps/headerz/package.json .
-COPY --from=installer --chown=65532:65532 /app/apps/headerz/.next/standalone ./
-COPY --from=installer --chown=65532:65532 /app/apps/headerz/.next/static ./apps/headerz/.next/static
-COPY --from=installer --chown=65532:65532 /app/apps/headerz/public ./apps/headerz/public
+COPY --from=installer /app/apps/request-headers/next.config.js .
+COPY --from=installer /app/apps/request-headers/package.json .
+COPY --from=installer --chown=65532:65532 /app/apps/request-headers/.next/standalone ./
+COPY --from=installer --chown=65532:65532 /app/apps/request-headers/.next/static ./apps/request-headers/.next/static
+COPY --from=installer --chown=65532:65532 /app/apps/request-headers/public ./apps/request-headers/public
 
-CMD ["apps/headerz/server.js"]
+CMD ["apps/request-headers/server.js"]
