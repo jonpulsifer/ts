@@ -1,8 +1,8 @@
-import { describe, it, expect } from "@jest/globals";
-import { readInput } from "./lib";
-import { part1, part2 } from "./day04";
+import { describe, it, expect } from '@jest/globals';
+import { readInput } from './lib';
+import { part1, part2 } from './day04';
 
-describe("tests day 4", () => {
+describe('tests day 4', () => {
   const input = `
 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
@@ -24,15 +24,15 @@ describe("tests day 4", () => {
 22 11 13  6  5
  2  0 12  3  7
 `;
-  it("yells bingo", () => {
+  it('yells bingo', () => {
     expect(part1(input)).toBe(4512);
     expect(part2(input)).toBe(1924);
   });
 });
 
-describe("solves day 4", () => {
+describe('solves day 4', () => {
   const input = readInput(4);
-  it("yells bingo again", () => {
+  it('yells bingo again', () => {
     expect(part1(input)).toBe(11774);
     expect(part2(input)).toBe(4495);
   });

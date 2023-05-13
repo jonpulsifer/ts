@@ -1,10 +1,10 @@
 function parse(s: string): number[][][] {
   return s
     .trim()
-    .split("\n")
+    .split('\n')
     .map((v) => {
-      return v.split("->").map((v) => {
-        return v.trim().split(",").map(Number);
+      return v.split('->').map((v) => {
+        return v.trim().split(',').map(Number);
       });
     });
 }
@@ -12,9 +12,9 @@ function parse(s: string): number[][][] {
 export function solve(
   input: string,
   boardsize: number,
-  diagonals: boolean
+  diagonals: boolean,
 ): number {
-  let board = new Array(boardsize).fill(0).map((a) => {
+  const board = new Array(boardsize).fill(0).map((a) => {
     return new Array(boardsize).fill(0);
   });
   const coords = parse(input);

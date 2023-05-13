@@ -1,6 +1,7 @@
-import fetch from "cross-fetch";
-import { mkdirSync, writeFileSync } from "fs";
-import * as path from "path";
+/* eslint-disable turbo/no-undeclared-env-vars */
+import fetch from 'cross-fetch';
+import { mkdirSync, writeFileSync } from 'fs';
+import * as path from 'path';
 
 async function fetchInput(url: string, cookie: string): Promise<string> {
   const headers = {
@@ -13,17 +14,18 @@ async function fetchInput(url: string, cookie: string): Promise<string> {
 }
 
 function saveInput(): void {
-  const cookie = process.env.AOC_SESSION_COOKIE || "";
-  if (!cookie) throw new Error("AOC session cookie not set");
+  const cookie = process.env.AOC_SESSION_COOKIE || '';
+  if (!cookie) throw new Error('AOC session cookie not set');
 
   const now = new Date();
   const year = process.argv[2] || now.getFullYear().toString();
   const day = process.argv[3] || now.getDate().toString();
-  const outputDir = path.resolve(".", year);
+  const outputDir = path.resolve('.', year);
   try {
     mkdirSync(outputDir);
-  } catch (error) {
-    if (error.code !== "EEXIST") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.code !== 'EEXIST') {
       throw new Error(`${error.code}: could not create directory`);
     }
   }
@@ -31,8 +33,8 @@ function saveInput(): void {
   const url = `https://adventofcode.com/${year}/day/${day}/input`;
   fetchInput(url, cookie).then((input) => {
     writeFileSync(
-      path.resolve(outputDir, `day${day.padStart(2, "0")}.txt`),
-      input
+      path.resolve(outputDir, `day${day.padStart(2, '0')}.txt`),
+      input,
     );
     console.log(`Wrote ${input.length} bytes to ${outputDir}`);
   });

@@ -1,8 +1,8 @@
 function parse(s: string): number[][] {
   return s
     .trim()
-    .split("\n")
-    .map((v) => v.split("").map(Number));
+    .split('\n')
+    .map((v) => v.split('').map(Number));
 }
 
 const isLowPoint = (y: number, x: number, map: number[][]): boolean => {

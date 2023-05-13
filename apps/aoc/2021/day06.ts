@@ -1,7 +1,7 @@
 function parse(s: string): Map<number, number> {
-  const arr = s.trim().split(",").map(Number);
+  const arr = s.trim().split(',').map(Number);
   const unique = [...new Set(arr)];
-  let map: Map<number, number> = new Map();
+  const map: Map<number, number> = new Map();
   unique.forEach((v) => {
     map.set(v, arr.filter((e) => e === v).length);
   });
@@ -11,7 +11,7 @@ function parse(s: string): Map<number, number> {
 export function part1(input: string, days: number): number {
   const fresh = 8;
   const reset = 6;
-  let fishmap = parse(input);
+  const fishmap = parse(input);
   for (let day = 0; day < days; day++) {
     const zeroes = fishmap.get(0) || 0;
     for (let age = 1; age <= fresh; age++) {

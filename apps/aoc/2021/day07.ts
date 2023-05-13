@@ -1,8 +1,8 @@
 function parse(s: string): number[] {
-  return s.trim().split(",").map(Number);
+  return s.trim().split(',').map(Number);
 }
 
-export function part1(input: string, premium: boolean = false): number {
+export function part1(input: string, premium = false): number {
   const crabs = parse(input);
   const rate = premium
     ? (fuel: number) => (fuel * (fuel + 1)) / 2
@@ -12,7 +12,7 @@ export function part1(input: string, premium: boolean = false): number {
 
   let fuel = Number.POSITIVE_INFINITY;
   for (let range = min; range < max; range++) {
-    let spent = crabs
+    const spent = crabs
       .map((pos) => rate(Math.abs(pos - range)))
       .reduce((p, v) => p + v);
     if (spent < fuel) fuel = spent;

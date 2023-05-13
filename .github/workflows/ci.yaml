@@ -1,4 +1,4 @@
-name: CI
+name: checks
 
 on:
   push:
@@ -24,8 +24,6 @@ jobs:
           fetch-depth: 2
 
       - uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3

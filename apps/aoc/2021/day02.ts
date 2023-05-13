@@ -1,9 +1,9 @@
 function parse(s: string): Array<[string, number]> {
   return s
     .trim()
-    .split("\n")
+    .split('\n')
     .map((e) => {
-      const [direction, amount] = e.split(" ");
+      const [direction, amount] = e.split(' ');
       return [direction, Number(amount)];
     });
 }
@@ -13,15 +13,15 @@ export function part1(input: string): number {
   let depth = 0;
 
   const movements = parse(input);
-  for (let [direction, amount] of movements) {
+  for (const [direction, amount] of movements) {
     switch (direction) {
-      case "forward":
+      case 'forward':
         distance += amount;
         break;
-      case "down":
+      case 'down':
         depth += amount;
         break;
-      case "up":
+      case 'up':
         depth -= amount;
         break;
     }
@@ -35,16 +35,16 @@ export function part2(input: string): number {
   let depth = 0;
 
   const movements = parse(input);
-  for (let [direction, amount] of movements) {
+  for (const [direction, amount] of movements) {
     switch (direction) {
-      case "forward":
+      case 'forward':
         distance += amount;
         depth += aim * amount;
         break;
-      case "down":
+      case 'down':
         aim += amount;
         break;
-      case "up":
+      case 'up':
         aim -= amount;
         break;
     }

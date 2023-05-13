@@ -1,8 +1,8 @@
-import { describe, it, expect } from "@jest/globals";
-import { readInput } from "./lib";
-import { part1, part2 } from "./day08";
+import { describe, it, expect } from '@jest/globals';
+import { readInput } from './lib';
+import { part1, part2 } from './day08';
 
-describe("tests day 8 sample", () => {
+describe('tests day 8 sample', () => {
   const input = `
 be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
 edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
@@ -15,20 +15,20 @@ bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbg
 egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 `;
-  it("counts how many times 1,4,7, and 8 appear", () => {
+  it('counts how many times 1,4,7, and 8 appear', () => {
     expect(part1(input)).toBe(26);
   });
-  it("adds the outputs together", () => {
+  it('adds the outputs together', () => {
     expect(part2(input)).toBe(61229);
   });
 });
 
-describe("solves day 8", () => {
+describe('solves day 8', () => {
   const input = readInput(8);
-  it("counts how many times 1,4,7, and 8 appear", () => {
+  it('counts how many times 1,4,7, and 8 appear', () => {
     expect(part1(input)).toBe(342);
   });
-  it("adds the output together", () => {
+  it('adds the output together', () => {
     expect(part2(input)).toBe(1068933);
   });
 });
