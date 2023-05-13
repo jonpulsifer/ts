@@ -19,7 +19,7 @@
     "eslint-config-custom": "workspace:*",
     "next-transpile-modules": "10.0.0",
     "tsconfig": "workspace:*",
-    "@types/node": "18.16.8",
+    "@types/node": "18.16.9",
     "@types/react": "18.2.6",
     "typescript": "5.0.4"
   }
