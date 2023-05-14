@@ -9,14 +9,15 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
+    "next": "13.4.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
     "@types/node": "18.16.9",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
-    "eslint": "8.40.0",
     "eslint-config-custom": "workspace:*",
-    "next": "13.4.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "tsconfig": "workspace:*",
     "typescript": "5.0.4"
   }

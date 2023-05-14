@@ -46,21 +46,6 @@ importers:
 
   apps/authme:
     dependencies:
-      '@types/node':
-        specifier: 18.16.9
-        version: 18.16.9
-      '@types/react':
-        specifier: 18.2.6
-        version: 18.2.6
-      '@types/react-dom':
-        specifier: 18.2.4
-        version: 18.2.4
-      eslint:
-        specifier: 8.40.0
-        version: 8.40.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
       google-auth-library:
         specifier: 8.8.0
         version: 8.8.0
@@ -73,15 +58,7 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: 5.0.4
-        version: 5.0.4
-
-  apps/request-headers:
-    dependencies:
+    devDependencies:
       '@types/node':
         specifier: 18.16.9
         version: 18.16.9
@@ -91,12 +68,18 @@ importers:
       '@types/react-dom':
         specifier: 18.2.4
         version: 18.2.4
-      eslint:
-        specifier: 8.40.0
-        version: 8.40.0
       eslint-config-custom:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: 5.0.4
+        version: 5.0.4
+
+  apps/request-headers:
+    dependencies:
       next:
         specifier: 13.4.2
         version: 13.4.2(react-dom@18.2.0)(react@18.2.0)
@@ -106,6 +89,19 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@types/node':
+        specifier: 18.16.9
+        version: 18.16.9
+      '@types/react':
+        specifier: 18.2.6
+        version: 18.2.6
+      '@types/react-dom':
+        specifier: 18.2.4
+        version: 18.2.4
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -2072,6 +2068,7 @@ packages:
 
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+    dev: true
 
   /@types/qs@6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
@@ -2085,6 +2082,7 @@ packages:
     resolution: {integrity: sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==}
     dependencies:
       '@types/react': 18.2.6
+    dev: true
 
   /@types/react@18.2.6:
     resolution: {integrity: sha512-wRZClXn//zxCFW+ye/D2qY65UsYP1Fpex2YXorHc8awoNamkMZSvBxwxdYVInsHOZZd2Ppq8isnSzJL5Mpf8OA==}
@@ -2092,6 +2090,7 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.2
+    dev: true
 
   /@types/rimraf@3.0.2:
     resolution: {integrity: sha512-F3OznnSLAUxFrCEu/L5PY8+ny8DtcFRjx7fZZ9bycvXRi3KPTRS9HOitGZwvPg0juRhXFWIeKX58cnX5YqLohQ==}
@@ -2101,6 +2100,7 @@ packages:
 
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+    dev: true
 
   /@types/semver@7.3.12:
     resolution: {integrity: sha512-WwA1MW0++RfXmCr12xeYOOC5baSC9mSb0ZqCquFzKhcoF4TvHu5MKOuXsncgZcpVFhB1pXd5hZmM0ryAoCp12A==}
