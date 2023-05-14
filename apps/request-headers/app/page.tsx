@@ -1,13 +1,20 @@
+'use client';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import styles from './page.module.css';
+import { Suspense } from 'react';
 
-export default async function Home() {
-  let headersMarkup = '';
+const { NODE_NAME, NODE_IP, POD_NAME, POD_IP } = process.env;
+const headersMarkup = () => {
+  let markup = '';
   for (const [key, value] of headers().entries()) {
     const line = `${key}: ${value}\n`;
-    headersMarkup = headersMarkup.concat(line);
+    markup = markup.concat(line);
   }
+  return markup;
+};
+
+export default async function Home() {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -18,10 +25,10 @@ export default async function Home() {
             <h2>k8s &darr;</h2>
             <code className={styles.code}>
               <pre>
-                {`Node: ${process.env.NODE_NAME}
-Node IP: ${process.env.NODE_IP}
-Pod: ${process.env.POD_NAME}
-Pod IP: ${process.env.POD_IP}`}
+                {`Node: ${NODE_NAME}
+Node IP: ${NODE_IP}
+Pod: ${POD_NAME}
+Pod IP: ${POD_IP}`}
               </pre>
             </code>
           </a>
@@ -31,7 +38,10 @@ Pod IP: ${process.env.POD_IP}`}
           <a href="#" className={styles.card}>
             <h2>Request Headers &darr;</h2>
             <code className={styles.code}>
-              <pre>{headersMarkup}</pre>
+              {/* <pre>{headersMarkup}</pre> but suspended */}
+              <Suspense fallback={<div>Loading...</div>}>
+                <pre>{headersMarkup()}</pre>
+              </Suspense>
             </code>
           </a>
         </div>
