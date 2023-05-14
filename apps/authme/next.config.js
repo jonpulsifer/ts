@@ -4,6 +4,7 @@ const nextConfig = {
     appDir: true,
     typedRoutes: true,
   },
+  reactStrictMode: true,
 };
 
 module.exports = nextConfig;
