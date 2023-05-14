@@ -21,7 +21,6 @@
   "scripts": {
     "lint": "eslint --fix",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
     "fetch": "ts-node index.ts"
   }
 }
