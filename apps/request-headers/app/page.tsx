@@ -1,4 +1,3 @@
-'use client';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import styles from './page.module.css';
