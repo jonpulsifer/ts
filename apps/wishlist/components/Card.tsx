@@ -18,8 +18,8 @@ export interface CardProps {
 
 const Card = ({ title, subtitle, action, children }: CardProps) => {
   const titleMarkup = (
-    <div className="px-4 pt-4">
-      <h1 className="font-semibold text-lg">{title}</h1>
+    <div className="px-4 pt-2">
+      <h1 className="font-semibold text-lg pb-2">{title}</h1>
       <h4 className="text-xs text-gray-400">{subtitle}</h4>
     </div>
   );

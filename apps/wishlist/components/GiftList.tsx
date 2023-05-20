@@ -235,19 +235,38 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
     });
   };
 
-  return (
-    <Card title={title}>
-      <table className="table-auto w-full rounded-lg">
-        <thead className="">
-          <tr className="">
-            <th className="px-4 py-4 text-left">Name</th>
-            <th className="px-4 py-4 text-right flex-end">Action</th>
-          </tr>
-        </thead>
-        <tbody className="rounded rounded-xl">{giftList(gifts)}</tbody>
-      </table>
-    </Card>
-  );
-};
+  const GiftCard = (gifts: Gift[], title: string | undefined) => {
+    return (
+      <Card title={title}>
+        <table className="table-auto w-full rounded-lg">
+          <thead className="">
+            <tr className="">
+              <th className="px-4 py-4 text-left">Gift</th>
+              <th className="px-4 py-4 text-right flex-end">Action</th>
+            </tr>
+          </thead>
+          <tbody className="rounded rounded-xl">{giftList(gifts)}</tbody>
+        </table>
+      </Card>
+    );
+  };
 
+  // get owners of gifts
+  const owners = gifts.map((gift) => gift.owner);
+
+  // remove duplicates
+  const uniqueOwners = [...new Set(owners)];
+
+  // create an array of gifts for each owner
+  const giftsByOwner = uniqueOwners.map((owner) => {
+    return gifts.filter((gift) => gift.owner === owner);
+  });
+
+  // return a card for each owner
+  const giftCards = giftsByOwner.map((gifts) => {
+    return GiftCard(gifts, gifts[0].owner_name);
+  });
+
+  return <>{giftCards}</>;
+};
 export default GiftList;

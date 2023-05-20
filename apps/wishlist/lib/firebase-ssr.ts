@@ -106,6 +106,7 @@ const getGifts = async () => {
     const snapshot = await db
       .collection('gifts')
       .where('claimed_by', '==', '')
+      .orderBy('owner')
       .get();
 
     for (const doc of snapshot.docs) {
