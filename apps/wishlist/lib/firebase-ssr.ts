@@ -206,8 +206,8 @@ const getPeopleForUser = async () => {
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
     console.log(JSON.stringify(e));
-    throw e;
   }
+  redirect('/login');
 };
 
 const getUserGifts = async (id: string) => {
