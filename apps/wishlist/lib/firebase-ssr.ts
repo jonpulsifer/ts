@@ -193,7 +193,6 @@ const getPeopleForUser = async () => {
       .collection('users')
       .where(FieldPath.documentId(), '!=', uid)
       .where('families', 'array-contains-any', user.families)
-      .orderBy('name')
       .get();
 
     for (const doc of snapshot.docs) {
@@ -202,10 +201,17 @@ const getPeopleForUser = async () => {
         uid: doc.id,
       });
     }
-    return { users, user };
+    // sort users by name
+    const sorted = users.sort((a, b) => {
+      if (a.name && b.name) return a.name.localeCompare(b.name);
+      if (a.name) return -1;
+      if (b.name) return 1;
+      return 0;
+    });
+
+    return { sorted, user };
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
-    console.log(JSON.stringify(e));
   }
   redirect('/login');
 };
