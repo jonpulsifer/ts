@@ -137,7 +137,6 @@ const getAllUserGifts = async () => {
     const snapshot = await db
       .collection('gifts')
       .where('owner', '==', uid)
-      .orderBy('name')
       .get();
 
     for (const doc of snapshot.docs) {
@@ -146,7 +145,13 @@ const getAllUserGifts = async () => {
         id: doc.id,
       });
     }
-    return { gifts };
+    const sorted = gifts.sort((a, b) => {
+      if (a.name && b.name) return a.name.localeCompare(b.name);
+      if (a.name) return -1;
+      if (b.name) return 1;
+      return 0;
+    });
+    return { gifts: sorted };
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
   }
