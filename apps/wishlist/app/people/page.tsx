@@ -7,7 +7,7 @@ import { getPeopleForUser } from '../../lib/firebase-ssr';
 
 const PeoplePage = async () => {
   const { users, user } = await getPeopleForUser();
-  if (!users || !user) redirect('/login');
+  if (!user) redirect('/login');
 
   return (
     <Frame title="People">
