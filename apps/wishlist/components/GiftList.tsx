@@ -13,17 +13,15 @@ import Card from './Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMinusSquare,
-  faPlus,
   faPlusSquare,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   gifts: Gift[];
-  title?: string;
 }
 
-const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
+const GiftList = ({ gifts: giftsFromProps }: Props) => {
   const [gifts, setGifts] = useState(giftsFromProps);
   const { user } = useAuth();
   const path = usePathname();
