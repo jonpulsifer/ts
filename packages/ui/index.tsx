@@ -1,3 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as React from 'react';
-export * from './Button';
+export * from './src/Card';
+export * as Card from './src/Card';

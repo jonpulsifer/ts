@@ -39,7 +39,7 @@ const daysUntilChristmas = () => {
 };
 
 const logoFont = Finger_Paint({ weight: '400', subsets: ['latin'] });
-const logoStyle = `${logoFont.className} select-none font-semibold text-xl text-black`;
+const logoStyle = `${logoFont.className} select-none font-semibold text-xl text-black dark:text-gray-200`;
 
 export default function Nav({ title }: Props) {
   const [showNav, setShowNav] = useState(false);
@@ -95,7 +95,7 @@ export default function Nav({ title }: Props) {
   const linksMarkup = (links: NavLink[]) => {
     const linx: JSX.Element[] = [];
     const linkStyle =
-      'p-2 text-lg font-semibold transition ease-in-out duration-150 rounded-md hover:shadow-sm hover:shadow-gray-300 hover:bg-white hover:text-blue-600';
+      'p-2 text-lg font-semibold transition ease-in-out duration-150 rounded-md hover:shadow-sm hover:shadow-gray-300 hover:bg-white hover:text-blue-600 dark:hover:bg-gray-800 dark:hover:shadow-black';
     links.forEach((link) => {
       if (!link.link) {
         linx.push(
@@ -119,7 +119,7 @@ export default function Nav({ title }: Props) {
         <Link
           className={
             isActive
-              ? `${linkStyle} bg-white border border-gray-200 shadow-sm`
+              ? `${linkStyle} text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 shadow-sm`
               : linkStyle
           }
           key={link.title}
@@ -129,7 +129,9 @@ export default function Nav({ title }: Props) {
         >
           <div
             className={`flex flex-row items-center justify-center ${
-              isActive ? 'text-blue-600' : ''
+              isActive
+                ? 'text-blue-600 dark:text-blue-600 dark:bg-gray-900'
+                : ''
             }`}
           >
             <div className="flex">
@@ -178,7 +180,7 @@ export default function Nav({ title }: Props) {
 
   return (
     <>
-      <header className="flex w-full bg-white items-center p-2 text-semibold border-b border-transparent space-x-2">
+      <header className="flex w-full bg-white dark:bg-gray-900 dark:text-gray-400 items-center p-2 text-semibold border-b border-transparent space-x-2">
         {burgerButton}
         <h1 className="flex truncate font-semibold text-lg noselect">
           {title}
@@ -193,7 +195,7 @@ export default function Nav({ title }: Props) {
         </div>
       </header>
       <aside
-        className={`top-0 flex flex-col absolute z-10 border-r border-gray-300 w-60 transition-all duration-300 bg-gray-50 flex-grow-0 overflow-y-auto h-full ${
+        className={`top-0 flex flex-col absolute z-10 border-r dark:border-gray-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-gray-900 dark:text-gray-400 flex-grow-0 overflow-y-auto h-full ${
           !showNav ? '-ml-60' : ''
         }`}
       >

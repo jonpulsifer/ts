@@ -12,6 +12,7 @@ coverage
 .next/
 out/
 build
+dist
 
 # typescript
 *.d.ts

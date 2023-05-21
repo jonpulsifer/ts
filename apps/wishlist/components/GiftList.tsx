@@ -217,7 +217,7 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
       return (
         <tr
           key={id}
-          className="border-t hover:bg-gray-50 transition ease-in-out duration-300"
+          className="border-t dark:border-gray-800 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 transition ease-in-out duration-300"
         >
           <td className={`px-4 py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
             <Link href={`/gift/${gift.id}`}>
@@ -241,8 +241,8 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
         <table className="table-auto w-full rounded-lg">
           <thead className="">
             <tr className="">
-              <th className="px-4 py-4 text-left">Gift</th>
-              <th className="px-4 py-4 text-right flex-end">Action</th>
+              <th className="px-4 pt-2 text-left text-xl">Gift Name</th>
+              <th className="px-4 pt-2 text-right flex-end text-xl">Action</th>
             </tr>
           </thead>
           <tbody className="rounded rounded-xl">{giftList(gifts)}</tbody>

@@ -8,7 +8,7 @@ const GiftsPage = async () => {
   const { gifts } = await getGifts();
 
   return (
-    <Frame title="Gift List">
+    <Frame title="🎁 Gifts">
       <Suspense fallback={<Loading />}>
         <GiftList gifts={gifts} />
       </Suspense>

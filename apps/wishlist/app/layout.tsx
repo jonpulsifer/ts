@@ -9,7 +9,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import { AnalyticsWrapper } from '../components/Analytics';
 
 const noto = Noto_Sans({ weight: '400', subsets: ['latin'] });
-const bodyClassName = `${noto.className} bg-gradient-to-br from-violet-500 to-blue-900`;
+const bodyClassName = `${noto.className} bg-gradient-to-br from-violet-500 to-blue-900 dark:to-black dark:from-blue-950`;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

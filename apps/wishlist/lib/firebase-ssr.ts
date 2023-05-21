@@ -137,6 +137,7 @@ const getAllUserGifts = async () => {
     const snapshot = await db
       .collection('gifts')
       .where('owner', '==', uid)
+      .orderBy('name')
       .get();
 
     for (const doc of snapshot.docs) {
@@ -192,6 +193,7 @@ const getPeopleForUser = async () => {
       .collection('users')
       .where(FieldPath.documentId(), '!=', uid)
       .where('families', 'array-contains-any', user.families)
+      .orderBy('name')
       .get();
 
     for (const doc of snapshot.docs) {
@@ -230,7 +232,8 @@ const getUserGifts = async (id: string) => {
         : db
             .collection('gifts')
             .where('owner', '==', uid)
-            .where('claimed_by', 'in', [null, '']);
+            .where('claimed_by', 'in', [null, ''])
+            .orderBy('name');
 
     const gifts: Gift[] = [];
     const docs = await query.get();

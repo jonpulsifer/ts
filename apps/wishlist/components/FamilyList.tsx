@@ -175,7 +175,7 @@ const FamilyList = ({ families, user }: Props) => {
       return (
         <tr
           key={`${name}-${id}`}
-          className={`border-t hover:bg-gray-50 transition ease-in-out duration-300`}
+          className={`border-t hover:bg-gray-800 transition ease-in-out duration-300`}
         >
           <td className={`w-full py-2 ${isLast ? 'rounded-b-lg' : ''}`}>
             <div className="flex items-center p-2 px-4">

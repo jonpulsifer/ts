@@ -6,7 +6,7 @@ const Spinner = () => (
   <div className="flex justify-center items-center h-screen">
     <div>
       <FontAwesomeIcon
-        className="animate-spin text-7xl text-white"
+        className="animate-spin text-7xl text-white dark:text-gray-200"
         icon={faGift}
       />
     </div>

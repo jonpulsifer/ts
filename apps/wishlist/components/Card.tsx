@@ -18,7 +18,7 @@ export interface CardProps {
 
 const Card = ({ title, subtitle, action, children }: CardProps) => {
   const titleMarkup = (
-    <div className="px-4 pt-2">
+    <div className="px-4 pt-2 dark:text-gray-400">
       <h1 className="font-semibold text-lg pb-2">{title}</h1>
       <h4 className="text-xs text-gray-400">{subtitle}</h4>
     </div>
@@ -57,7 +57,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
     : null;
 
   const footer = (
-    <div className="border-t border-gray-200 py-2">
+    <div className="py-2">
       <div className="flex flex-row-reverse">{actionsMarkup}</div>
     </div>
   );
@@ -65,7 +65,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
   const headerMarkup = title ? titleMarkup : null;
   const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="flex flex-col sm:max-w-2xl bg-white rounded-lg shadow shadow-md border-transparent">
+    <div className="flex flex-col sm:max-w-2xl bg-white dark:bg-gray-900 dark:text-gray-400 rounded-lg shadow shadow-md border-transparent">
       {headerMarkup}
       {children}
       {footerMarkup}

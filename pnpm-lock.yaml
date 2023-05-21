@@ -7,9 +7,12 @@ importers:
       eslint-config-custom:
         specifier: workspace:*
         version: link:packages/eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:packages/tsconfig
       turbo:
-        specifier: ^1.9.4
-        version: 1.9.4
+        specifier: ^1.9.8
+        version: 1.9.8
 
   apps/aoc:
     devDependencies:
@@ -150,6 +153,9 @@ importers:
       react-toastify:
         specifier: 9.1.3
         version: 9.1.3(react-dom@18.2.0)(react@18.2.0)
+      ui:
+        specifier: workspace:*
+        version: link:../../packages/ui
     devDependencies:
       '@types/node':
         specifier: 18.16.13
@@ -178,6 +184,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.3.0
         version: 0.3.0(prettier@2.8.8)
+      tailwind-config:
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
       tailwindcss:
         specifier: 3.3.2
         version: 3.3.2
@@ -222,9 +231,31 @@ importers:
         specifier: 5.0.4
         version: 5.0.4
 
+  packages/tailwind-config:
+    devDependencies:
+      tailwindcss:
+        specifier: 3.3.2
+        version: 3.3.2
+
   packages/tsconfig: {}
 
   packages/ui:
+    dependencies:
+      '@fortawesome/fontawesome-svg-core':
+        specifier: 6.4.0
+        version: 6.4.0
+      '@fortawesome/free-regular-svg-icons':
+        specifier: 6.4.0
+        version: 6.4.0
+      '@fortawesome/free-solid-svg-icons':
+        specifier: 6.4.0
+        version: 6.4.0
+      '@fortawesome/react-fontawesome':
+        specifier: 0.2.0
+        version: 0.2.0(@fortawesome/fontawesome-svg-core@6.4.0)(react@18.2.0)
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
     devDependencies:
       '@types/react':
         specifier: 18.2.6
