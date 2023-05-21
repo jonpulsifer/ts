@@ -1,7 +1,4 @@
-'use client';
-
-// 'use client' marks this page as a Client Component
-// https://beta.nextjs.org/docs/rendering/server-and-client-components
+'use client'; // Error components must be Client Components
 
 import { useEffect } from 'react';
 
@@ -19,8 +16,15 @@ export default function Error({
 
   return (
     <div>
-      <p>Something went wrong! /gift/id/edit</p>
-      <button onClick={() => reset()}>Reset error boundary</button>
+      <h2>Something went wrong!</h2>
+      <button
+        onClick={
+          // Attempt to recover by trying to re-render the segment
+          () => reset()
+        }
+      >
+        Try again
+      </button>
     </div>
   );
 }
