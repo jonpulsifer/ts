@@ -209,7 +209,7 @@ const getPeopleForUser = async () => {
       return 0;
     });
 
-    return { sorted, user };
+    return { users: sorted, user };
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
   }
