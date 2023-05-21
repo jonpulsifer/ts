@@ -132,7 +132,7 @@ const FamilyList = ({ families, user }: Props) => {
               type="number"
               pattern="\d{1,4}"
               autoComplete="off"
-              className="form-control block w-20 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              className="form-control block w-20 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
               value={pin[family.id]}
               onChange={(e) => handlePinChange(e)}
               placeholder="Pin"
@@ -175,12 +175,12 @@ const FamilyList = ({ families, user }: Props) => {
       return (
         <tr
           key={`${name}-${id}`}
-          className={`border-t hover:bg-gray-800 transition ease-in-out duration-300`}
+          className={`border-t hover:bg-gray-100 dark:hover:bg-gray-950 transition dark:border-gray-800 ease-in-out duration-300`}
         >
           <td className={`w-full py-2 ${isLast ? 'rounded-b-lg' : ''}`}>
             <div className="flex items-center p-2 px-4">
-              <div className="hidden mr-4 sm:flex inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full bg-indigo-100">
-                <span className="font-medium text-violet-600">
+              <div className="hidden mr-4 sm:flex inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-gray-800">
+                <span className="font-medium text-violet-600 dark:text-violet-500">
                   {name[0].toUpperCase()}
                 </span>
               </div>
@@ -203,7 +203,7 @@ const FamilyList = ({ families, user }: Props) => {
         <table className="table-auto w-full rounded-lg">
           <thead className="">
             <tr className="">
-              <th className="px-4 py-4 text-left">Family</th>
+              <th className="px-4 py-4 text-left">Family List</th>
             </tr>
           </thead>
           <tbody className="rounded rounded-xl">{familyList(families)}</tbody>

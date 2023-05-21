@@ -72,13 +72,13 @@ const UserForm = ({ user }: Props) => {
     >
       <form onSubmit={(e) => submit(e)} className="px-4 pb-4">
         <div className="mb-6">
-          <label className="mb-2 text-sm font-medium text-gray-800">
+          <label className="mb-2 text-sm font-medium text-gray-800 dark:text-gray-400">
             This is the name that you will have in the app
           </label>
           <input
             type="text"
             autoComplete="name"
-            className="form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Rudolph"
@@ -86,14 +86,14 @@ const UserForm = ({ user }: Props) => {
         </div>
 
         <div className="mb-6">
-          <label className="mb-2 text-sm font-medium text-gray-800">
+          <label className="mb-2 text-sm font-medium text-gray-800 dark:text-gray-400">
             Make it easy for grand-maman to send you a Christmas card by
             entering your address
           </label>
           <input
             id="address"
             autoComplete="street-address"
-            className="form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
             placeholder="Stable #9, North Pole, H0H 0H0"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
@@ -101,14 +101,14 @@ const UserForm = ({ user }: Props) => {
         </div>
 
         <div className="mb-6">
-          <label className="mb-2 text-sm font-medium text-gray-800">
+          <label className="mb-2 text-sm font-medium text-gray-800 dark:text-gray-400">
             What are themes for Santa to keep in mind this year?
           </label>
           <input
             id="giftTheme"
             type="textbox"
             autoComplete="gift-theme"
-            className="form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
             placeholder="Reindeer Games, Kitchen Stuff, Beer"
             value={giftTheme}
             onChange={(e) => setGiftTheme(e.target.value)}
@@ -116,42 +116,42 @@ const UserForm = ({ user }: Props) => {
         </div>
         <div className="flex flex-row">
           <div className="mb-6 pr-2">
-            <label className="mb-2 text-sm font-medium text-gray-800">
+            <label className="mb-2 text-sm font-medium text-gray-800 dark:text-gray-400">
               Shirt Size
             </label>
             <input
               id="shirt"
               type="textbox"
               autoComplete="shirt-size"
-              className="form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
               placeholder="S/M"
               value={shirtSize}
               onChange={(e) => setShirtSize(e.target.value)}
             />
           </div>
           <div className="mb-6 pr-2">
-            <label className="mb-2 text-sm font-medium text-gray-800">
+            <label className="mb-2 text-sm font-medium text-gray-800 dark:text-gray-400">
               Pant Size
             </label>
             <input
               id="pants"
               type="textbox"
               autoComplete="pant-size"
-              className="form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
               placeholder="XL"
               value={pantSize}
               onChange={(e) => setPantSize(e.target.value)}
             />
           </div>
           <div className="mb-6">
-            <label className="mb-2 text-sm font-medium text-gray-800">
+            <label className="mb-2 text-sm font-medium text-gray-800 dark:text-gray-400">
               Shoe Size
             </label>
             <input
               id="shoe"
               type="textbox"
               autoComplete="shoe-size"
-              className="form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
               placeholder="13"
               value={shoeSize}
               onChange={(e) => setShoeSize(e.target.value)}

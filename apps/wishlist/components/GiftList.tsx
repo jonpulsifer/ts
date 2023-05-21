@@ -13,6 +13,7 @@ import Card from './Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMinusSquare,
+  faPlus,
   faPlusSquare,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
@@ -117,13 +118,13 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
   const ToastMarkup = ({ gift, idx }: { gift: Gift; idx: number }) => {
     return (
       <>
-        <button className="flex flex-row items-center space-x-4 h-max">
-          <div className="flex h-max">
+        <button className="flex items-center space-x-4 h-max">
+          <div className="flex flex-0">
             Are you sure you want to delete {gift.name}?
           </div>
           <div
             onClick={() => handleDelete(gift, idx)}
-            className="flex pl-6 items-center border-l border-gray-300 h-16 hover:text-red-800 hover:drop-shadow transition ease-in-out duration-200 text-red-600 text-xs font-semibold uppercase"
+            className="flex flex-shrink-0 pl-4 items-center border-l border-gray-300 hover:text-red-800 hover:drop-shadow transition ease-in-out duration-200 text-red-600 text-xs font-semibold uppercase"
           >
             delete
           </div>
@@ -136,10 +137,7 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
     toast.error(<ToastMarkup gift={gift} idx={idx} />, {
       position: toast.POSITION.BOTTOM_CENTER,
       icon: (
-        <FontAwesomeIcon
-          icon={faTrashCan}
-          className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600"
-        />
+        <FontAwesomeIcon icon={faTrashCan} className="text-xl text-red-600" />
       ),
     });
   };
@@ -179,14 +177,11 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
   const giftActions = (gift: Gift, idx: number) => {
     if (gift.owner === user.uid)
       return (
-        <div
-          className="text-right"
-          onClick={() => handleConfirmDelete(gift, idx)}
-        >
-          <FontAwesomeIcon
-            icon={faTrashCan}
-            className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600"
-          />
+        <div onClick={() => handleConfirmDelete(gift, idx)}>
+          <FontAwesomeIcon icon={faTrashCan} className="text-red-600 pr-1" />
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-500 inline-block transition ease-in-out duration-300 hover:font-bold">
+            Delete
+          </span>
         </div>
       );
     if (gift.claimed_by && gift.claimed_by !== user.uid) return null;
@@ -195,37 +190,47 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
         <div onClick={() => handleUnclaim(gift, idx)}>
           <FontAwesomeIcon
             icon={faMinusSquare}
-            className="text-3xl text-blue-600"
+            className="text-violet-600 pr-2"
           />
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 inline-block transition ease-in-out duration-300 hover:font-bold">
+            Unclaim
+          </span>
         </div>
       );
     }
     return (
       <div onClick={() => handleClaim(gift, idx)}>
-        <FontAwesomeIcon
-          icon={faPlusSquare}
-          className="text-3xl text-blue-600"
-        />
+        <FontAwesomeIcon icon={faPlusSquare} className="text-green-600 pr-1" />
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-blue-600 inline-block transition ease-in-out duration-300 hover:font-bold">
+          Claim
+        </span>
       </div>
     );
   };
 
   const giftList = (gifts: Gift[]) => {
     return gifts.map((gift, idx, { length }) => {
-      const { id, name, owner_name } = gift;
+      const { id, name, url } = gift;
+      let urlToUse = '';
+      if (url) urlToUse = url;
+
       const isLast = length - 1 === idx;
       return (
         <tr
           key={id}
-          className="border-t dark:border-gray-800 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 transition ease-in-out duration-300"
+          className="border-t dark:border-gray-800 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
         >
           <td className={`px-4 py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
-            <Link href={`/gift/${gift.id}`}>
-              <div className="flex flex-col">
-                <div className="font-semibold text-xl">{name}</div>
-                <div className="text-xs text-gray-400">{owner_name}</div>
-              </div>
-            </Link>
+            <div className="flex flex-col">
+              <Link href={`/gift/${gift.id}`}>
+                <div className="font-semibold text-lg">{name}</div>
+              </Link>
+              <Link href={urlToUse}>
+                <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-blue-600 hover:font-bold transition ease-in-out duration-200">
+                  {urlToUse}
+                </div>
+              </Link>
+            </div>
           </td>
           <td className={`px-4 py-2 ${isLast ? 'rounded-br-lg' : ''}`}>
             <div className="text-right">{giftActions(gift, idx)}</div>
@@ -241,8 +246,8 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
         <table className="table-auto w-full rounded-lg">
           <thead className="">
             <tr className="">
-              <th className="px-4 pt-2 text-left text-xl">Gift Name</th>
-              <th className="px-4 pt-2 text-right flex-end text-xl">Action</th>
+              <th className="px-4 pt-2 text-left text-sm">Gift Name</th>
+              <th className="px-4 pt-2 text-right flex-end text-sm">Action</th>
             </tr>
           </thead>
           <tbody className="rounded rounded-xl">{giftList(gifts)}</tbody>

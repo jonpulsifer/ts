@@ -16,7 +16,7 @@ interface Props {
 const UserList = ({ users, user }: Props) => {
   const router = useRouter();
   const action: CardAction = {
-    title: 'Join a Family',
+    title: 'View All Families',
     icon: faPeopleRoof,
     fn: () => router.push('/family/join'),
   };
@@ -45,15 +45,14 @@ const UserList = ({ users, user }: Props) => {
     );
   }
   const userList = (appUsers: AppUser[]) => {
-    return appUsers.map((appUser, idx, { length }) => {
+    return appUsers.map((appUser) => {
       const { uid, name, email, photoUrl } = appUser;
-      const isLast = length - 1 === idx;
       return (
         <tr
           key={uid}
-          className="border-t hover:bg-gray-50 transition ease-in-out duration-300 select-none"
+          className="border-t hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-950 transition ease-in-out duration-300 select-none"
         >
-          <td className={`w-full py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
+          <td className="w-full py-2">
             <Link href={`/user/${uid}`}>
               <div className="flex items-center space-x-4 p-2 px-4">
                 <div

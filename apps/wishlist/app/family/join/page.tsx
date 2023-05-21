@@ -11,7 +11,7 @@ const JoinFamilyPage = async () => {
   return (
     <Frame title="Join a Family">
       <Suspense fallback={<Loading />}>
-        <FamilyList families={families} user={user} />;
+        <FamilyList families={families} user={user} />
       </Suspense>
     </Frame>
   );
