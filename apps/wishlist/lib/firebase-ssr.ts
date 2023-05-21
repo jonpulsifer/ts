@@ -205,6 +205,7 @@ const getPeopleForUser = async () => {
     return { users, user };
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
+    console.log(JSON.stringify(e));
     throw e;
   }
 };
