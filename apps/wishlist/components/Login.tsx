@@ -2,23 +2,15 @@
 
 import { User } from 'firebase/auth';
 import Link from 'next/link';
-import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { SignInResults, useAuth } from './AuthProvider';
 import Card from './Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { useRouter } from 'next/navigation';
 
 const Login = () => {
-  const { user } = useAuth();
-  const router = useRouter();
   const { signInWithGoogle } = useAuth();
-
-  useEffect(() => {
-    if (user) router.push('/people');
-  }, [router, user]);
 
   const welcome = (user: User) => {
     const person = user ? user.displayName || user.email : null;
