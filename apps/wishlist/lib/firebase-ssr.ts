@@ -205,8 +205,8 @@ const getPeopleForUser = async () => {
     return { users, user };
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
+    throw e;
   }
-  return { users, user: null };
 };
 
 const getUserGifts = async (id: string) => {
