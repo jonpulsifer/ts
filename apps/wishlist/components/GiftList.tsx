@@ -210,9 +210,12 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
 
   const giftList = (gifts: Gift[]) => {
     return gifts.map((gift, idx, { length }) => {
-      const { id, name, url } = gift;
-      let urlToUse = '';
-      if (url) urlToUse = url;
+      const { id, name, notes } = gift;
+      const notesMarkup = notes ? (
+        <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-blue-600 hover:font-bold transition ease-in-out duration-200">
+          {notes.length > 60 ? `${notes.substring(0, 60)}...` : notes}
+        </div>
+      ) : null;
 
       const isLast = length - 1 === idx;
       return (
@@ -221,16 +224,12 @@ const GiftList = ({ gifts: giftsFromProps, title }: Props) => {
           className="border-t dark:border-gray-800 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
         >
           <td className={`px-4 py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
-            <div className="flex flex-col">
-              <Link href={`/gift/${gift.id}`}>
+            <Link href={`/gift/${gift.id}`}>
+              <div className="flex flex-col">
                 <div className="font-semibold text-lg">{name}</div>
-              </Link>
-              <Link href={urlToUse}>
-                <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-blue-600 hover:font-bold transition ease-in-out duration-200">
-                  {urlToUse}
-                </div>
-              </Link>
-            </div>
+                {notesMarkup}
+              </div>
+            </Link>
           </td>
           <td className={`px-4 py-2 ${isLast ? 'rounded-br-lg' : ''}`}>
             <div className="text-right">{giftActions(gift, idx)}</div>
