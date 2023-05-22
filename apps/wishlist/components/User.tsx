@@ -104,10 +104,7 @@ export const UserProfile = ({ gifts, appUser }: Props) => {
   return (
     <Suspense fallback={<Card title="Loading..." />}>
       <Card action={actions}>{fieldsMarkup}</Card>
-      <GiftList
-        title={isUserProfile ? undefined : `${name || email}'s Wishlist`}
-        gifts={gifts}
-      />
+      <GiftList gifts={gifts} />
     </Suspense>
   );
 };
