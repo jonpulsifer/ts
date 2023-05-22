@@ -175,7 +175,10 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   const giftActions = (gift: Gift, idx: number) => {
     if (gift.owner === user.uid)
       return (
-        <div onClick={() => handleConfirmDelete(gift, idx)}>
+        <div
+          className="flex flex-shrink-0 items-center"
+          onClick={() => handleConfirmDelete(gift, idx)}
+        >
           <FontAwesomeIcon icon={faTrashCan} className="text-red-600 pr-1" />
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-500 inline-block transition ease-in-out duration-300 hover:font-bold">
             Delete
@@ -185,7 +188,10 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     if (gift.claimed_by && gift.claimed_by !== user.uid) return null;
     if (gift.claimed_by === user.uid) {
       return (
-        <div onClick={() => handleUnclaim(gift, idx)}>
+        <div
+          className="flex flex-shrink-0 items-center"
+          onClick={() => handleUnclaim(gift, idx)}
+        >
           <FontAwesomeIcon
             icon={faMinusSquare}
             className="text-violet-600 pr-2"
@@ -197,7 +203,10 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
       );
     }
     return (
-      <div onClick={() => handleClaim(gift, idx)}>
+      <div
+        className="flex flex-shrink-0 items-center"
+        onClick={() => handleClaim(gift, idx)}
+      >
         <FontAwesomeIcon icon={faPlusSquare} className="text-green-600 pr-1" />
         <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-blue-600 inline-block transition ease-in-out duration-300 hover:font-bold">
           Claim
@@ -230,7 +239,9 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
             </Link>
           </td>
           <td className={`px-4 py-2 ${isLast ? 'rounded-br-lg' : ''}`}>
-            <div className="text-right">{giftActions(gift, idx)}</div>
+            <div className="grid justify-items-end">
+              {giftActions(gift, idx)}
+            </div>
           </td>
         </tr>
       );
