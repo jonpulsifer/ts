@@ -277,7 +277,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   // return a card for each owner
   const giftCards = giftsByOwner.map((gifts) => {
-    return GiftCard(gifts, gifts[0].owner_name);
+    return GiftCard(gifts, `${gifts[0].owner_name}'s gifts`);
   });
 
   return <>{giftCards}</>;
