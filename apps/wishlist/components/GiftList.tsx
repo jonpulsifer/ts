@@ -270,8 +270,8 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   // remove duplicates
   const uniqueOwners = [...new Set(owners)];
 
-  // create an array of gifts for each owner
-  const giftsByOwner = uniqueOwners.map((owner) => {
+  // create an array of gifts for each owner, sorted by owner
+  const giftsByOwner = uniqueOwners.sort().map((owner) => {
     return gifts.filter((gift) => gift.owner === owner);
   });
 
