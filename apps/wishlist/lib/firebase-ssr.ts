@@ -120,7 +120,16 @@ const getGifts = async () => {
         owner_name,
       });
     }
-    return { gifts };
+
+    // sort gifts by name
+    const sorted = gifts.sort((a, b) => {
+      if (a.name && b.name) return a.name.localeCompare(b.name);
+      if (a.name) return -1;
+      if (b.name) return 1;
+      return 0;
+    });
+
+    return { gifts: sorted };
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
   }
@@ -244,8 +253,7 @@ const getUserGifts = async (id: string) => {
         : db
             .collection('gifts')
             .where('owner', '==', uid)
-            .where('claimed_by', 'in', [null, ''])
-            .orderBy('name');
+            .where('claimed_by', 'in', [null, '']);
 
     const gifts: Gift[] = [];
     const docs = await query.get();
@@ -257,7 +265,15 @@ const getUserGifts = async (id: string) => {
       });
     });
 
-    return { user, gifts };
+    // sort gifts by name
+    const sorted = gifts.sort((a, b) => {
+      if (a.name && b.name) return a.name.localeCompare(b.name);
+      if (a.name) return -1;
+      if (b.name) return 1;
+      return 0;
+    });
+
+    return { user, gifts: sorted };
   } catch (e) {
     if (isFirebaseError(e)) console.log(JSON.stringify(e));
   }
