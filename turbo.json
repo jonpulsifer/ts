@@ -7,11 +7,7 @@
       "dependsOn": [
         "^build"
       ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "wishlist#build": {
       "dependsOn": [
@@ -32,10 +28,7 @@
         "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET",
         "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA"
       ],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "authme#build": {
       "dependsOn": [
@@ -44,10 +37,7 @@
       "env": [
         "JWT_EXPECTED_AUDIENCE"
       ],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "request-headers#build": {
       "dependsOn": [
@@ -66,7 +56,7 @@
         "build"
       ],
       "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"],
-      "outputs": []
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {
       "cache": false,
