@@ -16,11 +16,11 @@
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
-    "turbo": "^1.9.8"
+    "turbo": "1.9.9"
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=7.0.0"
   },
-  "packageManager": "pnpm@8.5.1"
+  "packageManager": "pnpm@8.6.0"
 }
