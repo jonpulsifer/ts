@@ -48,7 +48,8 @@
         "NODE_NAME",
         "POD_IP",
         "POD_NAME"
-      ]
+      ],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "lint": {},
     "test": {
