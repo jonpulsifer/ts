@@ -34,7 +34,7 @@
     "concurrently": "8.0.1",
     "eslint-config-custom": "workspace:*",
     "firebase-tools": "12.2.1",
-    "postcss": "8.4.23",
+    "postcss": "8.4.24",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "tailwind-config": "workspace:*",
     "tailwindcss": "3.3.2",
