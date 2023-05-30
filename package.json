@@ -16,7 +16,7 @@
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
-    "turbo": "1.9.9"
+    "turbo": "1.10.0"
   },
   "engines": {
     "node": ">=18.0.0",
