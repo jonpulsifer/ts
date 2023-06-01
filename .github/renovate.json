@@ -1,5 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base", "helpers:pinGitHubActionDigests"],
-  "automerge": true
+  "automerge": true,
+  "semanticCommits": "enabled",
+  "pinDigests": true
 }
