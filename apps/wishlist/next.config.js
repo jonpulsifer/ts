@@ -8,6 +8,7 @@ const nextConfig = {
   images: {
     domains: ['lh3.googleusercontent.com'],
   },
+  transpilePackages: ['ui'],
   async headers() {
     return [
       {

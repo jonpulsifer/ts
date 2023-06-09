@@ -6,7 +6,5 @@
   "devDependencies": {
     "tailwindcss": "3.3.2"
   },
-  "publishConfig": {
-    "access": "public"
-  }
+  "private": true
 }

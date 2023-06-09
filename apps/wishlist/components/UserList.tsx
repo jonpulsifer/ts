@@ -3,47 +3,19 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import type { AppUser } from '../types';
-
-import Card, { CardAction } from './Card';
+import { Card, CardAction } from 'ui';
 
 interface Props {
   user: AppUser;
   users: AppUser[];
 }
 
-const UserList = ({ users, user }: Props) => {
-  const router = useRouter();
+const UserList = ({ users }: Props) => {
   const action: CardAction = {
     title: 'View All Families',
     icon: faPeopleRoof,
-    fn: () => router.push('/family/join'),
   };
-
-  if (!users || !users.length) {
-    const content =
-      user?.families && user.families.length ? (
-        <>
-          You&apos;re the first one here!{' '}
-          <span className="font-semibold">
-            Share wishin.app with your family!
-          </span>
-        </>
-      ) : (
-        <>
-          The elves couldn&apos;t find anyone. Have you{' '}
-          <Link className="text-blue-600 font-semibold" href="/family/join">
-            joined a family?
-          </Link>
-        </>
-      );
-    return (
-      <Card title="🧑 No People Found" action={action}>
-        <div className="p-4">{content}</div>
-      </Card>
-    );
-  }
   const userList = (appUsers: AppUser[]) => {
     return appUsers.map((appUser) => {
       const { uid, name, email, photoUrl } = appUser;

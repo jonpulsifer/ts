@@ -1,3 +1,4 @@
+'use client';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FormEvent, MouseEvent } from 'react';
@@ -6,7 +7,7 @@ export interface CardAction {
   icon?: IconDefinition;
   title: string;
   danger?: boolean;
-  fn: (e: MouseEvent | FormEvent) => void;
+  fn?: (e: MouseEvent | FormEvent) => void;
 }
 
 export interface CardProps {
@@ -46,7 +47,9 @@ export const Card = ({ title, subtitle, action, children }: CardProps) => {
         return (
           <button
             className={buttonClass}
-            onClick={action?.fn ? (e) => action.fn(e) : undefined}
+            onClick={
+              action?.fn ? (e) => (action.fn ? e : undefined) : undefined
+            }
             key={`fb-${idx}`}
           >
             {actionIcon}
