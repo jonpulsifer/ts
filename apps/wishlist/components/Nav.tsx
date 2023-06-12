@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 import { useAuth } from './AuthProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,10 +15,6 @@ import {
   faUser,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
-import { Finger_Paint } from 'next/font/google';
-interface Props {
-  title: string;
-}
 
 type NavLink = {
   title: string;
@@ -28,22 +23,8 @@ type NavLink = {
   onClick?: () => void;
 };
 
-const daysUntilChristmas = () => {
-  const today = new Date();
-  const christmas = new Date(today.getFullYear(), 11, 25);
-  if (today.getMonth() === 11 && today.getDate() > 25) {
-    christmas.setFullYear(christmas.getFullYear() + 1);
-  }
-  const oneDay = 1000 * 60 * 60 * 24;
-  return Math.ceil((christmas.getTime() - today.getTime()) / oneDay);
-};
-
-const logoFont = Finger_Paint({ weight: '400', subsets: ['latin'] });
-const logoStyle = `${logoFont.className} select-none font-semibold text-xl text-black dark:text-gray-200`;
-
-export default function Nav({ title }: Props) {
-  const [showNav, setShowNav] = useState(false);
-  const { user, signOut } = useAuth();
+export default function Nav() {
+  const { signOut } = useAuth();
   const router = useRouter();
   const path = usePathname();
 
@@ -78,14 +59,13 @@ export default function Nav({ title }: Props) {
   const signOutLink = [
     {
       title: 'Profile',
-      link: `/user/${user?.uid}`,
+      link: '/user/me',
       icon: faUser,
     },
     {
       title: 'Sign out',
       onClick: () =>
         signOut().then(() => {
-          setShowNav(!showNav);
           router.push('/');
         }),
       icon: faSignOut,
@@ -124,7 +104,6 @@ export default function Nav({ title }: Props) {
           }
           key={link.title}
           href={link.link}
-          onClick={() => setShowNav(!showNav)}
           prefetch={false}
         >
           <div
@@ -149,64 +128,27 @@ export default function Nav({ title }: Props) {
     return linx;
   };
 
-  const burgerButton = (
-    <button className="hidden sm:block" onClick={() => setShowNav(!showNav)}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        className="h-6 w-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M4 6h16M4 12h16M4 18h16"
-        />
-      </svg>
-    </button>
-  );
-
   const logoMarkup = (
-    <div
-      onClick={() => setShowNav(!showNav)}
-      className="bg-[url('/santa.png')] items-center bg-contain bg-no-repeat bg-right-top h-24 flex flex-row space-x-4 p-2"
-    >
-      <div className="">{burgerButton}</div>
-      <h1 className={logoStyle}>wishin.app</h1>
+    <div className="bg-[url('/santa.png')] items-center bg-contain bg-no-repeat bg-right-top h-24 flex flex-row space-x-4 p-2">
+      <h1
+        className={`pl-4 select-none font-bold text-2xl text-black dark:text-gray-200`}
+      >
+        wishin.app
+      </h1>
     </div>
   );
 
   return (
-    <>
-      <header className="flex w-full bg-white dark:bg-gray-900 dark:text-gray-400 items-center p-2 text-semibold border-b border-transparent space-x-2">
-        {burgerButton}
-        <h1 className="flex truncate font-semibold text-lg noselect">
-          {title}
-        </h1>
-        <div className="flex flex-1 truncate justify-end">
-          <p className="text-xs text-right truncate">
-            <span className="font-semibold text-blue-600">
-              {`${daysUntilChristmas()}`}
-            </span>{' '}
-            days until Christmas
-          </p>
-        </div>
-      </header>
-      <aside
-        className={`top-0 flex invisible sm:visible flex-col absolute z-10 border-r dark:border-gray-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-gray-900 dark:text-gray-400 flex-grow-0 overflow-y-auto h-full ${
-          !showNav ? '-ml-60' : ''
-        }`}
-      >
-        {logoMarkup}
-        <nav className="flex flex-col flex-1 space-y-2 p-2">
-          {linksMarkup(links)}
-        </nav>
-        <nav className="flex flex-col flex-end pb-20 space-y-2 p-2">
+    <div
+      className={`flex flex-col flex-grow min-h-full hidden sm:block border-r dark:border-gray-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-gray-900 dark:text-gray-400`}
+    >
+      {logoMarkup}
+      <div className="flex flex-col">
+        <nav className="flex flex-col space-y-2 p-2">{linksMarkup(links)}</nav>
+        <nav className="flex flex-col bottom-0 fixed space-y-2 p-2">
           {linksMarkup(signOutLink)}
         </nav>
-      </aside>
-    </>
+      </div>
+    </div>
   );
 }

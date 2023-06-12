@@ -33,7 +33,6 @@ interface AuthContextProps {
 }
 
 const AuthContext = React.createContext<AuthContextProps>({
-  user: null,
   loading: true,
 } as AuthContextProps);
 

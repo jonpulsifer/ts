@@ -189,6 +189,28 @@ const getUser = async (id: string) => {
   redirect('/login');
 };
 
+const getCurrentUser = async () => {
+  const t = cookies().get('token')?.value;
+  if (!t) redirect('/login');
+
+  try {
+    const token = await auth.verifyIdToken(t, true);
+    const snapshot = await db.doc(`/users/${token.uid}`).get();
+    const doc = snapshot.data() as AppUser;
+    if (!doc) notFound();
+
+    const user: AppUser = {
+      ...doc,
+      uid: snapshot.id,
+    };
+
+    return { user };
+  } catch (e) {
+    if (isFirebaseError(e)) console.log(JSON.stringify(e));
+  }
+  redirect('/login');
+};
+
 const getPeopleForUser = async () => {
   const users: AppUser[] = [];
   const token = cookies().get('token')?.value;
@@ -283,6 +305,7 @@ const getUserGifts = async (id: string) => {
 export {
   getAllUserGifts,
   getClaimedGifts,
+  getCurrentUser,
   getFamilies,
   getGift,
   getGifts,

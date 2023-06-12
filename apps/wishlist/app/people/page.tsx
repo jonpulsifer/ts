@@ -6,6 +6,7 @@ import Loading from './loading';
 import { getPeopleForUser } from '../../lib/firebase-ssr';
 import { Card, CardAction } from 'ui';
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
+import Modal from '../../components/Modal';
 
 const PeoplePage = async () => {
   const { users, user } = await getPeopleForUser();
@@ -44,6 +45,7 @@ const PeoplePage = async () => {
           <UserList users={users} user={user} />
         )}
       </Suspense>
+      <Modal />
     </Frame>
   );
 };
