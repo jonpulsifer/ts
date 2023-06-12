@@ -80,10 +80,10 @@ const Frame = ({ children, title }: Props) => {
                     icon={faPlusSquare}
                     className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
                     fill="currentColor"
-                    key={'Gifts'}
+                    key={'NewGift'}
                   />
                   <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-                    Add Gift
+                    Add
                   </span>
                 </Link>
               </button>
