@@ -5,7 +5,6 @@ import { Suspense } from 'react';
 import Loading from './loading';
 import { getPeopleForUser } from '../../lib/firebase-ssr';
 import { Card, CardAction } from 'ui';
-import { Modal } from 'ui';
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 
 const PeoplePage = async () => {
@@ -33,28 +32,19 @@ const PeoplePage = async () => {
   );
 
   return (
-    <>
-      <Modal
-        show={true}
-        cardProps={{ title: 'This is a testzzz' }}
-        //content="This is a test modal. It's not real. It's just a test. Dude, it's just a test."
-      >
-        <p>wat</p>
-      </Modal>
-      <Frame title="People">
-        <Suspense fallback={<Loading />}>
-          {noPeople ? (
-            <>
-              <Card title="🧑 No People Found" action={action}>
-                <div className="p-4">{noPeopleMarkup}</div>
-              </Card>
-            </>
-          ) : (
-            <UserList users={users} user={user} />
-          )}
-        </Suspense>
-      </Frame>
-    </>
+    <Frame title="People">
+      <Suspense fallback={<Loading />}>
+        {noPeople ? (
+          <>
+            <Card title="🧑 No People Found" action={action}>
+              <div className="p-4">{noPeopleMarkup}</div>
+            </Card>
+          </>
+        ) : (
+          <UserList users={users} user={user} />
+        )}
+      </Suspense>
+    </Frame>
   );
 };
 
