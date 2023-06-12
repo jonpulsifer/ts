@@ -4,14 +4,14 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "../../packages/ui/src/Modal.tsx"  ],
+  ],
   "exclude": [
     "node_modules"
   ],
   "compilerOptions": {
-    //"baseUrl": ".",
+    "baseUrl": ".",
     "paths": {
-      // "ui": ["../../packages/ui"],
+      "ui": ["../../packages/ui"],
     },
     "plugins": [
       {

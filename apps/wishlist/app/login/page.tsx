@@ -5,13 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { Finger_Paint } from 'next/font/google';
 import { SignInResults, useAuth } from '../../components/AuthProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import santa from 'public/santaicon.png';
-const logoFont = Finger_Paint({ weight: '400', subsets: ['latin'] });
 
 const LoginPage = () => {
   const { user } = useAuth();
@@ -55,6 +53,7 @@ const LoginPage = () => {
       );
       welcome(user);
       toast(toastMarkup, {
+        className: 'bg-white dark:bg-black',
         autoClose: false,
         position: toast.POSITION.BOTTOM_CENTER,
         icon: (
@@ -115,7 +114,7 @@ const LoginPage = () => {
         <div className="flex flex-col sm:mx-auto sm:w-full sm:max-w-sm items-center">
           <div className="flex flex-row justify-center items-center">
             <Image src={santa} alt="Santa" width={100} height={100} />
-            <h1 className="text-3xl font-bold dark:text-white text-black ">
+            <h1 className="text-3xl font-bold dark:text-white text-black">
               wishin.app
             </h1>
           </div>

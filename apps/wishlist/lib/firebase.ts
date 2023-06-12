@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'development') {
     auth,
     `http://${process.env.FIREBASE_AUTH_EMULATOR_HOST || '127.0.0.1:9099'}`,
     {
-      disableWarnings: false,
+      disableWarnings: true,
     },
   );
 
