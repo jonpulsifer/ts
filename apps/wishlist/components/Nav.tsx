@@ -128,27 +128,19 @@ export default function Nav() {
     return linx;
   };
 
-  const logoMarkup = (
-    <div className="bg-[url('/santa.png')] items-center bg-contain bg-no-repeat bg-right-top h-24 flex flex-row space-x-4 p-2">
-      <h1
-        className={`pl-4 select-none font-bold text-2xl text-black dark:text-gray-200`}
-      >
-        wishin.app
-      </h1>
-    </div>
-  );
-
   return (
-    <div
-      className={`flex flex-col flex-grow min-h-full hidden sm:block border-r dark:border-gray-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-gray-900 dark:text-gray-400`}
-    >
-      {logoMarkup}
+    <div className="flex flex-col min-h-screen hidden sm:block border-r dark:border-gray-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-gray-300">
+      <div className="flex flex-row h-24 p-2 items-center  bg-[url('/santa.png')] bg-contain bg-no-repeat bg-right-top">
+        <h1 className="pl-4 select-none font-bold text-xl text-black dark:text-white">
+          wishin.app
+        </h1>
+      </div>
       <div className="flex flex-col">
         <nav className="flex flex-col space-y-2 p-2">{linksMarkup(links)}</nav>
-        <nav className="flex flex-col bottom-0 fixed space-y-2 p-2">
-          {linksMarkup(signOutLink)}
-        </nav>
       </div>
+      <nav className="flex flex-col space-y-2 p-2">
+        {linksMarkup(signOutLink)}
+      </nav>
     </div>
   );
 }

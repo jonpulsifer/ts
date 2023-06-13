@@ -39,33 +39,28 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
         People need to add more gifts to their wishlists.
       </p>
     );
+    const myGiftsMarkup = (
+      <p>
+        You haven&apos;t added any gifts. Go to the{' '}
+        <Link className="font-semibold text-blue-600" href="/gift/new">
+          add gift page
+        </Link>{' '}
+        and add one now!
+      </p>
+    );
     if (!path) return defaultMarkup;
     switch (path) {
       case `/user/${user.uid}`:
-        return (
-          <p>
-            You haven&apos;t added any gifts. Go to the{' '}
-            <Link className="font-semibold text-blue-600" href="/gift/new">
-              add gift page
-            </Link>{' '}
-            and add one now!
-          </p>
-        );
+        return myGiftsMarkup;
+      case '/me':
+        return myGiftsMarkup;
+      case '/mine':
+        return myGiftsMarkup;
       case path.match(/\/user\/\w+/)?.input:
         return (
           <p>
             This person has nothing left on their wishlist. You know what that
             means 🧦
-          </p>
-        );
-      case '/mine':
-        return (
-          <p>
-            You haven&apos;t added any gifts. Go to the{' '}
-            <Link className="font-semibold text-blue-600" href="/gift/new">
-              add gift page
-            </Link>{' '}
-            and add one now!
           </p>
         );
       case '/claimed':
@@ -277,7 +272,14 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   // return a card for each owner
   const giftCards = giftsByOwner.map((gifts) => {
-    return GiftCard(gifts, `${gifts[0].owner_name}'s gifts`);
+    const bestGuessOwner =
+      gifts
+        .map((g) => g.owner_name)
+        .filter((e) => e)
+        .pop() || "Someone's";
+    const isOwnerMe = gifts[0].owner === user.uid;
+    const owner = isOwnerMe ? 'My' : `${bestGuessOwner}'s`;
+    return GiftCard(gifts, `${owner} gifts`);
   });
 
   return <>{giftCards}</>;
