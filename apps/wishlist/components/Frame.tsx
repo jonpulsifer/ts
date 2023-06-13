@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Nav from './Nav';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import {
   faPlusSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from './AuthProvider';
+import Modal from './GiftModal';
 interface Props {
   children: React.ReactNode;
   title: string;
@@ -28,6 +29,7 @@ const daysUntilChristmas = () => {
 
 const Frame = ({ children, title }: Props) => {
   const { user } = useAuth();
+  const [showGiftModal, setShowGiftModal] = useState(false);
   return (
     <div className="flex flex-col flex-grow">
       <div className="flex flex-row flex-grow">
@@ -102,9 +104,13 @@ const Frame = ({ children, title }: Props) => {
             className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
           >
             <Link
-              href="/gift/new"
+              href="#"
               className="flex flex-col items-center"
               prefetch={false}
+              onClick={() => {
+                setShowGiftModal(true);
+                console.log('wat');
+              }}
             >
               <FontAwesomeIcon
                 icon={faPlusSquare}
@@ -158,6 +164,7 @@ const Frame = ({ children, title }: Props) => {
             </Link>
           </button>
         </div>
+        <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
       </div>
     </div>
   );

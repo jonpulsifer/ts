@@ -73,9 +73,9 @@ const GiftForm = ({ gift }: Props) => {
   const newGiftForm = (
     <form
       onSubmit={(e) => handleSubmit(e)}
-      className="flex flex-col p-4 space-y-4"
+      className="flex flex-col p-4 space-y-4 text-left"
     >
-      <div className="">
+      <div className="col-span-full">
         <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
           What&apos;s the name of the thing you wish for?
         </label>
@@ -89,7 +89,7 @@ const GiftForm = ({ gift }: Props) => {
         />
       </div>
 
-      <div className="">
+      <div className="col-span-full">
         <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
           Where can we find it? Remember that Amazon is also available in 🇨🇦
           (optional)
@@ -105,7 +105,7 @@ const GiftForm = ({ gift }: Props) => {
         />
       </div>
 
-      <div className="">
+      <div className="col-span-full">
         <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
           Notes (optional)
         </label>
@@ -118,15 +118,16 @@ const GiftForm = ({ gift }: Props) => {
           onChange={(e) => setNotes(e.target.value)}
         />
       </div>
-
-      <button
-        className="px-4 py-3 bg-blue-600 text-white font-medium text-lg leading-snug rounded-lg hover:bg-blue-900 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-300 ease-in-out w-full"
-        data-mdb-ripple="true"
-        data-mdb-ripple-color="light"
-        type="submit"
-      >
-        {isNewGift ? `Add ${name} to your wishlist` : `Update ${name}`}
-      </button>
+      <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+        <button
+          className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+          data-mdb-ripple="true"
+          data-mdb-ripple-color="light"
+          type="submit"
+        >
+          {isNewGift ? `Add ${name} to your wishlist` : `Update ${name}`}
+        </button>
+      </div>
     </form>
   );
   return newGiftForm;
