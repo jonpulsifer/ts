@@ -12,7 +12,6 @@ import {
   faPeopleRoof,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import { AppUser, Gift } from '../types';
 import { useAuth } from './AuthProvider';
@@ -26,7 +25,6 @@ interface Props {
 
 export const UserProfile = ({ gifts, appUser }: Props) => {
   const { user } = useAuth();
-  const router = useRouter();
   const isUserProfile = user?.uid === appUser.uid;
 
   const {
@@ -93,12 +91,12 @@ export const UserProfile = ({ gifts, appUser }: Props) => {
       {
         icon: faUserEdit,
         title: 'Edit Profile',
-        fn: () => router.push(`/user/${uid}/edit`),
+        link: `/user/${uid}/edit`,
       },
       {
         title: 'Join a Family',
         icon: faPeopleRoof,
-        fn: () => router.push('/family/join'),
+        link: '/family/join',
       },
     );
   return (

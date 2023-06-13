@@ -2,6 +2,7 @@
 
 import './globals.css';
 import 'react-toastify/dist/ReactToastify.min.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import { AuthProvider } from '../components/AuthProvider';
 import { ToastContainer } from 'react-toastify';
 import { Inter } from 'next/font/google';

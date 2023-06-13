@@ -22,13 +22,9 @@ const ProfilePage = async ({ params }: Props) => {
     <Frame title="Edit Profile">
       <Suspense fallback={<Loading />}>
         <Card>
-          <div className="flex flex-row items-center p-4">
-            <FontAwesomeIcon icon={faAt} className="w-10" />
-            <Link
-              className="flex items-center"
-              href={`mailto:${email}`}
-              target="email"
-            >
+          <div className="flex flex-row items-center">
+            <FontAwesomeIcon icon={faAt} className="w-10 text-lg" />
+            <Link className="" href={`mailto:${email}`} target="email">
               {email}
             </Link>
           </div>

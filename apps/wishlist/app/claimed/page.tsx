@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 const ClaimedPage = async () => {
   const { gifts } = await getClaimedGifts();
   return (
-    <Frame title="Claimed Gifts">
+    <Frame title="🛒 Claimed Gifts">
       <Suspense fallback={<Loading />}>
         <GiftList gifts={gifts} />
       </Suspense>

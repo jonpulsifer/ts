@@ -4,7 +4,7 @@ import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { AppUser } from '../types';
-import { Card, CardAction } from 'ui';
+import Card, { CardAction } from './Card';
 
 interface Props {
   user: AppUser;
@@ -15,6 +15,7 @@ const UserList = ({ users }: Props) => {
   const action: CardAction = {
     title: 'View All Families',
     icon: faPeopleRoof,
+    link: '/family/join',
   };
   const userList = (appUsers: AppUser[]) => {
     return appUsers.map((appUser) => {
@@ -45,8 +46,10 @@ const UserList = ({ users }: Props) => {
                     </span>
                   )}
                 </div>
-                <div className="font-semibold text-xl">{name || email}</div>
-                {/* <div className="text-xs text-gray-400">{email}</div> */}
+                <div className="flex flex-col">
+                  <div className="font-semibold text-xl">{name || email}</div>
+                  <div className="text-xs text-gray-400">{email}</div>
+                </div>
               </div>
             </Link>
           </td>
@@ -58,15 +61,11 @@ const UserList = ({ users }: Props) => {
   return (
     <Card
       title="Family Members"
-      subtitle="This is a list of everyone in your families"
+      subtitle="This is a list of everyone that can see your wishlist."
       action={action}
     >
-      <div className="pb-4" />
       <table className="table-auto w-full rounded-lg">
-        <thead className="">
-          <tr className=""></tr>
-        </thead>
-        <tbody className="rounded rounded-xl">{userList(users)}</tbody>
+        <tbody>{userList(users)}</tbody>
       </table>
     </Card>
   );

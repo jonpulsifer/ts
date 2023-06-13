@@ -73,7 +73,7 @@ export default function Nav() {
   const linksMarkup = (links: NavLink[]) => {
     const linx: JSX.Element[] = [];
     const linkStyle =
-      'p-2 text-md font-semibold transition ease-in-out duration-150 rounded-md hover:shadow-sm hover:shadow-gray-300 hover:bg-white hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:shadow-black';
+      'p-2 text-md font-semibold transition ease-in-out duration-150 rounded-md hover:shadow-sm hover:shadow-gray-300 hover:bg-white hover:text-indigo-600 dark:hover:bg-slate-800 dark:hover:shadow-black';
     links.forEach((link) => {
       if (!link.link) {
         linx.push(
@@ -102,7 +102,7 @@ export default function Nav() {
         <Link
           className={
             isActive
-              ? `${linkStyle} text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 shadow-sm bg-slate-800`
+              ? `${linkStyle} text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500 shadow-sm bg-gray-100 dark:bg-slate-800`
               : linkStyle
           }
           key={link.title}
@@ -112,7 +112,7 @@ export default function Nav() {
         >
           <div
             className={`flex flex-row items-center justify-center ${
-              isActive ? 'text-blue-600 dark:text-blue-600' : ''
+              isActive ? 'text-indigo-600 dark:text-indigo-600' : ''
             }`}
           >
             <div className="flex">

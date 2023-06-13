@@ -121,53 +121,50 @@ const FamilyList = ({ families, user }: Props) => {
   };
 
   const familyList = (families: Family[]) => {
-    return families.map((family, idx, { length }) => {
+    return families.map((family) => {
       const { id, name } = family;
-      const isLast = length - 1 === idx;
       const form = (
-        <form>
-          <div className="flex flex-row space-x-4">
-            <input
-              id={family.id}
-              type="number"
-              pattern="\d{1,4}"
-              autoComplete="off"
-              className="form-control block w-20 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-              value={pin[family.id]}
-              onChange={(e) => handlePinChange(e)}
-              placeholder="Pin"
-            />
-            <button
-              className="px-4 py-2 flex flex-row items-center bg-blue-600 text-white font-medium text-lg leading-snug rounded-lg hover:bg-blue-900 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-300 ease-in-out"
-              data-mdb-ripple="true"
-              data-mdb-ripple-color="light"
-              type="submit"
-              onClick={(e) => handleJoin(e, family.id)}
-            >
-              <div className="flex">
-                <FontAwesomeIcon icon={faHandshake} className="pr-2" />
-              </div>
-              Join
-            </button>
-          </div>
+        <form className="flex flex-row items-center">
+          <input
+            id={family.id}
+            type="number"
+            pattern="\d{1,4}"
+            autoComplete="off"
+            className="form-control block w-20 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+            value={pin[family.id]}
+            onChange={(e) => handlePinChange(e)}
+            placeholder="Pin"
+          />
+          <button
+            className="inline-flex ml-4 w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto "
+            data-mdb-ripple="true"
+            data-mdb-ripple-color="light"
+            type="submit"
+            onClick={(e) => handleJoin(e, family.id)}
+          >
+            <div className="flex">
+              <FontAwesomeIcon icon={faHandshake} className="pr-2" />
+            </div>
+            Join
+          </button>
         </form>
       );
 
       const actionMarkup = user.families?.includes(family.id) ? (
-        <>
-          <button
-            className="px-4 py-2 flex flex-row items-center bg-red-600 text-white font-medium text-lg leading-snug rounded-lg hover:bg-red-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-lg transition duration-300 ease-in-out"
-            data-mdb-ripple="true"
-            data-mdb-ripple-color="light"
-            type="submit"
-            onClick={(e) => handleLeave(e, family.id)}
-          >
+        <button
+          className="inline-flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
+          data-mdb-ripple="true"
+          data-mdb-ripple-color="light"
+          type="submit"
+          onClick={(e) => handleLeave(e, family.id)}
+        >
+          <div className="flex items-center">
             <div className="flex">
               <FontAwesomeIcon icon={faTrashCan} className="pr-2" />
             </div>
             Leave
-          </button>
-        </>
+          </div>
+        </button>
       ) : (
         form
       );
@@ -177,9 +174,9 @@ const FamilyList = ({ families, user }: Props) => {
           key={`${name}-${id}`}
           className={`border-t hover:bg-gray-100 dark:hover:bg-gray-950 transition dark:border-gray-800 ease-in-out duration-300`}
         >
-          <td className={`w-full py-2 ${isLast ? 'rounded-b-lg' : ''}`}>
+          <td className="w-full py-2">
             <div className="flex items-center p-2 px-4">
-              <div className="hidden mr-4 sm:flex inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-gray-800">
+              <div className="mr-4 sm:flex inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-gray-800">
                 <span className="font-medium text-violet-600 dark:text-violet-500">
                   {name[0].toUpperCase()}
                 </span>
@@ -198,14 +195,12 @@ const FamilyList = ({ families, user }: Props) => {
   };
 
   return families.length ? (
-    <Card>
+    <Card
+      title="Family Wishlists"
+      subtitle="Find your family and join their wishlist."
+    >
       <div className="flex flex-row overflow-x-auto select-none">
         <table className="table-auto w-full rounded-lg">
-          <thead className="">
-            <tr className="">
-              <th className="px-4 py-4 text-left">Family List</th>
-            </tr>
-          </thead>
           <tbody className="rounded rounded-xl">{familyList(families)}</tbody>
         </table>
       </div>

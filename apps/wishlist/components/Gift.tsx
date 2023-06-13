@@ -150,7 +150,7 @@ export const GiftCard = ({ gift, user }: Props) => {
               </div>
               <div className="truncate">
                 <Link
-                  className="text-lg text-blue-600 font-medium hover:text-blue-600"
+                  className="text-lg text-indigo-600 font-medium hover:text-indigo-600"
                   target="gift"
                   href={url}
                 >

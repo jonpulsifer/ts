@@ -10,6 +10,7 @@ import type { Gift } from '../types';
 
 import { useAuth } from './AuthProvider';
 import Card from './Card';
+import Modal from './GiftModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMinusSquare,
@@ -25,6 +26,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   const [gifts, setGifts] = useState(giftsFromProps);
   const { user } = useAuth();
   const path = usePathname();
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setGifts(giftsFromProps);
@@ -41,18 +43,21 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     );
     const myGiftsMarkup = (
       <p>
-        You haven&apos;t added any gifts. Go to the{' '}
-        <Link className="font-semibold text-blue-600" href="/gift/new">
-          add gift page
-        </Link>{' '}
-        and add one now!
+        You haven&apos;t added any gifts,{' '}
+        <Link
+          className="font-semibold text-indigo-600"
+          href=""
+          onClick={() => setIsOpen(true)}
+        >
+          add one now!
+        </Link>
       </p>
     );
     if (!path) return defaultMarkup;
     switch (path) {
       case `/user/${user.uid}`:
         return myGiftsMarkup;
-      case '/me':
+      case '/user/me':
         return myGiftsMarkup;
       case '/mine':
         return myGiftsMarkup;
@@ -67,7 +72,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
         return (
           <p>
             You haven&apos;t claimed any gifts. Go to the{' '}
-            <Link className="font-semibold text-blue-600" href="/gifts">
+            <Link className="font-semibold text-indigo-600" href="/gifts">
               gift list
             </Link>{' '}
             and claim one before they&apos;re all gone.
@@ -80,9 +85,12 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   if (!gifts.length) {
     return (
-      <Card title="🎁 No Gifts Found" subtitle="This wishlist is empty">
-        <div className="p-4">{noGiftText()}</div>
-      </Card>
+      <>
+        <Card title="🎁 No Gifts Found" subtitle="This wishlist is empty">
+          <div className="p-4">{noGiftText()}</div>
+        </Card>
+        <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} />
+      </>
     );
   }
 
@@ -170,62 +178,58 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   const giftActions = (gift: Gift, idx: number) => {
     if (gift.owner === user.uid)
       return (
-        <div
-          className="flex flex-shrink-0 items-center"
+        <button
+          className="inline-flex w-full items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
           onClick={() => handleConfirmDelete(gift, idx)}
         >
-          <FontAwesomeIcon icon={faTrashCan} className="text-red-600 pr-1" />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-500 inline-block transition ease-in-out duration-300 hover:font-bold">
-            Delete
-          </span>
-        </div>
+          <div className="flex">
+            <FontAwesomeIcon icon={faTrashCan} className="pr-2" />
+          </div>
+          <div>Delete</div>
+        </button>
       );
     if (gift.claimed_by && gift.claimed_by !== user.uid) return null;
     if (gift.claimed_by === user.uid) {
       return (
-        <div
-          className="flex flex-shrink-0 items-center"
+        <button
+          className="inline-flex w-full items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
           onClick={() => handleUnclaim(gift, idx)}
         >
-          <FontAwesomeIcon
-            icon={faMinusSquare}
-            className="text-violet-600 pr-2"
-          />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 inline-block transition ease-in-out duration-300 hover:font-bold">
-            Unclaim
-          </span>
-        </div>
+          <div className="flex">
+            <FontAwesomeIcon icon={faMinusSquare} className="pr-2" />
+          </div>
+          <div>Unclaim</div>
+        </button>
       );
     }
     return (
-      <div
-        className="flex flex-shrink-0 items-center"
+      <button
+        className="inline-flex w-full items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 ml-3 w-auto"
         onClick={() => handleClaim(gift, idx)}
       >
-        <FontAwesomeIcon icon={faPlusSquare} className="text-green-600 pr-1" />
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-blue-600 inline-block transition ease-in-out duration-300 hover:font-bold">
-          Claim
-        </span>
-      </div>
+        <div className="flex">
+          <FontAwesomeIcon icon={faPlusSquare} className="pr-2" />
+        </div>
+        <div>Claim</div>
+      </button>
     );
   };
 
   const giftList = (gifts: Gift[]) => {
-    return gifts.map((gift, idx, { length }) => {
+    return gifts.map((gift, idx) => {
       const { id, name, notes } = gift;
       const notesMarkup = notes ? (
-        <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-blue-600 hover:font-bold transition ease-in-out duration-200">
+        <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-indigo-600 hover:font-bold transition ease-in-out duration-200">
           {notes.length > 60 ? `${notes.substring(0, 60)}...` : notes}
         </div>
       ) : null;
 
-      const isLast = length - 1 === idx;
       return (
         <tr
           key={id}
-          className="border-t dark:border-gray-800 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+          className="text-left border-t dark:border-gray-800 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
         >
-          <td className={`px-4 py-2 ${isLast ? 'rounded-bl-lg' : ''}`}>
+          <td className="px-4 py-2">
             <Link href={`/gift/${gift.id}`}>
               <div className="flex flex-col">
                 <div className="font-semibold text-lg">{name}</div>
@@ -233,7 +237,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
               </div>
             </Link>
           </td>
-          <td className={`px-4 py-2 ${isLast ? 'rounded-br-lg' : ''}`}>
+          <td className="px-4 py-2">
             <div className="grid justify-items-end">
               {giftActions(gift, idx)}
             </div>
@@ -247,13 +251,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     return (
       <Card title={title}>
         <table className="table-auto w-full rounded-lg">
-          <thead className="">
-            <tr className="">
-              <th className="px-4 pt-2 text-left text-sm">Gift Name</th>
-              <th className="px-4 pt-2 text-right flex-end text-sm">Action</th>
-            </tr>
-          </thead>
-          <tbody className="rounded rounded-xl">{giftList(gifts)}</tbody>
+          <tbody>{giftList(gifts)}</tbody>
         </table>
       </Card>
     );
@@ -282,6 +280,6 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     return GiftCard(gifts, `${owner} gifts`);
   });
 
-  return <>{giftCards}</>;
+  return giftCards;
 };
 export default GiftList;

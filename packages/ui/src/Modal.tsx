@@ -13,7 +13,7 @@ export const Modal = ({ show, cardProps, children }: Props) => {
   if (!show) return <></>;
   return (
     <>
-      <div className="ui-bg-blue-50 bg-opacity-25 fixed inset-0 z-40 w-full h-full">
+      <div className="ui-bg-indigo-50 bg-opacity-25 fixed inset-0 z-40 w-full h-full">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div className="relative w-auto my-6 mx-auto max-w-3xl">
             {/*content*/}

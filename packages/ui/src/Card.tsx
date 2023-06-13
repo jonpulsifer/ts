@@ -42,7 +42,7 @@ export const Card = ({ title, subtitle, action, children }: CardProps) => {
         const baseButtonClass =
           'font-semibold text-white rounded p-2 flex flex-row text-center items-center justify-center mr-4';
         const dangerClass = `bg-red-500 ${baseButtonClass}`;
-        const infoClass = `bg-blue-600 ${baseButtonClass}`;
+        const infoClass = `bg-indigo-600 ${baseButtonClass}`;
         const buttonClass = action.danger ? dangerClass : infoClass;
         return (
           <button

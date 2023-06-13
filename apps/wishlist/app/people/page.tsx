@@ -4,17 +4,17 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import Loading from './loading';
 import { getPeopleForUser } from '../../lib/firebase-ssr';
-import { Card, CardAction } from 'ui';
+import Card, { CardAction } from '../../components/Card';
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 
 const PeoplePage = async () => {
   const { users, user } = await getPeopleForUser();
 
   const action: CardAction = {
-    title: 'View All Families',
+    title: 'View all wishlists',
     icon: faPeopleRoof,
+    link: '/family/join',
   };
-
   const noPeople = !users || !users.length;
   const hasFamilies = user?.families && user.families.length;
   const noPeopleMarkup = hasFamilies ? (
@@ -25,18 +25,18 @@ const PeoplePage = async () => {
   ) : (
     <>
       The elves couldn&apos;t find anyone. Have you{' '}
-      <Link className="text-blue-600 font-semibold" href="/family/join">
-        joined a family?
+      <Link className="text-indigo-600 font-semibold" href="/family/join">
+        joined a wishlist?
       </Link>
     </>
   );
 
   return (
-    <Frame title="People">
+    <Frame title="👪 People">
       <Suspense fallback={<Loading />}>
         {noPeople ? (
           <>
-            <Card title="🧑 No People Found" action={action}>
+            <Card title="👪 No People Found" action={action}>
               <div className="p-4">{noPeopleMarkup}</div>
             </Card>
           </>

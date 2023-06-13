@@ -42,7 +42,7 @@ const LoginPage = () => {
         <>
           Make sure to
           <Link
-            className="font-semibold text-blue-600"
+            className="font-semibold text-indigo-600"
             href={`/user/${user.uid}/edit`}
           >
             {' '}
@@ -57,7 +57,7 @@ const LoginPage = () => {
         autoClose: false,
         position: toast.POSITION.BOTTOM_CENTER,
         icon: (
-          <FontAwesomeIcon icon={faUser} className="text-blue-600 text-lg" />
+          <FontAwesomeIcon icon={faUser} className="text-indigo-600 text-lg" />
         ),
       });
     }

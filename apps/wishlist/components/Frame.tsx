@@ -10,7 +10,6 @@ import {
   faPersonRays,
   faPlusSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from './AuthProvider';
 import Modal from './GiftModal';
 interface Props {
   children: React.ReactNode;
@@ -28,23 +27,22 @@ const daysUntilChristmas = () => {
 };
 
 const Frame = ({ children, title }: Props) => {
-  const { user } = useAuth();
   const [showGiftModal, setShowGiftModal] = useState(false);
   return (
     <div className="flex flex-col flex-grow">
       <div className="flex flex-row flex-grow">
         <Nav />
         <div className="flex flex-col flex-grow w-full h-full">
-          <header className="flex w-full h-16 bg-white dark:bg-gray-900 dark:text-gray-400 items-center p-2 text-semibold border-b border-transparent space-x-2">
-            <h1 className="flex truncate font-semibold text-lg noselect">
+          <header className="flex w-full h-16 text-white dark:text-gray-400 items-center p-4 text-semibold border-b border-transparent space-x-2">
+            <h1 className="flex font-bold text-2xl noselect drop-shadow-lg">
               {title}
             </h1>
             <div className="flex flex-1 truncate justify-end">
               <p className="text-xs text-right truncate">
-                <span className="font-semibold text-blue-600">
-                  {`${daysUntilChristmas()}`}
+                <span className="font-bold text-white dark:text-indigo-500">
+                  {`📅 ${daysUntilChristmas()}`}
                 </span>{' '}
-                days until Christmas
+                days until Christmas🎄
               </p>
             </div>
           </header>
@@ -70,11 +68,11 @@ const Frame = ({ children, title }: Props) => {
             >
               <FontAwesomeIcon
                 icon={faGifts}
-                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
                 fill="currentColor"
                 key={'Gifts'}
               />
-              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500">
                 Gifts
               </span>
             </Link>
@@ -90,11 +88,11 @@ const Frame = ({ children, title }: Props) => {
             >
               <FontAwesomeIcon
                 icon={faPeopleGroup}
-                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
                 fill="currentColor"
                 key={'People'}
               />
-              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500">
                 People
               </span>
             </Link>
@@ -114,11 +112,11 @@ const Frame = ({ children, title }: Props) => {
             >
               <FontAwesomeIcon
                 icon={faPlusSquare}
-                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
                 fill="currentColor"
                 key={'NewGift'}
               />
-              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500">
                 Add
               </span>
             </Link>
@@ -134,11 +132,11 @@ const Frame = ({ children, title }: Props) => {
             >
               <FontAwesomeIcon
                 icon={faListCheck}
-                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
                 fill="currentColor"
                 key={'Claimed'}
               />
-              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500">
                 Claimed
               </span>
             </Link>
@@ -148,17 +146,17 @@ const Frame = ({ children, title }: Props) => {
             className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
           >
             <Link
-              href={`/user/${user?.uid}`}
+              href="/user/me"
               className="flex flex-col items-center"
               prefetch={false}
             >
               <FontAwesomeIcon
                 icon={faPersonRays}
-                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+                className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
                 fill="currentColor"
                 key={'Profile'}
               />
-              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500">
                 Profile
               </span>
             </Link>
