@@ -69,7 +69,7 @@ const securityHeaders = [
   },
   {
     key: 'Cross-Origin-Opener-Policy',
-    value: 'same-origin-allow-popups',
+    value: 'same-origin',
   },
 ];
 
