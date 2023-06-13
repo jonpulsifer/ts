@@ -135,9 +135,8 @@ export default function Nav() {
           wishin.app
         </h1>
       </div>
-      <div className="flex flex-col">
-        <nav className="flex flex-col space-y-2 p-2">{linksMarkup(links)}</nav>
-      </div>
+      <nav className="flex flex-col space-y-2 p-2">{linksMarkup(links)}</nav>
+      <hr />
       <nav className="flex flex-col space-y-2 p-2">
         {linksMarkup(signOutLink)}
       </nav>
