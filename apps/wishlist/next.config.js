@@ -21,12 +21,12 @@ const nextConfig = {
 
 const ContentSecurityPolicy = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' apis.google.com cdn.vercel-insights.com;
+    script-src 'self' apis.google.com cdn.vercel-insights.com;
     frame-src 'self' ${
       process.env.NODE_ENV === 'development' ? '*' : 'firebees.firebaseapp.com'
     };
     child-src 'self';
-    style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com;
+    style-src 'self' cdnjs.cloudflare.com fonts.googleapis.com;
     img-src * blob: data:;
     media-src 'none';
     connect-src 'self' ${
@@ -68,7 +68,7 @@ const securityHeaders = [
   },
   {
     key: 'Cross-Origin-Embedder-Policy',
-    value: 'require-corp',
+    value: 'credentialless',
   },
   {
     key: 'Cross-Origin-Opener-Policy',
