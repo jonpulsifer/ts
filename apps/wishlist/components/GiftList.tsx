@@ -11,6 +11,7 @@ import type { Gift } from '../types';
 import { useAuth } from './AuthProvider';
 import Card from './Card';
 import Modal from './GiftModal';
+import DeleteModal from './DeleteModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMinusSquare,
@@ -27,6 +28,8 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   const { user } = useAuth();
   const path = usePathname();
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [gift, setGift] = useState<{ gift: Gift; idx: number } | null>(null);
 
   useEffect(() => {
     setGifts(giftsFromProps);
@@ -112,34 +115,12 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
       });
   };
 
-  const ToastMarkup = ({ gift, idx }: { gift: Gift; idx: number }) => {
-    return (
-      <>
-        <button className="flex items-center space-x-4 h-max">
-          <div className="flex flex-0">
-            Are you sure you want to delete {gift.name}?
-          </div>
-          <div
-            onClick={() => handleDelete(gift, idx)}
-            className="flex flex-shrink-0 pl-4 items-center border-l border-gray-300 hover:text-red-800 hover:drop-shadow transition ease-in-out duration-200 text-red-600 text-xs font-semibold uppercase"
-          >
-            delete
-          </div>
-        </button>
-      </>
-    );
-  };
-
   const handleConfirmDelete = (gift: Gift, idx: number) => {
-    toast.error(<ToastMarkup gift={gift} idx={idx} />, {
-      duration: 5000,
-      icon: (
-        <FontAwesomeIcon icon={faTrashCan} className="text-xl text-red-600" />
-      ),
-    });
+    setGift({ gift, idx });
+    setShowDeleteModal(true);
   };
 
-  const handleDelete = (gift: Gift, idx: number) => {
+  const handleActualDelete = (gift: Gift, idx: number) => {
     const ref = doc(db, 'gifts', gift.id);
     deleteDoc(ref)
       .then(() => {
@@ -167,7 +148,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     if (gift.owner === user.uid)
       return (
         <button
-          className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm dark:hover:bg-red-900 hover:bg-indigo-500 w-auto"
+          className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm dark:hover:bg-red-900 hover:bg-red-500 w-auto"
           onClick={() => handleConfirmDelete(gift, idx)}
         >
           <div className="flex">
@@ -218,7 +199,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
           className="text-left border-t dark:border-gray-800 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
         >
           <td className="px-4 py-2">
-            <Link href={`/gift/${gift.id}`}>
+            <Link key={id} href={`/gift/${gift.id}`}>
               <div className="flex flex-col">
                 <div className="font-semibold text-lg">{name}</div>
                 {notesMarkup}
@@ -237,7 +218,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   const GiftCard = (gifts: Gift[], title: string | undefined) => {
     return (
-      <Card title={title}>
+      <Card key={gifts[0].id} title={title}>
         <table className="table-auto w-full rounded-lg">
           <tbody>{giftList(gifts)}</tbody>
         </table>
@@ -268,6 +249,16 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     return GiftCard(gifts, `${owner} gifts`);
   });
 
-  return giftCards;
+  return (
+    <>
+      {giftCards}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        setIsOpen={setShowDeleteModal}
+        gift={gift}
+        handleDelete={handleActualDelete}
+      />
+    </>
+  );
 };
 export default GiftList;

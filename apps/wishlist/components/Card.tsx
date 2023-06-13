@@ -72,7 +72,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
     : null;
 
   const footer = (
-    <div className="bg-gray-50 rounded-b-lg dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse">
+    <div className="bg-gray-50 dark:bg-slate-900 rounded-b-lg px-4 py-3 sm:flex sm:flex-row-reverse">
       {actionsMarkup}
     </div>
   );
@@ -81,7 +81,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
   const footerMarkup = actions.length ? footer : null;
   return (
     <div className="flex flex-col rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md border-transparent">
-      <div className="my-2 text-center sm:text-left bg-white dark:bg-gray-900">
+      <div className="my-2 text-center sm:text-left bg-white dark:bg-slate-900">
         {headerMarkup}
         {children}
       </div>
