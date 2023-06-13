@@ -5,7 +5,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { AppUser } from '../types';
 
 import Card from './Card';
@@ -27,9 +27,7 @@ const UserForm = ({ user }: Props) => {
   function submit(e: MouseEvent | FormEvent) {
     e.preventDefault();
     if (!name) {
-      toast.error('Missing name', {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      toast.error('Please fill out a name');
       return;
     }
     setDoc(
@@ -45,16 +43,12 @@ const UserForm = ({ user }: Props) => {
       { merge: true },
     )
       .then(() => {
-        toast.success('Profile Updated', {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success('Profile Updated');
         router.push(`/user/${user.uid}`);
       })
       .catch((error: FirebaseError) => {
         if (error.code === 'permission-denied') {
-          toast.error('Permission Denied', {
-            position: toast.POSITION.TOP_CENTER,
-          });
+          toast.error('Permission Denied');
           return;
         }
         console.log(JSON.stringify(error));

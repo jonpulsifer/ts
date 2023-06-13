@@ -1,10 +1,9 @@
 'use client';
 
 import './globals.css';
-import 'react-toastify/dist/ReactToastify.min.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { AuthProvider } from '../components/AuthProvider';
-import { ToastContainer } from 'react-toastify';
+import Toast from 'components/Toaster';
 import { Inter } from 'next/font/google';
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -20,10 +19,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body className={bodyClassName}>
         <ErrorBoundary>
           <>
-            <ToastContainer />
             <AuthProvider>
               <main className="flex flex-col min-h-screen">{children}</main>
             </AuthProvider>
+            <Toast />
           </>
         </ErrorBoundary>
       </body>

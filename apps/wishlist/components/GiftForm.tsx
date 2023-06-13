@@ -4,7 +4,7 @@ import { collection, doc, FirestoreError, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import type { Gift } from '../types';
 
 import { useAuth } from './AuthProvider';
@@ -27,9 +27,7 @@ const GiftForm = ({ gift }: Props) => {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name) {
-      toast.error('Missing gift name. Tell Santa what you want!', {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      toast.error('Missing gift name. Tell Santa what you want!');
       return;
     }
     const col = collection(db, 'gifts');
@@ -50,9 +48,7 @@ const GiftForm = ({ gift }: Props) => {
         const msg = isNewGift
           ? `Added ${name} to your wishlist`
           : `${name} updated`;
-        toast.success(msg, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(msg);
         if (isNewGift) {
           setName('');
           setURL('');
@@ -64,9 +60,7 @@ const GiftForm = ({ gift }: Props) => {
       .catch((e) => {
         const error = e as FirestoreError;
         console.log(JSON.stringify(error));
-        toast.error(error.code, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.code);
       });
   }
 

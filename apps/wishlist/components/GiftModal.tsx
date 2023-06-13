@@ -6,7 +6,7 @@ import { faGifts } from '@fortawesome/free-solid-svg-icons';
 import { collection, doc, FirestoreError, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { useAuth } from './AuthProvider';
 interface Props {
   isOpen: boolean;
@@ -26,9 +26,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name) {
-      toast.error('Missing gift name. Tell Santa what you want!', {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      toast.error('Missing gift name. Tell Santa what you want!');
       return;
     }
     const col = collection(db, 'gifts');
@@ -47,9 +45,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
     )
       .then(() => {
         const msg = `Added ${name} to your wishlist`;
-        toast.success(msg, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(msg);
         setName('');
         setURL('');
         setNotes('');
@@ -57,9 +53,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
       .catch((e) => {
         const error = e as FirestoreError;
         console.log(JSON.stringify(error));
-        toast.error(error.code, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.code);
       });
   }
   return (

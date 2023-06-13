@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { doc, deleteDoc, FirestoreError, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { db } from '../lib/firebase';
 import { AppUser, Gift } from '../types';
 import Card from './Card';
@@ -50,7 +50,6 @@ export const GiftCard = ({ gift, user }: Props) => {
 
   const handleConfirmDelete = (gift: Gift) => {
     toast.error(<ToastMarkup gift={gift} />, {
-      position: toast.POSITION.BOTTOM_CENTER,
       icon: (
         <FontAwesomeIcon
           icon={faTrashCan}
@@ -64,15 +63,11 @@ export const GiftCard = ({ gift, user }: Props) => {
     const ref = doc(db, 'gifts', gift.id);
     deleteDoc(ref)
       .then(() => {
-        toast.success(`Deleted ${gift.name}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(`Deleted ${gift.name}`);
         router.push('/mine');
       })
       .catch((error: FirestoreError) => {
-        toast.error(error.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.message);
       });
   };
 
@@ -80,15 +75,11 @@ export const GiftCard = ({ gift, user }: Props) => {
     const ref = doc(db, 'gifts', gift.id);
     setDoc(ref, { claimed_by: user?.uid }, { merge: true })
       .then(() => {
-        toast.success(`Claimed ${gift.name}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(`Claimed ${gift.name}`);
         router.push('/gifts');
       })
       .catch((error: FirestoreError) => {
-        toast.error(error.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.message);
       });
   };
 
@@ -96,15 +87,11 @@ export const GiftCard = ({ gift, user }: Props) => {
     const ref = doc(db, 'gifts', gift.id);
     setDoc(ref, { claimed_by: '' }, { merge: true })
       .then(() => {
-        toast.success(`Unclaimed ${gift.name}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(`Unclaimed ${gift.name}`);
         router.push('/gifts');
       })
       .catch((error: FirestoreError) => {
-        toast.error(error.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.message);
       });
   };
 

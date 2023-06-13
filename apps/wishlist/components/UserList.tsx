@@ -46,7 +46,7 @@ const UserList = ({ users }: Props) => {
                     </span>
                   )}
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col text-left">
                   <div className="font-semibold text-xl">{name || email}</div>
                   <div className="text-xs text-gray-400">{email}</div>
                 </div>

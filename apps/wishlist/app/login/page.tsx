@@ -4,10 +4,9 @@ import { User } from 'firebase/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { SignInResults, useAuth } from '../../components/AuthProvider';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { dismissable } from '../../components/Toaster';
 import { useRouter } from 'next/navigation';
 import santa from 'public/santaicon.png';
 
@@ -23,10 +22,7 @@ const LoginPage = () => {
   const welcome = (user: User) => {
     const person = user ? user.displayName || user.email : null;
     const text = person ? `Welcome ${person}!` : 'Welcome!';
-    toast(text, {
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 3000,
-    });
+    toast.success(text);
   };
 
   const handleSignInResults = (results: SignInResults) => {
@@ -52,14 +48,7 @@ const LoginPage = () => {
         </>
       );
       welcome(user);
-      toast(toastMarkup, {
-        className: 'bg-white dark:bg-black',
-        autoClose: false,
-        position: toast.POSITION.BOTTOM_CENTER,
-        icon: (
-          <FontAwesomeIcon icon={faUser} className="text-indigo-600 text-lg" />
-        ),
-      });
+      dismissable(toastMarkup);
     }
     if (user && !isNewUser) welcome(user);
   };

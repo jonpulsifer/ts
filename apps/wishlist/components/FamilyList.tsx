@@ -3,7 +3,7 @@
 import { doc, setDoc, FirestoreError } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { db } from '../lib/firebase';
 import { AppUser, Family } from '../types';
 import { useAuth } from './AuthProvider';
@@ -57,27 +57,19 @@ const FamilyList = ({ families, user }: Props) => {
           { merge: true },
         )
           .then(() => {
-            toast.success(`You've joined the ${family.name} family`, {
-              position: toast.POSITION.TOP_CENTER,
-            });
+            toast.success(`You've joined the ${family.name} family`);
             router.push('/people');
           })
           .catch((e) => {
             const error = e as FirestoreError;
             console.log(JSON.stringify(error));
-            toast.error(error.message, {
-              position: toast.POSITION.TOP_CENTER,
-            });
+            toast.error(error.message);
           });
       } else {
-        toast.error(`You're already in the ${family.name} family`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(`You're already in the ${family.name} family`);
       }
     } else {
-      toast.error(`Pin does not match for the ${family?.name} family`, {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      toast.error(`Pin does not match for the ${family?.name} family`);
     }
   };
 
@@ -101,22 +93,16 @@ const FamilyList = ({ families, user }: Props) => {
       user.families = newFamilies;
       setDoc(ref, { families: newFamilies }, { merge: true })
         .then(() => {
-          toast.success(`You've left the ${family.name} family`, {
-            position: toast.POSITION.TOP_CENTER,
-          });
+          toast.success(`You've left the ${family.name} family`);
           router.push('/people');
         })
         .catch((e) => {
           const error = e as FirestoreError;
           console.log(JSON.stringify(error));
-          toast.error(error.message, {
-            position: toast.POSITION.TOP_CENTER,
-          });
+          toast.error(error.message);
         });
     } else {
-      toast.error(`You're not in the ${family.name} family`, {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      toast.error(`You're not in the ${family.name} family`);
     }
   };
 
@@ -129,8 +115,9 @@ const FamilyList = ({ families, user }: Props) => {
             id={family.id}
             type="number"
             pattern="\d{1,4}"
+            inputMode="numeric"
             autoComplete="off"
-            className="form-control block w-20 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+            className="form-control block w-24 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
             value={pin[family.id]}
             onChange={(e) => handlePinChange(e)}
             placeholder="Pin"
@@ -152,7 +139,7 @@ const FamilyList = ({ families, user }: Props) => {
 
       const actionMarkup = user.families?.includes(family.id) ? (
         <button
-          className="inline-flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
+          className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
           data-mdb-ripple="true"
           data-mdb-ripple-color="light"
           type="submit"

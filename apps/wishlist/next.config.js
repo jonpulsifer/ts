@@ -22,7 +22,9 @@ const nextConfig = {
 const isDev = process.env.NODE_ENV === 'development';
 const ContentSecurityPolicy = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' apis.google.com cdn.vercel-insights.com;
+    script-src 'self' 'unsafe-inline' apis.google.com cdn.vercel-insights.com ${
+      isDev && "'unsafe-eval'"
+    };
     frame-src 'self' ${isDev ? '*' : 'firebees.firebaseapp.com'};
     child-src 'self';
     style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com;

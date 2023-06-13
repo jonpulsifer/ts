@@ -5,7 +5,7 @@ import { db } from '../lib/firebase';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import type { Gift } from '../types';
 
 import { useAuth } from './AuthProvider';
@@ -105,14 +105,10 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     setDoc(ref, { claimed_by: user.uid }, { merge: true })
       .then(() => {
         removeGiftFromList(gift, idx);
-        toast.success(`Claimed ${gift.name}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(`Claimed ${gift.name}`);
       })
       .catch((error: FirestoreError) => {
-        toast.error(error.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.message);
       });
   };
 
@@ -136,7 +132,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   const handleConfirmDelete = (gift: Gift, idx: number) => {
     toast.error(<ToastMarkup gift={gift} idx={idx} />, {
-      position: toast.POSITION.BOTTOM_CENTER,
+      duration: 5000,
       icon: (
         <FontAwesomeIcon icon={faTrashCan} className="text-xl text-red-600" />
       ),
@@ -148,14 +144,10 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     deleteDoc(ref)
       .then(() => {
         removeGiftFromList(gift, idx);
-        toast.success(`Deleted ${gift.name}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(`Deleted ${gift.name}`);
       })
       .catch((error: FirestoreError) => {
-        toast.error(error.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.message);
       });
   };
 
@@ -164,14 +156,10 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     setDoc(ref, { claimed_by: '' }, { merge: true })
       .then(() => {
         removeGiftFromList(gift, idx);
-        toast.success(`Unclaimed ${gift.name}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.success(`Unclaimed ${gift.name}`);
       })
       .catch((error: FirestoreError) => {
-        toast.error(error.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        toast.error(error.message);
       });
   };
 
@@ -179,7 +167,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     if (gift.owner === user.uid)
       return (
         <button
-          className="inline-flex w-full items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
+          className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm dark:hover:bg-red-900 hover:bg-indigo-500 w-auto"
           onClick={() => handleConfirmDelete(gift, idx)}
         >
           <div className="flex">
@@ -192,7 +180,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     if (gift.claimed_by === user.uid) {
       return (
         <button
-          className="inline-flex w-full items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
           onClick={() => handleUnclaim(gift, idx)}
         >
           <div className="flex">
@@ -204,7 +192,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     }
     return (
       <button
-        className="inline-flex w-full items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 ml-3 w-auto"
+        className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 ml-3 w-auto"
         onClick={() => handleClaim(gift, idx)}
       >
         <div className="flex">
