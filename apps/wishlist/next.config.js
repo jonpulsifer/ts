@@ -19,20 +19,17 @@ const nextConfig = {
   },
 };
 
+const isDev = process.env.NODE_ENV === 'development';
 const ContentSecurityPolicy = `
     default-src 'self';
-    script-src 'self' apis.google.com cdn.vercel-insights.com;
-    frame-src 'self' ${
-      process.env.NODE_ENV === 'development' ? '*' : 'firebees.firebaseapp.com'
-    };
+    script-src 'self' apis.google.com cdn.vercel-insights.com unsafe-inline;
+    frame-src 'self' ${isDev ? '*' : 'firebees.firebaseapp.com'};
     child-src 'self';
     style-src 'self' cdnjs.cloudflare.com fonts.googleapis.com;
     img-src * blob: data:;
     media-src 'none';
     connect-src 'self' ${
-      process.env.NODE_ENV === 'development'
-        ? '*'
-        : '*.googleapis.com vitals.vercel-insights.com'
+      isDev ? '*' : '*.googleapis.com vitals.vercel-insights.com'
     };
     font-src 'self' cdnjs.cloudflare.com fonts.gstatic.com;
 `;
