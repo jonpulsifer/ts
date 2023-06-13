@@ -63,7 +63,7 @@ const UserForm = ({ user }: Props) => {
 
   return (
     <Card
-      title="Let Santa know a little bit about you..."
+      title="Fill out your profile"
       action={{
         title: 'Save Profile',
         icon: faUserCheck,

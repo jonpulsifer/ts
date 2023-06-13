@@ -83,7 +83,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full items-end justify-center p-4 text-left sm:text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -95,7 +95,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <form onSubmit={(e) => handleSubmit(e)}>
-                  <div className="bg-white dark:bg-slate-900 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                  <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
                         <FontAwesomeIcon
@@ -104,7 +104,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                           icon={faGifts}
                         />
                       </div>
-                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 text-left">
+                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title
                           as="h3"
                           className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200"

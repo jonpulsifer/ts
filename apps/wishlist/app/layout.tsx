@@ -4,11 +4,14 @@ import './globals.css';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { AuthProvider } from '../components/AuthProvider';
 import { ToastContainer } from 'react-toastify';
-import { Noto_Sans } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import ErrorBoundary from '../components/ErrorBoundary';
 
-const noto = Noto_Sans({ weight: '400', subsets: ['latin'] });
-const bodyClassName = `${noto.className} bg-gradient-to-br from-violet-500 to-blue-900 dark:to-black dark:from-blue-950`;
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+});
+const bodyClassName = `${inter.className} bg-gradient-to-br from-violet-500 to-blue-900 dark:to-black dark:from-blue-950`;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

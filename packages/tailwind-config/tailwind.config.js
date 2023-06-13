@@ -10,8 +10,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Noto Sans', 'system-ui', 'sans-serif'],
-        title: ['Finger Paint', 'cursive'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },
