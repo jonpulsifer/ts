@@ -2,12 +2,12 @@
 import { Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faGifts,
-  faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons';
-import GiftForm from './GiftForm';
-
+import { faGifts } from '@fortawesome/free-solid-svg-icons';
+import { collection, doc, FirestoreError, setDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useAuth } from './AuthProvider';
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -15,6 +15,53 @@ interface Props {
 
 export default function Modal({ isOpen, setIsOpen }: Props) {
   const cancelButtonRef = useRef(null);
+  const [name, setName] = useState('');
+  const [url, setURL] = useState('');
+  const [notes, setNotes] = useState('');
+  const { user } = useAuth();
+
+  if (!user) return null;
+  const { uid } = user;
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name) {
+      toast.error('Missing gift name. Tell Santa what you want!', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+    const col = collection(db, 'gifts');
+    const ref = doc(col);
+
+    setDoc(
+      ref,
+      {
+        name,
+        notes,
+        url,
+        owner: uid,
+        claimed_by: '',
+      },
+      { merge: true },
+    )
+      .then(() => {
+        const msg = `Added ${name} to your wishlist`;
+        toast.success(msg, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        setName('');
+        setURL('');
+        setNotes('');
+      })
+      .catch((e) => {
+        const error = e as FirestoreError;
+        console.log(JSON.stringify(error));
+        toast.error(error.code, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      });
+  }
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
@@ -47,41 +94,95 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div className="bg-white dark:bg-slate-900 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
-                      <FontAwesomeIcon
-                        className="h-6 w-6 text-indigo-600 dark:text-indigo-400"
-                        aria-hidden="true"
-                        icon={faGifts}
-                      />
-                    </div>
-                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200"
-                      >
-                        Add a new gift!
-                      </Dialog.Title>
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-500">
-                          Use the form below to add a new gift to your wishlist
-                        </p>
+                <form onSubmit={(e) => handleSubmit(e)}>
+                  <div className="bg-white dark:bg-slate-900 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
+                        <FontAwesomeIcon
+                          className="h-6 w-6 text-indigo-600 dark:text-indigo-400"
+                          aria-hidden="true"
+                          icon={faGifts}
+                        />
                       </div>
-                      <GiftForm />
+                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 text-left">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200"
+                        >
+                          Add a new gift!
+                        </Dialog.Title>
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Use the form below to add a new gift to your
+                            wishlist
+                          </p>
+                        </div>
+                        <div className="mt-4 text-left space-y-4">
+                          <div className="col-span-full">
+                            <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
+                              What&apos;s the name of the thing you wish for?
+                            </label>
+                            <input
+                              type="text"
+                              autoComplete="name"
+                              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
+                              placeholder="Red Mittens"
+                            />
+                          </div>
+                          <div className="col-span-full">
+                            <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
+                              Where can we find it? Remember that Amazon is also
+                              available in 🇨🇦 (optional)
+                            </label>
+                            <input
+                              id="url"
+                              type="textbox"
+                              autoComplete="url"
+                              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+                              placeholder="https://amazon.ca/ur-favourite-slippers"
+                              value={url}
+                              onChange={(e) => setURL(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="col-span-full">
+                            <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
+                              Notes (optional)
+                            </label>
+                            <textarea
+                              id="notes"
+                              autoComplete="notes"
+                              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+                              placeholder="..."
+                              value={notes}
+                              onChange={(e) => setNotes(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="button"
-                    className="mt-3 dark:text-slate-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => setIsOpen(false)}
-                    ref={cancelButtonRef}
-                  >
-                    Close
-                  </button>
-                </div>
+                  <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button
+                      className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+                      data-mdb-ripple="true"
+                      data-mdb-ripple-color="light"
+                      type="submit"
+                    >
+                      {`Add ${name} to your wishlist`}
+                    </button>
+                    <button
+                      type="button"
+                      className="mt-3 dark:text-slate-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                      onClick={() => setIsOpen(false)}
+                      ref={cancelButtonRef}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { useAuth } from './AuthProvider';
+import Modal from './GiftModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faGifts,
@@ -15,6 +16,7 @@ import {
   faUser,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 
 type NavLink = {
   title: string;
@@ -27,11 +29,13 @@ export default function Nav() {
   const { signOut } = useAuth();
   const router = useRouter();
   const path = usePathname();
+  const [showGiftModal, setShowGiftModal] = useState(false);
 
   const links = [
     {
       title: 'Add Gift',
-      link: '/gift/new',
+      link: '#',
+      onClick: () => setShowGiftModal(true),
       icon: faPlusSquare,
     },
     {
@@ -136,10 +140,10 @@ export default function Nav() {
         </h1>
       </div>
       <nav className="flex flex-col space-y-2 p-2">{linksMarkup(links)}</nav>
-      <hr />
       <nav className="flex flex-col space-y-2 p-2">
         {linksMarkup(signOutLink)}
       </nav>
+      <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
     </div>
   );
 }
