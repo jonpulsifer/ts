@@ -113,13 +113,13 @@ export const GiftCard = ({ gift, user }: Props) => {
     if (gift.claimed_by && gift.claimed_by !== user.uid) return undefined;
     if (gift.claimed_by === user.uid) {
       return {
-        fn: () => handleUnclaim(gift),
+        onClick: () => handleUnclaim(gift),
         icon: faMinusSquare,
         title: 'Unclaim Gift',
       };
     }
     return {
-      fn: () => handleClaim(gift),
+      onClick: () => handleClaim(gift),
       icon: faPlusSquare,
       title: 'Claim Gift',
     };

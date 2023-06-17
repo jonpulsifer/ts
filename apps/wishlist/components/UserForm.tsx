@@ -61,7 +61,7 @@ const UserForm = ({ user }: Props) => {
       action={{
         title: 'Save Profile',
         icon: faUserCheck,
-        fn: (e) => submit(e),
+        onClick: (e) => submit(e),
       }}
     >
       <form onSubmit={(e) => submit(e)} className="px-4 pb-4">
