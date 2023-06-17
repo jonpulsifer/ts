@@ -42,17 +42,17 @@ export function Sidebar() {
       icon: faGifts,
     },
     {
-      title: 'Claimed',
-      link: '/claimed',
-      icon: faListCheck,
-    },
-    {
       title: 'People',
       link: '/people',
       icon: faPeopleGroup,
     },
     {
-      title: 'My Profile',
+      title: 'Claimed',
+      link: '/claimed',
+      icon: faListCheck,
+    },
+    {
+      title: 'Profile',
       link: '/user/me',
       icon: faPersonRays,
     },
@@ -101,7 +101,7 @@ export function Sidebar() {
         <Link
           className={
             isActive
-              ? `${linkStyle} text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500 shadow-sm bg-gray-100 dark:bg-slate-800`
+              ? `${linkStyle} text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500 shadow-sm bg-gray-100 dark:bg-slate-800 dark:bg-opacity-50`
               : linkStyle
           }
           key={link.title}
@@ -131,12 +131,7 @@ export function Sidebar() {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen hidden sm:block border-r dark:border-gray-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-gray-300">
-        <div className="flex flex-row h-24 p-2 items-center  bg-[url('/santa.png')] bg-contain bg-no-repeat bg-right-top">
-          <h1 className="pl-4 select-none font-bold text-xl text-black dark:text-white">
-            wishin.app
-          </h1>
-        </div>
+      <div className="top-0 left-0 hidden sm:block border-r dark:border-slate-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-slate-200 bg-[url('/santa.png')] bg-no-repeat bg-right-top">
         <nav className="flex flex-col space-y-2 p-2">{linksMarkup(links)}</nav>
         <nav className="flex flex-col space-y-2 p-2">
           {linksMarkup(signOutLink)}
@@ -180,11 +175,11 @@ export function BottomNav() {
     },
   ];
   const buttonClass =
-    'inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-800 group';
+    'inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-900 dark:hover:bg-slate-950 dark:hover:bg-opacity-75 group';
   const iconClass =
-    'w-6 h-6 mb-1 text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+    'w-6 h-6 mb-1 text-gray-500 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
   const labelClass =
-    'text-sm font-semibold text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+    'text-sm font-semibold text-gray-500 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
 
   const buttons = links.map((link) => {
     // add hover style if link is active
@@ -227,8 +222,10 @@ export function BottomNav() {
   });
 
   return (
-    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-white border-t border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-      <div className="grid h-full max-w-lg grid-cols-5 mx-auto">{buttons}</div>
+    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-gray-50 border-t border-slate-200 dark:bg-slate-900 dark:border-slate-800 bg-[url('/santa.png')] bg-contain bg-no-repeat bg-right-top">
+      <div className="grid h-full max-w-lg grid-cols-5 mx-auto bg-opacity-75 bg-slate-950">
+        {buttons}
+      </div>
       <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
     </div>
   );

@@ -12,7 +12,7 @@ const inter = Inter({
   display: 'swap',
 });
 
-const bodyClassName = `${inter.className} bg-gradient-to-br from-violet-500 to-blue-900 dark:to-black dark:from-blue-950`;
+const bodyClassName = `${inter.className} bg-gray-200 dark:bg-slate-950`;
 
 export const metadata: Metadata = {
   title: {
@@ -26,12 +26,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <body className={bodyClassName}>
         <ErrorBoundary>
-          <AuthProvider>
-            <main className="flex flex-col min-h-screen">
+          <main className="h-full w-full">
+            <AuthProvider>
               <Frame>{children}</Frame>
-              <Toast />
-            </main>
-          </AuthProvider>
+            </AuthProvider>
+            <Toast />
+          </main>
         </ErrorBoundary>
       </body>
     </html>
