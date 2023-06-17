@@ -1,0 +1,17 @@
+{
+  "name": "worker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .ts"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20230419.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "5.1.3",
+    "wrangler": "3.1.0"
+  }
+}

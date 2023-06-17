@@ -1,0 +1,5 @@
+name = "cf-worker"
+main = "src/worker.ts"
+compatibility_date = "2023-06-17"
+
+route = { pattern = "lolwtf.ca/robots.txt", zone_name = "lolwtf.ca" }
