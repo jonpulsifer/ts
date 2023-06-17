@@ -46,7 +46,11 @@ const generateTitle = (path: string | null) => {
 
 const Frame = ({ children }: Props) => {
   const [showGiftModal, setShowGiftModal] = useState(false);
-  const title = generateTitle(usePathname());
+  const path = usePathname();
+  if (path === '/' || path === '/login') {
+    return <>{children}</>;
+  }
+  const title = generateTitle(path);
   return (
     <div className="flex flex-col flex-grow">
       <div className="flex flex-row flex-grow">

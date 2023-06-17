@@ -1,10 +1,11 @@
 import './globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { AuthProvider } from '../components/AuthProvider';
+import { AuthProvider } from 'components/AuthProvider';
 import Toast from 'components/Toaster';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import ErrorBoundary from '../components/ErrorBoundary';
+import ErrorBoundary from 'components/ErrorBoundary';
+import Frame from 'components/Frame';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,7 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <ErrorBoundary>
           <AuthProvider>
             <main className="flex flex-col min-h-screen">
-              {children}
+              <Frame>{children}</Frame>
               <Toast />
             </main>
           </AuthProvider>
