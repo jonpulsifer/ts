@@ -1,7 +1,5 @@
 import GiftList from 'components/GiftList';
-import Loading from './loading';
 import { getClaimedGifts } from 'lib/firebase-ssr';
-import { Suspense } from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,11 +9,7 @@ export const metadata: Metadata = {
 
 const ClaimedPage = async () => {
   const { gifts } = await getClaimedGifts();
-  return (
-    <Suspense fallback={<Loading />}>
-      <GiftList gifts={gifts} />
-    </Suspense>
-  );
+  return <GiftList gifts={gifts} />;
 };
 
 export default ClaimedPage;

@@ -1,7 +1,5 @@
 import { getFamilies } from 'lib/firebase-ssr';
 import FamilyList from 'components/FamilyList';
-import { Suspense } from 'react';
-import Loading from './loading';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,11 +9,7 @@ export const metadata: Metadata = {
 
 const JoinFamilyPage = async () => {
   const { families, user } = await getFamilies();
-  return (
-    <Suspense fallback={<Loading />}>
-      <FamilyList families={families} user={user} />
-    </Suspense>
-  );
+  return <FamilyList families={families} user={user} />;
 };
 
 export default JoinFamilyPage;

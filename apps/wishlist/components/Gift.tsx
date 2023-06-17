@@ -99,12 +99,12 @@ export const GiftCard = ({ gift, user }: Props) => {
     if (gift.owner === user.uid)
       return [
         {
-          fn: () => router.push(`/gift/${gift.id}/edit`),
+          link: `/gift/${gift.id}/edit`,
           icon: faPencil,
           title: 'Edit Gift',
         },
         {
-          fn: () => handleConfirmDelete(gift),
+          onClick: () => handleConfirmDelete(gift),
           icon: faTrashCan,
           title: 'Delete Gift',
           danger: true,

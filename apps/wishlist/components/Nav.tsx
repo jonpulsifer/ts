@@ -24,12 +24,11 @@ type NavLink = {
   onClick?: () => void;
 };
 
-export default function Nav() {
+export function Sidebar() {
   const { signOut } = useAuth();
   const router = useRouter();
   const path = usePathname();
   const [showGiftModal, setShowGiftModal] = useState(false);
-
   const links = [
     {
       title: 'Add Gift',
@@ -102,7 +101,7 @@ export default function Nav() {
         <Link
           className={
             isActive
-              ? `${linkStyle} text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500 shadow-sm bg-gray-100 dark:bg-slate-800`
+              ? `${linkStyle} text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500 shadow-sm bg-gray-100 dark:bg-slate-800`
               : linkStyle
           }
           key={link.title}
@@ -112,14 +111,14 @@ export default function Nav() {
         >
           <div
             className={`flex flex-row items-center justify-center ${
-              isActive ? 'text-indigo-600 dark:text-indigo-600' : ''
+              isActive ? 'text-indigo-600 dark:text-indigo-500' : ''
             }`}
           >
             <div className="flex">
               <FontAwesomeIcon
                 key={link.title}
                 icon={link.icon}
-                className="w-10 text-gray-600"
+                className="w-10 text-gray-600 dark:text-slate-400"
               />
             </div>
             <div className="flex flex-grow">{link.title}</div>
@@ -145,5 +144,92 @@ export default function Nav() {
       </div>
       <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
     </>
+  );
+}
+
+export function BottomNav() {
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  const path = usePathname();
+  const links = [
+    {
+      title: 'Gifts',
+      href: '/gifts',
+      icon: faGifts,
+    },
+    {
+      title: 'People',
+      href: '/people',
+      icon: faPeopleGroup,
+    },
+    {
+      title: 'Add',
+      href: '#',
+      onClick: () => setShowGiftModal(true),
+      icon: faPlusSquare,
+    },
+    {
+      title: 'Claimed',
+      href: '/claimed',
+      icon: faListCheck,
+    },
+
+    {
+      title: 'Profile',
+      href: '/user/me',
+      icon: faPersonRays,
+    },
+  ];
+  const buttonClass =
+    'inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-800 group';
+  const iconClass =
+    'w-6 h-6 mb-1 text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+  const labelClass =
+    'text-sm font-semibold text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+
+  const buttons = links.map((link) => {
+    // add hover style if link is active
+    const isActive = path === link.href;
+
+    return (
+      <button
+        type="button"
+        className={
+          isActive ? `${buttonClass} bg-gray-50 dark:bg-slate-800` : buttonClass
+        }
+      >
+        <Link
+          href={link.href}
+          className="flex flex-col items-center"
+          prefetch={true}
+          onClick={link.onClick ? link.onClick : undefined}
+        >
+          <FontAwesomeIcon
+            icon={link.icon}
+            className={
+              isActive
+                ? `${iconClass} text-indigo-600 dark:text-indigo-500`
+                : iconClass
+            }
+            fill="currentColor"
+          />
+          <span
+            className={
+              isActive
+                ? `${labelClass} text-indigo-600 dark:text-indigo-500`
+                : labelClass
+            }
+          >
+            {link.title}
+          </span>
+        </Link>
+      </button>
+    );
+  });
+
+  return (
+    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-white border-t border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+      <div className="grid h-full max-w-lg grid-cols-5 mx-auto">{buttons}</div>
+      <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
+    </div>
   );
 }

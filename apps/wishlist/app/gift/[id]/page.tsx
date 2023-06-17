@@ -1,7 +1,5 @@
 import { getGift, getUser } from 'lib/firebase-ssr';
 import { GiftCard } from 'components/Gift';
-import { Suspense } from 'react';
-import Loading from './loading';
 import { Metadata } from 'next';
 
 interface Props {
@@ -20,11 +18,7 @@ const GiftPage = async ({ params }: Props) => {
   const { gift } = await getGift(params.id);
   const { user } = await getUser(gift.owner);
 
-  return (
-    <Suspense fallback={<Loading />}>
-      <GiftCard gift={gift} user={user} />
-    </Suspense>
-  );
+  return <GiftCard gift={gift} user={user} />;
 };
 
 export default GiftPage;

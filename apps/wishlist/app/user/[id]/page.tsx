@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-import Loading from './loading';
 import { UserProfile } from 'components/User';
 import { getUser, getUserGifts } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
@@ -20,11 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const ProfilePage = async ({ params }: Props) => {
   const { user, gifts } = await getUserGifts(params.id);
-  return (
-    <Suspense fallback={<Loading />}>
-      <UserProfile gifts={gifts} appUser={user} />
-    </Suspense>
-  );
+  return <UserProfile gifts={gifts} appUser={user} />;
 };
 
 export default ProfilePage;

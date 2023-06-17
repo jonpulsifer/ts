@@ -1,7 +1,5 @@
 import UserList from 'components/UserList';
 import Link from 'next/link';
-import { Suspense } from 'react';
-import Loading from './loading';
 import { getPeopleForUser } from 'lib/firebase-ssr';
 import Card, { CardAction } from 'components/Card';
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
@@ -36,16 +34,12 @@ const PeoplePage = async () => {
     </>
   );
 
-  return (
-    <Suspense fallback={<Loading />}>
-      {noPeople ? (
-        <Card title="👪 No People Found" action={action}>
-          <div className="p-4">{noPeopleMarkup}</div>
-        </Card>
-      ) : (
-        <UserList users={users} user={user} />
-      )}
-    </Suspense>
+  return noPeople ? (
+    <Card title="👪 No People Found" action={action}>
+      <div className="p-4">{noPeopleMarkup}</div>
+    </Card>
+  ) : (
+    <UserList users={users} user={user} />
   );
 };
 

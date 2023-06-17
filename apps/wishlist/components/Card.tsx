@@ -7,7 +7,7 @@ export interface CardAction {
   icon?: IconDefinition;
   title: string;
   danger?: boolean;
-  fn?: (e: MouseEvent | FormEvent) => void;
+  onClick?: (e: MouseEvent | FormEvent) => void;
   link?: string;
 }
 
@@ -45,7 +45,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
           </div>
         ) : null;
         const baseButtonClass =
-          'inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto mt-2 sm:mt-0';
+          'text-sm font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
         const dangerClass = `bg-red-500 ${baseButtonClass}`;
         const infoClass = `bg-indigo-600 ${baseButtonClass}`;
         const buttonClass = action.danger ? dangerClass : infoClass;
@@ -53,12 +53,14 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
           <button
             className={buttonClass}
             onClick={
-              action?.fn ? (e) => (action.fn ? e : undefined) : undefined
+              action?.onClick
+                ? (e) => (action.onClick ? e : undefined)
+                : undefined
             }
             key={`fb-${idx}`}
           >
             {actionIcon}
-            <div className="">{action?.title}</div>
+            {action?.title}
           </button>
         );
         return action.link ? (
