@@ -5,8 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { SignInResults, useAuth } from '../../components/AuthProvider';
-import { dismissable } from '../../components/Toaster';
+import { SignInResults, useAuth } from 'components/AuthProvider';
+import { dismissable } from 'components/Toaster';
 import { useRouter } from 'next/navigation';
 import santa from 'public/santaicon.png';
 

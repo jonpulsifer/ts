@@ -97,7 +97,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     );
   }
 
-  const removeGiftFromList = (gift: Gift, idx: number) => {
+  const removeGiftFromList = (idx: number) => {
     const localGiftsCopy = [...gifts];
     localGiftsCopy.splice(idx, 1);
     setGifts(localGiftsCopy);
@@ -107,7 +107,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     const ref = doc(db, 'gifts', gift.id);
     setDoc(ref, { claimed_by: user.uid }, { merge: true })
       .then(() => {
-        removeGiftFromList(gift, idx);
+        removeGiftFromList(idx);
         toast.success(`Claimed ${gift.name}`);
       })
       .catch((error: FirestoreError) => {
@@ -124,7 +124,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     const ref = doc(db, 'gifts', gift.id);
     deleteDoc(ref)
       .then(() => {
-        removeGiftFromList(gift, idx);
+        removeGiftFromList(idx);
         toast.success(`Deleted ${gift.name}`);
       })
       .catch((error: FirestoreError) => {
@@ -136,7 +136,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     const ref = doc(db, 'gifts', gift.id);
     setDoc(ref, { claimed_by: '' }, { merge: true })
       .then(() => {
-        removeGiftFromList(gift, idx);
+        removeGiftFromList(idx);
         toast.success(`Unclaimed ${gift.name}`);
       })
       .catch((error: FirestoreError) => {
@@ -252,12 +252,14 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   return (
     <>
       {giftCards}
-      <DeleteModal
-        isOpen={showDeleteModal}
-        setIsOpen={setShowDeleteModal}
-        gift={gift}
-        handleDelete={handleActualDelete}
-      />
+      {gift && (
+        <DeleteModal
+          isOpen={showDeleteModal}
+          setIsOpen={setShowDeleteModal}
+          gift={gift}
+          onClick={() => handleActualDelete(gift.gift, gift.idx)}
+        />
+      )}
     </>
   );
 };

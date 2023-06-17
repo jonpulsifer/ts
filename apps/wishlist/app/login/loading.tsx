@@ -1,4 +1,5 @@
-import Spinner from '../../components/Spinner';
+import { faPerson } from '@fortawesome/free-solid-svg-icons';
+import Spinner from 'components/Spinner';
 export default function Loading() {
-  return <Spinner />;
+  return <Spinner icon={faPerson} />;
 }

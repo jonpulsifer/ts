@@ -11,9 +11,9 @@ import {
   faPlusSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import Modal from './GiftModal';
+import { usePathname } from 'next/navigation';
 interface Props {
   children: React.ReactNode;
-  title: string;
 }
 
 const daysUntilChristmas = () => {
@@ -26,8 +26,27 @@ const daysUntilChristmas = () => {
   return Math.ceil((christmas.getTime() - today.getTime()) / oneDay);
 };
 
-const Frame = ({ children, title }: Props) => {
+// generate title from path name
+const generateTitle = (path: string | null) => {
+  switch (path) {
+    case '/family/join':
+      return '👪 Join a Family';
+    case '/gifts':
+      return '🎁 Gifts';
+    case '/people':
+      return '👪 People';
+    case '/claimed':
+      return '🛒 Claimed Gifts';
+    case '/user/me':
+      return '👤 Profile';
+    default:
+      return '🎁 wishin.app';
+  }
+};
+
+const Frame = ({ children }: Props) => {
   const [showGiftModal, setShowGiftModal] = useState(false);
+  const title = generateTitle(usePathname());
   return (
     <div className="flex flex-col flex-grow">
       <div className="flex flex-row flex-grow">
