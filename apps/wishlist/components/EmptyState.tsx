@@ -28,6 +28,7 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
         const dangerClass = `bg-red-500 ${baseButtonClass}`;
         const infoClass = `bg-indigo-600 ${baseButtonClass}`;
         const buttonClass = action.danger ? dangerClass : infoClass;
+        console.log('got button with action', action);
         const button = (
           <button
             className={buttonClass}
@@ -42,6 +43,7 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
             {action?.title}
           </button>
         );
+        console.log('got button', button);
         return action.link ? (
           <Link href={action.link} key={`fb-${idx}`}>
             {button}
@@ -52,16 +54,16 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
       })
     : null;
   return (
-    <div className="flex flex-col items-center justify-center text-center h-full max-w-md">
+    <div className="flex flex-col items-center justify-center text-center h-full">
       <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
+        <h1 className="text-2xl font-bold text-black dark:text-slate-200">
           {title}
         </h1>
-        <p className="text-gray-400 dark:text-slate-200 font-semibold">
+        <p className="text-black-400 dark:text-slate-200 font-semibold">
           {subtitle}
         </p>
       </div>
-      <div className="text-gray-900 dark:text-slate-400 text-sm">
+      <div className="text-gray-600 dark:text-slate-400 text-sm">
         {children}
       </div>
       {action && <div className="flex flex-row gap-4">{actionsMarkup}</div>}

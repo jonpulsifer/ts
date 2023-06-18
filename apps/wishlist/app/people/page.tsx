@@ -27,14 +27,21 @@ const PeoplePage = async () => {
     </>
   ) : (
     <>
-      <p>The elves couldn&apos;t find anyone.</p>
+      <p>
+        Please{' '}
+        <span className="font-bold dark:text-slate-200">join a wishlist</span>{' '}
+        or{' '}
+        <span className="font-bold dark:text-slate-200">
+          invite your family
+        </span>
+      </p>
     </>
   );
 
   return noPeople ? (
     <EmptyState
       title="👪 No People Found"
-      subtitle="Please join a wishlist or invite your family"
+      subtitle="The elves couldn't find anyone"
       action={action}
     >
       <div className="p-4">{noPeopleMarkup}</div>

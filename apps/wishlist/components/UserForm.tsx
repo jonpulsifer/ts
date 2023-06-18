@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { AppUser } from '../types';
 
 import Card from './Card';
-import { faUserCheck } from '@fortawesome/free-solid-svg-icons';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   user: AppUser;
@@ -18,7 +18,7 @@ interface Props {
 const UserForm = ({ user }: Props) => {
   const [name, setName] = useState(user.name || '');
   const [address, setAddress] = useState(user.address || '');
-  const [giftTheme, setGiftTheme] = useState(user.gift_theme || '');
+  // const [giftTheme, setGiftTheme] = useState(user.gift_theme || '');
   const [shirtSize, setShirtSize] = useState(user.shirt_size || '');
   const [pantSize, setPantSize] = useState(user.pant_size || '');
   const [shoeSize, setShoeSize] = useState(user.shoe_size || '');
@@ -35,7 +35,7 @@ const UserForm = ({ user }: Props) => {
       {
         name,
         address,
-        gift_theme: giftTheme,
+        // gift_theme: giftTheme,
         pant_size: pantSize,
         shirt_size: shirtSize,
         shoe_size: shoeSize,
@@ -44,7 +44,7 @@ const UserForm = ({ user }: Props) => {
     )
       .then(() => {
         toast.success('Profile Updated');
-        router.push(`/user/${user.uid}`);
+        router.refresh();
       })
       .catch((error: FirebaseError) => {
         if (error.code === 'permission-denied') {
@@ -57,12 +57,20 @@ const UserForm = ({ user }: Props) => {
 
   return (
     <Card
-      title="Fill out your profile"
-      action={{
-        title: 'Save Profile',
-        icon: faUserCheck,
-        onClick: (e) => submit(e),
-      }}
+      title="Edit Profile"
+      subtitle="Update your profile information"
+      action={[
+        {
+          title: 'Save Profile',
+          icon: faSave,
+          onClick: (e) => submit(e),
+        },
+        {
+          title: 'Back',
+          onClick: () => router.back(),
+          secondary: true,
+        },
+      ]}
     >
       <form onSubmit={(e) => submit(e)} className="px-4 pb-4">
         <div className="mb-6">
@@ -93,7 +101,7 @@ const UserForm = ({ user }: Props) => {
           />
         </div>
 
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
             Gift Themes
           </label>
@@ -106,7 +114,7 @@ const UserForm = ({ user }: Props) => {
             value={giftTheme}
             onChange={(e) => setGiftTheme(e.target.value)}
           />
-        </div>
+        </div> */}
         <div className="flex flex-row">
           <div className="mb-6 pr-2">
             <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">

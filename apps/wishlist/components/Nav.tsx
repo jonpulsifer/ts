@@ -130,7 +130,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col h-full flex-none hidden sm:block border-r dark:border-slate-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-slate-200 bg-[url('/santa.png')] bg-no-repeat bg-right-top">
+    <div className="flex flex-col h-full flex-none hidden sm:block border-r dark:border-slate-800 border-gray-300 w-48 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-slate-200">
       <nav className="flex flex-col flex-none space-y-2 p-2">
         {linksMarkup(links)}
       </nav>
@@ -176,18 +176,14 @@ export function BottomNav() {
   ];
   const buttons = (links: NavLink[]) => {
     const buttonClass =
-      'inline-flex flex-col text-gray-500 dark:text-slate-400 dark:bg-slate-950 items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-900 dark:hover:bg-slate-900 dark:hover:bg-opacity-75 group';
+      'inline-flex flex-col text-gray-900 dark:text-slate-400 dark:bg-slate-950 items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-900 dark:hover:bg-slate-900 group';
     const iconClass =
       'w-6 h-6 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
     const labelClass =
       'text-sm font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
 
     const btns = links.map((link) => {
-      // add hover style if link is active
       const isActive = path === link.href;
-      // log object with isactive and the path and some extra info
-      if (isActive) console.log({ isActive, path, link });
-
       const href = link.href ? link.href : '#';
       return (
         <button
@@ -231,8 +227,8 @@ export function BottomNav() {
   };
 
   return (
-    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-gray-50 border-t border-slate-200 dark:bg-slate-950 dark:border-slate-800 bg-[url('/santa.png')] bg-contain bg-no-repeat bg-right-top">
-      <div className="grid h-full max-w-lg grid-cols-5 mx-auto opacity-100">
+    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800">
+      <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
         {buttons(links)}
       </div>
       <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />

@@ -8,6 +8,7 @@ import { db } from '../lib/firebase';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from './AuthProvider';
+import { useRouter } from 'next/navigation';
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -19,6 +20,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
   const [url, setURL] = useState('');
   const [notes, setNotes] = useState('');
   const { user } = useAuth();
+  const router = useRouter();
 
   if (!user) return null;
   const { uid } = user;
@@ -49,6 +51,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
         setName('');
         setURL('');
         setNotes('');
+        router.refresh();
       })
       .catch((e) => {
         const error = e as FirestoreError;

@@ -9,14 +9,13 @@ import { Gift } from 'types';
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  gift: { gift: Gift; idx: number } | null;
+  gift: Gift | null;
   onClick: () => void;
 }
 
 export default function Modal({ isOpen, setIsOpen, gift, onClick }: Props) {
   const cancelButtonRef = useRef(null);
   if (!gift) return;
-  const { gift: g } = gift;
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
@@ -64,13 +63,13 @@ export default function Modal({ isOpen, setIsOpen, gift, onClick }: Props) {
                           as="h3"
                           className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200"
                         >
-                          Delete {g.name}?
+                          Delete {gift.name}?
                         </Dialog.Title>
                         <div className="mt-2 text-sm text-gray-500">
                           <p>
                             Are you sure you want to{' '}
                             <span className="font-bold text-black dark:text-white">
-                              delete {g.name}?
+                              delete {gift.name}?
                             </span>
                           </p>
                           <p>This can not be undone.</p>

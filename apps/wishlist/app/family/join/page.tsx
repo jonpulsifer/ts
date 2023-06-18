@@ -3,7 +3,7 @@ import FamilyList from 'components/FamilyList';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Join a Family',
+  title: 'Join a wishlist',
   description: 'Join a wishlist',
 };
 

@@ -20,7 +20,7 @@ const Spinner = ({ icon = faGift }: Props) => {
   return (
     <div className="flex justify-center items-center h-full">
       <FontAwesomeIcon
-        className="animate-spin text-7xl text-white dark:text-slate-200"
+        className="animate-spin text-7xl text-indigo-600 dark:text-indigo-500"
         icon={icon}
       />
     </div>

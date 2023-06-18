@@ -12,17 +12,15 @@ import {
   faPeopleRoof,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AppUser, Gift } from '../types';
+import { AppUser } from '../types';
 import { useAuth } from './AuthProvider';
 import Card, { CardAction } from './Card';
-import GiftList from './GiftList';
 
 interface Props {
-  gifts: Gift[];
   appUser: AppUser;
 }
 
-export const UserProfile = ({ gifts, appUser }: Props) => {
+export const UserProfile = ({ appUser }: Props) => {
   const { user } = useAuth();
   const isUserProfile = user?.uid === appUser.uid;
 
@@ -93,15 +91,10 @@ export const UserProfile = ({ gifts, appUser }: Props) => {
         link: `/user/${uid}/edit`,
       },
       {
-        title: 'Join a Family',
+        title: 'View Wishlists',
         icon: faPeopleRoof,
         link: '/family/join',
       },
     );
-  return (
-    <>
-      <Card action={actions}>{fieldsMarkup}</Card>
-      <GiftList gifts={gifts} />
-    </>
-  );
+  return <Card action={actions}>{fieldsMarkup}</Card>;
 };

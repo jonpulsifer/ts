@@ -1,3 +1,5 @@
+import GiftList from 'components/GiftList';
+
 import { UserProfile } from 'components/User';
 import { getUser, getUserGifts } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
@@ -18,7 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const ProfilePage = async ({ params }: Props) => {
   const { user, gifts } = await getUserGifts(params.id);
-  return <UserProfile gifts={gifts} appUser={user} />;
+  return (
+    <>
+      <UserProfile appUser={user} />
+      <GiftList gifts={gifts} />
+    </>
+  );
 };
 
 export default ProfilePage;

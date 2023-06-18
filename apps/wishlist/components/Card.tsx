@@ -7,7 +7,8 @@ export interface CardAction {
   icon?: IconDefinition;
   title: string;
   danger?: boolean;
-  onClick?: (e: MouseEvent | FormEvent) => void;
+  secondary?: boolean;
+  onClick?: ((e: MouseEvent | FormEvent) => void) | (() => void) | undefined;
   link?: string;
 }
 
@@ -25,7 +26,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
         {title}
       </h1>
       <div className="mt-2">
-        <p className="text-sm text-gray-500">{subtitle}</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">{subtitle}</p>
       </div>
     </div>
   );
@@ -46,17 +47,19 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
         ) : null;
         const baseButtonClass =
           'text-sm font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
+        const secondaryButtonClass =
+          'mt-3 dark:text-slate-400 inline-flex w-full items-center justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto';
         const dangerClass = `bg-red-500 ${baseButtonClass}`;
         const infoClass = `bg-indigo-600 ${baseButtonClass}`;
+
         const buttonClass = action.danger ? dangerClass : infoClass;
+        const actionsMarkup = action.secondary
+          ? secondaryButtonClass
+          : buttonClass;
         const button = (
           <button
-            className={buttonClass}
-            onClick={
-              action?.onClick
-                ? (e) => (action.onClick ? e : undefined)
-                : undefined
-            }
+            className={actionsMarkup}
+            onClick={action?.onClick ? action.onClick : undefined}
             key={`fb-${idx}`}
           >
             {actionIcon}

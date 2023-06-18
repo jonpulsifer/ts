@@ -38,7 +38,7 @@ const LoginPage = () => {
         <>
           Make sure to
           <Link
-            className="font-semibold text-indigo-600"
+            className="font-bold text-indigo-600"
             href={`/user/${user.uid}/edit`}
           >
             {' '}
