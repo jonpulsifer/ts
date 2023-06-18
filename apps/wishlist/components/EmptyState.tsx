@@ -51,6 +51,10 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
     : null;
   return (
     <>
+      <div
+        className="fixed right-0 -z-10 w-1/2 h-1/2 
+        sm:bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top"
+      />
       <div className="flex flex-col items-center justify-center text-center h-full">
         <div className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-2xl font-bold text-black dark:text-slate-200">
@@ -65,10 +69,6 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
         </div>
         {action && <div className="flex flex-row gap-4">{actionsMarkup}</div>}
       </div>
-      <div
-        className="fixed right-0 top-36 h-full w-full -z-10 
-       bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top"
-      />
     </>
   );
 };

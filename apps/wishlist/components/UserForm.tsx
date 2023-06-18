@@ -89,7 +89,7 @@ const UserForm = ({ user }: Props) => {
 
         <div className="mb-6">
           <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
-            Mailing Address so Grandmaman can write you a card
+            Address
           </label>
           <input
             id="address"

@@ -105,7 +105,7 @@ const getGifts = async () => {
 
     const snapshot = await db
       .collection('gifts')
-      .where('claimed_by', '==', '')
+      // .where('claimed_by', '==', '')
       .orderBy('owner')
       .get();
 
@@ -231,10 +231,18 @@ const getPeopleForUser = async () => {
       .where('families', 'array-contains-any', user.families)
       .get();
 
-    for (const doc of snapshot.docs) {
+    for (const u of snapshot.docs) {
+      const snapcount = await db
+        .collection('gifts')
+        .where('owner', '==', u.id)
+        .where('claimed_by', 'in', [null, ''])
+        .count()
+        .get();
+      const count = snapcount.data().count;
       users.push({
-        ...(doc.data() as AppUser),
-        uid: doc.id,
+        ...(u.data() as AppUser),
+        uid: u.id,
+        num_gifts: count,
       });
     }
     // sort users by name

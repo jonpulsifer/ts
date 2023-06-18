@@ -15,19 +15,25 @@ export interface CardAction {
 export interface CardProps {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
+  badges?: React.ReactNode;
   children?: React.ReactNode;
   action?: CardAction | CardAction[];
 }
 
-const Card = ({ title, subtitle, action, children }: CardProps) => {
+const Card = ({ title, subtitle, action, badges, children }: CardProps) => {
   const titleMarkup = (
-    <div className="px-4 pt-2 dark:text-gray-400 pb-4">
-      <h1 className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200">
-        {title}
-      </h1>
-      <div className="mt-2">
-        <p className="text-sm text-gray-500 dark:text-slate-400">{subtitle}</p>
+    <div className="flex flex-row gap-4 p-4">
+      <div className="flex flex-col grow dark:text-gray-400">
+        <h1 className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200">
+          {title}
+        </h1>
+        <div className="mt-2">
+          <p className="text-sm text-gray-500 dark:text-slate-400">
+            {subtitle}
+          </p>
+        </div>
       </div>
+      <div className="flex items-center">{badges}</div>
     </div>
   );
 
@@ -86,7 +92,7 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
   const footerMarkup = actions.length ? footer : null;
   return (
     <div className="flex flex-col h-max rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md border-transparent">
-      <div className="my-2 text-center sm:text-left bg-white dark:bg-slate-900">
+      <div className="my-2 sm:text-left bg-white dark:bg-slate-900">
         {headerMarkup}
         {children}
       </div>

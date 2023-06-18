@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteDoc, doc, FirestoreError, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, FirestoreError, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,6 +14,7 @@ import Modal from './GiftModal';
 import DeleteModal from './DeleteModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faEdit,
   faGift,
   faGifts,
   faMinusSquare,
@@ -152,7 +153,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   const handleClaim = (gift: Gift) => {
     const ref = doc(db, 'gifts', gift.id);
-    setDoc(ref, { claimed_by: user.uid }, { merge: true })
+    updateDoc(ref, { claimed_by: user.uid })
       .then(() => {
         toast.success(`Claimed ${gift.name}`);
         router.refresh();
@@ -177,11 +178,12 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
       .catch((error: FirestoreError) => {
         toast.error(error.message);
       });
+    setGift(null);
   };
 
   const handleUnclaim = (gift: Gift) => {
     const ref = doc(db, 'gifts', gift.id);
-    setDoc(ref, { claimed_by: '' }, { merge: true })
+    updateDoc(ref, { claimed_by: '' })
       .then(() => {
         toast.success(`Unclaimed ${gift.name}`);
         router.refresh();
@@ -192,62 +194,77 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   };
 
   const giftActions = (gift: Gift) => {
+    const buttonClass =
+      'inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm w-auto ring-1 ring-inset';
+    const buttonInfo =
+      'text-indigo-600 dark:text-indigo-100 hover:text-white dark:hover:text-indigo-500 bg-indigo-50 dark:bg-indigo-950/25 dark:hover:bg-indigo-950/25 hover:bg-indigo-600 ring-indigo-700/10 dark:ring-indigo-600/20';
+    const buttonDanger =
+      'text-red-600 dark:text-red-100 hover:text-white dark:hover:text-red-500 bg-red-50 dark:bg-red-950/25 dark:hover:bg-red-950/25 hover:bg-red-600 ring-red-700/10 dark:ring-red-600/20';
+
     if (gift.owner === user.uid)
       return (
-        <button
-          className="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white dark:text-red-600 shadow-sm dark:hover:bg-red-900 hover:dark:text-slate-200 hover:bg-red-600 w-auto"
-          onClick={() => handleConfirmDelete(gift)}
-        >
-          <div className="flex">
-            <FontAwesomeIcon icon={faTrashCan} className="" />
-          </div>
-        </button>
+        <div className="flex flex-row space-x-2">
+          <Link href={`/gift/${gift.id}/edit`}>
+            <button className={`${buttonClass} ${buttonInfo}`}>
+              <div className="flex">
+                <FontAwesomeIcon icon={faEdit} />
+              </div>
+            </button>
+          </Link>
+          <button
+            className={`${buttonClass} ${buttonDanger}`}
+            onClick={() => handleConfirmDelete(gift)}
+          >
+            <div className="flex">
+              <FontAwesomeIcon icon={faTrashCan} />
+            </div>
+          </button>
+        </div>
       );
     if (gift.claimed_by && gift.claimed_by !== user.uid) return null;
     if (gift.claimed_by === user.uid) {
       return (
         <button
-          className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          className={`${buttonClass} ${buttonDanger}`}
           onClick={() => handleUnclaim(gift)}
         >
           <div className="flex">
-            <FontAwesomeIcon icon={faMinusSquare} className="pr-2" />
+            <FontAwesomeIcon icon={faMinusSquare} />
           </div>
-          <div>Unclaim</div>
         </button>
       );
     }
     return (
       <button
-        className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 ml-3 w-auto"
+        className={`${buttonClass} ${buttonInfo}`}
         onClick={() => handleClaim(gift)}
       >
         <div className="flex">
-          <FontAwesomeIcon icon={faPlusSquare} className="pr-2" />
+          <FontAwesomeIcon icon={faPlusSquare} />
         </div>
-        <div>Claim</div>
       </button>
     );
   };
 
   const giftList = (gifts: Gift[]) => {
     return gifts.map((gift) => {
-      const { id, name, notes } = gift;
-      const notesMarkup = notes ? (
+      const notesMarkup = gift.notes ? (
         <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-indigo-600 hover:font-bold transition ease-in-out duration-200">
-          {notes.length > 60 ? `${notes.substring(0, 60)}...` : notes}
+          {gift.notes.length > 60
+            ? `${gift.notes.substring(0, 60)}...`
+            : gift.notes}
         </div>
       ) : null;
 
       return (
         <tr
-          key={id}
+          key={gift.id}
           className="text-left border-t dark:border-gray-800 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
         >
           <td className="px-4 py-2">
-            <Link key={id} href={`/gift/${gift.id}`}>
+            <Link key={gift.id} href={`/gift/${gift.id}`}>
               <div className="flex flex-col">
-                <div className="font-semibold text-lg">{name}</div>
+                <div className="font-semibold text-lg">{gift.name}</div>
                 {notesMarkup}
               </div>
             </Link>
@@ -260,13 +277,26 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     });
   };
 
-  const GiftCard = (
-    gifts: Gift[],
-    title: React.ReactNode | undefined,
-    subtitle: React.ReactNode | undefined = undefined,
-  ) => {
+  interface GiftCardProps {
+    gifts: Gift[];
+    title: React.ReactNode | undefined;
+    subtitle?: React.ReactNode;
+    badges?: React.ReactNode;
+  }
+
+  const GiftCard = ({
+    gifts,
+    title,
+    subtitle = undefined,
+    badges = undefined,
+  }: GiftCardProps) => {
     return (
-      <Card key={gifts[0].id} title={title} subtitle={subtitle}>
+      <Card
+        key={gifts[0].owner}
+        title={title}
+        subtitle={subtitle}
+        badges={badges}
+      >
         <table className="table-auto w-full rounded-lg">
           <tbody>{giftList(gifts)}</tbody>
         </table>
@@ -289,13 +319,13 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   const GiftCountBadge = (gifts: Gift[]) => {
     const count = gifts.length;
     const baseFontColor =
-      'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950 ring-indigo-700/10 dark:ring-indigo-500/10';
+      'text-indigo-700 flex-none dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950 ring-indigo-700/10 dark:ring-indigo-500/10';
     const fontColor =
       count > 0 && count < 3
         ? 'text-red-700 dark:text-red-500 bg-red-50 dark:bg-red-950 ring-red-700/10 dark:ring-red-500/10'
         : count > 2 && count < 5
         ? 'text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-950 ring-yellow-700/10 dark:ring-yellow-500/10'
-        : count > 4 && count < 7
+        : count > 4
         ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950 ring-green-700/10 dark:ring-green-500/10'
         : baseFontColor;
     const baseClass = `inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${fontColor}`;
@@ -309,14 +339,19 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   // return a card for each owner
   const giftCards = giftsByOwner.map((gifts) => {
-    const bestGuessOwner =
-      gifts
-        .map((g) => g.owner_name)
-        .filter((e) => e)
-        .pop() || "Someone's";
+    const owner = gifts
+      .map((g) => g.owner_name)
+      .filter((e) => e)
+      .pop();
     const isOwnerMe = gifts[0].owner === user.uid;
-    const owner = isOwnerMe ? 'My' : `${bestGuessOwner}'s`;
-    return GiftCard(gifts, `${owner} gifts`, GiftCountBadge(gifts));
+    return (
+      <GiftCard
+        gifts={gifts}
+        title={owner ? `${owner}'s Gifts` : 'My Gifts'}
+        subtitle={isOwnerMe ? 'Find all your gifts below' : undefined}
+        badges={GiftCountBadge(gifts)}
+      />
+    );
   });
 
   return (

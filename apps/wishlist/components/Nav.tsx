@@ -130,7 +130,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col h-full flex-none hidden sm:block border-r dark:border-slate-800 border-gray-300 w-48 transition-all duration-300 bg-gray-50 dark:bg-transparent dark:text-slate-200">
+    <div className="flex flex-col h-full flex-none hidden sm:block w-48 transition-all duration-300 dark:bg-transparent dark:text-slate-200">
       <nav className="flex flex-col flex-none space-y-2 p-2">
         {linksMarkup(links)}
       </nav>
@@ -178,7 +178,7 @@ export function BottomNav() {
     const buttonClass =
       'inline-flex flex-col text-gray-900 dark:text-slate-400 dark:bg-slate-950 items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-900 dark:hover:bg-slate-900 group';
     const iconClass =
-      'w-6 h-6 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+      'w-6 h-6 text-xl group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
     const labelClass =
       'text-sm font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
 
@@ -197,7 +197,7 @@ export function BottomNav() {
         >
           <Link
             href={href}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center gap-1"
             prefetch={false}
             onClick={link.onClick ? link.onClick : undefined}
           >
@@ -227,7 +227,7 @@ export function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 block sm:hidden w-full h-24 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800">
+    <div className="fixed bottom-0 block sm:hidden w-full h-24 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800 rounded-t-lg">
       <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
         {buttons(links)}
       </div>

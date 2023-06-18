@@ -9,4 +9,5 @@ export interface AppUser {
   shoe_size?: string;
   pant_size?: string;
   families?: string[];
+  num_gifts?: number;
 }

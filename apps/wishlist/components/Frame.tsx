@@ -41,30 +41,32 @@ const Frame = ({ children }: Props) => {
   }
   const title = generateTitle(path);
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex flex-row items-center w-full h-16 bg-inherit sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 sm:dark:border-slate-800 text-black dark:text-slate-400 items-center p-4 text-semibold border-b border-transparent gap-4">
-        <h1 className="grow flex-none font-bold text-2xl noselect drop-shadow-lg">
-          {title}
-        </h1>
-        <div className="shrink truncate flex-end">
-          <p className="text-xs text-right truncate">
-            <span className="font-bold text-indigo-600 dark:text-indigo-500">
-              {`📅 ${daysUntilChristmas()}`}
-            </span>{' '}
-            days until Christmas🎄
-          </p>
-        </div>
-      </header>
-      <div className="flex flex-row h-full">
-        <Sidebar />
-        <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
-          <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
-            <div className="pb-28 sm:pb-0 h-full">{children}</div>
+    <>
+      <div className="flex flex-col h-full">
+        <header className="flex flex-row items-center w-full h-16 bg-inherit sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 sm:dark:border-slate-800 text-black dark:text-slate-400 items-center p-4 text-semibold border-b border-transparent gap-4">
+          <h1 className="grow flex-none font-bold text-2xl noselect drop-shadow-lg">
+            {title}
+          </h1>
+          <div className="shrink truncate flex-end">
+            <p className="text-xs text-right truncate">
+              <span className="font-bold text-indigo-600 dark:text-indigo-500">
+                {`📅 ${daysUntilChristmas()}`}
+              </span>{' '}
+              days until Christmas🎄
+            </p>
+          </div>
+        </header>
+        <div className="flex flex-row h-full">
+          <Sidebar />
+          <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
+            <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
+              <div className="pb-28 sm:pb-0 h-full space-y-4">{children}</div>
+            </div>
           </div>
         </div>
       </div>
       <BottomNav />
-    </div>
+    </>
   );
 };
 

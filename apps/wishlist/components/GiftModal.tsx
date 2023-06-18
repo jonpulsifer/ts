@@ -90,7 +90,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-950 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-indigo-950">
                 <form onSubmit={(e) => handleSubmit(e)}>
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
@@ -122,7 +122,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                             <input
                               type="text"
                               autoComplete="name"
-                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+                              className="form-control text-sm block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
                               value={name}
                               onChange={(e) => setName(e.target.value)}
                               placeholder="Red Mittens"
@@ -140,7 +140,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               type="url"
                               inputMode="url"
                               autoComplete="url"
-                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+                              className="form-control text-sm block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
                               placeholder="https://amazon.ca/ur-favourite-slippers"
                               value={url}
                               onChange={(e) => setURL(e.target.value)}
@@ -154,7 +154,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                             <textarea
                               id="notes"
                               autoComplete="notes"
-                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+                              className="form-control text-sm block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
                               placeholder="..."
                               value={notes}
                               onChange={(e) => setNotes(e.target.value)}
@@ -164,7 +164,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <div className="bg-gray-50 dark:bg-slate-950 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button
                       className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                       data-mdb-ripple="true"
