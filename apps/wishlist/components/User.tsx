@@ -12,7 +12,6 @@ import {
   faPeopleRoof,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Suspense } from 'react';
 import { AppUser, Gift } from '../types';
 import { useAuth } from './AuthProvider';
 import Card, { CardAction } from './Card';
@@ -100,9 +99,9 @@ export const UserProfile = ({ gifts, appUser }: Props) => {
       },
     );
   return (
-    <Suspense fallback={<Card title="Loading..." />}>
+    <>
       <Card action={actions}>{fieldsMarkup}</Card>
       <GiftList gifts={gifts} />
-    </Suspense>
+    </>
   );
 };

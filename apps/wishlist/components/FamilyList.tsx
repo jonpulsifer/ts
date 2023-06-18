@@ -11,6 +11,7 @@ import Card from './Card';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandshake, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import EmptyState from './EmptyState';
 
 interface Props {
   families: Family[];
@@ -193,11 +194,12 @@ const FamilyList = ({ families, user }: Props) => {
       </div>
     </Card>
   ) : (
-    <Card title="👨‍👩‍👧‍👦 No Families Found">
-      <div className="p-4">
-        The elves couldn&apos;t find any families. Something is broken!
-      </div>
-    </Card>
+    <EmptyState
+      title="👨‍👩‍👧‍👦 No Families Found"
+      subtitle="Something is broken, talk to the webmaster"
+    >
+      <div className="p-4">The elves couldn&apos;t find any families.</div>
+    </EmptyState>
   );
 };
 

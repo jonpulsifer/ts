@@ -10,7 +10,11 @@ export const metadata: Metadata = {
 const MePage = async () => {
   const { user } = await getCurrentUser();
   const { gifts } = await getAllUserGifts();
-  return <UserProfile gifts={gifts} appUser={user} />;
+  return (
+    <div className="w-full">
+      <UserProfile gifts={gifts} appUser={user} />
+    </div>
+  );
 };
 
 export default MePage;

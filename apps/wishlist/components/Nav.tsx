@@ -19,7 +19,7 @@ import { useState } from 'react';
 
 type NavLink = {
   title: string;
-  link?: string;
+  href?: string;
   icon: IconDefinition;
   onClick?: () => void;
 };
@@ -32,28 +32,28 @@ export function Sidebar() {
   const links = [
     {
       title: 'Add Gift',
-      link: '#',
+      href: '#',
       onClick: () => setShowGiftModal(true),
       icon: faPlusSquare,
     },
     {
       title: 'Gifts',
-      link: '/gifts',
+      href: '/gifts',
       icon: faGifts,
     },
     {
       title: 'People',
-      link: '/people',
+      href: '/people',
       icon: faPeopleGroup,
     },
     {
       title: 'Claimed',
-      link: '/claimed',
+      href: '/claimed',
       icon: faListCheck,
     },
     {
       title: 'Profile',
-      link: '/user/me',
+      href: '/user/me',
       icon: faPersonRays,
     },
   ];
@@ -74,7 +74,7 @@ export function Sidebar() {
     const linkStyle =
       'p-2 text-md font-semibold transition ease-in-out duration-150 rounded-md hover:shadow-sm hover:shadow-gray-300 hover:bg-white hover:text-indigo-600 dark:hover:bg-slate-800 dark:hover:shadow-black';
     links.forEach((link) => {
-      if (!link.link) {
+      if (!link.href) {
         linx.push(
           <Link
             href="#"
@@ -96,7 +96,7 @@ export function Sidebar() {
         );
         return;
       }
-      const isActive = path === link.link;
+      const isActive = path === link.href;
       linx.push(
         <Link
           className={
@@ -105,7 +105,7 @@ export function Sidebar() {
               : linkStyle
           }
           key={link.title}
-          href={link.link}
+          href={link.href}
           prefetch={false}
           onClick={link.onClick}
         >
@@ -130,15 +130,15 @@ export function Sidebar() {
   };
 
   return (
-    <>
-      <div className="top-0 left-0 hidden sm:block border-r dark:border-slate-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-slate-200 bg-[url('/santa.png')] bg-no-repeat bg-right-top">
-        <nav className="flex flex-col space-y-2 p-2">{linksMarkup(links)}</nav>
-        <nav className="flex flex-col space-y-2 p-2">
-          {linksMarkup(signOutLink)}
-        </nav>
-      </div>
+    <div className="flex flex-col h-full flex-none hidden sm:block border-r dark:border-slate-800 border-gray-300 w-60 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-slate-200 bg-[url('/santa.png')] bg-no-repeat bg-right-top">
+      <nav className="flex flex-col flex-none space-y-2 p-2">
+        {linksMarkup(links)}
+      </nav>
+      <nav className="flex flex-col grow-2 space-y-2 p-2 ">
+        {linksMarkup(signOutLink)}
+      </nav>
       <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
-    </>
+    </div>
   );
 }
 
@@ -174,57 +174,66 @@ export function BottomNav() {
       icon: faPersonRays,
     },
   ];
-  const buttonClass =
-    'inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-900 dark:hover:bg-slate-950 dark:hover:bg-opacity-75 group';
-  const iconClass =
-    'w-6 h-6 mb-1 text-gray-500 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
-  const labelClass =
-    'text-sm font-semibold text-gray-500 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+  const buttons = (links: NavLink[]) => {
+    const buttonClass =
+      'inline-flex flex-col text-gray-500 dark:text-slate-400 dark:bg-slate-950 items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-900 dark:hover:bg-slate-900 dark:hover:bg-opacity-75 group';
+    const iconClass =
+      'w-6 h-6 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+    const labelClass =
+      'text-sm font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
 
-  const buttons = links.map((link) => {
-    // add hover style if link is active
-    const isActive = path === link.href;
+    const btns = links.map((link) => {
+      // add hover style if link is active
+      const isActive = path === link.href;
+      // log object with isactive and the path and some extra info
+      if (isActive) console.log({ isActive, path, link });
 
-    return (
-      <button
-        type="button"
-        className={
-          isActive ? `${buttonClass} bg-gray-50 dark:bg-slate-800` : buttonClass
-        }
-      >
-        <Link
-          href={link.href}
-          className="flex flex-col items-center"
-          prefetch={true}
-          onClick={link.onClick ? link.onClick : undefined}
+      const href = link.href ? link.href : '#';
+      return (
+        <button
+          type="button"
+          className={
+            isActive
+              ? `${buttonClass} bg-gray-50 text-indigo-600 dark:text-indigo-400`
+              : buttonClass
+          }
+          key={link.title}
         >
-          <FontAwesomeIcon
-            icon={link.icon}
-            className={
-              isActive
-                ? `${iconClass} text-indigo-600 dark:text-indigo-500`
-                : iconClass
-            }
-            fill="currentColor"
-          />
-          <span
-            className={
-              isActive
-                ? `${labelClass} text-indigo-600 dark:text-indigo-500`
-                : labelClass
-            }
+          <Link
+            href={href}
+            className="flex flex-col items-center"
+            prefetch={false}
+            onClick={link.onClick ? link.onClick : undefined}
           >
-            {link.title}
-          </span>
-        </Link>
-      </button>
-    );
-  });
+            <FontAwesomeIcon
+              icon={link.icon}
+              className={
+                isActive
+                  ? `${iconClass} text-indigo-600 dark:text-indigo-400`
+                  : iconClass
+              }
+              fill="currentColor"
+            />
+            <span
+              className={
+                isActive
+                  ? `${labelClass} text-indigo-600 dark:text-indigo-400`
+                  : labelClass
+              }
+            >
+              {link.title}
+            </span>
+          </Link>
+        </button>
+      );
+    });
+    return btns;
+  };
 
   return (
-    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-gray-50 border-t border-slate-200 dark:bg-slate-900 dark:border-slate-800 bg-[url('/santa.png')] bg-contain bg-no-repeat bg-right-top">
-      <div className="grid h-full max-w-lg grid-cols-5 mx-auto bg-opacity-75 bg-slate-950">
-        {buttons}
+    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-gray-50 border-t border-slate-200 dark:bg-slate-950 dark:border-slate-800 bg-[url('/santa.png')] bg-contain bg-no-repeat bg-right-top">
+      <div className="grid h-full max-w-lg grid-cols-5 mx-auto opacity-100">
+        {buttons(links)}
       </div>
       <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
     </div>

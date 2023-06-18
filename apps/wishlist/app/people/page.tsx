@@ -1,9 +1,9 @@
 import UserList from 'components/UserList';
-import Link from 'next/link';
 import { getPeopleForUser } from 'lib/firebase-ssr';
-import Card, { CardAction } from 'components/Card';
+import { CardAction } from 'components/Card';
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import { Metadata } from 'next';
+import EmptyState from 'components/EmptyState';
 
 export const metadata: Metadata = {
   title: 'People',
@@ -27,17 +27,18 @@ const PeoplePage = async () => {
     </>
   ) : (
     <>
-      The elves couldn&apos;t find anyone. Have you{' '}
-      <Link className="text-indigo-600 font-semibold" href="/family/join">
-        joined a wishlist?
-      </Link>
+      <p>The elves couldn&apos;t find anyone.</p>
     </>
   );
 
   return noPeople ? (
-    <Card title="👪 No People Found" action={action}>
+    <EmptyState
+      title="👪 No People Found"
+      subtitle="Please join a wishlist or invite your family"
+      action={action}
+    >
       <div className="p-4">{noPeopleMarkup}</div>
-    </Card>
+    </EmptyState>
   ) : (
     <UserList users={users} user={user} />
   );

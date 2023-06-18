@@ -14,10 +14,12 @@ import Modal from './GiftModal';
 import DeleteModal from './DeleteModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faGift,
   faMinusSquare,
   faPlusSquare,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
+import EmptyState from './EmptyState';
 
 interface Props {
   gifts: Gift[];
@@ -73,13 +75,15 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
         );
       case '/claimed':
         return (
-          <p>
-            You haven&apos;t claimed any gifts. Go to the{' '}
-            <Link className="font-semibold text-indigo-600" href="/gifts">
-              gift list
-            </Link>{' '}
-            and claim one before they&apos;re all gone.
-          </p>
+          <>
+            <p>You haven&apos;t claimed any gifts.</p>
+            <p>
+              <span className="font-semibold dark:text-slate-200">
+                Claim a gift
+              </span>{' '}
+              before they&apos;re all gone.
+            </p>
+          </>
         );
       default:
         return defaultMarkup;
@@ -89,9 +93,17 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
   if (!gifts.length) {
     return (
       <>
-        <Card title="🎁 No Gifts Found" subtitle="This wishlist is empty">
+        <EmptyState
+          title="🎁 No Gifts Found"
+          subtitle="There are no gifts in this list"
+          action={{
+            title: 'View all gifts',
+            link: '/gifts',
+            icon: faGift,
+          }}
+        >
           <div className="p-4">{noGiftText()}</div>
-        </Card>
+        </EmptyState>
         <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} />
       </>
     );

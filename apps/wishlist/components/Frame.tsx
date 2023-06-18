@@ -41,8 +41,8 @@ const Frame = ({ children }: Props) => {
   }
   const title = generateTitle(path);
   return (
-    <div>
-      <header className="h-24 w-full bg-inherit sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 sm:dark:border-slate-800 flex grow items-center justify-center text-black dark:text-slate-400 items-center p-4 text-semibold border-b border-transparent space-x-2">
+    <div className="flex flex-col h-full">
+      <header className="flex flex-row items-center w-full h-16 bg-inherit sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 sm:dark:border-slate-800 text-black dark:text-slate-400 items-center p-4 text-semibold border-b border-transparent">
         <h1 className="grow font-bold text-2xl noselect drop-shadow-lg">
           {title}
         </h1>
@@ -55,9 +55,9 @@ const Frame = ({ children }: Props) => {
           </p>
         </div>
       </header>
-      <div className="flex flex-row">
+      <div className="flex flex-row h-full">
         <Sidebar />
-        <div className="flex justify-center p-4 space-y-5 sm:max-w-2xl">
+        <div className="flex flex-col m-auto items-center justify-center p-4 space-y-5 sm:max-w-2xl">
           {children}
         </div>
       </div>

@@ -1,35 +1,14 @@
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import React, { FormEvent, MouseEvent } from 'react';
+import { CardAction } from './Card';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export interface CardAction {
-  icon?: IconDefinition;
-  title: string;
-  danger?: boolean;
-  onClick?: (e: MouseEvent | FormEvent) => void;
-  link?: string;
-}
-
-export interface CardProps {
-  title?: React.ReactNode;
-  subtitle?: React.ReactNode;
+interface Props {
   children?: React.ReactNode;
+  title?: string;
+  subtitle?: string;
   action?: CardAction | CardAction[];
 }
-
-const Card = ({ title, subtitle, action, children }: CardProps) => {
-  const titleMarkup = (
-    <div className="px-4 pt-2 dark:text-gray-400 pb-4">
-      <h1 className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200">
-        {title}
-      </h1>
-      <div className="mt-2">
-        <p className="text-sm text-gray-500">{subtitle}</p>
-      </div>
-    </div>
-  );
-
+export const EmptyState = ({ children, title, subtitle, action }: Props) => {
   const actions: CardAction[] = [];
   if (action && Array.isArray(action)) {
     actions.push(...action);
@@ -72,24 +51,22 @@ const Card = ({ title, subtitle, action, children }: CardProps) => {
         );
       })
     : null;
-
-  const footer = (
-    <div className="bg-gray-50 dark:bg-slate-900 rounded-b-lg px-4 py-3 sm:flex sm:flex-row-reverse">
-      {actionsMarkup}
-    </div>
-  );
-
-  const headerMarkup = title ? titleMarkup : null;
-  const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="flex flex-col h-max rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md border-transparent">
-      <div className="my-2 text-center sm:text-left bg-white dark:bg-slate-900">
-        {headerMarkup}
+    <div className="flex flex-col items-center justify-center text-center h-full max-w-md">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
+          {title}
+        </h1>
+        <p className="text-gray-400 dark:text-slate-200 font-semibold">
+          {subtitle}
+        </p>
+      </div>
+      <div className="text-gray-900 dark:text-slate-400 text-sm">
         {children}
       </div>
-      {footerMarkup}
+      {action && <div className="flex flex-row gap-4">{actionsMarkup}</div>}
     </div>
   );
 };
 
-export default Card;
+export default EmptyState;
