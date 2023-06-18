@@ -55,11 +55,11 @@ const Frame = ({ children }: Props) => {
           </p>
         </div>
       </header>
-      <div className="flex flex-row h-full bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top sm:bg-right-bottom">
+      <div className="flex flex-row h-full">
         <Sidebar />
         <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
           <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
-            {children}
+            <div className="pb-28 sm:pb-0 h-full">{children}</div>
           </div>
         </div>
       </div>

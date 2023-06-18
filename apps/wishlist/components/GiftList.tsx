@@ -15,6 +15,7 @@ import DeleteModal from './DeleteModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faGift,
+  faGifts,
   faMinusSquare,
   faPlusSquare,
   faTrashCan,
@@ -81,10 +82,13 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     );
     const currentUserStateProps = {
       title: '🎁 No Gifts Found',
-      subtitle: "You haven't added any gifts to your wishlist",
+      subtitle: 'You have not added any gifts to your wishlist',
       action: {
         title: 'Add one now!',
-        onClick: () => setIsOpen(true),
+        onClick: () => {
+          console.log('clicked');
+          setIsOpen(true);
+        },
         icon: faGift,
       },
     };
@@ -105,7 +109,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
         return (
           <EmptyState
             title="🎁 No Gifts Found"
-            subtitle="The elves couldn't find any gifts for this person"
+            subtitle="The elves could not find any gifts for this person"
           >
             <div className="p-4">{defaultMarkup}</div>
           </EmptyState>
@@ -114,12 +118,12 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
         // return the state for the claimed route
         return (
           <EmptyState
-            title="🎁 No Gifts Found"
-            subtitle="You haven't claimed any gifts"
+            title="🛒 No Claimed Gifts"
+            subtitle="You have not claimed any gifts"
             action={{
-              title: 'View all gifts',
+              title: 'View gifts',
               link: '/gifts',
-              icon: faGift,
+              icon: faGifts,
             }}
           >
             <div className="p-4">

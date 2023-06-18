@@ -41,7 +41,7 @@ const PeoplePage = async () => {
   return noPeople ? (
     <EmptyState
       title="👪 No People Found"
-      subtitle="The elves couldn't find anyone"
+      subtitle="The elves could not find anyone but you!"
       action={action}
     >
       <div className="p-4">{noPeopleMarkup}</div>

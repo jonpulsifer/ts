@@ -32,11 +32,7 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
         const button = (
           <button
             className={buttonClass}
-            onClick={
-              action?.onClick
-                ? (e) => (action.onClick ? e : undefined)
-                : undefined
-            }
+            onClick={action?.onClick ? action.onClick : undefined}
             key={`fb-${idx}`}
           >
             {actionIcon}
@@ -54,20 +50,26 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
       })
     : null;
   return (
-    <div className="flex flex-col items-center justify-center text-center h-full">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold text-black dark:text-slate-200">
-          {title}
-        </h1>
-        <p className="text-black-400 dark:text-slate-200 font-semibold">
-          {subtitle}
-        </p>
+    <>
+      <div className="flex flex-col items-center justify-center text-center h-full">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <h1 className="text-2xl font-bold text-black dark:text-slate-200">
+            {title}
+          </h1>
+          <p className="text-black-400 dark:text-slate-200 font-semibold">
+            {subtitle}
+          </p>
+        </div>
+        <div className="text-gray-600 dark:text-slate-400 text-sm">
+          {children}
+        </div>
+        {action && <div className="flex flex-row gap-4">{actionsMarkup}</div>}
       </div>
-      <div className="text-gray-600 dark:text-slate-400 text-sm">
-        {children}
-      </div>
-      {action && <div className="flex flex-row gap-4">{actionsMarkup}</div>}
-    </div>
+      <div
+        className="fixed right-0 top-36 h-full w-full -z-10 
+       bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top"
+      />
+    </>
   );
 };
 

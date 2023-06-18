@@ -130,7 +130,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col h-full flex-none hidden sm:block border-r dark:border-slate-800 border-gray-300 w-48 transition-all duration-300 bg-gray-50 dark:bg-slate-900 dark:text-slate-200">
+    <div className="flex flex-col h-full flex-none hidden sm:block border-r dark:border-slate-800 border-gray-300 w-48 transition-all duration-300 bg-gray-50 dark:bg-transparent dark:text-slate-200">
       <nav className="flex flex-col flex-none space-y-2 p-2">
         {linksMarkup(links)}
       </nav>
@@ -227,7 +227,7 @@ export function BottomNav() {
   };
 
   return (
-    <div className="fixed block sm:hidden bottom-0 w-full h-20 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800">
+    <div className="fixed bottom-0 block sm:hidden w-full h-24 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800">
       <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
         {buttons(links)}
       </div>

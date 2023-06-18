@@ -1,6 +1,12 @@
 'use client';
 
-import { doc, setDoc, FirestoreError } from 'firebase/firestore';
+import {
+  doc,
+  FirestoreError,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -10,7 +16,7 @@ import { useAuth } from './AuthProvider';
 import Card from './Card';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHandshake, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faDoorOpen, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import EmptyState from './EmptyState';
 
 interface Props {
@@ -27,6 +33,17 @@ const FamilyList = ({ families, user }: Props) => {
   const { user: currentUser } = useAuth();
   const router = useRouter();
 
+  if (!currentUser) {
+    return (
+      <EmptyState
+        title="👨‍👩‍👧‍👦 No Wishlists Found"
+        subtitle="Something is broken, talk to the webmaster"
+      >
+        <div className="p-4">The elves could not find you!</div>
+      </EmptyState>
+    );
+  }
+
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setPin((prev) => {
@@ -35,67 +52,18 @@ const FamilyList = ({ families, user }: Props) => {
     });
   };
 
-  const handleJoin = async (
-    e: React.FormEvent | React.MouseEvent,
-    id: string,
-  ) => {
+  const handleJoin = (e: React.FormEvent | React.MouseEvent, fam: Family) => {
     e.preventDefault();
-
+    const { id } = fam;
     const family = families.find((f) => f.id === id);
     const pinMatch = family?.pin === pin[id];
-    if (pinMatch) {
+    if (family && pinMatch) {
       const ref = doc(db, `/users/${currentUser?.uid}`);
-      const localFamilies: string[] =
-        user.families && user.families.length ? [...user.families] : [];
 
-      if (!localFamilies.includes(family.id)) {
-        localFamilies.push(family.id);
-        setDoc(
-          ref,
-          {
-            families: localFamilies,
-          },
-          { merge: true },
-        )
-          .then(() => {
-            toast.success(`You've joined the ${family.name} family`);
-            router.push('/people');
-          })
-          .catch((e) => {
-            const error = e as FirestoreError;
-            console.log(JSON.stringify(error));
-            toast.error(error.message);
-          });
-      } else {
-        toast.error(`You're already in the ${family.name} family`);
-      }
-    } else {
-      toast.error(`Pin does not match for the ${family?.name} family`);
-    }
-  };
-
-  const handleLeave = async (
-    e: React.FormEvent | React.MouseEvent,
-    id: string,
-  ) => {
-    e.preventDefault();
-
-    const family = families.find((f) => f.id === id);
-    if (!family) {
-      console.log('could not get family');
-      return;
-    }
-    const ref = doc(db, 'users', user.uid);
-    const userFamilies: string[] =
-      user.families && user.families.length ? [...user.families] : [];
-
-    if (userFamilies.includes(family.id)) {
-      const newFamilies = userFamilies.filter((f) => f != family.id);
-      user.families = newFamilies;
-      setDoc(ref, { families: newFamilies }, { merge: true })
+      updateDoc(ref, { families: arrayUnion(family.id) })
         .then(() => {
-          toast.success(`You've left the ${family.name} family`);
-          router.push('/people');
+          toast.success(`You joined the ${family.name} wishlist!`);
+          router.refresh();
         })
         .catch((e) => {
           const error = e as FirestoreError;
@@ -103,13 +71,33 @@ const FamilyList = ({ families, user }: Props) => {
           toast.error(error.message);
         });
     } else {
-      toast.error(`You're not in the ${family.name} family`);
+      toast.error(`Pin does not match for ${family?.name}`);
     }
+  };
+
+  const handleLeave = (fam: Family) => {
+    const { id } = fam;
+    const family = families.find((f) => f.id === id);
+    if (!family) {
+      return;
+    }
+    console.log(user);
+    console.log(currentUser);
+    const ref = doc(db, 'users', currentUser?.uid);
+    updateDoc(ref, { families: arrayRemove(family.id) })
+      .then(() => {
+        toast.success(`You have left ${family.name}`);
+        router.refresh();
+      })
+      .catch((e) => {
+        const error = e as FirestoreError;
+        console.log(JSON.stringify(error));
+        toast.error(error.message);
+      });
   };
 
   const familyList = (families: Family[]) => {
     return families.map((family) => {
-      const { id, name } = family;
       const form = (
         <form className="flex flex-row items-center">
           <input
@@ -128,7 +116,7 @@ const FamilyList = ({ families, user }: Props) => {
             data-mdb-ripple="true"
             data-mdb-ripple-color="light"
             type="submit"
-            onClick={(e) => handleJoin(e, family.id)}
+            onClick={(e) => handleJoin(e, family)}
           >
             <div className="flex">
               <FontAwesomeIcon icon={faHandshake} className="pr-2" />
@@ -143,12 +131,11 @@ const FamilyList = ({ families, user }: Props) => {
           className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
           data-mdb-ripple="true"
           data-mdb-ripple-color="light"
-          type="submit"
-          onClick={(e) => handleLeave(e, family.id)}
+          onClick={() => handleLeave(family)}
         >
           <div className="flex items-center">
             <div className="flex">
-              <FontAwesomeIcon icon={faTrashCan} className="pr-2" />
+              <FontAwesomeIcon icon={faDoorOpen} className="pr-2" />
             </div>
             Leave
           </div>
@@ -159,18 +146,18 @@ const FamilyList = ({ families, user }: Props) => {
 
       return (
         <tr
-          key={`${name}-${id}`}
+          key={`${family.name}-${family.id}`}
           className={`border-t hover:bg-gray-100 dark:hover:bg-gray-950 transition dark:border-gray-800 ease-in-out duration-300`}
         >
           <td className="w-full py-2">
             <div className="flex items-center p-2 px-4">
               <div className="mr-4 sm:flex inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-gray-800">
                 <span className="font-medium text-violet-600 dark:text-violet-500">
-                  {name[0].toUpperCase()}
+                  {family.name[0].toUpperCase()}
                 </span>
               </div>
               <div>
-                <div className="font-semibold text-xl">{name}</div>
+                <div className="font-semibold text-xl">{family.name}</div>
               </div>
               <div className="flex flex-grow text-right justify-end">
                 {actionMarkup}
@@ -185,7 +172,7 @@ const FamilyList = ({ families, user }: Props) => {
   return families.length ? (
     <Card
       title="Family Wishlists"
-      subtitle="Find your family and join their wishlist."
+      subtitle="Find your family and join their wishlist by entering a matching pin"
     >
       <div className="flex flex-row overflow-x-auto select-none">
         <table className="table-auto w-full rounded-lg">
@@ -195,10 +182,10 @@ const FamilyList = ({ families, user }: Props) => {
     </Card>
   ) : (
     <EmptyState
-      title="👨‍👩‍👧‍👦 No Families Found"
+      title="👨‍👩‍👧‍👦 No Wishlists Found"
       subtitle="Something is broken, talk to the webmaster"
     >
-      <div className="p-4">The elves couldn&apos;t find any families.</div>
+      <div className="p-4">The elves could not find any wishlists.</div>
     </EmptyState>
   );
 };
