@@ -20,7 +20,7 @@ const UserList = ({ users }: Props) => {
   const userList = (appUsers: AppUser[]) => {
     const GiftCountBadge = (count = 0) => {
       const baseFontColor =
-        'text-indigo-700 flex-none dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950/25 ring-indigo-700/10 dark:ring-indigo-500/10';
+        'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950/25 ring-indigo-700/10 dark:ring-indigo-500/10';
       const fontColor =
         count >= 0 && count < 3
           ? 'text-red-700 dark:text-red-500 bg-red-50 dark:bg-red-950/25 ring-red-700/10 dark:ring-red-500/10'
@@ -29,7 +29,7 @@ const UserList = ({ users }: Props) => {
           : count > 4
           ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950/25 ring-green-700/10 dark:ring-green-500/10'
           : baseFontColor;
-      const baseClass = `inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset ${fontColor}`;
+      const baseClass = `flex-none inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset ${fontColor}`;
 
       return (
         <span className={baseClass}>

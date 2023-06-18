@@ -63,7 +63,7 @@ export function Sidebar() {
       title: 'Sign out',
       onClick: () =>
         signOut().then(() => {
-          router.push('/');
+          router.refresh();
         }),
       icon: faSignOut,
     },
@@ -227,7 +227,7 @@ export function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 block sm:hidden w-full h-24 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800 rounded-t-lg">
+    <div className="fixed bottom-0 block sm:hidden w-full h-20 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800 rounded-t-lg">
       <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
         {buttons(links)}
       </div>
