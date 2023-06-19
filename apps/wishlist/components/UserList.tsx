@@ -29,12 +29,12 @@ const UserList = ({ users }: Props) => {
           : count > 4
           ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950/25 ring-green-700/10 dark:ring-green-500/10'
           : baseFontColor;
-      const baseClass = `flex-none inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset ${fontColor}`;
+      const baseClass = `flex-none w-16 justify-center inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset ${fontColor}`;
 
       return (
-        <span className={baseClass}>
-          {count} gift{count > 1 || count === 0 ? 's' : ''} available
-        </span>
+        <div className={baseClass}>
+          {count} gift{count > 1 || count === 0 ? 's' : ''}
+        </div>
       );
     };
     return appUsers.map((appUser) => {

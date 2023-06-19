@@ -4,7 +4,6 @@ import {
   faSignature,
   faAt,
   faLocationDot,
-  faLayerGroup,
   faSocks,
   faPersonRunning,
   faShirt,
@@ -24,16 +23,8 @@ export const UserProfile = ({ appUser }: Props) => {
   const { user } = useAuth();
   const isUserProfile = user?.uid === appUser.uid;
 
-  const {
-    uid,
-    name,
-    email,
-    address,
-    shirt_size,
-    shoe_size,
-    pant_size,
-    gift_theme,
-  } = appUser;
+  const { uid, name, email, address, shirt_size, shoe_size, pant_size } =
+    appUser;
 
   const fields = [
     {
@@ -48,10 +39,10 @@ export const UserProfile = ({ appUser }: Props) => {
       icon: faLocationDot,
       content: address,
     },
-    {
-      icon: faLayerGroup,
-      content: gift_theme,
-    },
+    // {
+    //   icon: faLayerGroup,
+    //   content: gift_theme,
+    // },
     {
       icon: faSocks,
       content: shoe_size,
@@ -71,7 +62,7 @@ export const UserProfile = ({ appUser }: Props) => {
     return (
       <div
         key={`${field.icon}-${i}`}
-        className="flex flex-row items-center p-4"
+        className="flex flex-row items-center truncate"
       >
         <FontAwesomeIcon
           icon={field.icon}
@@ -96,5 +87,12 @@ export const UserProfile = ({ appUser }: Props) => {
         link: '/family/join',
       },
     );
-  return <Card action={actions}>{fieldsMarkup}</Card>;
+  return (
+    <Card
+      // title={isUserProfile ? `Your Profile` : `${user?.displayName}'s Profile`}
+      action={actions}
+    >
+      <div className="flex flex-col">{fieldsMarkup}</div>
+    </Card>
+  );
 };

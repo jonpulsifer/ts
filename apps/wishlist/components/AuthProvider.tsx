@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signInWithPopup,
+  signInWithRedirect,
   User,
   UserCredential,
 } from 'firebase/auth';
@@ -131,7 +131,7 @@ const AuthProvider = ({ children }: Props) => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(firebase.auth, provider);
+      const result = await signInWithRedirect(firebase.auth, provider);
       const isNewUser = getAdditionalUserInfo(result)?.isNewUser;
       return handleUserCredential(result, isNewUser);
     } catch (e) {

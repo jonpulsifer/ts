@@ -63,6 +63,7 @@ export function Sidebar() {
       title: 'Sign out',
       onClick: () =>
         signOut().then(() => {
+          router.push('/login');
           router.refresh();
         }),
       icon: faSignOut,
@@ -130,11 +131,11 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col h-full flex-none hidden sm:block w-48 transition-all duration-300 dark:bg-transparent dark:text-slate-200">
-      <nav className="flex flex-col flex-none space-y-2 p-2">
+    <div className="hidden flex-none sm:block w-40 dark:bg-transparent dark:text-slate-200">
+      <nav className="flex flex-col grow space-y-2 p-2">
         {linksMarkup(links)}
       </nav>
-      <nav className="flex flex-col grow-2 space-y-2 p-2 ">
+      <nav className="flex flex-col space-y-2 p-2">
         {linksMarkup(signOutLink)}
       </nav>
       <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />

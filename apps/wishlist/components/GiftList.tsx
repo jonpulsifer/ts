@@ -270,7 +270,9 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
             </Link>
           </td>
           <td className="px-4 py-2">
-            <div className="grid justify-items-end">{giftActions(gift)}</div>
+            <div className="grid justify-items-end overflow-hidden">
+              {giftActions(gift)}
+            </div>
           </td>
         </tr>
       );
@@ -328,11 +330,11 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
         : count > 4
         ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950 ring-green-700/10 dark:ring-green-500/10'
         : baseFontColor;
-    const baseClass = `flex-none inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${fontColor}`;
+    const baseClass = `flex-none w-16 justify-center inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${fontColor}`;
 
     return (
       <div className={baseClass}>
-        {count} gift{count > 1 ? 's' : ''} available
+        {count} gift{count > 1 ? 's' : ''}
       </div>
     );
   };
@@ -346,6 +348,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
     const isOwnerMe = gifts[0].owner === user.uid;
     return (
       <GiftCard
+        key={gifts[0].owner}
         gifts={gifts}
         title={owner ? `${owner}'s Gifts` : 'My Gifts'}
         subtitle={isOwnerMe ? 'Find all your gifts below' : undefined}

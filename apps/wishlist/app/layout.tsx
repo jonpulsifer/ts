@@ -12,8 +12,6 @@ const inter = Inter({
   display: 'swap',
 });
 
-const bodyClassName = `${inter.className} h-full bg-gray-200 dark:bg-slate-950`;
-
 export const metadata: Metadata = {
   title: {
     template: '%s | wishin.app',
@@ -23,10 +21,12 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html className="h-full" lang="en">
-      <body className={bodyClassName}>
+    <html className="h-full w-full" lang="en">
+      <body
+        className={`h-full w-full bg-gray-200 dark:bg-slate-950 ${inter.className}`}
+      >
         <ErrorBoundary>
-          <main className="flex flex-col h-full">
+          <main className="flex flex-col h-full w-full">
             <AuthProvider>
               <Frame>{children}</Frame>
             </AuthProvider>
