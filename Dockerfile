@@ -35,7 +35,7 @@ COPY turbo.json turbo.json
 
 RUN turbo run build --scope=request-headers --include-dependencies --no-deps
 
-FROM cgr.dev/chainguard/node:18.16.0@sha256:2835457c39dbd807182ad011ed8e7ce0dd0eb540e80b8ba2c880e70f19b62fd4 AS runner
+FROM cgr.dev/chainguard/node:18.16.1@sha256:926be3c8db70b8329d84db337f955737d80466ecf252f04980a6a2db38fb4b28 AS runner
 WORKDIR /app
 
 COPY --from=installer /app/apps/request-headers/next.config.js .
