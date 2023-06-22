@@ -132,8 +132,8 @@ export const GiftCard = ({ gift, user }: Props) => {
           {url ? (
             <div className="flex flex-col sm:flex-row">
               <div className="flex flex-row sm:shrink-0 sm:w-24 items-center space-x-2 mb-2 text-gray-600">
-                <FontAwesomeIcon icon={faLink} className="text-sm" />
-                <p className="font-semibold text-lg">Link</p>
+                <FontAwesomeIcon icon={faLink} />
+                <p className="font-semibold">Link</p>
               </div>
               <div className="truncate">
                 <Link
@@ -148,8 +148,8 @@ export const GiftCard = ({ gift, user }: Props) => {
           ) : null}
           <div className="flex flex-col sm:flex-row items-start">
             <div className="flex flex-row sm:shrink-0 sm:w-24 items-center space-x-2 mb-2 text-gray-600">
-              <FontAwesomeIcon icon={faFeather} className="text-sm" />
-              <p className="font-semibold text-lg">Notes</p>
+              <FontAwesomeIcon icon={faFeather} />
+              <p className="font-semibold">Notes</p>
             </div>
             <div className="whitespace-pre-line">{notesContent}</div>
           </div>

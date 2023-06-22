@@ -65,7 +65,7 @@ export default function Modal({ isOpen, setIsOpen, gift, onClick }: Props) {
                         >
                           Delete {gift.name}?
                         </Dialog.Title>
-                        <div className="mt-2 text-sm text-gray-500">
+                        <div className="mt-2 text-gray-500">
                           <p>
                             Are you sure you want to{' '}
                             <span className="font-bold text-black dark:text-white">
@@ -79,16 +79,14 @@ export default function Modal({ isOpen, setIsOpen, gift, onClick }: Props) {
                   </div>
                   <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button
-                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-900 sm:ml-3 sm:w-auto"
-                      data-mdb-ripple="true"
-                      data-mdb-ripple-color="light"
+                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-900 sm:ml-3 sm:w-auto"
                       type="submit"
                     >
                       Delete
                     </button>
                     <button
                       type="button"
-                      className="mt-3 dark:text-slate-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                      className="font-semibold text-gray-900 mt-3 dark:text-slate-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={() => setIsOpen(false)}
                       ref={cancelButtonRef}
                     >

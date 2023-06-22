@@ -24,7 +24,7 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
           </div>
         ) : null;
         const baseButtonClass =
-          'text-sm font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
+          'font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
         const dangerClass = `bg-red-500 ${baseButtonClass}`;
         const infoClass = `bg-indigo-600 ${baseButtonClass}`;
         const buttonClass = action.danger ? dangerClass : infoClass;

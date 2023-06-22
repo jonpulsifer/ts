@@ -113,8 +113,6 @@ const FamilyList = ({ families, user }: Props) => {
           />
           <button
             className="inline-flex ml-4 w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto "
-            data-mdb-ripple="true"
-            data-mdb-ripple-color="light"
             type="submit"
             onClick={(e) => handleJoin(e, family)}
           >
@@ -129,8 +127,6 @@ const FamilyList = ({ families, user }: Props) => {
       const actionMarkup = user.families?.includes(family.id) ? (
         <button
           className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
-          data-mdb-ripple="true"
-          data-mdb-ripple-color="light"
           onClick={() => handleLeave(family)}
         >
           <div className="flex items-center">

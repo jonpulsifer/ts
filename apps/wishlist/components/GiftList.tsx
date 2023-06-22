@@ -195,7 +195,7 @@ const GiftList = ({ gifts: giftsFromProps }: Props) => {
 
   const giftActions = (gift: Gift) => {
     const buttonClass =
-      'inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm w-auto ring-1 ring-inset';
+      'inline-flex items-center rounded-md px-3 py-2 font-semibold shadow-sm w-auto ring-1 ring-inset';
     const buttonInfo =
       'text-indigo-600 dark:text-indigo-100 hover:text-white dark:hover:text-indigo-500 bg-indigo-50 dark:bg-indigo-950/25 dark:hover:bg-indigo-950/25 hover:bg-indigo-600 ring-indigo-700/10 dark:ring-indigo-600/20';
     const buttonDanger =

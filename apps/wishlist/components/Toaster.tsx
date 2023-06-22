@@ -48,7 +48,7 @@ export const dismissable = (content: string | JSX.Element) => {
         >
           <FontAwesomeIcon icon={faClose} />
         </button>
-        <p className="text-sm font-bold">{content}</p>
+        <p className="font-bold">{content}</p>
       </div>
     );
   });
