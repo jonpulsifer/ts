@@ -1,4 +1,4 @@
-FROM node:18.16.1-alpine@sha256:1d0eb1383b35b675fb5cc0c8f04dccaeeac8e2205902eb8d5dc5feb1f9d8f5d8 AS builder
+FROM node:18.16.1-alpine@sha256:d5b2a7869a4016b1847986ea52098fa404421e44281bb7615a9e3615e07f37fb AS builder
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 RUN apk update
@@ -9,7 +9,7 @@ COPY . .
 RUN turbo prune --scope=request-headers --docker
 
 # Add lockfile and package.json's of isolated subworkspace
-FROM node:18.16.1-alpine@sha256:1d0eb1383b35b675fb5cc0c8f04dccaeeac8e2205902eb8d5dc5feb1f9d8f5d8 AS installer
+FROM node:18.16.1-alpine@sha256:d5b2a7869a4016b1847986ea52098fa404421e44281bb7615a9e3615e07f37fb AS installer
 RUN apk add --no-cache libc6-compat
 RUN yarn global add pnpm turbo
 WORKDIR /app
