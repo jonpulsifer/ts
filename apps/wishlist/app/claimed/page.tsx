@@ -1,6 +1,7 @@
-import Card from 'components/Card';
+import { faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import GiftList from 'components/GiftList';
 import Page from 'components/Page';
+import Spinner from 'components/Spinner';
 import { getClaimedGifts } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -14,7 +15,7 @@ const ClaimedPage = async () => {
   const { gifts } = await getClaimedGifts();
   return (
     <Page title="🛒 Claimed Gifts">
-      <Suspense fallback={<Card title="LOADING">Loading...</Card>}>
+      <Suspense fallback={<Spinner icon={faSnowflake} />}>
         <GiftList gifts={gifts} />
       </Suspense>
     </Page>

@@ -2,13 +2,13 @@
 import { faGifts } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
-import { collection, doc, FirestoreError, setDoc } from 'firebase/firestore';
+import { addDoc, collection, FirestoreError } from 'firebase/firestore';
+import { db } from 'lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Fragment, useRef } from 'react';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import { db } from '../lib/firebase';
 import { useAuth } from './AuthProvider';
 interface Props {
   isOpen: boolean;
@@ -23,6 +23,17 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
   const { user } = useAuth();
   const router = useRouter();
 
+  const resetForm = () => {
+    setName('');
+    setURL('');
+    setNotes('');
+  };
+
+  const closeAndReset = () => {
+    setIsOpen(false);
+    resetForm();
+  };
+
   if (!user) return null;
   const { uid } = user;
 
@@ -33,25 +44,17 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
       return;
     }
     const col = collection(db, 'gifts');
-    const ref = doc(col);
-
-    setDoc(
-      ref,
-      {
-        name,
-        notes,
-        url,
-        owner: uid,
-        claimed_by: '',
-      },
-      { merge: true },
-    )
+    addDoc(col, {
+      name,
+      notes,
+      url,
+      owner: uid,
+      claimed_by: '',
+    })
       .then(() => {
         const msg = `Added ${name} to your wishlist`;
         toast.success(msg);
-        setName('');
-        setURL('');
-        setNotes('');
+        resetForm();
         router.refresh();
       })
       .catch((e) => {
@@ -66,7 +69,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={() => setIsOpen(false)}
+        onClose={() => closeAndReset()}
       >
         <Transition.Child
           as={Fragment}
@@ -91,7 +94,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-950 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-indigo-950">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-indigo-950">
                 <form onSubmit={(e) => handleSubmit(e)}>
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
@@ -165,7 +168,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-slate-950 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button
                       className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                       type="submit"
@@ -175,7 +178,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                     <button
                       type="button"
                       className="mt-3 dark:text-slate-400 inline-flex w-full items-center justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => closeAndReset()}
                       ref={cancelButtonRef}
                     >
                       Close

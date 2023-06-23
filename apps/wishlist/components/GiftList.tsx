@@ -13,7 +13,7 @@ import { deleteDoc, doc, FirestoreError, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { db } from '../lib/firebase';
@@ -28,18 +28,13 @@ interface Props {
   gifts: Gift[];
 }
 
-const GiftList = ({ gifts: giftsFromProps }: Props) => {
-  const [gifts, setGifts] = useState(giftsFromProps);
-  const { user } = useAuth();
-  const path = usePathname();
+const GiftList = ({ gifts }: Props) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [gift, setGift] = useState<Gift | null>(null);
+  const path = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    setGifts(giftsFromProps);
-  }, [giftsFromProps]);
+  const { user } = useAuth();
 
   if (!user) return null;
 
