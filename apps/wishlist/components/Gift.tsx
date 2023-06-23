@@ -9,7 +9,13 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { deleteDoc, doc, FirestoreError, setDoc } from 'firebase/firestore';
+import {
+  deleteDoc,
+  doc,
+  FirestoreError,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
@@ -76,10 +82,10 @@ export const GiftCard = ({ gift, user }: Props) => {
 
   const handleClaim = (gift: Gift) => {
     const ref = doc(db, 'gifts', gift.id);
-    setDoc(ref, { claimed_by: user?.uid }, { merge: true })
+    updateDoc(ref, { claimed_by: currentUser?.uid })
       .then(() => {
         toast.success(`Claimed ${gift.name}`);
-        router.push('/gifts');
+        router.refresh();
       })
       .catch((error: FirestoreError) => {
         toast.error(error.message);
@@ -88,10 +94,10 @@ export const GiftCard = ({ gift, user }: Props) => {
 
   const handleUnclaim = (gift: Gift) => {
     const ref = doc(db, 'gifts', gift.id);
-    setDoc(ref, { claimed_by: '' }, { merge: true })
+    updateDoc(ref, { claimed_by: '' })
       .then(() => {
         toast.success(`Unclaimed ${gift.name}`);
-        router.push('/gifts');
+        router.refresh();
       })
       .catch((error: FirestoreError) => {
         toast.error(error.message);
