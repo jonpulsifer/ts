@@ -9,13 +9,7 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  deleteDoc,
-  doc,
-  FirestoreError,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { deleteDoc, doc, FirestoreError, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
