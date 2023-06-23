@@ -64,13 +64,13 @@ const Page = ({ title, children }: Props) => {
   const pageTitle = title || generateTitle(path);
   return (
     <div className="flex flex-col h-full">
-      <header className="flex flex-row fixed items-center w-full z-10 h-16 dark:bg-slate-950 sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 dark:border-slate-800 text-black dark:text-slate-400 gap-2 sm:gap-4 items-center p-2 sm:p-4 text-semibold border-b border-transparent">
+      <header className="flex flex-row items-center w-full h-16 bg-inherit sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 dark:border-slate-800 text-black dark:text-slate-400 gap-2 sm:gap-4 items-center p-2 sm:p-4 text-semibold border-b border-transparent">
         <h1 className="grow flex-none font-bold text-2xl noselect drop-shadow-lg">
           {pageTitle}
         </h1>
         <div className="flex-end">{DaysUntilChristmas()}</div>
       </header>
-      <div className="flex flex-row h-full mt-16">
+      <div className="flex flex-row h-full">
         <Sidebar />
         <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
           <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
