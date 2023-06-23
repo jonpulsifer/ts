@@ -255,7 +255,7 @@ importers:
         specifier: 7.32.2
         version: 7.32.2(eslint@8.43.0)
       eslint-plugin-simple-import-sort:
-        specifier: ^10.0.0
+        specifier: 10.0.0
         version: 10.0.0(eslint@8.43.0)
       prettier:
         specifier: 2.8.8
