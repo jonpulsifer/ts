@@ -18,9 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const GiftPage = async ({ params }: Props) => {
   const { gift } = await getGift(params.id);
   const { user } = await getUser(gift.owner);
-
   return (
-    <Page>
+    <Page title={gift.name}>
       <GiftCard gift={gift} user={user} />
     </Page>
   );

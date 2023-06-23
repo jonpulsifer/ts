@@ -28,16 +28,22 @@ const ProfilePage = async ({ params }: Props) => {
   const { email } = user;
 
   return (
-    <Page>
-      <Card>
-        <div className="flex flex-row items-center">
-          <FontAwesomeIcon icon={faAt} className="w-10 text-lg" />
-          <Link className="" href={`mailto:${email}`} target="email">
-            {email}
-          </Link>
-        </div>
-      </Card>
-      <UserForm user={user} />
+    <Page title={`Edit ${user.name || user.email}`}>
+      {user ? (
+        <>
+          <Card>
+            <div className="flex flex-row items-center">
+              <FontAwesomeIcon icon={faAt} className="w-10 text-lg" />
+              <Link className="" href={`mailto:${email}`} target="email">
+                {email}
+              </Link>
+            </div>
+          </Card>
+          <UserForm user={user} />
+        </>
+      ) : (
+        <Card title="User Not Found" />
+      )}
     </Page>
   );
 };

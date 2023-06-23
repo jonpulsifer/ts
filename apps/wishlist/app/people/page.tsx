@@ -19,7 +19,7 @@ const PeoplePage = async () => {
     icon: faPeopleRoof,
     link: '/family/join',
   };
-  const noPeople = !users || !users.length;
+  const people = users && users.length;
   const hasFamilies = user?.families && user.families.length;
   const noPeopleMarkup = hasFamilies ? (
     <>
@@ -40,8 +40,10 @@ const PeoplePage = async () => {
   );
 
   return (
-    <Page>
-      {noPeople ? (
+    <Page title="👪 People">
+      {people ? (
+        <UserList users={users} user={user} />
+      ) : (
         <EmptyState
           title="👪 No People Found"
           subtitle="The elves could not find anyone but you!"
@@ -49,10 +51,7 @@ const PeoplePage = async () => {
         >
           <div className="p-4">{noPeopleMarkup}</div>
         </EmptyState>
-      ) : (
-        <UserList users={users} user={user} />
       )}
-      )
     </Page>
   );
 };

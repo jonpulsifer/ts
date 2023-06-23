@@ -13,7 +13,7 @@ const MePage = async () => {
   const { user } = await getCurrentUser();
   const { gifts } = await getAllUserGifts();
   return (
-    <Page>
+    <Page title="👤 My Profile">
       <div className="w-full space-y-4">
         <UserProfile appUser={user} />
         <GiftList gifts={gifts} />

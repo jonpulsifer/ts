@@ -11,19 +11,22 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { gift } = await getGift(params.id);
   return {
-    title: `Edit ${gift.name || 'Gift'}`,
+    title: `Edit ${gift.name || '🎁 Edit Gift'}`,
     description: 'Edit a gift',
   };
 }
 
 const EditGiftPage = async ({ params }: Props) => {
   const { gift } = await getGift(params.id);
-  if (!gift) return EmptyState({ title: 'Gift not found' });
   return (
-    <Page>
-      <Card>
-        <GiftForm gift={gift} />
-      </Card>
+    <Page title={`Edit ${gift.name || '🎁 Edit Gift'}`}>
+      {gift ? (
+        <Card>
+          <GiftForm gift={gift} />
+        </Card>
+      ) : (
+        EmptyState({ title: 'Gift not found' })
+      )}
     </Page>
   );
 };

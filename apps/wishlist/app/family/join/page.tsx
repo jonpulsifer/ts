@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const JoinFamilyPage = async () => {
   const { families, user } = await getFamilies();
   return (
-    <Page>
+    <Page title="👪 Join a family">
       <FamilyList families={families} user={user} />
     </Page>
   );

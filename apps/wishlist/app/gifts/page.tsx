@@ -12,7 +12,7 @@ const GiftsPage = async () => {
   const { gifts } = await getGifts();
 
   return (
-    <Page>
+    <Page title="🎁 Gifts">
       <GiftList gifts={gifts} />
     </Page>
   );
