@@ -1,15 +1,15 @@
 'use client';
 
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FirebaseError } from 'firebase/app';
 import { collection, doc, setDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { AppUser } from '../types';
 
+import { db } from '../lib/firebase';
+import { AppUser } from '../types';
 import Card from './Card';
-import { faSave } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   user: AppUser;

@@ -1,10 +1,11 @@
-import Card from 'components/Card';
-import UserForm from 'components/UserForm';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Card from 'components/Card';
+import Page from 'components/Page';
+import UserForm from 'components/UserForm';
 import { getUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 interface Props {
   params: { [K in string]: string };
@@ -27,7 +28,7 @@ const ProfilePage = async ({ params }: Props) => {
   const { email } = user;
 
   return (
-    <>
+    <Page>
       <Card>
         <div className="flex flex-row items-center">
           <FontAwesomeIcon icon={faAt} className="w-10 text-lg" />
@@ -37,7 +38,7 @@ const ProfilePage = async ({ params }: Props) => {
         </div>
       </Card>
       <UserForm user={user} />
-    </>
+    </Page>
   );
 };
 

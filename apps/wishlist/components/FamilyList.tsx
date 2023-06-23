@@ -1,22 +1,22 @@
 'use client';
 
+import { faDoorOpen, faHandshake } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  arrayRemove,
+  arrayUnion,
   doc,
   FirestoreError,
   updateDoc,
-  arrayUnion,
-  arrayRemove,
 } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+
 import { db } from '../lib/firebase';
 import { AppUser, Family } from '../types';
 import { useAuth } from './AuthProvider';
 import Card from './Card';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDoorOpen, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import EmptyState from './EmptyState';
 
 interface Props {

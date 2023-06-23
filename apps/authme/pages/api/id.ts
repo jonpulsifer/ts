@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { LoginTicket } from 'google-auth-library';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import verifyIdToken from '../../lib/auth';
 
 export default async function handler(

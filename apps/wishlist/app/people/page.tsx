@@ -1,9 +1,10 @@
+import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
+import { CardAction } from 'components/Card';
+import EmptyState from 'components/EmptyState';
+import Page from 'components/Page';
 import UserList from 'components/UserList';
 import { getPeopleForUser } from 'lib/firebase-ssr';
-import { CardAction } from 'components/Card';
-import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import { Metadata } from 'next';
-import EmptyState from 'components/EmptyState';
 
 export const metadata: Metadata = {
   title: 'People',
@@ -38,16 +39,21 @@ const PeoplePage = async () => {
     </>
   );
 
-  return noPeople ? (
-    <EmptyState
-      title="👪 No People Found"
-      subtitle="The elves could not find anyone but you!"
-      action={action}
-    >
-      <div className="p-4">{noPeopleMarkup}</div>
-    </EmptyState>
-  ) : (
-    <UserList users={users} user={user} />
+  return (
+    <Page>
+      {noPeople ? (
+        <EmptyState
+          title="👪 No People Found"
+          subtitle="The elves could not find anyone but you!"
+          action={action}
+        >
+          <div className="p-4">{noPeopleMarkup}</div>
+        </EmptyState>
+      ) : (
+        <UserList users={users} user={user} />
+      )}
+      )
+    </Page>
   );
 };
 

@@ -1,4 +1,5 @@
 import GiftList from 'components/GiftList';
+import Page from 'components/Page';
 import { getClaimedGifts } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 
@@ -9,7 +10,11 @@ export const metadata: Metadata = {
 
 const ClaimedPage = async () => {
   const { gifts } = await getClaimedGifts();
-  return <GiftList gifts={gifts} />;
+  return (
+    <Page>
+      <GiftList gifts={gifts} />
+    </Page>
+  );
 };
 
 export default ClaimedPage;

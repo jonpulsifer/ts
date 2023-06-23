@@ -1,16 +1,17 @@
 'use client';
 
 import {
-  faSignature,
   faAt,
   faLocationDot,
-  faSocks,
+  faPeopleRoof,
   faPersonRunning,
   faShirt,
+  faSignature,
+  faSocks,
   faUserEdit,
-  faPeopleRoof,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { AppUser } from '../types';
 import { useAuth } from './AuthProvider';
 import Card, { CardAction } from './Card';

@@ -1,5 +1,6 @@
-import Login from './login/page';
 import { Metadata } from 'next';
+
+import Login from './login/page';
 
 export const metadata: Metadata = {
   title: 'Login',

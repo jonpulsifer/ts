@@ -1,18 +1,19 @@
 'use client';
 
 import {
-  faLink,
   faFeather,
+  faLink,
   faMinusSquare,
   faPencil,
   faPlusSquare,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { doc, deleteDoc, FirestoreError, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, FirestoreError, setDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+
 import { db } from '../lib/firebase';
 import { AppUser, Gift } from '../types';
 import Card from './Card';

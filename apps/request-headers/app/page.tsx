@@ -1,7 +1,8 @@
 import { headers } from 'next/headers';
 import Image from 'next/image';
-import styles from './page.module.css';
 import { Suspense } from 'react';
+
+import styles from './page.module.css';
 
 const { NODE_NAME, NODE_IP, POD_NAME, POD_IP } = process.env;
 const headersMarkup = () => {

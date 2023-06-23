@@ -12,9 +12,10 @@ import {
   UserCredential,
 } from 'firebase/auth';
 import { collection, doc, FirestoreError, setDoc } from 'firebase/firestore';
-import * as firebase from '../lib/firebase';
 import { destroyCookie, setCookie } from 'nookies';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
+
+import * as firebase from '../lib/firebase';
 
 interface SignInResults {
   user?: User;
@@ -183,4 +184,4 @@ const AuthProvider = ({ children }: Props) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export { type SignInResults, AuthProvider, useAuth };
+export { AuthProvider, type SignInResults, useAuth };

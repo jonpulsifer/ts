@@ -1,5 +1,6 @@
 import { headers } from 'next/headers';
 import Image from 'next/image';
+
 import verifyIdToken from '../lib/auth';
 import styles from './page.module.css';
 

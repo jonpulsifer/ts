@@ -1,14 +1,14 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import {
+  faGhost,
   faGift,
   faGifts,
-  faSnowman,
   faHollyBerry,
-  faGhost,
   faSleigh,
+  faSnowman,
 } from '@fortawesome/free-solid-svg-icons';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
 interface Props {
   icon?: IconDefinition;

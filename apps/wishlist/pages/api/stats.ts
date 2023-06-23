@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { WhereFilterOp } from 'firebase-admin/firestore';
 import { NextApiRequest, NextApiResponse } from 'next';
+
 import { db } from '../../lib/firebase-ssr-db';
 
 const getCounts = async (

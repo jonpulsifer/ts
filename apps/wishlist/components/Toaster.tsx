@@ -1,9 +1,9 @@
 'use client';
-import React from 'react';
-import { Transition } from '@headlessui/react';
-import { toast, Toaster, ToastIcon, resolveValue } from 'react-hot-toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Transition } from '@headlessui/react';
+import React from 'react';
+import { resolveValue, toast, Toaster, ToastIcon } from 'react-hot-toast';
 
 export const Toast = () => {
   return (

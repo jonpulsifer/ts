@@ -1,5 +1,6 @@
-import { getGift, getUser } from 'lib/firebase-ssr';
 import { GiftCard } from 'components/Gift';
+import Page from 'components/Page';
+import { getGift, getUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 
 interface Props {
@@ -18,7 +19,11 @@ const GiftPage = async ({ params }: Props) => {
   const { gift } = await getGift(params.id);
   const { user } = await getUser(gift.owner);
 
-  return <GiftCard gift={gift} user={user} />;
+  return (
+    <Page>
+      <GiftCard gift={gift} user={user} />
+    </Page>
+  );
 };
 
 export default GiftPage;

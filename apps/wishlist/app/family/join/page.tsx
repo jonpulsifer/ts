@@ -1,5 +1,6 @@
-import { getFamilies } from 'lib/firebase-ssr';
 import FamilyList from 'components/FamilyList';
+import Page from 'components/Page';
+import { getFamilies } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,7 +10,11 @@ export const metadata: Metadata = {
 
 const JoinFamilyPage = async () => {
   const { families, user } = await getFamilies();
-  return <FamilyList families={families} user={user} />;
+  return (
+    <Page>
+      <FamilyList families={families} user={user} />
+    </Page>
+  );
 };
 
 export default JoinFamilyPage;

@@ -1,14 +1,15 @@
 'use client';
-import { Fragment, useRef } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGifts } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Dialog, Transition } from '@headlessui/react';
 import { collection, doc, FirestoreError, setDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { useRouter } from 'next/navigation';
+import { Fragment, useRef } from 'react';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+
+import { db } from '../lib/firebase';
 import { useAuth } from './AuthProvider';
-import { useRouter } from 'next/navigation';
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;

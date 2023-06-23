@@ -3,6 +3,7 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import type { AppUser } from '../types';
 import Card, { CardAction } from './Card';
 

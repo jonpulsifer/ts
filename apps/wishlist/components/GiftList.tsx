@@ -1,18 +1,5 @@
 'use client';
 
-import { deleteDoc, doc, FirestoreError, updateDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
-import type { Gift } from '../types';
-
-import { useAuth } from './AuthProvider';
-import Card from './Card';
-import Modal from './GiftModal';
-import DeleteModal from './DeleteModal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEdit,
   faGift,
@@ -21,8 +8,21 @@ import {
   faPlusSquare,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
-import EmptyState from './EmptyState';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { deleteDoc, doc, FirestoreError, updateDoc } from 'firebase/firestore';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+
+import { db } from '../lib/firebase';
+import type { Gift } from '../types';
+import { useAuth } from './AuthProvider';
+import Card from './Card';
+import DeleteModal from './DeleteModal';
+import EmptyState from './EmptyState';
+import Modal from './GiftModal';
 
 interface Props {
   gifts: Gift[];

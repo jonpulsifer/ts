@@ -1,9 +1,12 @@
 'use client';
-import React from 'react';
-import { Sidebar, BottomNav } from './Nav';
 import { usePathname } from 'next/navigation';
+import React from 'react';
+
+import { BottomNav, Sidebar } from './Nav';
+
 interface Props {
   children: React.ReactNode;
+  title?: string;
 }
 
 const daysUntilChristmas = () => {
@@ -53,33 +56,31 @@ const DaysUntilChristmas = (count = daysUntilChristmas()) => {
   );
 };
 
-const Frame = ({ children }: Props) => {
+const Page = ({ title, children }: Props) => {
   const path = usePathname();
   if (path === '/' || path === '/login') {
     return <>{children}</>;
   }
-  const title = generateTitle(path);
+  const pageTitle = title || generateTitle(path);
   return (
-    <>
-      <div className="flex flex-col h-full">
-        <header className="flex flex-row items-center w-full h-16 bg-inherit sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 sm:dark:border-slate-800 text-black dark:text-slate-400 gap-2 sm:gap-4 items-center p-2 sm:p-4 text-semibold border-b border-transparent">
-          <h1 className="grow flex-none font-bold text-2xl noselect drop-shadow-lg">
-            {title}
-          </h1>
-          <div className="flex-end">{DaysUntilChristmas()}</div>
-        </header>
-        <div className="flex flex-row h-full">
-          <Sidebar />
-          <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
-            <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
-              <div className="space-y-4 pb-28 sm:pb-0 grow">{children}</div>
-            </div>
+    <div className="flex flex-col h-full">
+      <header className="flex flex-row items-center w-full h-16 bg-inherit sm:bg-gray-50 sm:border-b sm:border-gray-300 sm:dark:bg-slate-900 sm:dark:border-slate-800 text-black dark:text-slate-400 gap-2 sm:gap-4 items-center p-2 sm:p-4 text-semibold border-b border-transparent">
+        <h1 className="grow flex-none font-bold text-2xl noselect drop-shadow-lg">
+          {pageTitle}
+        </h1>
+        <div className="flex-end">{DaysUntilChristmas()}</div>
+      </header>
+      <div className="flex flex-row h-full">
+        <Sidebar />
+        <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
+          <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
+            <div className="space-y-4 pb-28 sm:pb-0 grow">{children}</div>
           </div>
         </div>
-        <BottomNav />
       </div>
-    </>
+      <BottomNav />
+    </div>
   );
 };
 
-export default Frame;
+export default Page;

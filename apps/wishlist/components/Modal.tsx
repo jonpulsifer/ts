@@ -1,8 +1,8 @@
 'use client';
-import { Fragment, useRef, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useRef, useState } from 'react';
 
 export default function Modal() {
   const [open, setOpen] = useState(true);

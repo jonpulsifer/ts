@@ -1,11 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-
-import { useAuth } from './AuthProvider';
-import Modal from './GiftModal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faGifts,
   faListCheck,
@@ -15,7 +9,13 @@ import {
   faSignOut,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+import { useAuth } from './AuthProvider';
+import Modal from './GiftModal';
 
 type NavLink = {
   title: string;

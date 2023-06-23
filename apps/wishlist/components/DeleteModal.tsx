@@ -1,8 +1,8 @@
 'use client';
-import { Fragment, useRef } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useRef } from 'react';
 import React from 'react';
 import { Gift } from 'types';
 

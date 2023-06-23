@@ -1,6 +1,7 @@
-import Link from 'next/link';
-import { CardAction } from './Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+
+import { CardAction } from './Card';
 
 interface Props {
   children?: React.ReactNode;

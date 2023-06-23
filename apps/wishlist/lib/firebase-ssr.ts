@@ -2,6 +2,7 @@ import { FirebaseError } from 'firebase-admin';
 import { FieldPath } from 'firebase-admin/firestore';
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+
 import { AppUser, Family, Gift } from '../types';
 import { auth, db } from './firebase-ssr-db';
 

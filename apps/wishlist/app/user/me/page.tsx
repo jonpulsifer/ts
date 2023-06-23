@@ -1,6 +1,7 @@
 import GiftList from 'components/GiftList';
+import Page from 'components/Page';
 import { UserProfile } from 'components/User';
-import { getCurrentUser, getAllUserGifts } from 'lib/firebase-ssr';
+import { getAllUserGifts, getCurrentUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,10 +13,12 @@ const MePage = async () => {
   const { user } = await getCurrentUser();
   const { gifts } = await getAllUserGifts();
   return (
-    <div className="w-full space-y-4">
-      <UserProfile appUser={user} />
-      <GiftList gifts={gifts} />
-    </div>
+    <Page>
+      <div className="w-full space-y-4">
+        <UserProfile appUser={user} />
+        <GiftList gifts={gifts} />
+      </div>
+    </Page>
   );
 };
 
