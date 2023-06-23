@@ -70,7 +70,7 @@ const Page = ({ title, children }: Props) => {
         </h1>
         <div className="flex-end">{DaysUntilChristmas()}</div>
       </header>
-      <div className="flex flex-row h-full mt-0 sm:mt-16">
+      <div className="flex flex-row h-full mt-16">
         <Sidebar />
         <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
           <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">

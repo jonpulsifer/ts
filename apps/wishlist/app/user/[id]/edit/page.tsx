@@ -28,7 +28,7 @@ const ProfilePage = async ({ params }: Props) => {
   const { email } = user;
 
   return (
-    <Page title={`Edit ${user.name || user.email}`}>
+    <Page title={`👤 Edit ${user.name || user.email}`}>
       {user ? (
         <>
           <Card>

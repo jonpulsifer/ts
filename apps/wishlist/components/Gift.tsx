@@ -16,6 +16,7 @@ import { toast } from 'react-hot-toast';
 
 import { db } from '../lib/firebase';
 import { AppUser, Gift } from '../types';
+import { useAuth } from './AuthProvider';
 import Card from './Card';
 
 interface Props {
@@ -26,6 +27,7 @@ interface Props {
 export const GiftCard = ({ gift, user }: Props) => {
   const { name, notes, url } = gift;
   const router = useRouter();
+  const { user: currentUser } = useAuth();
 
   const notesContent = notes
     ? notes
@@ -97,7 +99,7 @@ export const GiftCard = ({ gift, user }: Props) => {
   };
 
   const giftAction = () => {
-    if (gift.owner === user.uid)
+    if (gift.owner === currentUser?.uid)
       return [
         {
           link: `/gift/${gift.id}/edit`,
@@ -111,8 +113,9 @@ export const GiftCard = ({ gift, user }: Props) => {
           danger: true,
         },
       ];
-    if (gift.claimed_by && gift.claimed_by !== user.uid) return undefined;
-    if (gift.claimed_by === user.uid) {
+    if (gift.claimed_by && gift.claimed_by !== currentUser?.uid)
+      return undefined;
+    if (gift.claimed_by === currentUser?.uid) {
       return {
         onClick: () => handleUnclaim(gift),
         icon: faMinusSquare,
