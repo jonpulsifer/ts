@@ -29,7 +29,6 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
         const dangerClass = `bg-red-500 ${baseButtonClass}`;
         const infoClass = `bg-indigo-600 ${baseButtonClass}`;
         const buttonClass = action.danger ? dangerClass : infoClass;
-        console.log('got button with action', action);
         const button = (
           <button
             className={buttonClass}
@@ -40,7 +39,6 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
             {action?.title}
           </button>
         );
-        console.log('got button', button);
         return action.link ? (
           <Link href={action.link} key={`fb-${idx}`}>
             {button}
