@@ -1,7 +1,6 @@
 'use client';
 
 import { SignInResults, useAuth } from 'components/AuthProvider';
-import Card from 'components/Card';
 import { dismissable } from 'components/Toaster';
 import { User } from 'firebase/auth';
 import Image from 'next/image';
@@ -33,25 +32,26 @@ const LoginPage = () => {
       console.log('something went wrong');
       return;
     }
-
-    if (user && isNewUser) {
-      const toastMarkup = (
-        <>
-          Make sure to
-          <Link
-            className="font-bold text-indigo-600"
-            href={`/user/${user.uid}/edit`}
-          >
-            {' '}
-            complete your profile{' '}
-          </Link>
-          with some extra festive details!
-        </>
-      );
-      welcome(user);
-      dismissable(toastMarkup);
+    if (user) {
+      if (isNewUser) {
+        const toastMarkup = (
+          <>
+            Make sure to
+            <Link
+              className="font-bold text-indigo-600"
+              href={`/user/${user.uid}/edit`}
+            >
+              {' '}
+              complete your profile{' '}
+            </Link>
+            with some extra festive details!
+          </>
+        );
+        welcome(user);
+        dismissable(toastMarkup);
+      } else welcome(user);
+      router.push('/people');
     }
-    if (user && !isNewUser) welcome(user);
   };
 
   const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
@@ -60,27 +60,91 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center items-center px-6 py-12 lg:px-8">
-      <Card>
-        <div className="flex flex-col sm:mx-auto sm:w-full sm:max-w-sm items-center">
-          <div className="flex flex-row justify-center items-center">
-            <Image src={santa} alt="Santa" width={100} height={100} />
-            <h1 className="text-3xl font-bold dark:text-white text-black">
-              wishin.app
-            </h1>
+    <div className="flex min-h-full flex-1 flex-col justify-center items-center leading-9 tracking-tight px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
+        <Image src={santa} alt="Santa" width={100} height={100} />
+
+        <h1 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-black dark:text-white">
+          wishin.app
+        </h1>
+      </div>
+
+      <div className="mt-10 w-full max-w-sm">
+        <h2 className="dark:text-slate-200 font-semibold">
+          Sign in to continue
+        </h2>
+        <form className="space-y-4" onSubmit={(e) => handleGoogle(e)}>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-gray-900 dark:text-slate-200"
+            >
+              Email address
+            </label>
+            <div className="mt-2">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="santa@example.com"
+                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+              />
+            </div>
           </div>
-          <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
-            Sign in to your account
-          </h2>
-          <form onSubmit={(e) => handleGoogle(e)} className="max-w-screen">
+
+          <div>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-slate-200"
+              >
+                Password
+              </label>
+              <div className="text-sm">
+                <a
+                  href="#"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-500 dark:hover:text-indigo-400"
+                >
+                  Forgot password?
+                </a>
+              </div>
+            </div>
+            <div className="mt-2">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+              />
+            </div>
+          </div>
+
+          <div>
             <button
-              className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3 px-4 border rounded-lg border-gray-700 text-center inline-flex items-center w-full text-lg bg-white text-black dark:bg-black dark:text-white dark:hover:bg-black dark:hover:text-indigo-600 hover:bg-black hover:text-white transition ease-in-out duration-300"
+              type="submit"
+              className="flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Sign in
+            </button>
+          </div>
+          <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 dark:before:border-slate-400 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300 dark:after:border-slate-400">
+            <p className="mx-4 mb-0 text-center font-semibold dark:text-slate-400">
+              OR
+            </p>
+          </div>
+          <div className="flex flex-row items-center justify-center">
+            <button
+              className="flex justify-center font-semibold w-full h-10 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-slate-800 text-center inline-flex items-center bg-white text-black dark:bg-slate-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
               onClick={(e) => {
                 handleGoogle(e);
               }}
             >
               <svg
-                className="mr-2 -ml-1 w-10 h-7"
+                className="mr-1 -ml-1 w-10 h-6"
                 viewBox="0 0 24 24"
                 width="20"
                 height="20"
@@ -107,9 +171,9 @@ const LoginPage = () => {
               </svg>
               Continue with Google
             </button>
-          </form>
-        </div>
-      </Card>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
