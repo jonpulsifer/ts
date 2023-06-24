@@ -83,7 +83,6 @@ const getGift = async (id: string) => {
 };
 
 const getGifts = async () => {
-  console.log(`/gifts: getGifts()`);
   const token = cookies().get('token')?.value;
   if (!token) redirect('/login');
 
