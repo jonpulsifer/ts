@@ -1,7 +1,6 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import { CardAction } from 'components/Card';
 import EmptyState from 'components/EmptyState';
-import Page from 'components/Page';
 import UserList from 'components/UserList';
 import { getPeopleForUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
@@ -40,7 +39,7 @@ const PeoplePage = async () => {
   );
 
   return (
-    <Page title="👪 People">
+    <>
       {people ? (
         <UserList users={users} user={user} />
       ) : (
@@ -52,7 +51,7 @@ const PeoplePage = async () => {
           <div className="p-4">{noPeopleMarkup}</div>
         </EmptyState>
       )}
-    </Page>
+    </>
   );
 };
 

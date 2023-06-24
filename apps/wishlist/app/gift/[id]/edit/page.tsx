@@ -1,7 +1,6 @@
 import Card from 'components/Card';
 import EmptyState from 'components/EmptyState';
 import GiftForm from 'components/GiftForm';
-import Page from 'components/Page';
 import { getGift } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 interface Props {
@@ -19,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const EditGiftPage = async ({ params }: Props) => {
   const { gift } = await getGift(params.id);
   return (
-    <Page title={`Edit ${gift.name || '🎁 Edit Gift'}`}>
+    <>
       {gift ? (
         <Card>
           <GiftForm gift={gift} />
@@ -27,7 +26,7 @@ const EditGiftPage = async ({ params }: Props) => {
       ) : (
         EmptyState({ title: 'Gift not found' })
       )}
-    </Page>
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { AuthProvider } from 'components/AuthProvider';
 import ErrorBoundary from 'components/ErrorBoundary';
+import Page from 'components/Page';
 import Toast from 'components/Toaster';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html className="h-full w-full" lang="en">
       <body
@@ -27,11 +28,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       >
         <ErrorBoundary>
           <main className="flex flex-col h-full w-full">
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              <Page>{children}</Page>
+            </AuthProvider>
             <Toast />
           </main>
         </ErrorBoundary>
       </body>
     </html>
   );
-}
+};
+
+export default Layout;

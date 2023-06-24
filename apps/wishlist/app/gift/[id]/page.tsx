@@ -1,5 +1,4 @@
 import { GiftCard } from 'components/Gift';
-import Page from 'components/Page';
 import { getGift, getUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 
@@ -18,11 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const GiftPage = async ({ params }: Props) => {
   const { gift } = await getGift(params.id);
   const { user } = await getUser(gift.owner);
-  return (
-    <Page title={gift.name}>
-      <GiftCard gift={gift} user={user} />
-    </Page>
-  );
+  return <GiftCard gift={gift} user={user} />;
 };
 
 export default GiftPage;

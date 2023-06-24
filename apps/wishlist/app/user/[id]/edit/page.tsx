@@ -1,7 +1,6 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card from 'components/Card';
-import Page from 'components/Page';
 import UserForm from 'components/UserForm';
 import { getUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
@@ -28,7 +27,7 @@ const ProfilePage = async ({ params }: Props) => {
   const { email } = user;
 
   return (
-    <Page title={`👤 Edit ${user.name || user.email}`}>
+    <>
       {user ? (
         <>
           <Card>
@@ -44,7 +43,7 @@ const ProfilePage = async ({ params }: Props) => {
       ) : (
         <Card title="User Not Found" />
       )}
-    </Page>
+    </>
   );
 };
 

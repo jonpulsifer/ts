@@ -177,21 +177,21 @@ export function BottomNav() {
   ];
   const buttons = (links: NavLink[]) => {
     const buttonClass =
-      'inline-flex flex-col text-gray-900 dark:text-slate-400 dark:bg-slate-950 items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-slate-900 dark:hover:bg-slate-900 group';
-    const iconClass =
-      'w-6 h-6 text-xl group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
-    const labelClass =
-      'text-sm font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-500';
+      'inline-flex flex-col text-gray-900 dark:text-slate-400 dark:bg-slate-950 items-center justify-center px-5 group';
+    const iconClass = 'w-6 h-6 text-xl';
+    const labelClass = 'text-xs font-bold';
 
     const btns = links.map((link) => {
-      const isActive = path === link.href;
+      // if path contains href then we are on the active link
       const href = link.href ? link.href : '#';
+      const isActive = path && path.includes(href);
+      const isAdd = link.title === 'Add';
       return (
         <button
           type="button"
           className={
             isActive
-              ? `${buttonClass} bg-gray-50 text-indigo-600 dark:text-indigo-400`
+              ? `${buttonClass} bg-gray-50 text-indigo-600 dark:text-indigo-500 border-t-2 border-indigo-600 dark:border-indigo-500`
               : buttonClass
           }
           key={link.title}
@@ -205,7 +205,7 @@ export function BottomNav() {
             <FontAwesomeIcon
               icon={link.icon}
               className={
-                isActive
+                isActive || isAdd
                   ? `${iconClass} text-indigo-600 dark:text-indigo-400`
                   : iconClass
               }
@@ -213,7 +213,7 @@ export function BottomNav() {
             />
             <span
               className={
-                isActive
+                isActive || isAdd
                   ? `${labelClass} text-indigo-600 dark:text-indigo-400`
                   : labelClass
               }
@@ -228,7 +228,7 @@ export function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 block sm:hidden w-full h-20 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800 rounded-t-lg">
+    <div className="fixed bottom-0 block sm:hidden w-full h-16 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800 rounded-t-lg">
       <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
         {buttons(links)}
       </div>
