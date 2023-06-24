@@ -50,7 +50,6 @@ const LoginPage = () => {
         welcome(user);
         dismissable(toastMarkup);
       } else welcome(user);
-      router.push('/people');
     }
   };
 
