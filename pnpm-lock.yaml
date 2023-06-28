@@ -207,8 +207,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
       firebase-tools:
-        specifier: 12.4.1
-        version: 12.4.1
+        specifier: 12.4.2
+        version: 12.4.2
       postcss:
         specifier: 8.4.24
         version: 8.4.24
@@ -4972,8 +4972,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools@12.4.1:
-    resolution: {integrity: sha512-/XaFXqK0Vd0Hatjk18tjwBYUztSlLVRyW37rXFyMicI78oySR3zDGN1MKoeUfeRj5tuePToP5Dbdnm5wPI2Adg==}
+  /firebase-tools@12.4.2:
+    resolution: {integrity: sha512-4oYbIq+htEi/sXRV1RN8Q/3r27+/VMcOw1G795KMEXgFluw9adWEegbobKyOMqN7VKF+M0jMeFUiGbWwlNUv8w==}
     engines: {node: '>=16.13.0 || >=18.0.0'}
     hasBin: true
     dependencies:
