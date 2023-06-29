@@ -51,8 +51,8 @@ importers:
   apps/authme:
     dependencies:
       google-auth-library:
-        specifier: 8.8.0
-        version: 8.8.0
+        specifier: 8.9.0
+        version: 8.9.0
       next:
         specifier: 13.4.7
         version: 13.4.7(react-dom@18.2.0)(react@18.2.0)
@@ -1781,7 +1781,7 @@ packages:
       '@types/long': 4.0.2
       arrify: 2.0.1
       extend: 3.0.2
-      google-auth-library: 8.8.0
+      google-auth-library: 8.9.0
       google-gax: 3.6.0
       heap-js: 2.2.0
       is-stream-ended: 0.1.4
@@ -1807,7 +1807,7 @@ packages:
       ent: 2.2.0
       extend: 3.0.2
       gaxios: 5.0.2
-      google-auth-library: 8.8.0
+      google-auth-library: 8.9.0
       mime: 3.0.0
       mime-types: 2.1.35
       p-limit: 3.1.0
@@ -5251,8 +5251,8 @@ packages:
       - supports-color
     dev: true
 
-  /gcp-metadata@5.2.0:
-    resolution: {integrity: sha512-aFhhvvNycky2QyhG+dcfEdHBF0FRbYcf39s6WNHUDysKSrbJ5vuFbjydxBcmewtXeV248GP8dWT3ByPNxsyHCw==}
+  /gcp-metadata@5.3.0:
+    resolution: {integrity: sha512-FNTkdNEnBdlqF2oatizolQqNANMrcqJt6AAYt99B3y1aLLC8Hc5IOBb+ZnnzllodEEf6xMBp6wRcBbc16fa65w==}
     engines: {node: '>=12'}
     dependencies:
       gaxios: 5.0.2
@@ -5473,8 +5473,8 @@ packages:
       - supports-color
     dev: true
 
-  /google-auth-library@8.8.0:
-    resolution: {integrity: sha512-0iJn7IDqObDG5Tu9Tn2WemmJ31ksEa96IyK0J0OZCpTh6CrC6FrattwKX87h3qKVuprCJpdOGKc1Xi8V0kMh8Q==}
+  /google-auth-library@8.9.0:
+    resolution: {integrity: sha512-f7aQCJODJFmYWN6PeNKzgvy9LI2tYmXnzpNDHEjG5sDNPgGb2FXQyTBnXeSH+PAtpKESFD+LmHw3Ox3mN7e1Fg==}
     engines: {node: '>=12'}
     dependencies:
       arrify: 2.0.1
@@ -5482,7 +5482,7 @@ packages:
       ecdsa-sig-formatter: 1.0.11
       fast-text-encoding: 1.0.6
       gaxios: 5.0.2
-      gcp-metadata: 5.2.0
+      gcp-metadata: 5.3.0
       gtoken: 6.1.2
       jws: 4.0.0
       lru-cache: 6.0.0
@@ -5502,7 +5502,7 @@ packages:
       abort-controller: 3.0.0
       duplexify: 4.1.2
       fast-text-encoding: 1.0.6
-      google-auth-library: 8.8.0
+      google-auth-library: 8.9.0
       is-stream-ended: 0.1.4
       node-fetch: 2.6.11
       object-hash: 3.0.0
