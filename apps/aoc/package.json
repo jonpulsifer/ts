@@ -8,7 +8,7 @@
   "private": true,
   "devDependencies": {
     "@types/jest": "29.5.2",
-    "@types/node": "18.16.18",
+    "@types/node": "18.16.19",
     "cross-fetch": "3.1.6",
     "eslint-config-custom": "workspace:*",
     "jest": "29.5.0",
