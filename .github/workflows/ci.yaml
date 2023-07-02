@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build and Test
     timeout-minutes: 15
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       NODE_ENV: test
       TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
