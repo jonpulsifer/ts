@@ -40,7 +40,7 @@
     "eslint-config-custom": "workspace:*",
     "firebase-tools": "12.4.3",
     "postcss": "8.4.25",
-    "prettier-plugin-tailwindcss": "^0.3.0",
+    "prettier-plugin-tailwindcss": "^0.4.0",
     "tailwind-config": "workspace:*",
     "tailwindcss": "3.3.2",
     "tsconfig": "workspace:*",
