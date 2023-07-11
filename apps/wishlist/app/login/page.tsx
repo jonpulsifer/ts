@@ -7,13 +7,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import santa from 'public/santaicon.png';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
+  const [register, setRegister] = useState(false);
 
   useEffect(() => {
     if (user) router.push('/people');
@@ -53,6 +54,28 @@ const LoginPage = () => {
     }
   };
 
+  const handleSignInWithEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    const target = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+    };
+    const { email, password } = target;
+    const signIn = register ? signUpWithEmail : signInWithEmail;
+    signIn(email.value, password.value).then((results) =>
+      handleSignInResults(results),
+    );
+  };
+
+  const handleSignUpWithEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    const target = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+    };
+    const { email, password } = target;
+  };
+
   const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
     e.preventDefault();
     signInWithGoogle().then((results) => handleSignInResults(results));
@@ -70,9 +93,9 @@ const LoginPage = () => {
 
       <div className="mt-10 w-full max-w-sm">
         <h2 className="dark:text-slate-200 font-semibold">
-          Sign in to continue
+          {register ? 'Sign up for the wishlist' : 'Sign in to continue'}
         </h2>
-        <form className="space-y-4" onSubmit={(e) => handleGoogle(e)}>
+        <form className="space-y-4" onSubmit={(e) => handleSignInWithEmail(e)}>
           <div>
             <label
               htmlFor="email"
@@ -101,12 +124,12 @@ const LoginPage = () => {
               >
                 Password
               </label>
-              <div className="text-sm">
+              <div className="text-sm" onClick={() => setRegister(!register)}>
                 <a
                   href="#"
                   className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-500 dark:hover:text-indigo-400"
                 >
-                  Forgot password?
+                  {register ? 'Already have an account?' : 'Need an account?'}
                 </a>
               </div>
             </div>
@@ -127,7 +150,7 @@ const LoginPage = () => {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign in
+              {register ? 'Create Account' : 'Sign in'}
             </button>
           </div>
           <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 dark:before:border-slate-400 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300 dark:after:border-slate-400">
