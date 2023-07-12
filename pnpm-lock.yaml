@@ -204,8 +204,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
       firebase-tools:
-        specifier: 12.4.3
-        version: 12.4.3
+        specifier: 12.4.4
+        version: 12.4.4
       postcss:
         specifier: 8.4.25
         version: 8.4.25
@@ -2249,7 +2249,7 @@ packages:
       '@firebase/app-compat': 0.2.14
       '@firebase/component': 0.6.4
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
     dev: false
@@ -2268,7 +2268,7 @@ packages:
       '@firebase/installations': 0.6.4(@firebase/app@0.9.14)
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/app-check-compat@0.3.7(@firebase/app-compat@0.2.14)(@firebase/app@0.9.14):
@@ -2282,7 +2282,7 @@ packages:
       '@firebase/component': 0.6.4
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
     dev: false
@@ -2304,7 +2304,7 @@ packages:
       '@firebase/component': 0.6.4
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/app-compat@0.2.14:
@@ -2314,7 +2314,7 @@ packages:
       '@firebase/component': 0.6.4
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/app-types@0.9.0:
@@ -2328,7 +2328,7 @@ packages:
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
       idb: 7.1.1
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/auth-compat@0.4.3(@firebase/app-compat@0.2.14)(@firebase/app-types@0.9.0)(@firebase/app@0.9.14)(react-native@0.71.12):
@@ -2342,7 +2342,7 @@ packages:
       '@firebase/component': 0.6.4
       '@firebase/util': 1.9.3
       node-fetch: 2.6.7
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
       - '@firebase/app-types'
@@ -2375,7 +2375,7 @@ packages:
       '@firebase/util': 1.9.3
       '@react-native-async-storage/async-storage': 1.17.12(react-native@0.71.12)
       node-fetch: 2.6.7
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - encoding
       - react-native
@@ -2385,7 +2385,7 @@ packages:
     resolution: {integrity: sha512-rLMyrXuO9jcAUCaQXCMjCMUsWrba5fzHlNK24xz5j2W6A/SRmK8mZJ/hn7V0fViLbxC0lPMtrK1eYzk6Fg03jA==}
     dependencies:
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/database-compat@0.3.4:
@@ -2407,7 +2407,7 @@ packages:
       '@firebase/database-types': 1.0.0
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/database-types@0.10.4:
@@ -2432,7 +2432,7 @@ packages:
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
       faye-websocket: 0.11.4
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/database@1.0.0:
@@ -2443,7 +2443,7 @@ packages:
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
       faye-websocket: 0.11.4
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/firestore-compat@0.3.13(@firebase/app-compat@0.2.14)(@firebase/app-types@0.9.0)(@firebase/app@0.9.14):
@@ -2456,7 +2456,7 @@ packages:
       '@firebase/firestore': 4.0.0(@firebase/app@0.9.14)
       '@firebase/firestore-types': 3.0.0(@firebase/app-types@0.9.0)(@firebase/util@1.9.3)
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
       - '@firebase/app-types'
@@ -2487,7 +2487,7 @@ packages:
       '@grpc/grpc-js': 1.7.2
       '@grpc/proto-loader': 0.6.13
       node-fetch: 2.6.7
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -2502,7 +2502,7 @@ packages:
       '@firebase/functions': 0.10.0(@firebase/app@0.9.14)
       '@firebase/functions-types': 0.6.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
       - encoding
@@ -2524,7 +2524,7 @@ packages:
       '@firebase/messaging-interop-types': 0.2.0
       '@firebase/util': 1.9.3
       node-fetch: 2.6.7
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -2539,7 +2539,7 @@ packages:
       '@firebase/installations': 0.6.4(@firebase/app@0.9.14)
       '@firebase/installations-types': 0.5.0(@firebase/app-types@0.9.0)
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
       - '@firebase/app-types'
@@ -2562,13 +2562,13 @@ packages:
       '@firebase/component': 0.6.4
       '@firebase/util': 1.9.3
       idb: 7.0.1
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/logger@0.4.0:
     resolution: {integrity: sha512-eRKSeykumZ5+cJPdxxJRgAC3G5NknY2GwEbKfymdnXtnT0Ucm4pspfR6GT4MUQEDuJwRVbVcSx85kgJulMoFFA==}
     dependencies:
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/messaging-compat@0.2.4(@firebase/app-compat@0.2.14)(@firebase/app@0.9.14):
@@ -2580,7 +2580,7 @@ packages:
       '@firebase/component': 0.6.4
       '@firebase/messaging': 0.12.4(@firebase/app@0.9.14)
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
     dev: false
@@ -2600,7 +2600,7 @@ packages:
       '@firebase/messaging-interop-types': 0.2.0
       '@firebase/util': 1.9.3
       idb: 7.0.1
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/performance-compat@0.2.4(@firebase/app-compat@0.2.14)(@firebase/app@0.9.14):
@@ -2614,7 +2614,7 @@ packages:
       '@firebase/performance': 0.6.4(@firebase/app@0.9.14)
       '@firebase/performance-types': 0.2.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
     dev: false
@@ -2633,7 +2633,7 @@ packages:
       '@firebase/installations': 0.6.4(@firebase/app@0.9.14)
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/remote-config-compat@0.2.4(@firebase/app-compat@0.2.14)(@firebase/app@0.9.14):
@@ -2647,7 +2647,7 @@ packages:
       '@firebase/remote-config': 0.4.4(@firebase/app@0.9.14)
       '@firebase/remote-config-types': 0.3.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
     dev: false
@@ -2666,7 +2666,7 @@ packages:
       '@firebase/installations': 0.6.4(@firebase/app@0.9.14)
       '@firebase/logger': 0.4.0
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/storage-compat@0.3.2(@firebase/app-compat@0.2.14)(@firebase/app-types@0.9.0)(@firebase/app@0.9.14):
@@ -2679,7 +2679,7 @@ packages:
       '@firebase/storage': 0.11.2(@firebase/app@0.9.14)
       '@firebase/storage-types': 0.8.0(@firebase/app-types@0.9.0)(@firebase/util@1.9.3)
       '@firebase/util': 1.9.3
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@firebase/app'
       - '@firebase/app-types'
@@ -2705,7 +2705,7 @@ packages:
       '@firebase/component': 0.6.4
       '@firebase/util': 1.9.3
       node-fetch: 2.6.7
-      tslib: 2.4.0
+      tslib: 2.6.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -2713,7 +2713,7 @@ packages:
   /@firebase/util@1.9.3:
     resolution: {integrity: sha512-DY02CRhOZwpzO36fHpuVysz6JZrscPiBXD0fXp6qSrL9oNOx5KWICKdR95C0lSITzxp0TZosVyHqzatE8JbcjA==}
     dependencies:
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /@firebase/webchannel-wrapper@0.10.1:
@@ -4532,7 +4532,7 @@ packages:
     resolution: {integrity: sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w==}
     engines: {node: '>=4'}
     dependencies:
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: true
 
   /ast-types@0.14.2:
@@ -6772,8 +6772,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools@12.4.3:
-    resolution: {integrity: sha512-B/E4kV7bzpzT3nLgbU34ImZs1Z/RwdvQGjbvtJ1+Tvs28ml7tpdf2b6yJchZIsK9ALHNcOfYPGSbWoLRaykZAA==}
+  /firebase-tools@12.4.4:
+    resolution: {integrity: sha512-Zvk+NX2X2FqsGj91QgWoj17OjJ0E+W95azyIomeoS1SF1MKGHNh1W/HMCHVGngYeIABgmZc0AJr3+33M5owl1w==}
     engines: {node: '>=16.13.0 || >=18.0.0'}
     hasBin: true
     dependencies:
@@ -6822,7 +6822,7 @@ packages:
       request: 2.88.2
       retry: 0.13.1
       rimraf: 3.0.2
-      semver: 5.7.1
+      semver: 7.5.3
       stream-chain: 2.2.5
       stream-json: 1.7.4
       strip-ansi: 6.0.1
@@ -11271,7 +11271,7 @@ packages:
   /rxjs@7.8.0:
     resolution: {integrity: sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg==}
     dependencies:
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: true
 
   /safe-buffer@5.1.2:
@@ -11920,7 +11920,7 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     dependencies:
       '@pkgr/utils': 2.3.1
-      tslib: 2.4.0
+      tslib: 2.6.0
     dev: false
 
   /synckit@0.8.5:
@@ -12284,10 +12284,10 @@ packages:
 
   /tslib@2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+    dev: false
 
   /tslib@2.6.0:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
-    dev: false
 
   /tsup@7.1.0(postcss@8.4.25)(typescript@5.1.6):
     resolution: {integrity: sha512-mazl/GRAk70j8S43/AbSYXGgvRP54oQeX8Un4iZxzATHt0roW0t6HYDVZIXMw0ZQIpvr1nFMniIVnN5186lW7w==}
@@ -12709,6 +12709,7 @@ packages:
   /vm2@3.9.11:
     resolution: {integrity: sha512-PFG8iJRSjvvBdisowQ7iVF580DXb1uCIiGaXgm7tynMR1uTBlv7UJlB1zdv5KJ+Tmq1f0Upnj3fayoEOPpCBKg==}
     engines: {node: '>=6.0'}
+    deprecated: The library contains critical security issues and should not be used for production! The maintenance of the project has been discontinued. Consider migrating your code to isolated-vm.
     hasBin: true
     dependencies:
       acorn: 8.9.0
