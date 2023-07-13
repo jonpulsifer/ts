@@ -39,7 +39,7 @@
     "autoprefixer": "10.4.14",
     "eslint-config-custom": "workspace:*",
     "firebase-tools": "12.4.4",
-    "postcss": "8.4.25",
+    "postcss": "8.4.26",
     "prettier-plugin-tailwindcss": "^0.4.0",
     "tailwind-config": "workspace:*",
     "tailwindcss": "3.3.2",
