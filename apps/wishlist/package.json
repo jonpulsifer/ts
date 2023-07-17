@@ -20,7 +20,7 @@
     "@headlessui/react": "1.7.15",
     "@vercel/analytics": "1.0.1",
     "firebase": "10.0.0",
-    "firebase-admin": "11.9.0",
+    "firebase-admin": "11.10.1",
     "next": "13.4.10",
     "nookies": "2.5.2",
     "prettier": "3.0.0",
