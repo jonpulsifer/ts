@@ -1,7 +1,6 @@
 FROM node:18.16.1-alpine@sha256:d5b2a7869a4016b1847986ea52098fa404421e44281bb7615a9e3615e07f37fb AS builder
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-RUN apk update
 # Set working directory
 WORKDIR /app
 RUN yarn global add turbo
@@ -36,6 +35,7 @@ COPY turbo.json turbo.json
 RUN turbo run build --scope=request-headers --include-dependencies --no-deps
 
 FROM cgr.dev/chainguard/node:18.16.1@sha256:88d402ca93aa900ec0bcd5ea4f7f5743c360e7455b20d2e5a0cf6ccd248ca591 AS runner
+ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
 
 COPY --from=installer /app/apps/request-headers/next.config.js .
