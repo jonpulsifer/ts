@@ -74,6 +74,9 @@ const LoginPage = () => {
       password: { value: string };
     };
     const { email, password } = target;
+    signUpWithEmail(email.value, password.value).then((results) =>
+      handleSignInResults(results),
+    );
   };
 
   const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
@@ -95,7 +98,12 @@ const LoginPage = () => {
         <h2 className="dark:text-slate-200 font-semibold">
           {register ? 'Sign up for the wishlist' : 'Sign in to continue'}
         </h2>
-        <form className="space-y-4" onSubmit={(e) => handleSignInWithEmail(e)}>
+        <form
+          className="space-y-4"
+          onSubmit={(e) =>
+            register ? handleSignUpWithEmail(e) : handleSignInWithEmail(e)
+          }
+        >
           <div>
             <label
               htmlFor="email"

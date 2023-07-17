@@ -162,11 +162,14 @@ const AuthProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const user = firebase.auth.currentUser;
-      console.log(`refreshing token for ${user?.email}`);
-      if (user) persistUser(user);
-    }, 10 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        const user = firebase.auth.currentUser;
+        console.log(`refreshing token for ${user?.email}`);
+        if (user) persistUser(user);
+      },
+      10 * 60 * 1000,
+    );
 
     return () => clearInterval(interval);
   }, []);
