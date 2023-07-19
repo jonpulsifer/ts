@@ -34,7 +34,7 @@ COPY turbo.json turbo.json
 
 RUN turbo run build --scope=request-headers --include-dependencies --no-deps
 
-FROM cgr.dev/chainguard/node:18.16.1@sha256:9b4310b99d50cc4c30a3ded94fc8a962f987ed1a1c9ba4f058c95cc7e766908e AS runner
+FROM cgr.dev/chainguard/node:18.17.0@sha256:eb27a694c78e5674d35eb1744879713d8ca89ac2eae26c603de0b4278e855feb AS runner
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
 
