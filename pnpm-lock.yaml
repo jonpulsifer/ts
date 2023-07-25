@@ -204,8 +204,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
       firebase-tools:
-        specifier: 12.4.5
-        version: 12.4.5
+        specifier: 12.4.6
+        version: 12.4.6
       postcss:
         specifier: 8.4.27
         version: 8.4.27
@@ -2837,21 +2837,12 @@ packages:
     dev: false
     optional: true
 
-  /@grpc/grpc-js@1.8.14:
-    resolution: {integrity: sha512-w84maJ6CKl5aApCMzFll0hxtFNT6or9WwMslobKaqWUEf1K+zhlL43bSQhFreyYWIWR+Z0xnVFC1KtLm4ZpM/A==}
-    engines: {node: ^8.13.0 || >=10.10.0}
-    requiresBuild: true
-    dependencies:
-      '@grpc/proto-loader': 0.7.3
-      '@types/node': 18.17.1
-
   /@grpc/grpc-js@1.8.18:
     resolution: {integrity: sha512-2uWPtxhsXmVgd8WzDhfamSjHpZDXfMjMDciY6VRTq4Sn7rFzazyf0LLDa0oav+61UHIoEZb4KKaAV6S7NuJFbQ==}
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.3
       '@types/node': 18.17.1
-    dev: false
 
   /@grpc/proto-loader@0.6.13:
     resolution: {integrity: sha512-FjxPYDRTn6Ec3V0arm1FtSpmP6V50wuph2yILpyvTKzjc76oDdoihXqM1DzOW5ubvCC8GivfCnNtfaRE8myJ7g==}
@@ -6779,8 +6770,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools@12.4.5:
-    resolution: {integrity: sha512-qDDJ1QgbsqQYLNGcOO34ltnqEEbyayKGMDo4Q7ScpGsISf45tYKaVlnLJSwPrIG+tMoljJ8B3s5sqeR32udfQQ==}
+  /firebase-tools@12.4.6:
+    resolution: {integrity: sha512-WcHCxBsmFschPDdiKrVQla7kGdTDHuDBKbL01yYEVXCQA3lPXUUfTRS5D1LKi/8RH3Kv0MkvO2eXNuxIGo2qmg==}
     engines: {node: '>=16.13.0 || >=18.0.0'}
     hasBin: true
     dependencies:
@@ -7357,7 +7348,7 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
     dependencies:
-      '@grpc/grpc-js': 1.8.14
+      '@grpc/grpc-js': 1.8.18
       '@grpc/proto-loader': 0.7.3
       '@types/long': 4.0.2
       '@types/rimraf': 3.0.2
