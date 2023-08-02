@@ -204,8 +204,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
       firebase-tools:
-        specifier: 12.4.6
-        version: 12.4.6
+        specifier: 12.4.7
+        version: 12.4.7
       postcss:
         specifier: 8.4.27
         version: 8.4.27
@@ -6209,15 +6209,6 @@ packages:
       - supports-color
     dev: false
 
-  /espree@9.6.0:
-    resolution: {integrity: sha512-1FH/IiruXZ84tpUlm0aCUEwMl2Ho5ilqVh0VvQXw+byAz/4SAciyHLlfmL5WYqsvD38oymdUwBss0LtK8m4s/A==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    requiresBuild: true
-    dependencies:
-      acorn: 8.9.0
-      acorn-jsx: 5.3.2(acorn@8.9.0)
-      eslint-visitor-keys: 3.4.2
-
   /espree@9.6.1:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -6225,7 +6216,6 @@ packages:
       acorn: 8.9.0
       acorn-jsx: 5.3.2(acorn@8.9.0)
       eslint-visitor-keys: 3.4.2
-    dev: false
 
   /esprima@4.0.1:
     resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
@@ -6644,8 +6634,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools@12.4.6:
-    resolution: {integrity: sha512-WcHCxBsmFschPDdiKrVQla7kGdTDHuDBKbL01yYEVXCQA3lPXUUfTRS5D1LKi/8RH3Kv0MkvO2eXNuxIGo2qmg==}
+  /firebase-tools@12.4.7:
+    resolution: {integrity: sha512-L5nULzh0PElm2OK5lXsj7zkIwBBB4KsGOg0CvCnjdvJ1ROMN2IqffJ0KR/8paXuGWf5SA0VJj2QjG37jFxrAjg==}
     engines: {node: '>=16.13.0 || >=18.0.0'}
     hasBin: true
     dependencies:
@@ -10662,7 +10652,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3
-      espree: 9.6.0
+      espree: 9.6.1
       estraverse: 5.3.0
       glob: 8.0.3
       jsdoc: 4.0.2
