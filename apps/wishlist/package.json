@@ -19,7 +19,7 @@
     "@fortawesome/react-fontawesome": "0.2.0",
     "@headlessui/react": "1.7.17",
     "@vercel/analytics": "1.0.2",
-    "firebase": "10.2.0",
+    "firebase": "10.3.0",
     "firebase-admin": "11.10.1",
     "next": "13.4.19",
     "nookies": "2.5.2",
