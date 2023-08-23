@@ -204,8 +204,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
       firebase-tools:
-        specifier: 12.5.0
-        version: 12.5.0
+        specifier: 12.5.1
+        version: 12.5.1
       postcss:
         specifier: 8.4.28
         version: 8.4.28
@@ -3243,7 +3243,7 @@ packages:
     resolution: {integrity: sha512-7O+FbCihrB5WGbFYesctwmTKae6rOiIzmz1icreWJ+0aA7LJfuqhEso2T9ncpcFtzMQtzXf2QGGueWJGTYsqrA==}
     dependencies:
       function-bind: 1.1.1
-      get-intrinsic: 1.1.3
+      get-intrinsic: 1.2.1
 
   /call-me-maybe@1.0.1:
     resolution: {integrity: sha512-wCyFsDQkKPwwF8BDwOiWNx/9K45L/hvggQiDbve+viMNMQnWhrlYIuBk09offfwCRtCO9P6XwUttufzU11WCVw==}
@@ -4832,8 +4832,8 @@ packages:
       - supports-color
     dev: false
 
-  /firebase-tools@12.5.0:
-    resolution: {integrity: sha512-0d5zshEope0aZU0/NzYQuhMuoH9Mq3sOEjnGH9BMNojvVrzkLIYbZNJBZUoYF4o1Qh3/+l5cW2lMCfHPK8Bc4w==}
+  /firebase-tools@12.5.1:
+    resolution: {integrity: sha512-TjerH4RBG+e6KrfNNtjNWbtdqvw6mpSvM1ruUYB8izh1+J22k5CmQvXcCE0azM43UT6l/dn8eq8hWLG6C8fXww==}
     engines: {node: '>=16.13.0 || >=18.0.0'}
     hasBin: true
     dependencies:
@@ -5156,13 +5156,6 @@ packages:
   /get-caller-file@2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
     engines: {node: 6.* || 8.* || >= 10.*}
-
-  /get-intrinsic@1.1.3:
-    resolution: {integrity: sha512-QJVz1Tj7MS099PevUG5jvnt9tSkXN8K14dxQlikJuPt4uD9hHAHjLyLBiLR5zELelBdD9QNRAXZzsJx0WaDL9A==}
-    dependencies:
-      function-bind: 1.1.1
-      has: 1.0.3
-      has-symbols: 1.0.3
 
   /get-intrinsic@1.2.1:
     resolution: {integrity: sha512-2DcsyfABl+gVHEfCOaTrWgyt+tb6MSEGmKq+kI5HwLbIYgjgmMcV8KQ41uaKz1xxUcn9tJtgFbQUEVcEbd0FYw==}
@@ -5520,7 +5513,7 @@ packages:
   /has-property-descriptors@1.0.0:
     resolution: {integrity: sha512-62DVLZGoiEBDHQyqG4w9xCuZ7eJEwNmJRWw2VY84Oedb7WFcA27fiEVe8oUQx9hAUJ4ekurquucTGwsyO1XGdQ==}
     dependencies:
-      get-intrinsic: 1.1.3
+      get-intrinsic: 1.2.1
     dev: false
 
   /has-proto@1.0.1:
