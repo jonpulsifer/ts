@@ -1,0 +1,3 @@
+{{ include "common.service" . }}
+{{ include "common.ingress" . }}
+{{ include "common.deployment" . }}
