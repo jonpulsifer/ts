@@ -1,7 +1,5 @@
 replicaCount: 1
 
-fullnameOverride: "lol"
-
 image:
   repository: jonpulsifer/request-headers
   pullPolicy: IfNotPresent

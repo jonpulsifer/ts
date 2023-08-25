@@ -5,6 +5,7 @@ const nextConfig = {
     typedRoutes: true,
   },
   reactStrictMode: true,
+  output: process.env.IS_DOCKER ? 'standalone' : undefined,
 };
 
 module.exports = nextConfig;
