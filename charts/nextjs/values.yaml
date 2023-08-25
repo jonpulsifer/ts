@@ -21,8 +21,10 @@ service:
 
 ingress:
   enabled: true
-  ingressClassName: ""
-  annotations: {}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    hajimari.io/enable: "true"
+    hajimari.io/icon: sync
   hosts:
     - host: &host "application.example.com"
       paths:
