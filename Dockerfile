@@ -23,7 +23,7 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-* ./
-RUN pnpm i
+RUN pnpm install --frozen-lockfile --filter=${APP}
 
 # Uncomment and use build args to enable remote caching
 ARG TURBO_TEAM
@@ -40,7 +40,6 @@ RUN turbo run build --filter=${APP}
 
 FROM cgr.dev/chainguard/node:18.17.1@sha256:fbaecf4d6ac9883699078c0b501aad22c866f9ce039d009212c0eed260914875 AS runner
 ARG APP
-ENV APP_NAME=${APP}
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
 
@@ -50,4 +49,5 @@ COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/standalone ./
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/public ./apps/${APP}/public
 
-CMD apps/${APP_NAME}/server.js
+WORKDIR /app/apps/${APP}
+CMD ["server.js"]
