@@ -50,4 +50,4 @@ COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/standalone ./
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/public ./apps/${APP}/public
 
-CMD ["apps/${APP_NAME}/server.js"]
+CMD apps/${APP_NAME}/server.js
