@@ -41,13 +41,14 @@ RUN turbo run build --scope=${APP} --include-dependencies --no-deps
 
 FROM cgr.dev/chainguard/node:18.17.1@sha256:fbaecf4d6ac9883699078c0b501aad22c866f9ce039d009212c0eed260914875 AS runner
 ARG APP=request-headers
+ENV APP_NAME=${APP}
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
 
 COPY --from=installer /app/apps/${APP}/next.config.js .
 COPY --from=installer /app/apps/${APP}/package.json .
-COPY --from=installer --chown=65532:65532 /app/apps/$APP/.next/standalone ./
-COPY --from=installer --chown=65532:65532 /app/apps/$APP/.next/static ./apps/${APP}/.next/static
-COPY --from=installer --chown=65532:65532 /app/apps/$APP/public ./apps/${APP}/public
+COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/standalone ./
+COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
+COPY --from=installer --chown=65532:65532 /app/apps/${APP}/public ./apps/${APP}/public
 
-CMD ["apps/${APP}/server.js"]
+CMD ["apps/${APP_NAME}/server.js"]
