@@ -7,7 +7,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --filter=${APP} --docker
+RUN turbo prune --scope=${APP} --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:18.17.1-alpine@sha256:3482a20c97e401b56ac50ba8920cc7b5b2022bfc6aa7d4e4c231755770cf892f AS installer
