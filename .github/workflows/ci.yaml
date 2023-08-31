@@ -108,7 +108,7 @@ jobs:
           sudo mv /tmp/argocd /usr/local/bin/argocd
       - name: argocd-login
         run: |
-          argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
+          echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
       - name: argocd-app-sync
         run: |
           argocd app set ${{ matrix.app }} -p image.tag=${{ github.sha }} --sync-policy automated
