@@ -91,3 +91,26 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: true
+  deploy:
+    needs: containerize
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        app: ['request-headers']
+    env:
+      ARGOCD_URL: http://argo-argocd-server.argo:8080
+    steps:
+      - name: download-argocd-cli
+        run: |
+          curl -sSL -o /tmp/argocd http://${{ env.ARGOCD_URL }}/download/argocd-linux-amd64
+          chmod +x /tmp/argocd
+          sudo mv /tmp/argocd /usr/local/bin/argocd
+      - name: argocd-login
+        run: |
+          argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
+      - name: argocd-app-sync
+        run: |
+          argocd app set ${{ matrix.app }} -p image.tag=${{ github.sha }} --sync-policy automated
+      - name: argocd-app-rollout
+        run: |
+          argocd app wait ${{ matrix.app }} --timeout 600
