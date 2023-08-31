@@ -47,7 +47,9 @@
         "NODE_IP",
         "NODE_NAME",
         "POD_IP",
-        "POD_NAME"
+        "POD_NAME",
+        "POD_LABEL_APP_INSTANCE",
+        "POD_CHANGE_ME"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },

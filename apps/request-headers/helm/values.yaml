@@ -21,6 +21,12 @@ env:
     valueFrom:
       fieldRef:
         fieldPath: metadata.name
+  - name: POD_LABEL_APP_INSTANCE
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.labels['app.kubernetes.io/instance']
+  - name: POD_CHANGE_ME
+    value: "Change me!"
 
 ingress:
   hosts:

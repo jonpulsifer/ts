@@ -4,7 +4,14 @@ import { Suspense } from 'react';
 
 import styles from './page.module.css';
 
-const { NODE_NAME, NODE_IP, POD_NAME, POD_IP } = process.env;
+const {
+  NODE_NAME,
+  NODE_IP,
+  POD_NAME,
+  POD_IP,
+  POD_LABEL_APP_INSTANCE,
+  POD_CHANGE_ME,
+} = process.env;
 const headersMarkup = () => {
   let markup = '';
   for (const [key, value] of headers().entries()) {
@@ -25,10 +32,13 @@ export default async function Home() {
             <h2>k8s &darr;</h2>
             <code className={styles.code}>
               <pre>
-                {`Node: ${NODE_NAME}
+                {`app.kubernetes.io/instance: ${POD_LABEL_APP_INSTANCE}
+Node: ${NODE_NAME}
 Node IP: ${NODE_IP}
 Pod: ${POD_NAME}
-Pod IP: ${POD_IP}`}
+Pod IP: ${POD_IP}
+Pod Change Me: ${POD_CHANGE_ME}
+`}
               </pre>
             </code>
           </a>
@@ -38,7 +48,6 @@ Pod IP: ${POD_IP}`}
           <a href="#" className={styles.card}>
             <h2>Request Headers &darr;</h2>
             <code className={styles.code}>
-              {/* <pre>{headersMarkup}</pre> but suspended */}
               <Suspense fallback={<div>Loading...</div>}>
                 <pre>{headersMarkup()}</pre>
               </Suspense>

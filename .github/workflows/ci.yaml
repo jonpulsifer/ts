@@ -99,16 +99,16 @@ jobs:
       matrix:
         app: ['request-headers-non-gitops']
     env:
-      ARGOCD_URL: http://argo-argocd-server.argo
+      ARGOCD_URL: argo-argocd-server.argo
     steps:
       - name: download-argocd-cli
         run: |
-          curl -sSL -o /tmp/argocd ${{ env.ARGOCD_URL }}/download/argocd-linux-amd64
+          curl -sSL -o /tmp/argocd http://${{ env.ARGOCD_URL }}/download/argocd-linux-amd64
           chmod +x /tmp/argocd
           sudo mv /tmp/argocd /usr/local/bin/argocd
       - name: argocd-login
         run: |
-          argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}:80
+          argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
       - name: argocd-app-sync
         run: |
           argocd app set ${{ matrix.app }} -p image.tag=${{ github.sha }} --sync-policy automated
