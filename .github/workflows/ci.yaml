@@ -98,7 +98,7 @@ jobs:
       matrix:
         app: ['request-headers-non-gitops']
     env:
-      ARGOCD_URL: http://argo-argocd-server.argo:8080
+      ARGOCD_URL: http://argo-argocd-server.argo
     steps:
       - name: download-argocd-cli
         run: |
