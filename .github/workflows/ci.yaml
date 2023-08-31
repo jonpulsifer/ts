@@ -72,7 +72,7 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.app }}
           tags: |
-            type=sha,enable=true,priority=100,prefix=,suffix=,format=short
+            type=sha,enable=true,priority=100,prefix=,suffix=,format=long
           flavor: |
             latest=true
 
@@ -96,13 +96,13 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        app: ['request-headers']
+        app: ['request-headers-non-gitops']
     env:
       ARGOCD_URL: http://argo-argocd-server.argo:8080
     steps:
       - name: download-argocd-cli
         run: |
-          curl -sSL -o /tmp/argocd http://${{ env.ARGOCD_URL }}/download/argocd-linux-amd64
+          curl -sSL -o /tmp/argocd ${{ env.ARGOCD_URL }}/download/argocd-linux-amd64
           chmod +x /tmp/argocd
           sudo mv /tmp/argocd /usr/local/bin/argocd
       - name: argocd-login
