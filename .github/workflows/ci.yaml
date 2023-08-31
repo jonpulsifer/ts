@@ -91,6 +91,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: true
+
   deploy:
     needs: containerize
     runs-on: self-hosted
@@ -107,7 +108,7 @@ jobs:
           sudo mv /tmp/argocd /usr/local/bin/argocd
       - name: argocd-login
         run: |
-          argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
+          argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}:80
       - name: argocd-app-sync
         run: |
           argocd app set ${{ matrix.app }} -p image.tag=${{ github.sha }} --sync-policy automated
