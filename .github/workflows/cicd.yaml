@@ -1,4 +1,4 @@
-name: Build and Push
+name: Build and Deploy
 
 on:
   push:
@@ -101,17 +101,17 @@ jobs:
     env:
       ARGOCD_URL: argo-argocd-server.argo
     steps:
-      - name: download-argocd-cli
+      - name: Download ArgoCD CLI
         run: |
           curl -sSL -o /tmp/argocd http://${{ env.ARGOCD_URL }}/download/argocd-linux-amd64
           chmod +x /tmp/argocd
           sudo mv /tmp/argocd /usr/local/bin/argocd
-      - name: argocd-login
+      - name: Login to ArgoCD
         run: |
           echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
-      - name: argocd-app-sync
+      - name: Sync app to current commit
         run: |
           argocd app set ${{ matrix.app }} -p image.tag=${{ github.sha }} --sync-policy automated
-      - name: argocd-app-rollout
+      - name: Wait for app to finish syncing
         run: |
           argocd app wait ${{ matrix.app }} --timeout 600
