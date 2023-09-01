@@ -2,7 +2,7 @@ fullnameOverride: request-headers-gitops
 
 image:
   repository: jonpulsifer/request-headers
-  tag: latest
+  tag: 3af1971100be9823fc3662d09f70dd51aa084e9a
 
 env:
   - name: NODE_IP
