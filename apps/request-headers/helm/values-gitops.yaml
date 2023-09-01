@@ -26,7 +26,7 @@ env:
       fieldRef:
         fieldPath: metadata.labels['app.kubernetes.io/instance']
   - name: POD_CHANGE_ME
-    value: "i am a gitops pipeline, cant hurt me"
+    value: "i am a gitops pipeline, cant hurt me, can you? it's friday"
 
 ingress:
   hosts:
