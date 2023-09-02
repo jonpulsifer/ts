@@ -1,6 +1,8 @@
 import './globals.css';
+import 'ui/globals.css';
 
 import { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 
 export const metadata: Metadata = {
   title: 'Headerz',
@@ -12,14 +14,23 @@ export const metadata: Metadata = {
   icons: 'favicon.ico',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html className="h-full w-full" lang="en">
+      <body
+        className={`h-full w-full bg-gray-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
+      >
+        <main className="flex flex-col h-full w-full">
+          <div>{children}</div>
+        </main>
+      </body>
     </html>
   );
-}
+};
+
+export default Layout;

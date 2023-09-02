@@ -23,7 +23,7 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-* ./
-RUN pnpm install --frozen-lockfile --filter=${APP}
+RUN pnpm install --frozen-lockfile --filter=${APP}...
 
 # Uncomment and use build args to enable remote caching
 ARG TURBO_TEAM

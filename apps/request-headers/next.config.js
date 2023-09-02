@@ -4,6 +4,7 @@ const nextConfig = {
     appDir: true,
     typedRoutes: true,
   },
+  transpilePackages: ['ui'],
   reactStrictMode: true,
   output: process.env.IS_DOCKER ? 'standalone' : undefined,
 };

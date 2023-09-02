@@ -1,3 +1,2 @@
 import './globals.css';
-export * from './Card';
-export * from './Modal';
+export { default as Card } from './Card';
