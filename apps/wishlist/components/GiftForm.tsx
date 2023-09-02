@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 
 import type { Gift } from '../types';
 import { useAuth } from './AuthProvider';
-import Card from './Card';
+import { Card } from 'ui';
 
 interface Props {
   gift?: Gift;

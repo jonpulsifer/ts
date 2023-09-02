@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { AppUser } from '../types';
 import { useAuth } from './AuthProvider';
-import Card, { CardAction } from './Card';
+import { Card, CardAction } from 'ui';
 
 interface Props {
   appUser: AppUser;

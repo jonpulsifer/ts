@@ -1,4 +1,5 @@
 import './globals.css';
+import 'ui/globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { AuthProvider } from 'components/AuthProvider';

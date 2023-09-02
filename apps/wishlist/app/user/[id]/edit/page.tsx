@@ -1,6 +1,6 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Card from 'components/Card';
+import { Card } from 'ui';
 import UserForm from 'components/UserForm';
 import { getUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';

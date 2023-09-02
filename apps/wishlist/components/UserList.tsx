@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import type { AppUser } from '../types';
-import Card, { CardAction } from './Card';
+import { Card, CardAction } from 'ui';
 
 interface Props {
   user: AppUser;

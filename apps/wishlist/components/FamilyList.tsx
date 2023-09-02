@@ -16,7 +16,7 @@ import { toast } from 'react-hot-toast';
 import { db } from '../lib/firebase';
 import { AppUser, Family } from '../types';
 import { useAuth } from './AuthProvider';
-import Card from './Card';
+import { Card } from 'ui';
 import EmptyState from './EmptyState';
 
 interface Props {

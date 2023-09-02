@@ -1,4 +1,4 @@
-import Card from 'components/Card';
+import { Card } from 'ui';
 import EmptyState from 'components/EmptyState';
 import GiftForm from 'components/GiftForm';
 import { getGift } from 'lib/firebase-ssr';

@@ -1,5 +1,5 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
-import { CardAction } from 'components/Card';
+import { CardAction } from 'ui';
 import EmptyState from 'components/EmptyState';
 import UserList from 'components/UserList';
 import { getPeopleForUser } from 'lib/firebase-ssr';

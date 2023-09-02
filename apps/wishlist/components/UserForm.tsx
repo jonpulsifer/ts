@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 
 import { db } from '../lib/firebase';
 import { AppUser } from '../types';
-import Card from './Card';
+import { Card } from 'ui';
 
 interface Props {
   user: AppUser;
