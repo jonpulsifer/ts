@@ -1,5 +1,6 @@
+import { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { Card } from 'ui';
+import { Accordion } from 'ui';
 
 const {
   NODE_NAME,
@@ -11,7 +12,7 @@ const {
 } = process.env;
 
 const KubernetesTable = () => (
-  <table className="min-w-full table-auto overflow-wrap">
+  <table className="min-w-full table-auto">
     <thead>
       <tr>
         <th className="text-left px-4 py-2">Item</th>
@@ -47,15 +48,9 @@ const KubernetesTable = () => (
   </table>
 );
 
-const HeadersTable = () => {
-  const headersObj: { [key: string]: string } = {};
-
-  // Iterate through the headers using Headers.values()
-  for (const [key, value] of headers().entries()) {
-    headersObj[key] = value;
-  }
+const EnvironmentTable = () => {
   return (
-    <table className="min-w-full table-auto overflow-hidden">
+    <table className="min-w-full table-auto">
       <thead>
         <tr>
           <th className="text-left px-4 py-2">Item</th>
@@ -63,42 +58,99 @@ const HeadersTable = () => {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(headersObj).map(([key, value]) => (
-          <tr
-            key={key}
-            className="border-b dark:border-slate-800 border-gray-200"
-          >
-            <td className="px-4 py-2">{key}</td>
-            <td className="px-4 py-2">{value}</td>
-          </tr>
-        ))}
+        {Object.entries(process.env).map(([key, value]) => {
+          if (!value) return;
+          return (
+            <tr
+              key={key}
+              className="border-b dark:border-slate-800 border-gray-200"
+            >
+              <td className="px-4 py-2 w-24 whitespace-nowrap truncate text-ellipsis">
+                {key}
+              </td>
+              <td className="px-4 py-2 whitespace-nowrap">{value}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
 };
 
-export default async function Home() {
+const HeadersTable = () => {
+  const obj: { [key: string]: string } = {};
+
+  // Iterate through the headers using Headers.values()
+  for (const [key, value] of headers().entries()) {
+    obj[key] = value;
+  }
+  return (
+    <table className="min-w-full table-auto">
+      <thead>
+        <tr>
+          <th className="text-left px-4 py-2">Item</th>
+          <th className="text-left px-4 py-2">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(obj).map(([key, value]) => {
+          if (!value) return;
+          return (
+            <tr
+              key={key}
+              className="border-b dark:border-slate-800 border-gray-200"
+            >
+              <td className="px-4 py-2 whitespace-nowrap">{key}</td>
+              <td className="px-4 py-2 break-all">{value}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+export const metadata: Metadata = {
+  title: 'Request Headers',
+  description: 'Home page for the Request Headers app',
+};
+
+const Home = async () => {
   return (
     <div className="flex flex-col justify-center items-center gap-4 max-w-full w-full">
-      <h1 className="text-7xl font-bold pt-4">Request Headers</h1>
-
-      <Card
-        title="k8s &darr;"
-        subtitle="Kubernetes related environment variables"
-      >
-        <div className="pb-4 px-4">
+      <h1 className="text-md sm:text-2xl md:text-3xl lg:text-4xl tracking-tight font-extrabold pt-4">
+        <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-600">
+          ▂▃▅▇█▓▒░
+        </span>
+        <span>(∩ ͡° ͜ʖ ͡°)⊃</span>
+        <span className="text-indigo-600">━</span>
+        <span className="hover:animate-ping hover:text-yellow-300">☆ﾟ. *</span>
+        <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-400">
+          ░▒▓█▇▅▃▂
+        </span>
+      </h1>
+      <div className="flex flex-col gap-4 max-w-full sm:max-w-2xl">
+        <Accordion
+          title="k8s"
+          subtitle="Kubernetes related environment variables"
+        >
           <KubernetesTable />
-        </div>
-      </Card>
-
-      <Card
-        title="Request Headers &darr;"
-        subtitle="HTTP Headers received by the server"
-      >
-        <div className="pb-4 px-4">
+        </Accordion>
+        <Accordion
+          title="Environment Variables"
+          subtitle="All Environment variables visible on the server"
+        >
+          <EnvironmentTable />
+        </Accordion>
+        <Accordion
+          title="Request Headers"
+          subtitle="HTTP Headers received by the server"
+        >
           <HeadersTable />
-        </div>
-      </Card>
+        </Accordion>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;

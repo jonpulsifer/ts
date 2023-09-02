@@ -1,9 +1,14 @@
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+'use client';
+import {
+  faArrowDown,
+  faArrowRight,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import React, { FormEvent, MouseEvent } from 'react';
+import React, { FormEvent, MouseEvent, useState } from 'react';
 
-export interface CardAction {
+export interface AccordionAction {
   icon?: IconDefinition;
   title: string;
   danger?: boolean;
@@ -12,23 +17,48 @@ export interface CardAction {
   link?: string;
 }
 
-export interface CardProps {
+export interface AccordionProps {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   badges?: React.ReactNode;
   children?: React.ReactNode;
-  action?: CardAction | CardAction[];
+  action?: AccordionAction | AccordionAction[];
 }
 
-const Card = ({
+const Accordion = ({
   title,
   subtitle,
   action,
   badges,
   children,
-}: CardProps): JSX.Element => {
-  const titleMarkup = (
-    <div className="flex flex-row gap-4 p-4 truncate">
+}: AccordionProps): JSX.Element => {
+  const [open, setOpen] = useState(false);
+  const height = open ? 'auto' : '0px';
+
+  const toggleOpen = () => {
+    setOpen(!open);
+  };
+
+  const OpenedArrow = (
+    <FontAwesomeIcon
+      icon={faArrowDown}
+      onClick={toggleOpen}
+      className="text-indigo-600 dark:text-indigo-800"
+    />
+  );
+
+  const ClosedArrow = (
+    <FontAwesomeIcon
+      icon={faArrowRight}
+      onClick={toggleOpen}
+      className="text-indigo-600 dark:text-indigo-800"
+    />
+  );
+
+  const icon = open ? OpenedArrow : ClosedArrow;
+
+  const headerMarkup = (
+    <div className="flex flex-row gap-4 p-4 truncate" onClick={toggleOpen}>
       <div className="flex flex-col grow dark:text-gray-400">
         <h1 className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200">
           {title}
@@ -40,10 +70,11 @@ const Card = ({
         </div>
       </div>
       <div className="flex items-center">{badges}</div>
+      <div className="flex items-center text-2xl">{icon}</div>
     </div>
   );
 
-  const actions: CardAction[] = [];
+  const actions: AccordionAction[] = [];
   if (action && Array.isArray(action)) {
     actions.push(...action);
   } else if (action) {
@@ -94,17 +125,21 @@ const Card = ({
     </div>
   );
 
-  const headerMarkup = title ? titleMarkup : null;
   const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="flex flex-col h-max rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md border-transparent">
-      <div className="my-2 sm:text-left bg-white dark:bg-slate-900">
+    <div className="flex flex-col sm:rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md overflow-hidden">
+      <div className="sm:text-left">
         {headerMarkup}
-        {children}
+        <div
+          style={{ height: height }}
+          className="border-b dark:border-slate-800 border-gray-200 overflow-wrap"
+        >
+          {children}
+        </div>
       </div>
       {footerMarkup}
     </div>
   );
 };
 
-export default Card;
+export default Accordion;

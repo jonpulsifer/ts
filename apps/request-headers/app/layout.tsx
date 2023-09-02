@@ -1,5 +1,6 @@
 import './globals.css';
 import 'ui/globals.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -7,7 +8,7 @@ import { Inter } from 'next/font/google';
 export const metadata: Metadata = {
   title: 'Headerz',
   description: 'A little app that returns headers and things',
-  viewport: 'width=device-width, initial-scale=1',
+  // viewport: 'width=device-width, initial-scale=1',
   robots: {
     index: false,
   },
@@ -25,9 +26,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <body
         className={`h-full w-full bg-gray-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
       >
-        <main className="flex flex-col h-full w-full">
-          <div>{children}</div>
-        </main>
+        <main className="flex flex-col h-full w-full">{children}</main>
       </body>
     </html>
   );
