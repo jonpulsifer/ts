@@ -112,6 +112,7 @@ jobs:
           echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
       - name: Sync app to current commit
         run: |
+          argocd app patch ${{ matrix.app }} --patch '[{ "op": "replace", "path": "/sources/1/targetRevision", "value": "${{ github.sha }}" }]';
           argocd app set ${{ matrix.app }} -p image.tag=${{ github.sha }} --sync-policy automated
       - name: Wait for app to finish syncing
         run: |
