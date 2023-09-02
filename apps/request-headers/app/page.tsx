@@ -124,7 +124,7 @@ const Home = async () => {
         </span>
         <span>(∩ ͡° ͜ʖ ͡°)⊃</span>
         <span className="text-indigo-600">━</span>
-        <span className="hover:animate-ping hover:text-yellow-300">☆ﾟ. *</span>
+        <span className="hover:animate-ping hover:text-red-300">☆ﾟ. *</span>
         <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-400">
           ░▒▓█▇▅▃▂
         </span>
