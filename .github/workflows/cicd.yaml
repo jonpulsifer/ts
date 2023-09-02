@@ -98,7 +98,7 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        app: ['request-headers-non-gitops']
+        app: ['request-headers']
     env:
       ARGOCD_URL: argo-argocd-server.argo
     steps:
