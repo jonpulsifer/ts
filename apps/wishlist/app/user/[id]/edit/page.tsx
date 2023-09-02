@@ -1,10 +1,10 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Card } from 'ui';
 import UserForm from 'components/UserForm';
 import { getUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { Card } from 'ui';
 
 interface Props {
   params: { [K in string]: string };

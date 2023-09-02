@@ -3,9 +3,9 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Card, CardAction } from 'ui';
 
 import type { AppUser } from '../types';
-import { Card, CardAction } from 'ui';
 
 interface Props {
   user: AppUser;

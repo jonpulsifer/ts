@@ -11,10 +11,10 @@ import {
   faUserEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Card, CardAction } from 'ui';
 
 import { AppUser } from '../types';
 import { useAuth } from './AuthProvider';
-import { Card, CardAction } from 'ui';
 
 interface Props {
   appUser: AppUser;

@@ -6,10 +6,10 @@ import { db } from 'lib/firebase';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { Card } from 'ui';
 
 import type { Gift } from '../types';
 import { useAuth } from './AuthProvider';
-import { Card } from 'ui';
 
 interface Props {
   gift?: Gift;

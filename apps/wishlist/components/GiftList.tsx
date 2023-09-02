@@ -15,11 +15,11 @@ import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { Card } from 'ui';
 
 import { db } from '../lib/firebase';
 import type { Gift } from '../types';
 import { useAuth } from './AuthProvider';
-import { Card } from 'ui';
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import Modal from './GiftModal';

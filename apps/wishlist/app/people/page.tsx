@@ -1,9 +1,9 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
-import { CardAction } from 'ui';
 import EmptyState from 'components/EmptyState';
 import UserList from 'components/UserList';
 import { getPeopleForUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
+import { CardAction } from 'ui';
 
 export const metadata: Metadata = {
   title: 'People',

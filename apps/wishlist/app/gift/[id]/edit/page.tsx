@@ -1,8 +1,8 @@
-import { Card } from 'ui';
 import EmptyState from 'components/EmptyState';
 import GiftForm from 'components/GiftForm';
 import { getGift } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
+import { Card } from 'ui';
 interface Props {
   params: { [K in string]: string };
 }

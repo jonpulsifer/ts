@@ -6,10 +6,10 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { Card } from 'ui';
 
 import { db } from '../lib/firebase';
 import { AppUser } from '../types';
-import { Card } from 'ui';
 
 interface Props {
   user: AppUser;
