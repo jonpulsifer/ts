@@ -33,7 +33,7 @@ const Accordion = ({
   badges,
   isOpen = false,
   children,
-}: AccordionProps): JSX.Element => {
+}: AccordionProps): React.JSX.Element => {
   const [open, setOpen] = useState(isOpen);
   const height = open ? 'auto' : '0px';
 
@@ -122,7 +122,7 @@ const Accordion = ({
     : null;
 
   const footer = (
-    <div className="bg-gray-50 dark:bg-slate-900 rounded-b-lg px-4 py-3 sm:flex sm:flex-row-reverse">
+    <div className="border-t dark:border-slate-800 border-gray-200 bg-gray-50 dark:bg-slate-900 rounded-b-lg px-4 py-3 sm:flex sm:flex-row-reverse">
       {actionsMarkup}
     </div>
   );
@@ -135,10 +135,7 @@ const Accordion = ({
     >
       <div className="sm:text-left">
         {headerMarkup}
-        <div
-          style={{ height: height }}
-          className="border-b dark:border-slate-800 border-gray-200 overflow-y-scroll"
-        >
+        <div style={{ height: height }} className="overflow-y-scroll">
           {children}
         </div>
       </div>

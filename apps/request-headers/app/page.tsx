@@ -124,19 +124,20 @@ export const metadata: Metadata = {
   description: 'Home page for the Request Headers app',
 };
 
+// change me
+const starColor = 'text-yellow-300 hover:animate-ping hover:text-pink-600';
+
 const Home = async () => {
   return (
     <div className="flex flex-col justify-center items-center gap-4 max-w-full w-full">
       <h1 className="text-md sm:text-2xl md:text-3xl lg:text-4xl tracking-tight font-extrabold pt-4">
-        <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-600">
-          ▂▃▅▇█▓▒░
-        </span>
         <span>(∩ ͡° ͜ʖ ͡°)⊃</span>
-        <span className="text-indigo-600">━</span>
-        <span className="hover:animate-ping hover:text-red-300">☆ﾟ. *</span>
-        <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-400">
-          ░▒▓█▇▅▃▂
+        <span className="text-blue-600">━</span>
+        <span className="font-mono text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
+          <span className={starColor}>⭑</span>·~-.¸.·~
+          <span className={starColor}>⭒</span>·._.·
         </span>
+        <span className={starColor}>☆</span>
       </h1>
       <div className="flex flex-col gap-4 max-w-full sm:max-w-2xl">
         {KubernetesAccordion}
