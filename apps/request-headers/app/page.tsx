@@ -10,6 +10,7 @@ const {
   POD_LABEL_APP_INSTANCE,
   POD_CHANGE_ME,
 } = process.env;
+const isInKubernetes = !!process.env.POD_NAME;
 
 const KubernetesTable = () => (
   <table className="min-w-full table-auto">
@@ -110,6 +111,16 @@ const HeadersTable = () => {
   );
 };
 
+const KubernetesAccordion = isInKubernetes ? (
+  <Accordion
+    title="Kubernetes"
+    subtitle="Kubernetes related environment variables"
+    isOpen
+  >
+    <KubernetesTable />
+  </Accordion>
+) : null;
+
 export const metadata: Metadata = {
   title: 'Request Headers',
   description: 'Home page for the Request Headers app',
@@ -130,21 +141,16 @@ const Home = async () => {
         </span>
       </h1>
       <div className="flex flex-col gap-4 max-w-full sm:max-w-2xl">
-        <Accordion
-          title="k8s"
-          subtitle="Kubernetes related environment variables"
-        >
-          <KubernetesTable />
-        </Accordion>
+        {KubernetesAccordion}
         <Accordion
           title="Environment Variables"
-          subtitle="All Environment variables visible on the server"
+          subtitle="All environment variables visible on the server"
         >
           <EnvironmentTable />
         </Accordion>
         <Accordion
           title="Request Headers"
-          subtitle="HTTP Headers received by the server"
+          subtitle="HTTP headers received by the server"
         >
           <HeadersTable />
         </Accordion>

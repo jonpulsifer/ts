@@ -23,6 +23,7 @@ export interface AccordionProps {
   badges?: React.ReactNode;
   children?: React.ReactNode;
   action?: AccordionAction | AccordionAction[];
+  isOpen?: boolean;
 }
 
 const Accordion = ({
@@ -30,9 +31,10 @@ const Accordion = ({
   subtitle,
   action,
   badges,
+  isOpen = false,
   children,
 }: AccordionProps): JSX.Element => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(isOpen);
   const height = open ? 'auto' : '0px';
 
   const toggleOpen = () => {
