@@ -96,6 +96,10 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: containerize
     runs-on: home-cluster
+    container:
+      image: jonpulsifer/bashcurljq
+      env:
+        ARGOCD_URL: argo-argocd-server.argo
     strategy:
       matrix:
         app: ['request-headers', 'request-headers-tf']
