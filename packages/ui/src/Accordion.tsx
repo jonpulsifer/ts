@@ -60,7 +60,7 @@ const Accordion = ({
   const icon = open ? OpenedArrow : ClosedArrow;
 
   const headerMarkup = (
-    <div className="flex flex-row gap-4 p-4 truncate" onClick={toggleOpen}>
+    <div className="flex flex-row gap-4 p-4 truncate">
       <div className="flex flex-col grow dark:text-gray-400">
         <h1 className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200">
           {title}
@@ -129,12 +129,15 @@ const Accordion = ({
 
   const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="flex flex-col sm:rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md overflow-hidden">
+    <div
+      className="flex flex-col sm:rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md overflow-hidden"
+      onClick={toggleOpen}
+    >
       <div className="sm:text-left">
         {headerMarkup}
         <div
           style={{ height: height }}
-          className="border-b dark:border-slate-800 border-gray-200 overflow-wrap"
+          className="border-b dark:border-slate-800 border-gray-200 overflow-y-scroll"
         >
           {children}
         </div>

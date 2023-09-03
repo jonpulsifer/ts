@@ -66,10 +66,8 @@ const EnvironmentTable = () => {
               key={key}
               className="border-b dark:border-slate-800 border-gray-200"
             >
-              <td className="px-4 py-2 w-24 whitespace-nowrap truncate text-ellipsis">
-                {key}
-              </td>
-              <td className="px-4 py-2 whitespace-nowrap">{value}</td>
+              <td className="px-4 py-2">{key}</td>
+              <td className="px-4 py-2 break-all">{value}</td>
             </tr>
           );
         })}

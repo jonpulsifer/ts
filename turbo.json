@@ -44,6 +44,7 @@
         "^build"
       ],
       "env": [
+        "IS_DOCKER",
         "NODE_IP",
         "NODE_NAME",
         "POD_IP",
