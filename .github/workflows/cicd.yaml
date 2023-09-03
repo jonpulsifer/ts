@@ -95,7 +95,7 @@ jobs:
   deploy:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: containerize
-    runs-on: arc-runner-ts
+    runs-on: home-cluster
     strategy:
       matrix:
         app: ['request-headers', 'request-headers-tf']
