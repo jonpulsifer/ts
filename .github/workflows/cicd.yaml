@@ -97,7 +97,7 @@ jobs:
     needs: containerize
     runs-on: home-cluster
     container:
-      image: jonpulsifer/bashcurljq
+      image: jonpulsifer/bashcurljq@sha256:4d75c7f62ba503d5c4d5307495b49d87f0af4e3ea0d51eb533ab3380e1102eb4
       env:
         ARGOCD_URL: argo-argocd-server.argo
     strategy:
