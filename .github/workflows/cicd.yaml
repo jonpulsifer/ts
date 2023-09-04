@@ -96,6 +96,9 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: containerize
     runs-on: home-cluster
+    environment:
+      name: Production (k8s) – request-headers
+      url: https://request-headers.lolwtf.ca
     strategy:
       matrix:
         app: ['request-headers', 'request-headers-tf']
