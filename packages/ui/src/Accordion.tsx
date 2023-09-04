@@ -135,7 +135,7 @@ const Accordion = ({
     >
       <div className="sm:text-left">
         {headerMarkup}
-        <div style={{ height: height }} className="overflow-x-scroll">
+        <div style={{ height: height }} className="transition-all duration-200">
           {children}
         </div>
       </div>
