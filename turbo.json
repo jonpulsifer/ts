@@ -4,15 +4,11 @@
   "globalEnv": ["NODE_ENV"],
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "wishlist#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "FIREBASE_AUTH_EMULATOR_HOST",
         "FIREBASE_CLIENT_EMAIL",
@@ -31,18 +27,14 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "authme#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "JWT_EXPECTED_AUDIENCE"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "request-headers#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "IS_DOCKER",
         "NODE_IP",
@@ -53,6 +45,10 @@
         "POD_CHANGE_ME"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "nested#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
     "lint": {},
     "test": {

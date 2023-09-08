@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
+    "prettier-config": "workspace:*",
     "tsconfig": "workspace:*",
     "turbo": "1.10.13"
   },
