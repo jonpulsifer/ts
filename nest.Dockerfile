@@ -30,13 +30,14 @@ COPY --from=builder /app/out/full/ .
 # COPY .prettierrc.json .
 COPY --from=builder /app/out ./out
 #COPY turbo.json turbo.json
-RUN turbo run build --filter=${APP}
+RUN turbo run build --filter=${APP}...
 
 FROM cgr.dev/chainguard/node:18.17.1@sha256:af073516c203b6bd0b55a77a806a0950b486f2e9ea7387a32b0f41ea72f20886 AS runner
 ARG APP
 WORKDIR /app/apps/${APP}
-COPY --from=installer /app/node_modules /app/node_modules
-COPY --from=installer /app/apps/${APP}/package.json .
+COPY --from=installer --chown=65532:65532 /app/node_modules /app/node_modules
+COPY --from=installer --chown=65532:65532 /app/packages /app/packages
+COPY --from=installer --chown=65532:65532 /app/apps/${APP}/package.json .
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/node_modules ./node_modules
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/dist ./
 CMD ["main.js"]

@@ -103,7 +103,7 @@ importers:
   apps/nested:
     dependencies:
       '@nestjs/axios':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(@nestjs/common@10.2.4)(axios@1.5.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/common':
         specifier: 10.2.4
@@ -157,9 +157,6 @@ importers:
       jest:
         specifier: 29.6.4
         version: 29.6.4(@types/node@20.3.1)(ts-node@10.9.1)
-      nestjs-modules:
-        specifier: workspace:*
-        version: link:../../packages/nestjs-modules
       source-map-support:
         specifier: 0.5.21
         version: 0.5.21
@@ -361,40 +358,6 @@ importers:
         specifier: 3.0.3
         version: 3.0.3
     devDependencies:
-      typescript:
-        specifier: 5.2.2
-        version: 5.2.2
-
-  packages/nestjs-modules:
-    dependencies:
-      '@nestjs/axios':
-        specifier: ^3.0.0
-        version: 3.0.0(@nestjs/common@10.2.4)(axios@1.5.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/common':
-        specifier: 10.2.4
-        version: 10.2.4(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/terminus':
-        specifier: 10.0.1
-        version: 10.0.1(@nestjs/axios@3.0.0)(@nestjs/common@10.2.4)(@nestjs/core@10.2.4)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-    devDependencies:
-      '@nestjs/testing':
-        specifier: 10.2.4
-        version: 10.2.4(@nestjs/common@10.2.4)(@nestjs/core@10.2.4)(@nestjs/platform-express@10.2.4)
-      '@types/jest':
-        specifier: 29.5.4
-        version: 29.5.4
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../eslint-config-custom
-      jest:
-        specifier: 29.6.4
-        version: 29.6.4
-      ts-jest:
-        specifier: 29.1.1
-        version: 29.1.1(@babel/core@7.22.1)(jest@29.6.4)(typescript@5.2.2)
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
       typescript:
         specifier: 5.2.2
         version: 5.2.2
@@ -7031,35 +6994,6 @@ packages:
       - supports-color
     dev: true
 
-  /jest-cli@29.6.4:
-    resolution: {integrity: sha512-+uMCQ7oizMmh8ZwRfZzKIEszFY9ksjjEQnTEMTaL7fYiL3Kw4XhqT9bYh+A4DQKUb67hZn2KbtEnDuHvcgK4pQ==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 29.6.4(ts-node@10.9.1)
-      '@jest/test-result': 29.6.4
-      '@jest/types': 29.6.3
-      chalk: 4.1.2
-      exit: 0.1.2
-      graceful-fs: 4.2.10
-      import-local: 3.1.0
-      jest-config: 29.6.4(@types/node@18.17.15)(ts-node@10.9.1)
-      jest-util: 29.6.3
-      jest-validate: 29.6.3
-      prompts: 2.4.2
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - '@types/node'
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-    dev: true
-
   /jest-cli@29.6.4(@types/node@18.17.15)(ts-node@10.9.1):
     resolution: {integrity: sha512-+uMCQ7oizMmh8ZwRfZzKIEszFY9ksjjEQnTEMTaL7fYiL3Kw4XhqT9bYh+A4DQKUb67hZn2KbtEnDuHvcgK4pQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -7490,27 +7424,6 @@ packages:
       jest-util: 29.6.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
-    dev: true
-
-  /jest@29.6.4:
-    resolution: {integrity: sha512-tEFhVQFF/bzoYV1YuGyzLPZ6vlPrdfvDmmAxudA1dLEuiztqg2Rkx20vkKY32xiDROcD2KXlgZ7Cu8RPeEHRKw==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 29.6.4(ts-node@10.9.1)
-      '@jest/types': 29.6.3
-      import-local: 3.1.0
-      jest-cli: 29.6.4
-    transitivePeerDependencies:
-      - '@types/node'
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
     dev: true
 
   /jest@29.6.4(@types/node@18.17.15)(ts-node@10.9.1):
@@ -10541,7 +10454,7 @@ packages:
       '@babel/core': 7.22.1
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.6.4
+      jest: 29.6.4(@types/node@18.17.15)(ts-node@10.9.1)
       jest-util: 29.6.3
       json5: 2.2.3
       lodash.memoize: 4.1.2

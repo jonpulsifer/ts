@@ -16,6 +16,7 @@ dist
 
 # typescript
 *.d.ts
+tsconfig.tsbuildinfo
 
 # misc
 .DS_Store
