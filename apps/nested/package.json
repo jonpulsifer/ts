@@ -66,8 +66,7 @@
     "testEnvironment": "node",
     "coverageDirectory": "./coverage",
     "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/src/"
     ],
     "moduleNameMapper": {
       "^@app/wat(|/.*)$": "<rootDir>/libs/wat/src/$1"
