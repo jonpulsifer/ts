@@ -105,7 +105,7 @@ jobs:
     needs: containerize
     runs-on: home-cluster
     environment:
-      name: "${matrix.app}: Production"
+      name: Production - ${{ matrix.app }}
       url: https://${{matrix.app}}.lolwtf.ca
     env:
       ARGOCD_URL: argo-argocd-server.argo
