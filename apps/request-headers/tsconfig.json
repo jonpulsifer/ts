@@ -12,7 +12,7 @@
     "next-env.d.ts"
   ],
   "paths": {
-    "ui": ["../../../packages/ui/src"]
+    "ui": ["../../packages/ui/src"]
   },
   "exclude": [
     "node_modules"

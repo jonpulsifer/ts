@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
     types: [opened, synchronize]
 
@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3
         with:
           node-version: 18
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
@@ -47,26 +47,39 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app: ['request-headers']
+        include:
+          - app: request-headers
+            stack: nextjs
+          - app: nested
+            stack: nestjs
     steps:
       - name: Check out code
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
         with:
-          fetch-depth: 1
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+      - name: Turbo Ignore
+        id: turbo-ignore
+        run: pnpx turbo ignore
 
       - name: Set up QEMU
+        if: ${{ steps.turbo-ignore.outcome == 'success' }}
         uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # v2
 
       - name: Set up Docker Buildx
+        if: ${{ steps.turbo-ignore.outcome == 'success' }}
         uses: docker/setup-buildx-action@885d1462b80bc1c1c7f0b00334ad271f09369c55 # v2
 
       - name: Login to DockerHub
+        if: ${{ steps.turbo-ignore.outcome == 'success' }}
         uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Generate Docker Meta
+        if: ${{ steps.turbo-ignore.outcome == 'success' }}
         uses: docker/metadata-action@818d4b7b91585d195f67373fd9cb0332e31a7175 # v4
         id: meta
         with:
@@ -77,6 +90,7 @@ jobs:
             latest=true
 
       - name: Build and push
+        if: ${{ steps.turbo-ignore.outcome == 'success' }}
         uses: docker/build-push-action@0a97817b6ade9f46837855d676c4cca3a2471fc9 # v4
         with:
           build-args: |
@@ -87,21 +101,22 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
+          file: ${{ matrix.stack == 'nestjs' && 'nest.Dockerfile' || 'Dockerfile' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: true
 
   deploy:
+    strategy:
+      matrix:
+        app: ["request-headers", "request-headers-tf"]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: containerize
     runs-on: home-cluster
     environment:
       name: Production (k8s) – request-headers
       url: https://request-headers.lolwtf.ca
-    strategy:
-      matrix:
-        app: ['request-headers', 'request-headers-tf']
     env:
       ARGOCD_URL: argo-argocd-server.argo
     steps:
