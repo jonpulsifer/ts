@@ -61,7 +61,7 @@ jobs:
       - uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
       - name: Turbo Ignore
         id: turbo-ignore
-        run: pnpx turbo ignore
+        run: pnpx turbo-ignore --fallback=HEAD^1
 
       - name: Set up QEMU
         if: ${{ steps.turbo-ignore.outcome == 'success' }}
