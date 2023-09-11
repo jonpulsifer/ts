@@ -35,18 +35,18 @@ ARG TURBO_TOKEN
 ENV TURBO_TOKEN=$TURBO_TOKEN
 
 # Build the project
-# RUN turbo run build --filter=${APP}
+RUN turbo run build --filter=${APP}
 
-# FROM cgr.dev/chainguard/node:18.17.1@sha256:af073516c203b6bd0b55a77a806a0950b486f2e9ea7387a32b0f41ea72f20886 AS runner
-# ARG APP
-# ENV NEXT_TELEMETRY_DISABLED 1
-# WORKDIR /app
+FROM cgr.dev/chainguard/node:18.17.1@sha256:af073516c203b6bd0b55a77a806a0950b486f2e9ea7387a32b0f41ea72f20886 AS runner
+ARG APP
+ENV NEXT_TELEMETRY_DISABLED 1
+WORKDIR /app
 
-# COPY --from=installer /app/apps/${APP}/next.config.js .
-# COPY --from=installer /app/apps/${APP}/package.json .
-# COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/standalone ./
-# COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
-# COPY --from=installer --chown=65532:65532 /app/apps/${APP}/public ./apps/${APP}/public
+COPY --from=installer /app/apps/${APP}/next.config.js .
+COPY --from=installer /app/apps/${APP}/package.json .
+COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/standalone ./
+COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
+COPY --from=installer --chown=65532:65532 /app/apps/${APP}/public ./apps/${APP}/public
 
-# WORKDIR /app/apps/${APP}
-# CMD ["server.js"]
+WORKDIR /app/apps/${APP}
+CMD ["server.js"]
