@@ -12,8 +12,8 @@ datasource db {
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
+  id                Int     @id @default(autoincrement())
+  userId            Int
   type              String
   provider          String
   providerAccountId String
@@ -31,15 +31,15 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           Int      @id @default(autoincrement())
   sessionToken String   @unique
-  userId       String
+  userId       Int
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            Int        @id @default(autoincrement())
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   name          String?
@@ -66,7 +66,7 @@ model VerificationToken {
 }
 
 model Gift {
-  id          String     @id @default(cuid())
+  id          Int        @id @default(autoincrement())
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   name        String     @db.VarChar(255)
@@ -75,15 +75,15 @@ model Gift {
   description String?
   published   Boolean    @default(false)
   owner       User       @relation(fields: [ownerId], references: [id])
-  ownerId     String
+  ownerId     Int
   claimed     Boolean    @default(false)
   claimedBy   User?      @relation("ClaimedByUser", fields: [claimedById], references: [id])
-  claimedById String?
+  claimedById Int?
   wishlists   Wishlist[]
 }
 
 model Wishlist {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
