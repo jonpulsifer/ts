@@ -1,6 +1,4 @@
-import { getCurrentUser } from 'lib/firebase-ssr';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
 import LoginPage from './login/page';
 
@@ -10,8 +8,6 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  const { user } = await getCurrentUser();
-  if (user) redirect('/people');
   return <LoginPage />;
 };
 

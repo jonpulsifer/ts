@@ -1,5 +1,5 @@
 import FamilyList from 'components/FamilyList';
-import { getFamilies } from 'lib/firebase-ssr';
+import { getWishlists } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 };
 
 const JoinFamilyPage = async () => {
-  const { families, user } = await getFamilies();
-  return <FamilyList families={families} user={user} />;
+  const { wishlists, user } = await getWishlists();
+  return <FamilyList wishlists={wishlists} user={user} />;
 };
 
 export default JoinFamilyPage;

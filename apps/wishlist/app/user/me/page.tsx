@@ -1,6 +1,6 @@
 import GiftList from 'components/GiftList';
 import { UserProfile } from 'components/User';
-import { getAllUserGifts, getCurrentUser } from 'lib/firebase-ssr';
+import { getMeWithGifts } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,12 +9,11 @@ export const metadata: Metadata = {
 };
 
 const MePage = async () => {
-  const { user } = await getCurrentUser();
-  const { gifts } = await getAllUserGifts();
+  const user = await getMeWithGifts();
   return (
     <div className="w-full space-y-4">
-      <UserProfile appUser={user} />
-      <GiftList gifts={gifts} />
+      <UserProfile user={user} />
+      <GiftList gifts={user.gifts} />
     </div>
   );
 };

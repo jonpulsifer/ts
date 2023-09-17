@@ -9,29 +9,32 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { deleteDoc, doc, FirestoreError, updateDoc } from 'firebase/firestore';
+import { Gift, User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { GiftWithOwner } from 'types/prisma';
 import { Card } from 'ui';
 
-import { db } from '../lib/firebase';
-import { AppUser, Gift } from '../types';
-import { useAuth } from './AuthProvider';
-
+// use Gift or GiftWithUser or GiftWithUserAndClaimedBy
 interface Props {
-  gift: Gift;
-  user: AppUser;
+  gift: Gift | GiftWithOwner;
+  user: User;
 }
 
-export const GiftCard = ({ gift, user }: Props) => {
-  const { name, notes, url } = gift;
-  const router = useRouter();
-  const { user: currentUser } = useAuth();
+export const GiftCard = ({ gift: initialGift, user }: Props) => {
+  const [gift, setGift] = useState<Gift>(initialGift);
+  const { name, description, url } = gift;
+  const giftDescription = description
+    ? description
+    : `${user.name} hasn't added a description for this gift.`;
 
-  const notesContent = notes
-    ? notes
-    : `${user.name} hasn't added any notes for this gift.`;
+  const { data: session } = useSession();
+  const currentUser = session?.user as User;
+
+  const router = useRouter();
 
   const ToastMarkup = ({ gift }: { gift: Gift }) => {
     return (
@@ -63,43 +66,72 @@ export const GiftCard = ({ gift, user }: Props) => {
   };
 
   const handleDelete = (gift: Gift) => {
-    const ref = doc(db, 'gifts', gift.id);
-    deleteDoc(ref)
-      .then(() => {
-        toast.success(`Deleted ${gift.name}`);
-        router.push('/mine');
+    fetch(`/api/gift`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: gift.id }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success(`Deleted ${gift.name}`);
+          router.push('/user/me');
+        } else {
+          res.json().then((json) => toast.error(json.error));
+        }
       })
-      .catch((error: FirestoreError) => {
+      .catch((error) => {
         toast.error(error.message);
       });
   };
 
   const handleClaim = (gift: Gift) => {
-    const ref = doc(db, 'gifts', gift.id);
-    updateDoc(ref, { claimed_by: currentUser?.uid })
-      .then(() => {
-        toast.success(`Claimed ${gift.name}`);
-        router.refresh();
+    fetch(`/api/gift/claim`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: gift.id }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success(`Claimed ${gift.name}`);
+          res.json().then((json) => setGift(json.gift));
+        } else {
+          res.json().then((json) => toast.error(json.error));
+        }
       })
-      .catch((error: FirestoreError) => {
+      .catch((error) => {
         toast.error(error.message);
       });
+    router.refresh();
   };
 
   const handleUnclaim = (gift: Gift) => {
-    const ref = doc(db, 'gifts', gift.id);
-    updateDoc(ref, { claimed_by: '' })
-      .then(() => {
-        toast.success(`Unclaimed ${gift.name}`);
-        router.refresh();
+    fetch(`/api/gift/claim`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: gift.id }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success(`Unclaimed ${gift.name}`);
+          res.json().then((json) => setGift(json.gift));
+        } else {
+          res.json().then((json) => toast.error(json.error));
+        }
       })
-      .catch((error: FirestoreError) => {
+      .catch((error) => {
         toast.error(error.message);
       });
+    router.refresh();
   };
 
   const giftAction = () => {
-    if (gift.owner === currentUser?.uid)
+    if (gift.ownerId === currentUser?.id)
       return [
         {
           link: `/gift/${gift.id}/edit`,
@@ -113,9 +145,9 @@ export const GiftCard = ({ gift, user }: Props) => {
           danger: true,
         },
       ];
-    if (gift.claimed_by && gift.claimed_by !== currentUser?.uid)
+    if (gift.claimedById && gift.claimedById !== currentUser?.id)
       return undefined;
-    if (gift.claimed_by === currentUser?.uid) {
+    if (gift.claimedById === currentUser?.id) {
       return {
         onClick: () => handleUnclaim(gift),
         icon: faMinusSquare,
@@ -155,7 +187,7 @@ export const GiftCard = ({ gift, user }: Props) => {
               <FontAwesomeIcon icon={faFeather} />
               <p className="font-semibold">Notes</p>
             </div>
-            <div className="whitespace-pre-line">{notesContent}</div>
+            <div className="whitespace-pre-line">{giftDescription}</div>
           </div>
         </div>
       </div>

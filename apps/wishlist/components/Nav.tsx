@@ -11,10 +11,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 
-import { useAuth } from './AuthProvider';
 import Modal from './GiftModal';
 
 type NavLink = {
@@ -25,8 +25,6 @@ type NavLink = {
 };
 
 export function Sidebar() {
-  const { signOut } = useAuth();
-  const router = useRouter();
   const path = usePathname();
   const [showGiftModal, setShowGiftModal] = useState(false);
   const links = [
@@ -61,11 +59,7 @@ export function Sidebar() {
   const signOutLink = [
     {
       title: 'Sign out',
-      onClick: () =>
-        signOut().then(() => {
-          router.push('/login');
-          router.refresh();
-        }),
+      onClick: () => signOut(),
       icon: faSignOut,
     },
   ];

@@ -2,14 +2,11 @@
 import { faGifts } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
-import { addDoc, collection, FirestoreError } from 'firebase/firestore';
-import { db } from 'lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Fragment, useRef } from 'react';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import { useAuth } from './AuthProvider';
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -19,14 +16,13 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
   const cancelButtonRef = useRef(null);
   const [name, setName] = useState('');
   const [url, setURL] = useState('');
-  const [notes, setNotes] = useState('');
-  const { user } = useAuth();
+  const [description, setDescription] = useState('');
   const router = useRouter();
 
   const resetForm = () => {
     setName('');
     setURL('');
-    setNotes('');
+    setDescription('');
   };
 
   const closeAndReset = () => {
@@ -34,33 +30,38 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
     resetForm();
   };
 
-  if (!user) return null;
-  const { uid } = user;
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name) {
       toast.error('Missing gift name. Tell Santa what you want!');
       return;
     }
-    const col = collection(db, 'gifts');
-    addDoc(col, {
+
+    const gift = {
       name,
-      notes,
       url,
-      owner: uid,
-      claimed_by: '',
+      description,
+    };
+
+    fetch('/api/gift', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ gift }),
     })
-      .then(() => {
-        const msg = `Added ${name} to your wishlist`;
-        toast.success(msg);
-        resetForm();
-        router.refresh();
+      .then((res) => {
+        if (res.ok) {
+          toast.success(`Added ${name} to your wishlist!`);
+          resetForm();
+          router.refresh();
+        } else {
+          toast.error('Something went wrong. Please try again.');
+        }
       })
-      .catch((e) => {
-        const error = e as FirestoreError;
-        console.log(JSON.stringify(error));
-        toast.error(error.code);
+      .catch((err) => {
+        console.error(err);
+        toast.error('Something went wrong. Please try again.');
       });
   }
   return (
@@ -156,12 +157,12 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               Notes (optional)
                             </label>
                             <textarea
-                              id="notes"
-                              autoComplete="notes"
+                              id="description"
+                              autoComplete="description"
                               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
                               placeholder="..."
-                              value={notes}
-                              onChange={(e) => setNotes(e.target.value)}
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
                             />
                           </div>
                         </div>

@@ -1,5 +1,5 @@
 import GiftList from 'components/GiftList';
-import { getGifts } from 'lib/firebase-ssr';
+import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const GiftsPage = async () => {
-  const { gifts } = await getGifts();
+  const { gifts } = await getVisibleGiftsForUser();
   return <GiftList gifts={gifts} />;
 };
 

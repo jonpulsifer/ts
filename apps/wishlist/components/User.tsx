@@ -11,22 +11,19 @@ import {
   faUserEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { User } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import { Card, CardAction } from 'ui';
 
-import { AppUser } from '../types';
-import { useAuth } from './AuthProvider';
-
 interface Props {
-  appUser: AppUser;
+  user: User;
 }
 
-export const UserProfile = ({ appUser }: Props) => {
-  const { user } = useAuth();
-  const isUserProfile = user?.uid === appUser.uid;
-
-  const { uid, name, email, address, shirt_size, shoe_size, pant_size } =
-    appUser;
-
+export const UserProfile = ({ user }: Props) => {
+  const { data: session } = useSession();
+  const { id, name, email, address, shirt_size, shoe_size, pant_size } = user;
+  const isUserProfile = session?.user?.id === id;
+  const title = isUserProfile ? `Your Profile` : `${user?.name}'s Profile`;
   const fields = [
     {
       icon: faSignature,
@@ -80,7 +77,7 @@ export const UserProfile = ({ appUser }: Props) => {
       {
         icon: faUserEdit,
         title: 'Edit Profile',
-        link: `/user/${uid}/edit`,
+        link: `/user/${id}/edit`,
       },
       {
         title: 'View Wishlists',
@@ -89,11 +86,8 @@ export const UserProfile = ({ appUser }: Props) => {
       },
     );
   return (
-    <Card
-      // title={isUserProfile ? `Your Profile` : `${user?.displayName}'s Profile`}
-      action={actions}
-    >
-      <div className="flex flex-col">{fieldsMarkup}</div>
+    <Card title={title} action={actions}>
+      <div className="flex flex-row gap-4">{fieldsMarkup}</div>
     </Card>
   );
 };

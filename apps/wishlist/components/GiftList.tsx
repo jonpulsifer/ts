@@ -9,34 +9,38 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { deleteDoc, doc, FirestoreError, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { GiftWithOwner } from 'types/prisma';
 import { Card } from 'ui';
 
-import { db } from '../lib/firebase';
-import type { Gift } from '../types';
-import { useAuth } from './AuthProvider';
+import { BadgeCounter } from './BadgeCounter';
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import Modal from './GiftModal';
+import Spinner from './Spinner';
 
 interface Props {
-  gifts: Gift[];
+  gifts: GiftWithOwner[];
 }
 
 const GiftList = ({ gifts }: Props) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [gift, setGift] = useState<Gift | null>(null);
+  const [gift, setGift] = useState<GiftWithOwner | null>(null);
   const path = usePathname();
   const router = useRouter();
-  const { user } = useAuth();
 
-  if (!user) return null;
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  if (!user || status === 'loading') return <Spinner />;
+  if (status === 'unauthenticated') {
+    toast.error('You must be logged in to view this page');
+    router.push('/login');
+  }
 
   const getEmptyState = () => {
     const defaultMarkup = (
@@ -82,7 +86,6 @@ const GiftList = ({ gifts }: Props) => {
       action: {
         title: 'Add one now!',
         onClick: () => {
-          console.log('clicked');
           setIsOpen(true);
         },
         icon: faGift,
@@ -95,7 +98,7 @@ const GiftList = ({ gifts }: Props) => {
     );
 
     switch (path) {
-      case `/user/${user.uid}`:
+      case `/user/${user.id}`:
         return myGiftsMarkup;
       case '/user/me':
         return myGiftsMarkup;
@@ -137,7 +140,7 @@ const GiftList = ({ gifts }: Props) => {
     }
   };
 
-  if (!gifts.length) {
+  if (!gifts || !gifts.length) {
     return (
       <>
         {getEmptyState()}
@@ -146,49 +149,74 @@ const GiftList = ({ gifts }: Props) => {
     );
   }
 
-  const handleClaim = (gift: Gift) => {
-    const ref = doc(db, 'gifts', gift.id);
-    updateDoc(ref, { claimed_by: user.uid })
-      .then(() => {
-        toast.success(`Claimed ${gift.name}`);
-        router.refresh();
+  const handleClaim = (gift: GiftWithOwner) => {
+    fetch(`/api/gift/claim`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: gift.id }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success(`Claimed ${gift.name}`);
+          router.refresh();
+        } else {
+          res.json().then((json) => toast.error(json.error));
+        }
       })
-      .catch((error: FirestoreError) => {
+      .catch((error) => {
         toast.error(error.message);
       });
   };
 
-  const handleConfirmDelete = (gift: Gift) => {
+  const handleUnclaim = (gift: GiftWithOwner) => {
+    fetch(`/api/gift/claim`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: gift.id }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success(`Unclaimed ${gift.name}`);
+          router.refresh();
+        } else {
+          res.json().then((json) => toast.error(json.error));
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
+  const handleConfirmDelete = (gift: GiftWithOwner) => {
     setGift(gift);
     setShowDeleteModal(true);
   };
 
-  const handleActualDelete = (gift: Gift) => {
-    const ref = doc(db, 'gifts', gift.id);
-    deleteDoc(ref)
-      .then(() => {
-        toast.success(`Deleted ${gift.name}`);
-        router.refresh();
+  const handleActualDelete = (gift: GiftWithOwner) => {
+    fetch('/api/gift', {
+      method: 'DELETE',
+      body: JSON.stringify({ id: gift.id }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          toast.success(`Deleted ${gift.name}`);
+          router.refresh();
+        } else {
+          toast.error('Something went wrong');
+        }
       })
-      .catch((error: FirestoreError) => {
+      .catch((error) => {
         toast.error(error.message);
       });
+
     setGift(null);
   };
 
-  const handleUnclaim = (gift: Gift) => {
-    const ref = doc(db, 'gifts', gift.id);
-    updateDoc(ref, { claimed_by: '' })
-      .then(() => {
-        toast.success(`Unclaimed ${gift.name}`);
-        router.refresh();
-      })
-      .catch((error: FirestoreError) => {
-        toast.error(error.message);
-      });
-  };
-
-  const giftActions = (gift: Gift) => {
+  const giftActions = (gift: GiftWithOwner) => {
     const buttonClass =
       'inline-flex items-center rounded-md px-3 py-2 font-semibold shadow-sm w-auto ring-1 ring-inset';
     const buttonInfo =
@@ -196,7 +224,7 @@ const GiftList = ({ gifts }: Props) => {
     const buttonDanger =
       'text-red-600 dark:text-red-100 hover:text-white dark:hover:text-red-500 bg-red-50 dark:bg-red-950/25 dark:hover:bg-red-950/25 hover:bg-red-600 ring-red-700/10 dark:ring-red-600/20';
 
-    if (gift.owner === user.uid)
+    if (gift.ownerId === user.id)
       return (
         <div className="flex flex-row space-x-2">
           <Link href={`/gift/${gift.id}/edit`}>
@@ -216,8 +244,8 @@ const GiftList = ({ gifts }: Props) => {
           </button>
         </div>
       );
-    if (gift.claimed_by && gift.claimed_by !== user.uid) return null;
-    if (gift.claimed_by === user.uid) {
+    if (gift.claimedById && gift.claimedById !== user.id) return null;
+    if (gift.claimedById === user.id) {
       return (
         <button
           className={`${buttonClass} ${buttonDanger}`}
@@ -241,13 +269,13 @@ const GiftList = ({ gifts }: Props) => {
     );
   };
 
-  const giftList = (gifts: Gift[]) => {
+  const giftList = (gifts: GiftWithOwner[]) => {
     return gifts.map((gift) => {
-      const notesMarkup = gift.notes ? (
+      const notesMarkup = gift.description ? (
         <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-indigo-600 hover:font-bold transition ease-in-out duration-200">
-          {gift.notes.length > 60
-            ? `${gift.notes.substring(0, 60)}...`
-            : gift.notes}
+          {gift.description.length > 60
+            ? `${gift.description.substring(0, 60)}...`
+            : gift.description}
         </div>
       ) : null;
 
@@ -275,7 +303,7 @@ const GiftList = ({ gifts }: Props) => {
   };
 
   interface GiftCardProps {
-    gifts: Gift[];
+    gifts: GiftWithOwner[];
     title: React.ReactNode | undefined;
     subtitle?: React.ReactNode;
     badges?: React.ReactNode;
@@ -289,7 +317,7 @@ const GiftList = ({ gifts }: Props) => {
   }: GiftCardProps) => {
     return (
       <Card
-        key={gifts[0].owner}
+        key={gifts[0].ownerId}
         title={title}
         subtitle={subtitle}
         badges={badges}
@@ -301,53 +329,33 @@ const GiftList = ({ gifts }: Props) => {
     );
   };
 
-  // get owners of gifts
-  const owners = gifts.map((gift) => gift.owner);
+  // create a hash of gifts by owner id
+  const giftsByOwnerId = gifts.reduce(
+    (acc, gift) => {
+      const ownerId = gift.ownerId || user.id;
+      const ownerGifts = acc[ownerId] || [];
+      return {
+        ...acc,
+        [ownerId]: [...ownerGifts, gift],
+      };
+    },
+    {} as { [key: string]: GiftWithOwner[] },
+  );
 
-  // remove duplicates
-  const uniqueOwners = [...new Set(owners)];
+  const giftCards = Object.keys(giftsByOwnerId).map((ownerId) => {
+    const gifts = giftsByOwnerId[ownerId];
+    const name = gifts[0].owner?.name || gifts[0].owner?.email;
+    const title = name ? `${name}'s Gifts` : 'Gifts';
+    const subtitle = gifts.length > 1 ? 'Gifts' : 'Gift';
+    const badges = BadgeCounter('gift', gifts);
 
-  // create an array of gifts for each owner, sorted by owner
-  const giftsByOwner = uniqueOwners.sort().map((owner) => {
-    return gifts.filter((gift) => gift.owner === owner);
-  });
-
-  // return a badge with the gift count
-  const GiftCountBadge = (gifts: Gift[]) => {
-    const count = gifts.length;
-    const baseFontColor =
-      'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950 ring-indigo-700/10 dark:ring-indigo-500/10';
-    const fontColor =
-      count > 0 && count < 3
-        ? 'text-red-700 dark:text-red-500 bg-red-50 dark:bg-red-950 ring-red-700/10 dark:ring-red-500/10'
-        : count > 2 && count < 5
-        ? 'text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-950 ring-yellow-700/10 dark:ring-yellow-500/10'
-        : count > 4
-        ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950 ring-green-700/10 dark:ring-green-500/10'
-        : baseFontColor;
-    const baseClass = `flex-none w-16 justify-center inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${fontColor}`;
-
-    return (
-      <div className={baseClass}>
-        {count} gift{count > 1 ? 's' : ''}
-      </div>
-    );
-  };
-
-  // return a card for each owner
-  const giftCards = giftsByOwner.map((gifts) => {
-    const owner = gifts
-      .map((g) => g.owner_name)
-      .filter((e) => e)
-      .pop();
-    const isOwnerMe = gifts[0].owner === user.uid;
     return (
       <GiftCard
-        key={gifts[0].owner}
+        key={ownerId}
         gifts={gifts}
-        title={owner ? `${owner}'s Gifts` : 'My Gifts'}
-        subtitle={isOwnerMe ? 'Find all your gifts below' : undefined}
-        badges={GiftCountBadge(gifts)}
+        title={title}
+        subtitle={subtitle}
+        badges={badges}
       />
     );
   });

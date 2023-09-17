@@ -2,9 +2,9 @@
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
+import type { Gift } from '@prisma/client';
 import { Fragment, useRef } from 'react';
 import React from 'react';
-import { Gift } from 'types';
 
 interface Props {
   isOpen: boolean;

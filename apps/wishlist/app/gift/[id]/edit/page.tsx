@@ -1,6 +1,6 @@
 import EmptyState from 'components/EmptyState';
 import GiftForm from 'components/GiftForm';
-import { getGift } from 'lib/firebase-ssr';
+import { getGiftById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 import { Card } from 'ui';
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { gift } = await getGift(params.id);
+  const gift = await getGiftById(params.id);
   return {
     title: `Edit ${gift.name || '🎁 Edit Gift'}`,
     description: 'Edit a gift',
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const EditGiftPage = async ({ params }: Props) => {
-  const { gift } = await getGift(params.id);
+  const gift = await getGiftById(params.id);
   return (
     <>
       {gift ? (

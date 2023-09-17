@@ -1,5 +1,5 @@
 import { GiftCard } from 'components/Gift';
-import { getGift, getUser } from 'lib/firebase-ssr';
+import { getGiftById, getUserWithGiftsById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 
 interface Props {
@@ -7,16 +7,16 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { gift } = await getGift(params.id);
+  const gift = await getGiftById(params.id);
   return {
     title: gift.name || 'Gift',
-    description: gift.notes || 'A gift',
+    description: gift.description || 'A gift',
   };
 }
 
 const GiftPage = async ({ params }: Props) => {
-  const { gift } = await getGift(params.id);
-  const { user } = await getUser(gift.owner);
+  const gift = await getGiftById(params.id);
+  const user = await getUserWithGiftsById(gift.ownerId);
   return <GiftCard gift={gift} user={user} />;
 };
 

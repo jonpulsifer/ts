@@ -1,7 +1,7 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UserForm from 'components/UserForm';
-import { getUser } from 'lib/firebase-ssr';
+import { getUserById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Card } from 'ui';
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { user } = await getUser(params.id);
+  const user = await getUserById(params.id);
   const { name, email } = user;
   const title = `Edit ${name || email}'s Profile`;
   return {
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const ProfilePage = async ({ params }: Props) => {
-  const { user } = await getUser(params.id);
+  const user = await getUserById(params.id);
   if (!user) return <Card title="User Not Found" />;
 
   const { email } = user;

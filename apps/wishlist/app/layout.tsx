@@ -2,12 +2,13 @@ import './globals.css';
 import 'ui/globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
-import { AuthProvider } from 'components/AuthProvider';
 import ErrorBoundary from 'components/ErrorBoundary';
 import Page from 'components/Page';
 import Toast from 'components/Toaster';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+
+import { SessionProvider } from './providers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,12 +29,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         className={`h-full w-full bg-gray-200 dark:bg-slate-950 ${inter.className}`}
       >
         <ErrorBoundary>
-          <main className="flex flex-col h-full w-full">
-            <AuthProvider>
+          <SessionProvider>
+            <main className="flex flex-col h-full w-full">
               <Page>{children}</Page>
-            </AuthProvider>
-            <Toast />
-          </main>
+              <Toast />
+            </main>
+          </SessionProvider>
         </ErrorBoundary>
       </body>
     </html>

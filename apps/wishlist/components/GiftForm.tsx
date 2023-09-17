@@ -1,16 +1,11 @@
 'use client';
 
 import { faSave } from '@fortawesome/free-solid-svg-icons';
-import { collection, doc, FirestoreError, setDoc } from 'firebase/firestore';
-import { db } from 'lib/firebase';
+import { Gift } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Card } from 'ui';
-
-import type { Gift } from '../types';
-import { useAuth } from './AuthProvider';
-
 interface Props {
   gift?: Gift;
 }
@@ -18,13 +13,8 @@ interface Props {
 const GiftForm = ({ gift }: Props) => {
   const [name, setName] = useState(gift?.name || '');
   const [url, setURL] = useState(gift?.url || '');
-  const [notes, setNotes] = useState(gift?.notes || '');
-  const { user } = useAuth();
+  const [description, setDescription] = useState(gift?.description || '');
   const router = useRouter();
-  const isNewGift = gift === undefined;
-
-  if (!user) return null;
-  const { uid } = user;
 
   function submit(e: MouseEvent | FormEvent) {
     e.preventDefault();
@@ -32,38 +22,45 @@ const GiftForm = ({ gift }: Props) => {
       toast.error('Missing gift name. Tell Santa what you want!');
       return;
     }
-    const col = collection(db, 'gifts');
-    const ref = isNewGift ? doc(col) : doc(col, gift.id);
-
-    setDoc(
-      ref,
-      {
-        name,
-        notes,
-        url,
-        owner: uid,
-        claimed_by: '',
-      },
-      { merge: true },
-    )
-      .then(() => {
-        const msg = isNewGift
-          ? `Added ${name} to your wishlist`
-          : `${name} updated`;
-        toast.success(msg);
-        if (isNewGift) {
-          setName('');
-          setURL('');
-          setNotes('');
-        } else {
-          router.push('/mine');
-        }
+    if (!gift) {
+      fetch('/api/gift', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, url, description }),
       })
-      .catch((e) => {
-        const error = e as FirestoreError;
-        console.log(JSON.stringify(error));
-        toast.error(error.code);
-      });
+        .then((res) => {
+          if (res.ok) {
+            toast.success(`Added ${name} to your wishlist!`);
+            router.push('/gifts');
+          } else {
+            toast.error('Something went wrong. Please try again.');
+          }
+        })
+        .catch(() => {
+          toast.error('Something went wrong. Please try again.');
+        });
+    } else {
+      fetch('/api/gift', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: gift.id, name, url, description }),
+      })
+        .then((res) => {
+          if (res.ok) {
+            toast.success(`Updated ${name}!`);
+            router.refresh();
+          } else {
+            toast.error('Something went wrong. Please try again.');
+          }
+        })
+        .catch(() => {
+          toast.error('Something went wrong. Please try again.');
+        });
+    }
   }
 
   return (
@@ -119,8 +116,8 @@ const GiftForm = ({ gift }: Props) => {
             autoComplete="notes"
             className="form-control block w-full px-4 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
             placeholder="..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
       </form>

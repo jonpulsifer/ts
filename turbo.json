@@ -10,18 +10,8 @@
     "wishlist#build": {
       "dependsOn": ["^build"],
       "env": [
-        "FIREBASE_AUTH_EMULATOR_HOST",
-        "FIREBASE_CLIENT_EMAIL",
-        "FIREBASE_FIRESTORE_EMULATOR_HOST",
-        "FIREBASE_FIRESTORE_EMULATOR_PORT",
-        "FIREBASE_PRIVATE_KEY",
-        "GOOGLE_CLOUD_PROJECT",
-        "NEXT_PUBLIC_FIREBASE_API_KEY",
-        "NEXT_PUBLIC_FIREBASE_APP_ID",
-        "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
-        "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID",
-        "NEXT_PUBLIC_FIREBASE_PROJECT_ID",
-        "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET",
+        "AUTH_GOOGLE_ID",
+        "AUTH_GOOGLE_SECRET",
         "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]

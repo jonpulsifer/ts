@@ -1,24 +1,24 @@
 'use client';
 
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
+import { User } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { UserWithGifts } from 'types/prisma';
 import { Card, CardAction } from 'ui';
 
-import type { AppUser } from '../types';
+export type UserListProps = {
+  users: UserWithGifts[];
+  user: User;
+};
 
-interface Props {
-  user: AppUser;
-  users: AppUser[];
-}
-
-const UserList = ({ users }: Props) => {
+const UserList = ({ users }: UserListProps) => {
   const action: CardAction = {
     title: 'View All Families',
     icon: faPeopleRoof,
     link: '/family/join',
   };
-  const userList = (appUsers: AppUser[]) => {
+  const userList = (appUsers: UserWithGifts[]) => {
     const GiftCountBadge = (count = 0) => {
       const baseFontColor =
         'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950/25 ring-indigo-700/10 dark:ring-indigo-500/10';
@@ -39,24 +39,24 @@ const UserList = ({ users }: Props) => {
       );
     };
     return appUsers.map((appUser) => {
-      const { uid, name, email, photoUrl } = appUser;
+      const { id, name, email, image } = appUser;
       return (
         <tr
-          key={uid}
+          key={id}
           className="border-t hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-950 transition ease-in-out duration-300 select-none"
         >
           <td className="flex flex-row w-full">
             <div className="w-full">
-              <Link className="flex" href={`/user/${uid}`}>
+              <Link className="flex" href={`/user/${id}`}>
                 <div className="flex grow items-center space-x-4 p-2 px-4">
                   <div
                     className={`inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full ${
-                      photoUrl ? '' : 'bg-gray-200 dark:bg-slate-800'
+                      image ? '' : 'bg-gray-200 dark:bg-slate-800'
                     }`}
                   >
-                    {photoUrl ? (
+                    {image ? (
                       <Image
-                        src={photoUrl}
+                        src={image}
                         alt="Profile Photo"
                         className="rounded-full"
                         fill
@@ -74,7 +74,7 @@ const UserList = ({ users }: Props) => {
                   </div>
                 </div>
                 <div className="flex items-center pr-4 text-center">
-                  {GiftCountBadge(appUser.num_gifts)}
+                  {GiftCountBadge(appUser.gifts?.length)}
                 </div>
               </Link>
             </div>

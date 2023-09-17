@@ -1,4 +1,4 @@
 module.exports = {
-  extends: ['custom/nestjs'],
+  extends: ['custom/nest'],
   root: true,
 };

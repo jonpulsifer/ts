@@ -1,87 +1,48 @@
 'use client';
 
-import { SignInResults, useAuth } from 'components/AuthProvider';
-import { dismissable } from 'components/Toaster';
-import { User } from 'firebase/auth';
+import Spinner from 'components/Spinner';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signIn, useSession } from 'next-auth/react';
 import santa from 'public/santaicon.png';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+const welcome = (name?: string | null) => {
+  const text = name ? `Welcome ${name}!` : 'Welcome!';
+  toast.success(text);
+};
+
 const LoginPage = () => {
-  const { user } = useAuth();
+  const [showLoading, setShowLoading] = useState(true);
+  const { data: session, status } = useSession();
   const router = useRouter();
-  const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
-  const [register, setRegister] = useState(false);
+  const name = session?.user.name || session?.user.email;
 
+  // if the user is already logged in, redirect them to the people page
   useEffect(() => {
-    if (user) router.push('/people');
-  }, [router, user]);
-
-  const welcome = (user: User) => {
-    const person = user ? user.displayName || user.email : null;
-    const text = person ? `Welcome ${person}!` : 'Welcome!';
-    toast.success(text);
-  };
-
-  const handleSignInResults = (results: SignInResults) => {
-    const { error, user, isNewUser } = results;
-    if (error) toast.error(error.message);
-    if (!user) {
-      console.log('something went wrong');
-      return;
+    if (status === 'authenticated') {
+      router.push('/people');
+      welcome(name);
     }
-    if (user) {
-      if (isNewUser) {
-        const toastMarkup = (
-          <>
-            Make sure to
-            <Link
-              className="font-bold text-indigo-600"
-              href={`/user/${user.uid}/edit`}
-            >
-              {' '}
-              complete your profile{' '}
-            </Link>
-            with some extra festive details!
-          </>
-        );
-        welcome(user);
-        dismissable(toastMarkup);
-      } else welcome(user);
+
+    if (status === 'unauthenticated') {
+      setShowLoading(false);
     }
-  };
 
-  const handleSignInWithEmail = (e: React.FormEvent) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-      password: { value: string };
-    };
-    const { email, password } = target;
-    const signIn = register ? signUpWithEmail : signInWithEmail;
-    signIn(email.value, password.value).then((results) =>
-      handleSignInResults(results),
-    );
-  };
+    if (status === 'loading') {
+      setShowLoading(true);
+    }
+  }, [status, name, router]);
 
-  const handleSignUpWithEmail = (e: React.FormEvent) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-      password: { value: string };
-    };
-    const { email, password } = target;
-    signUpWithEmail(email.value, password.value).then((results) =>
-      handleSignInResults(results),
-    );
-  };
+  if (showLoading) {
+    return <Spinner />;
+  }
 
-  const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
+  const handleGoogle = async (e: React.MouseEvent | React.FormEvent) => {
+    setShowLoading(true);
     e.preventDefault();
-    signInWithGoogle().then((results) => handleSignInResults(results));
+    signIn('google', { callbackUrl: '/people', redirect: false });
   };
 
   return (
@@ -94,17 +55,17 @@ const LoginPage = () => {
         </h1>
       </div>
 
-      <div className="mt-10 w-full max-w-sm">
-        <h2 className="dark:text-slate-200 font-semibold">
-          {register ? 'Sign up for the wishlist' : 'Sign in to continue'}
-        </h2>
+      <div className="mt-10 w-full max-w-sm space-y-4">
+        <h1 className="dark:text-slate-200 font-semibold text-center items-center text-xl">
+          Sign in to continue
+        </h1>
         <form
           className="space-y-4"
-          onSubmit={(e) =>
-            register ? handleSignUpWithEmail(e) : handleSignInWithEmail(e)
-          }
+          // onSubmit={(e) =>
+          //   register ? handleSignUpWithEmail(e) : handleSignInWithEmail(e)
+          // }
         >
-          <div>
+          {/* <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium leading-6 text-gray-900 dark:text-slate-200"
@@ -165,7 +126,7 @@ const LoginPage = () => {
             <p className="mx-4 mb-0 text-center font-semibold dark:text-slate-400">
               OR
             </p>
-          </div>
+          </div> */}
           <div className="flex flex-row items-center justify-center">
             <button
               className="flex justify-center font-semibold w-full h-10 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-slate-800 text-center inline-flex items-center bg-white text-black dark:bg-slate-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
