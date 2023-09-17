@@ -28,14 +28,17 @@ export const UserProfile = ({ user }: Props) => {
     {
       icon: faSignature,
       content: name,
+      label: 'Name',
     },
     {
       icon: faAt,
       content: email,
+      label: 'Email',
     },
     {
       icon: faLocationDot,
       content: address,
+      label: 'Address',
     },
     // {
     //   icon: faLayerGroup,
@@ -44,29 +47,27 @@ export const UserProfile = ({ user }: Props) => {
     {
       icon: faSocks,
       content: shoe_size,
+      label: 'Shoe Size',
     },
     {
       icon: faPersonRunning,
       content: pant_size,
+      label: 'Pant Size',
     },
     {
       icon: faShirt,
       content: shirt_size,
+      label: 'Shirt Size',
     },
   ];
 
   const fieldsMarkup = fields.map((field, i) => {
     if (!field.content) return null;
     return (
-      <div
-        key={`${field.icon}-${i}`}
-        className="flex flex-row items-center truncate"
-      >
-        <FontAwesomeIcon
-          icon={field.icon}
-          className="w-10 shrink-0 text-center"
-        />
-        {field.content}
+      <div key={`${id}-${i}`} className="flex flex-row items-center truncate">
+        <FontAwesomeIcon icon={field.icon} className="mr-2" />
+        <span className="font-semibold">{field.label}: </span>
+        <span className="truncate">{field.content}</span>
       </div>
     );
   });
@@ -87,7 +88,7 @@ export const UserProfile = ({ user }: Props) => {
     );
   return (
     <Card title={title} action={actions}>
-      <div className="flex flex-row gap-4">{fieldsMarkup}</div>
+      <div className="flex flex-col gap-4">{fieldsMarkup}</div>
     </Card>
   );
 };
