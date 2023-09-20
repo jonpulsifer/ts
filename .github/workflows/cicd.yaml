@@ -20,7 +20,7 @@ jobs:
       TURBO_TEAM: ${{ secrets.VERCEL_ID }}
     services:
       postgres:
-        image: postgres:16@sha256:04831f8a506b41f0f3a198674fb094a28e1abd6a9eea77879ba3866f18ec1d3a
+        image: postgres:16@sha256:f86808f55807714e1cf8bc9d60b3f3230132d31ebadd4284c3b47e38d980bdcc
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: wishlist
