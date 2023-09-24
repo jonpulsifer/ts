@@ -148,12 +148,12 @@ const getVisibleGiftsForUser = async () => {
         owner: true,
         claimedBy: true,
       },
-      orderBy: {
+      orderBy: [{
         owner: {
           name: 'asc',
         },
         name: 'asc',
-      },
+      }],
     });
 
     return { gifts };
