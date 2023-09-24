@@ -31,6 +31,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
   }
 
+  const wishlists = await prisma.wishlist.findMany({
+    select: {
+      id: true,
+    },
+    where: {
+      members: {
+        some: {
+          id,
+        },
+      },
+    },
+  });
+
+  const wishlistIds = wishlists.map((wishlist) => ({ id: wishlist.id }));
+
   // create gift
   const { gift } = await req.json();
   const { name, url, description } = gift;
@@ -43,6 +58,9 @@ export async function POST(req: NextRequest) {
         connect: {
           id,
         },
+      },
+      wishlists: {
+        connect: wishlistIds,
       },
     },
   });
