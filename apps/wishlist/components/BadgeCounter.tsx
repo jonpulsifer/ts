@@ -1,6 +1,6 @@
 export const BadgeCounter = (name = 'thing', arr: unknown[]) => {
   const count = arr.length;
-  const label = count === 1 || count === 0 ? name : `${name}s`;
+  const label = count > 1 || count === 0 ? `${name}s` : name;
   const baseFontColor =
     'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950 ring-indigo-700/10 dark:ring-indigo-500/10';
   const fontColor =
