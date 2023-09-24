@@ -15,7 +15,7 @@ export const BadgeCounter = (name = 'thing', arr: unknown[]) => {
   return (
     <div className={baseClass}>
       {count} {name}
-      {count > 1 ? 's' : ''}
+      {count > 1 || 0 ? 's' : ''}
     </div>
   );
 };
