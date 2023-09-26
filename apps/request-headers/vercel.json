@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/yeet/:path*",
+      "destination": "https://hello-vercel-dezucpfxnq-ew.a.run.app/:path*"
+    }
+  ]
+}
