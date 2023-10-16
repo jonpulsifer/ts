@@ -52,8 +52,8 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          DATABASE_URL: postgresql://postgres:postgres@postgres:5432/wishlist?schema=public
-          DIRECT_URL: postgresql://postgres:postgres@postgres:5432/wishlist?schema=public
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/wishlist?schema=public
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/wishlist?schema=public
 
       - name: Test
         run: pnpm test
