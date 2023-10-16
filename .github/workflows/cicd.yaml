@@ -120,7 +120,7 @@ jobs:
         app: [request-headers, nested]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: containerize
-    runs-on: home-cluster
+    runs-on: ts
     environment:
       name: Production - ${{ matrix.app }}
       url: https://${{matrix.app}}.lolwtf.ca
