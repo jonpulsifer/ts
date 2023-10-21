@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-alpine@sha256:435dcad253bb5b7f347ebc69c8cc52de7c912eb7241098b920f2fc2d7843183d
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo
 
@@ -37,7 +37,7 @@ ENV TURBO_TOKEN=$TURBO_TOKEN
 # Build the project
 RUN turbo run build --filter=${APP}
 
-FROM cgr.dev/chainguard/node:18 AS runner
+FROM cgr.dev/chainguard/node:18@sha256:af073516c203b6bd0b55a77a806a0950b486f2e9ea7387a32b0f41ea72f20886 AS runner
 ARG APP
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
