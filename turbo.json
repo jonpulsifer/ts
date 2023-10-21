@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "globalEnv": ["NODE_ENV"],
+  "globalEnv": ["NODE_ENV", "PORT"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -18,9 +18,7 @@
     },
     "authme#build": {
       "dependsOn": ["^build"],
-      "env": [
-        "JWT_EXPECTED_AUDIENCE"
-      ],
+      "env": ["JWT_EXPECTED_AUDIENCE"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "request-headers#build": {
@@ -36,16 +34,29 @@
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
+    "penny#build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "PAGERDUTY_TOKEN",
+        "SLACK_BOT_TOKEN",
+        "SLACK_CLIENT_SIGNING_SECRET",
+        "SLACK_APP_TOKEN"
+      ],
+      "outputs": ["dist/**"]
+    },
     "nested#build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "lint": {},
     "test": {
-      "dependsOn": [
-        "build"
+      "dependsOn": ["build"],
+      "inputs": [
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "test/**/*.tsx"
       ],
-      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {
