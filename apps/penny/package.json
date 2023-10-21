@@ -2,7 +2,7 @@
   "name": "penny",
   "version": "0.0.1",
   "description": "chatbot",
-  "main": "src/bot.ts",
+  "main": "src/main.ts",
   "scripts": {
     "build": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only src/bot.ts",

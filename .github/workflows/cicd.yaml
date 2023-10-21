@@ -69,6 +69,8 @@ jobs:
             stack: nextjs
           - app: nested
             stack: nestjs
+          - app: penny
+            stack: generic
     steps:
       - name: Check out code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -108,7 +110,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
-          file: ${{ matrix.stack == 'nestjs' && 'nest.Dockerfile' || 'Dockerfile' }}
+          file: ${{ matrix.stack == 'nextjs' && 'nextjs.Dockerfile' || 'Dockerfile' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
