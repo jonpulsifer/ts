@@ -8,8 +8,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/bot.ts",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
-    "start": "ts-node src/bot.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/bot.ts"
   },
   "dependencies": {
     "@pagerduty/pdjs": "2.2.4",
