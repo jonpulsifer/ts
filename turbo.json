@@ -34,9 +34,12 @@
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
-    "penny#build": {
+    "rosie#build": {
       "dependsOn": ["^build"],
       "env": [
+        "ARGOCD_USERNAME",
+        "ARGOCD_PASSWORD",
+        "ARGOCD_SERVER",
         "PAGERDUTY_TOKEN",
         "SLACK_BOT_TOKEN",
         "SLACK_CLIENT_SIGNING_SECRET",

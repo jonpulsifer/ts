@@ -1,7 +1,7 @@
-fullnameOverride: penny
+fullnameOverride: rosie
 
 image:
-  repository: jonpulsifer/penny
+  repository: jonpulsifer/rosie
   tag: latest
 
 env:
@@ -28,7 +28,7 @@ env:
 
 ingress:
   hosts:
-    - host: &host "penny.lolwtf.ca"
+    - host: &host "rosie.lolwtf.ca"
       paths:
         - path: /
           pathType: Prefix

@@ -179,7 +179,7 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
 
-  apps/penny:
+  apps/rosie:
     dependencies:
       '@pagerduty/pdjs':
         specifier: 2.2.4
@@ -193,10 +193,16 @@ importers:
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
+      fastest-levenshtein:
+        specifier: 1.0.16
+        version: 1.0.16
     devDependencies:
       '@types/node':
         specifier: 18.18.6
         version: 18.18.6
+      '@types/node-fetch':
+        specifier: ^2.6.7
+        version: 2.6.7
       eslint-config-custom:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
@@ -2190,6 +2196,13 @@ packages:
 
   /@types/mime@3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
+
+  /@types/node-fetch@2.6.7:
+    resolution: {integrity: sha512-lX17GZVpJ/fuCjguZ5b3TjEbSENxmEk1B2z02yoXSK9WMEWRivhdSY73wWMn6bpcCDAOh6qAdktpKHIlkDk2lg==}
+    dependencies:
+      '@types/node': 20.8.7
+      form-data: 4.0.0
+    dev: true
 
   /@types/node@18.18.6:
     resolution: {integrity: sha512-wf3Vz+jCmOQ2HV1YUJuCWdL64adYxumkrxtc+H1VUQlnQI04+5HtH+qZCOE21lBE7gIrt+CwX2Wv8Acrw5Ak6w==}
@@ -4323,6 +4336,11 @@ packages:
 
   /fast-safe-stringify@2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+
+  /fastest-levenshtein@1.0.16:
+    resolution: {integrity: sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==}
+    engines: {node: '>= 4.9.1'}
+    dev: false
 
   /fastq@1.13.0:
     resolution: {integrity: sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==}

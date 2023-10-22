@@ -4,10 +4,10 @@
     "baseUrl": ".",
     "module": "commonjs",
     "esModuleInterop": true,
-    "rootDir": "src",
+    "rootDir": ".",
     "target": "es6",
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
