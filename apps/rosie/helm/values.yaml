@@ -26,13 +26,6 @@ env:
       fieldRef:
         fieldPath: metadata.labels['app.kubernetes.io/instance']
 
-ingress:
-  hosts:
-    - host: &host "rosie.lolwtf.ca"
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: *host
-      hosts:
-        - *host
+envFrom:
+  - secretRef:
+      name: rosie
