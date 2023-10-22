@@ -29,3 +29,7 @@ env:
 envFrom:
   - secretRef:
       name: rosie
+
+podSecurityContext:
+  allowPrivilegeEscalation: false
+	runAsNonRoot: true
