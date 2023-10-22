@@ -31,8 +31,8 @@ envFrom:
       name: rosie
 
 podSecurityContext:
-  allowPrivilegeEscalation: false
-  runAsNonRoot: true
+  allowPrivilegeEscalation: "false"
+  runAsNonRoot: "true"
   seccompProfile:
     type: RuntimeDefault
   capabilities:
