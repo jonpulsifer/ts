@@ -4,7 +4,10 @@
     "baseUrl": ".",
     "module": "commonjs",
     "esModuleInterop": true,
-    "rootDir": ".",
+    "rootDirs": [
+      "src",
+      "test"
+    ],
     "target": "es6",
     "outDir": "dist"
   },
