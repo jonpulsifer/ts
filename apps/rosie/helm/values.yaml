@@ -38,3 +38,12 @@ podSecurityContext:
   capabilities:
     drop:
       - ALL
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - ALL
+
