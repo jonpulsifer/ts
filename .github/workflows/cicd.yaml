@@ -69,7 +69,7 @@ jobs:
             stack: nextjs
           - app: nested
             stack: nestjs
-          - app: penny
+          - app: rosie
             stack: generic
     steps:
       - name: Check out code
