@@ -33,3 +33,8 @@ envFrom:
 podSecurityContext:
   allowPrivilegeEscalation: false
   runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - ALL
