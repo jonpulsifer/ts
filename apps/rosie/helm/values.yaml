@@ -32,4 +32,4 @@ envFrom:
 
 podSecurityContext:
   allowPrivilegeEscalation: false
-	runAsNonRoot: true
+  runAsNonRoot: true
