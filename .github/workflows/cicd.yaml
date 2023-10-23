@@ -60,7 +60,6 @@ jobs:
 
   containerize:
     name: containerize
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -121,7 +120,7 @@ jobs:
       matrix:
         app: [request-headers, nested, rosie]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: containerize
+    needs: [build, containerize]
     runs-on: ts
     environment:
       name: Production - ${{ matrix.app }}
