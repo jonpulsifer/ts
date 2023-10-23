@@ -8,7 +8,6 @@ This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes th
 
 ### Apps and Packages
 
-- `aoc`: old [Advent of Code](https://adventofcode.com) solutions
 - `authme`: a [Next.js](https://nextjs.org) app that uses JWTs to authenticate users. It is deployed at [https://authme.vercel.app](https://authme.vercel.app)
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `request-headers`: a [Next.js](https://nextjs.org) app that returns request headers. It is deployed at [https://request-headers.vercel.app](https://request-headers.vercel.app)
