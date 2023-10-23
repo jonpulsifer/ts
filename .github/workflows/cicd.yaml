@@ -119,7 +119,7 @@ jobs:
   deploy:
     strategy:
       matrix:
-        app: [request-headers, nested]
+        app: [request-headers, nested, rosie]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: containerize
     runs-on: ts
