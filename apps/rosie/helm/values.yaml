@@ -2,7 +2,7 @@ fullnameOverride: rosie
 
 image:
   repository: jonpulsifer/rosie
-	pullPolicy: Always
+  pullPolicy: Always
   tag: latest
 
 env:
