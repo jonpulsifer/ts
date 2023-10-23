@@ -2,6 +2,7 @@ fullnameOverride: rosie
 
 image:
   repository: jonpulsifer/rosie
+	pullPolicy: Always
   tag: latest
 
 env:
@@ -29,21 +30,3 @@ env:
 envFrom:
   - secretRef:
       name: rosie
-
-podSecurityContext:
-  allowPrivilegeEscalation: false
-  runAsNonRoot: true
-  seccompProfile:
-    type: RuntimeDefault
-  capabilities:
-    drop:
-      - ALL
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  runAsNonRoot: true
-  seccompProfile:
-    type: RuntimeDefault
-  capabilities:
-    drop:
-      - ALL
-
