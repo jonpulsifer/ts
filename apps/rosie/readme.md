@@ -1,10 +1,33 @@
-# Botkit Starter Kit
+# Bolt for JavaScript
 
-This is a Botkit starter kit for slack, created with the [Yeoman generator](https://github.com/howdyai/botkit/tree/master/packages/generator-botkit#readme).
+A JavaScript framework to build Slack apps in a flash with the latest platform features. Read the [getting started guide](https://slack.dev/bolt-js/tutorial/getting-started) to set-up and run your first Bolt app.
 
-To complete the configuration of this bot, make sure to update the included `.env` file with your platform tokens and credentials.
+Read [the documentation](https://slack.dev/bolt-js) to explore the basic and advanced concepts of Bolt for JavaScript.
 
-[Botkit Docs](https://github.com/howdyai/botkit/blob/main/packages/docs/index.md)
+## Setup
 
-This bot is powered by [a folder full of modules](https://github.com/howdyai/botkit/blob/main/packages/docs/core.md#organize-your-bot-code). 
-Edit the samples, and add your own in the [features/](features/) folder.
+```bash
+npm install @slack/bolt
+```
+
+## Initialization
+
+Create an app by calling the constructor, which is a top-level export.
+
+```ts
+import { App } from '@slack/bolt';
+
+const app = new App({
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  token: process.env.SLACK_BOT_TOKEN,
+});
+
+/* Add functionality here */
+
+(async () => {
+  // Start the app
+  await app.start(process.env.PORT || 3000);
+
+  console.log('⚡️ Bolt app is running!');
+})();
+```
