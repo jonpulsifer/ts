@@ -43,7 +43,7 @@
     "prettier-plugin-tailwindcss": "^0.5.0",
     "prisma": "5.5.1",
     "tailwind-config": "workspace:*",
-    "tailwindcss": "3.3.4",
+    "tailwindcss": "3.3.5",
     "ts-node": "10.9.1",
     "tsconfig": "workspace:*",
     "typescript": "5.2.2"

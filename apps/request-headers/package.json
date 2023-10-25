@@ -20,7 +20,7 @@
     "@types/react-dom": "18.2.14",
     "eslint-config-custom": "workspace:*",
     "tailwind-config": "workspace:*",
-    "tailwindcss": "3.3.4",
+    "tailwindcss": "3.3.5",
     "tsconfig": "workspace:*",
     "typescript": "5.2.2"
   }
