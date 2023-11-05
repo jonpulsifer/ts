@@ -20,7 +20,7 @@
     "react": "18.2.0"
   },
   "devDependencies": {
-    "@types/react": "18.2.34",
+    "@types/react": "18.2.35",
     "@types/react-dom": "18.2.14",
     "autoprefixer": "10.4.16",
     "eslint-config-custom": "workspace:*",
