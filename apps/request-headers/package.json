@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@types/node": "20.8.10",
-    "@types/react": "18.2.36",
-    "@types/react-dom": "18.2.14",
+    "@types/react": "18.2.37",
+    "@types/react-dom": "18.2.15",
     "eslint-config-custom": "workspace:*",
     "tailwind-config": "workspace:*",
     "tailwindcss": "3.3.5",
