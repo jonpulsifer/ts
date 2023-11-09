@@ -89,7 +89,7 @@ export async function argoListApps({ message, say }: BotMessage) {
           type: 'header',
           text: {
             type: 'plain_text',
-            text: 'ArgoCD Applications :octopus:',
+            text: 'ArgoCD Applications :star:',
             emoji: true,
           },
         },
