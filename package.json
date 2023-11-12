@@ -23,7 +23,7 @@
     "node": ">=18.0.0",
     "npm": ">=7.0.0"
   },
-  "packageManager": "pnpm@8.10.2",
+  "packageManager": "pnpm@8.10.3",
   "cspell": {
     "version": "0.2",
     "ignorePaths": [],
