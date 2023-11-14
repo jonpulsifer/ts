@@ -91,10 +91,23 @@ const getClaimedGiftsForMe = async (): Promise<GiftWithOwner[]> => {
   });
 };
 
-const getAllGiftsForUserById = async (id: string) => {
+const getVisibleGiftsForUserById = async (id: string) => {
+  const session = await isAuthenticated();
+  const currentUserId = session.user?.id;
   return prisma.gift.findMany({
     where: {
       ownerId: id,
+      AND: {
+        OR: [
+          { claimed: false },
+          {
+            claimed: true,
+            claimedBy: {
+              id: currentUserId,
+            },
+          },
+        ],
+      },
     },
     include: {
       owner: true,
@@ -211,7 +224,6 @@ const getPeopleForUser = async () => {
 };
 
 export {
-  getAllGiftsForUserById,
   getClaimedGiftsForMe,
   getGiftById,
   getMe,
@@ -222,6 +234,7 @@ export {
   getUserWithGifts,
   getUserWithGiftsById,
   getVisibleGiftsForUser,
+  getVisibleGiftsForUserById,
   getWishlists,
   isAuthenticated,
 };

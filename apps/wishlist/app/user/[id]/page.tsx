@@ -1,6 +1,6 @@
 import GiftList from 'components/GiftList';
 import { UserProfile } from 'components/User';
-import { getAllGiftsForUserById, getUserById } from 'lib/prisma-ssr';
+import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 
 interface Props {
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const ProfilePage = async ({ params }: Props) => {
   const user = await getUserById(params.id);
-  const gifts = await getAllGiftsForUserById(params.id);
+  const gifts = await getVisibleGiftsForUserById(params.id);
   return (
     <div className="space-y-16">
       <UserProfile user={user} />
