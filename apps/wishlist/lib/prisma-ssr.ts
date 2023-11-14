@@ -1,5 +1,4 @@
 import { User } from '@prisma/client';
-import { authOptions } from 'app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 
@@ -9,6 +8,7 @@ import {
   UserWithGiftsAndWishlists,
   UserWithGiftsWithOwners,
 } from '../types/prisma';
+import { authOptions } from './auth';
 import { prisma } from './prisma';
 
 const getMe = async (): Promise<User> => {
