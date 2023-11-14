@@ -26,10 +26,10 @@ const UserList = ({ users }: UserListProps) => {
         count >= 0 && count < 3
           ? 'text-red-700 dark:text-red-500 bg-red-50 dark:bg-red-950/25 ring-red-700/10 dark:ring-red-500/10'
           : count > 2 && count < 5
-          ? 'text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-950/25 ring-yellow-700/10 dark:ring-yellow-500/10'
-          : count > 4
-          ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950/25 ring-green-700/10 dark:ring-green-500/10'
-          : baseFontColor;
+            ? 'text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-950/25 ring-yellow-700/10 dark:ring-yellow-500/10'
+            : count > 4
+              ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950/25 ring-green-700/10 dark:ring-green-500/10'
+              : baseFontColor;
       const baseClass = `flex-none w-16 justify-center inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset ${fontColor}`;
 
       return (
