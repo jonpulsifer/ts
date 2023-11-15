@@ -225,8 +225,8 @@ importers:
         specifier: 2.2.4
         version: 2.2.4
       '@slack/bolt':
-        specifier: 3.14.0
-        version: 3.14.0
+        specifier: 3.15.0
+        version: 3.15.0
       '@slack/web-api':
         specifier: 6.10.0
         version: 6.10.0
@@ -1926,8 +1926,8 @@ packages:
       '@sinonjs/commons': 3.0.0
     dev: true
 
-  /@slack/bolt@3.14.0:
-    resolution: {integrity: sha512-Q7QifLEruuXLQQh0H/JODuBSH0UoiQdMxR+g4aVNdJQemv91XyHgbxRZgGuH8Vi1rVrOyDSLS9czS5jwMh2ewQ==}
+  /@slack/bolt@3.15.0:
+    resolution: {integrity: sha512-B+N6oaEb1BuXXzP9eb0Yc5J/vLII+ZNYgKewia3+lAoiWTSbQ3cto6SCmglMnihsmZM6wjZUrKEK9Hg0+l90QQ==}
     engines: {node: '>=12.13.0', npm: '>=6.12.0'}
     dependencies:
       '@slack/logger': 4.0.0
@@ -1938,7 +1938,7 @@ packages:
       '@types/express': 4.17.21
       '@types/promise.allsettled': 1.0.5
       '@types/tsscmp': 1.0.1
-      axios: 0.27.2
+      axios: 1.6.0
       express: 4.18.2
       path-to-regexp: 6.2.1
       please-upgrade-node: 3.2.0
@@ -2845,15 +2845,6 @@ packages:
   /axe-core@4.8.1:
     resolution: {integrity: sha512-9l850jDDPnKq48nbad8SiEelCv4OrUWrKab/cPj0GScVg6cb6NbCCt/Ulk26QEq5jP9NnGr04Bit1BHyV6r5CQ==}
     engines: {node: '>=4'}
-    dev: false
-
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
-    dependencies:
-      follow-redirects: 1.15.2
-      form-data: 4.0.0
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /axios@1.6.0:
