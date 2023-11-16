@@ -212,7 +212,21 @@ const getPeopleForUser = async () => {
         name: 'asc',
       },
       include: {
-        gifts: true,
+        gifts: {
+          where: {
+            AND: {
+              OR: [
+                { claimed: false },
+                {
+                  claimed: true,
+                  claimedBy: {
+                    id,
+                  },
+                },
+              ],
+            },
+          },
+        },
       },
     });
     const user = await getUserById(id, false, true);
