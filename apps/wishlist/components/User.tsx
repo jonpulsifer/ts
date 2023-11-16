@@ -64,10 +64,16 @@ export const UserProfile = ({ user }: Props) => {
   const fieldsMarkup = fields.map((field, i) => {
     if (!field.content) return null;
     return (
-      <div key={`${id}-${i}`} className="flex flex-row items-center truncate">
-        <FontAwesomeIcon icon={field.icon} className="mr-2" />
-        <span className="font-semibold">{field.label}: </span>
-        <span className="truncate">{field.content}</span>
+      <div key={i} className="flex flex-row justify-between">
+        <div className="flex flex-row gap-2">
+          <FontAwesomeIcon icon={field.icon} />
+          <span>{field.label}</span>
+        </div>
+        <div
+          style={field.label === 'Address' ? { whiteSpace: 'pre-wrap' } : {}}
+        >
+          {field.content}
+        </div>{' '}
       </div>
     );
   });
@@ -88,7 +94,7 @@ export const UserProfile = ({ user }: Props) => {
     );
   return (
     <Card title={title} action={actions}>
-      <div className="flex flex-col gap-4">{fieldsMarkup}</div>
+      <div className="flex flex-col gap-4 px-4">{fieldsMarkup}</div>
     </Card>
   );
 };
