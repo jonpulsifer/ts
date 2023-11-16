@@ -49,10 +49,8 @@ const PeoplePage = async () => {
   }
 
   const userTable = (users: UserWithGifts[]) => {
-    const currentUserId = user.id;
     const rows = users.map((user) => {
       const { id, name, email, image } = user;
-      const link = id === currentUserId ? '/user/me' : `/user/${id}`;
       return (
         <tr
           key={id}
@@ -60,7 +58,7 @@ const PeoplePage = async () => {
         >
           <td className="flex flex-row w-full">
             <div className="w-full">
-              <Link className="flex" href={link}>
+              <Link className="flex" href={`/user/${id}`}>
                 <div className="flex grow items-center space-x-4 p-2 px-4">
                   <div
                     className={`inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full ${
