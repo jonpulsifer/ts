@@ -28,7 +28,7 @@
     "react": "18.2.0",
     "tailwind-config": "workspace:*",
     "tsconfig": "workspace:*",
-    "tsup": "7.2.0",
+    "tsup": "7.3.0",
     "typescript": "5.2.2"
   },
   "sideEffects": [
