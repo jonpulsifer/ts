@@ -145,6 +145,7 @@ const getVisibleGiftsForUser = async () => {
             },
           },
         },
+        ownerId: { not: id },
         AND: {
           OR: [
             { claimed: false },
