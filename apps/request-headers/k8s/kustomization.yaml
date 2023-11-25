@@ -3,6 +3,11 @@ kind: Kustomization
 
 namespace: request-headers
 
+images:
+  - name: jonpulsifer/does-not-exist
+    newName: jonpulsifer/request-headers
+    newTag: latest
+
 resources:
   - ../../../k8s/base
 
