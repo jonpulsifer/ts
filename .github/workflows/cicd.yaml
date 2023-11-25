@@ -136,10 +136,10 @@ jobs:
       - name: Login to ArgoCD
         run: |
           echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
-      - name: Sync app to current commit
+      - name: Update application revision and image to ${{ github.sha }}
         run: |
           argocd app set ${{ matrix.app }} --revision=${{ github.sha }} --kustomize-image=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.app }}:${{ github.sha }}
-      - name: Wait for app to finish syncing
+      - name: Sync and wait for application to be healthy
         run: |
           argocd app sync ${{ matrix.app }}
           argocd app wait ${{ matrix.app }} --timeout 600
