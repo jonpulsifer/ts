@@ -8,6 +8,8 @@ images:
     newName: jonpulsifer/nested
     newTag: latest
 
+namePrefix: nested-
+
 resources:
   - ../../../k8s/workload
   - ../../../k8s/gateway
