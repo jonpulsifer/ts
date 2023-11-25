@@ -15,7 +15,7 @@ commonLabels:
   app.kubernetes.io/name: request-headers
   app.kubernetes.io/part-of: request-headers
 
-patches:
-  - path: env.yaml
-  - path: gateway.yaml
-  - path: http-route.yaml
+patchesStrategicMerge:
+  - env.yaml
+  - gateway.yaml
+  - http-route.yaml
