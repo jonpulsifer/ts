@@ -4,17 +4,3 @@ metadata:
   name: app
 spec:
   replicas: 2
-  template:
-    spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app.kubernetes.io/name
-                      operator: In
-                      values:
-                        - app
-                topologyKey: kubernetes.io/hostname
