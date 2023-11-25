@@ -6,6 +6,7 @@ spec:
   listeners:
     - name: tls-gateway
       hostname: &hostname request-headers.lolwtf.ca
+      port: 443
       tls:
         certificateRefs:
           - kind: Secret
