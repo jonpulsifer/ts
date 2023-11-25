@@ -2,14 +2,7 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { Accordion } from 'ui';
 
-const {
-  NODE_NAME,
-  NODE_IP,
-  POD_NAME,
-  POD_IP,
-  POD_LABEL_APP_INSTANCE,
-  POD_CHANGE_ME,
-} = process.env;
+const { NODE_NAME, NODE_IP, POD_NAME, POD_IP, POD_CHANGE_ME } = process.env;
 const isInKubernetes = !!process.env.POD_NAME;
 
 const KubernetesTable = () => (
@@ -21,10 +14,6 @@ const KubernetesTable = () => (
       </tr>
     </thead>
     <tbody>
-      <tr className="border-b dark:border-slate-800 border-gray-200">
-        <td className="px-4 py-2">app.kubernetes.io/instance</td>
-        <td className="px-4 py-2">{POD_LABEL_APP_INSTANCE}</td>
-      </tr>
       <tr className="border-b dark:border-slate-800 border-gray-200">
         <td className="px-4 py-2">Node</td>
         <td className="px-4 py-2">{NODE_NAME}</td>
