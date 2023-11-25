@@ -9,7 +9,7 @@ images:
     newTag: latest
 
 resources:
-  - ../../../k8s/base/workload
+  - ../../../k8s/workload
 
 commonLabels:
   app.kubernetes.io/name: rosie
