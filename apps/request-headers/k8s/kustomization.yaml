@@ -9,7 +9,8 @@ images:
     newTag: latest
 
 resources:
-  - ../../../k8s/base
+  - ../../../k8s/workload
+  - ../../../k8s/gateway
 
 commonLabels:
   app.kubernetes.io/name: request-headers
