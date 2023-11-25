@@ -9,19 +9,29 @@ spec:
   template:
     spec:
       securityContext:
-        allowPrivilegeEscalation: false
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
-        capabilities:
-          drop:
-            - ALL
       containers:
         - name: app
-          containerPort: 8080
           image: jonpulsifer/does-not-exist
           env:
             - name: PORT
               value: "8080"
             - name: POD_CHANGE_ME
               value: "( •_•)>⌐■-■ (⌐■_■) WE ARE KUSTOMIZED"
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
