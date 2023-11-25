@@ -20,3 +20,6 @@ spec:
         - name: app
           containerPort: 8080
           image: jonpulsifer/does-not-exist
+          env:
+            - name: PORT
+              value: "8080"
