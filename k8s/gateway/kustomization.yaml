@@ -4,5 +4,3 @@ resources:
   - service.yaml
   - gateway.yaml
   - http-route.yaml
-patches:
-  - path: deployment.yaml

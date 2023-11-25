@@ -21,3 +21,4 @@ patches:
   - path: env.yaml
   - path: gateway.yaml
   - path: http-route.yaml
+  - path: ../../../k8s/gateway/patches/deployment.yaml
