@@ -3,10 +3,6 @@ kind: Kustomization
 
 namespace: request-headers
 
-images:
-  - name: jonpulsifer/app
-    newName: jonpulsifer/request-headers
-
 resources:
   - ../../../k8s/base
 
