@@ -28,6 +28,8 @@ spec:
         - name: app
           image: jonpulsifer/does-not-exist
           env:
+            - name: PORT
+              value: "8080"
             - name: POD_CHANGE_ME
               value: "( •_•)>⌐■-■ (⌐■_■) WE ARE KUSTOMIZED"
           securityContext:
