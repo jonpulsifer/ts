@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app
-  labels:
-    app.kubernetes.io/created-by: kustomize
 spec:
   replicas: 1
   template:
@@ -20,13 +18,14 @@ spec:
                       values:
                         - app
                 topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: app
-          image: jonpulsifer/does-not-exist
+          image: jonpulsifer/does-not-exist:latest
           env:
             - name: PORT
               value: "8080"

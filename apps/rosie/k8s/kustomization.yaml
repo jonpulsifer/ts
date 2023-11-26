@@ -1,21 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 namespace: &app rosie
-
 namePrefix: rosie-
-
 images:
   - name: jonpulsifer/does-not-exist
     newName: jonpulsifer/rosie
     newTag: latest
-
+labels:
+  - pairs:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/part-of: *app
 resources:
   - ../../../k8s/workload
-
-commonLabels:
-  app.kubernetes.io/name: *app
-  app.kubernetes.io/part-of: *app
-
 patches:
   - path: secret.yaml
