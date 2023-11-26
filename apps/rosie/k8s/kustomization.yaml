@@ -6,10 +6,9 @@ images:
   - name: jonpulsifer/does-not-exist
     newName: jonpulsifer/rosie
     newTag: latest
-labels:
-  - pairs:
-      app.kubernetes.io/name: *app
-      app.kubernetes.io/part-of: *app
+commonLabels:
+  app.kubernetes.io/name: *app
+  app.kubernetes.io/part-of: *app
 resources:
   - ../../../k8s/workload
 patches:
