@@ -141,5 +141,5 @@ jobs:
           argocd app set ${{ matrix.app }} --revision=${{ github.sha }} --kustomize-image=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.app }}:${{ github.sha }}
       - name: Sync and wait for application to be healthy
         run: |
-          argocd app sync ${{ matrix.app }}
+          argocd app sync ${{ matrix.app }} --prune
           argocd app wait ${{ matrix.app }} --timeout 600

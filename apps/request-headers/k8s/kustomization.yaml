@@ -10,17 +10,17 @@ images:
     newName: jonpulsifer/request-headers
     newTag: latest
 
-replicas:
-  - name: app
-    count: 2
+commonLabels:
+  app.kubernetes.io/name: *app
+  app.kubernetes.io/part-of: *app
 
 resources:
   - ../../../k8s/workload
   - ../../../k8s/gateway
 
-commonLabels:
-  app.kubernetes.io/name: *app
-  app.kubernetes.io/part-of: *app
+replicas:
+  - name: app
+    count: 2
 
 patches:
   - path: env.yaml
