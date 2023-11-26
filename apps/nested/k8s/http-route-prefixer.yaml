@@ -1,0 +1,10 @@
+apiVersion: builtin
+kind: PrefixSuffixTransformer
+metadata:
+  name: httproute
+prefix: nested-
+fieldSpecs:
+  - path: spec/parentRefs/name
+    kind: HTTPRoute
+  - path: spec/rules/backendRefs/name
+    kind: HTTPRoute

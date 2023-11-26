@@ -26,3 +26,6 @@ patches:
   - path: env.yaml
   - path: gateway.yaml
   - path: http-route.yaml
+
+transformers:
+  - http-route-prefixer.yaml
