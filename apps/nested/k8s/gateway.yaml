@@ -4,7 +4,10 @@ metadata:
   name: app
 spec:
   listeners:
-    - hostname: &hostname nested.lolwtf.ca
+    - name: tls-gateway
+      hostname: &hostname nested.lolwtf.ca
+      port: 443
+      protocol: HTTPS
       tls:
         certificateRefs:
           - kind: Secret
