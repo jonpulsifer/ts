@@ -262,8 +262,8 @@ importers:
   apps/wishlist:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: 1.0.2
-        version: 1.0.2(@prisma/client@5.6.0)
+        specifier: 1.0.8
+        version: 1.0.8(@prisma/client@5.6.0)
       '@fortawesome/fontawesome-svg-core':
         specifier: 6.4.2
         version: 6.4.2
@@ -523,8 +523,8 @@ packages:
       - chokidar
     dev: true
 
-  /@auth/core@0.13.0:
-    resolution: {integrity: sha512-StjrzUenaKfMr68kmvhiqfY0xvxRvg8wllmem9JAULpPAAAt3uwRUDXICWOP/PfWB4OZ2wQT7rgfm0n42b+Mjg==}
+  /@auth/core@0.18.3:
+    resolution: {integrity: sha512-YXQWxi3pKxngt+2vo3dq8+wDANlUH8nhQgX6EVdd3Enfe3vweBtHqzaWrtWzQnVb8wdGxdhxaoOlYroEBE+/yw==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -533,18 +533,18 @@ packages:
     dependencies:
       '@panva/hkdf': 1.1.1
       cookie: 0.5.0
-      jose: 4.14.6
+      jose: 5.1.1
       oauth4webapi: 2.3.0
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/prisma-adapter@1.0.2(@prisma/client@5.6.0):
-    resolution: {integrity: sha512-ZD6ezxpt0eFFWq6rHloeCplBBDTUDczlgXfopeVxniQ8c1KKsgWBRJuA0mrQAIn3/TFDKI7AxN1bYwc8DzDgCg==}
+  /@auth/prisma-adapter@1.0.8(@prisma/client@5.6.0):
+    resolution: {integrity: sha512-654aQvvbWtlHKQpsxRKRm+9/V/eMdPH3LCGPqdibL8qxJtrwhvor1fo8ioJF6Xac0PDshNokH40QxoKlpk/Khg==}
     peerDependencies:
       '@prisma/client': '>=2.26.0 || >=3 || >=4 || >=5'
     dependencies:
-      '@auth/core': 0.13.0
+      '@auth/core': 0.18.3
       '@prisma/client': 5.6.0(prisma@5.6.0)
     transitivePeerDependencies:
       - nodemailer
@@ -6045,6 +6045,10 @@ packages:
 
   /jose@4.14.6:
     resolution: {integrity: sha512-EqJPEUlZD0/CSUMubKtMaYUOtWe91tZXTWMJZoKSbLk+KtdhNdcvppH8lA9XwVu2V4Ailvsj0GBZJ2ZwDjfesQ==}
+    dev: false
+
+  /jose@5.1.1:
+    resolution: {integrity: sha512-bfB+lNxowY49LfrBO0ITUn93JbUhxUN8I11K6oI5hJu/G6PO6fEUddVLjqdD0cQ9SXIHWXuWh7eJYwZF7Z0N/g==}
     dev: false
 
   /joycon@3.1.1:
