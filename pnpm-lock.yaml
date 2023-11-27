@@ -383,7 +383,7 @@ importers:
         specifier: 1.10.16
         version: 1.10.16(eslint@8.54.0)
       eslint-plugin-prettier:
-        specifier: ^5.0.0
+        specifier: 5.0.0
         version: 5.0.0(eslint-config-prettier@9.0.0)(eslint@8.54.0)(prettier@3.1.0)
       eslint-plugin-react:
         specifier: 7.33.2
