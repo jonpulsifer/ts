@@ -262,7 +262,7 @@ importers:
   apps/wishlist:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: ^1.0.2
+        specifier: 1.0.2
         version: 1.0.2(@prisma/client@5.6.0)
       '@fortawesome/fontawesome-svg-core':
         specifier: 6.4.2
@@ -292,7 +292,7 @@ importers:
         specifier: 14.0.3
         version: 14.0.3(react-dom@18.2.0)(react@18.2.0)
       next-auth:
-        specifier: ^4.24.5
+        specifier: 4.24.5
         version: 4.24.5(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
       nookies:
         specifier: 2.5.2
@@ -341,8 +341,8 @@ importers:
         specifier: 8.4.31
         version: 8.4.31
       prettier-plugin-tailwindcss:
-        specifier: ^0.5.0
-        version: 0.5.0(prettier@3.1.0)
+        specifier: 0.5.7
+        version: 0.5.7(prettier@3.1.0)
       prisma:
         specifier: 5.6.0
         version: 5.6.0
@@ -6855,8 +6855,8 @@ packages:
       fast-diff: 1.2.0
     dev: false
 
-  /prettier-plugin-tailwindcss@0.5.0(prettier@3.1.0):
-    resolution: {integrity: sha512-EpP/Hg/D/LzjKJ+gYiSnsqk+PkrHSFQAuRHx/sj3O4r2kH0iJAOrKeKmI1X4Fm96M1BY+tO0KiV+/Y03MYbArg==}
+  /prettier-plugin-tailwindcss@0.5.7(prettier@3.1.0):
+    resolution: {integrity: sha512-4v6uESAgwCni6YF6DwJlRaDjg9Z+al5zM4JfngcazMy4WEf/XkPS5TEQjbD+DZ5iNuG6RrKQLa/HuX2SYzC3kQ==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -6864,7 +6864,7 @@ packages:
       '@shopify/prettier-plugin-liquid': '*'
       '@shufo/prettier-plugin-blade': '*'
       '@trivago/prettier-plugin-sort-imports': '*'
-      prettier: ^2.2 || ^3.0
+      prettier: ^3.0
       prettier-plugin-astro: '*'
       prettier-plugin-css-order: '*'
       prettier-plugin-import-sort: '*'
