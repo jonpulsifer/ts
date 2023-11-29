@@ -9,7 +9,7 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "google-auth-library": "9.2.0",
+    "google-auth-library": "9.3.0",
     "next": "14.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"

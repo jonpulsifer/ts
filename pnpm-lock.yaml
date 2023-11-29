@@ -54,8 +54,8 @@ importers:
   apps/authme:
     dependencies:
       google-auth-library:
-        specifier: 9.2.0
-        version: 9.2.0
+        specifier: 9.3.0
+        version: 9.3.0
       next:
         specifier: 14.0.3
         version: 14.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -5225,8 +5225,8 @@ packages:
       csstype: 3.1.2
     dev: false
 
-  /google-auth-library@9.2.0:
-    resolution: {integrity: sha512-1oV3p0JhNEhVbj26eF3FAJcv9MXXQt4S0wcvKZaDbl4oHq5V3UJoSbsGZGQNcjoCdhW4kDSwOs11wLlHog3fgQ==}
+  /google-auth-library@9.3.0:
+    resolution: {integrity: sha512-W0F5CB7rAi9l+7/IVeKu26+KdzY6tCwXKAlLsZrleU/Q61XM16uonrDCQNld3Douv/5CH+YoULqNEVVkdmi5Qw==}
     engines: {node: '>=14'}
     dependencies:
       base64-js: 1.5.1
