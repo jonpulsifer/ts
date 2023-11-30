@@ -54,8 +54,8 @@ importers:
   apps/authme:
     dependencies:
       google-auth-library:
-        specifier: 9.3.0
-        version: 9.3.0
+        specifier: 9.4.0
+        version: 9.4.0
       next:
         specifier: 14.0.3
         version: 14.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -5042,8 +5042,8 @@ packages:
       - supports-color
     dev: false
 
-  /gcp-metadata@6.0.0:
-    resolution: {integrity: sha512-Ozxyi23/1Ar51wjUT2RDklK+3HxqDr8TLBNK8rBBFQ7T85iIGnXnVusauj06QyqCXRFZig8LZC+TUddWbndlpQ==}
+  /gcp-metadata@6.1.0:
+    resolution: {integrity: sha512-Jh/AIwwgaxan+7ZUUmRLCjtchyDiqh4KjBJ5tW3plBZb5iL/BPcso8A5DlzeD9qlw0duCamnNdpFjxwaT0KyKg==}
     engines: {node: '>=14'}
     dependencies:
       gaxios: 6.0.2
@@ -5225,14 +5225,14 @@ packages:
       csstype: 3.1.2
     dev: false
 
-  /google-auth-library@9.3.0:
-    resolution: {integrity: sha512-W0F5CB7rAi9l+7/IVeKu26+KdzY6tCwXKAlLsZrleU/Q61XM16uonrDCQNld3Douv/5CH+YoULqNEVVkdmi5Qw==}
+  /google-auth-library@9.4.0:
+    resolution: {integrity: sha512-Sn7w6p59lP3sHWPjLBc5OY6Y44CwbRrst5vAVpVhtSeMzTzZAGheyovaHDkcRRl6QeGl+H3a1GNiHLcLsCJTCw==}
     engines: {node: '>=14'}
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
       gaxios: 6.0.2
-      gcp-metadata: 6.0.0
+      gcp-metadata: 6.1.0
       gtoken: 7.0.1
       jws: 4.0.0
     transitivePeerDependencies:
