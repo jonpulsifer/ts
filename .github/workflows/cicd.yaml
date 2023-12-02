@@ -123,7 +123,7 @@ jobs:
     needs: [build, containerize]
     runs-on: ts
     environment:
-      name: Production - ${{ matrix.app }}
+      name: ${{ matrix.app }}
       url: https://${{matrix.app}}.lolwtf.ca
     env:
       ARGOCD_URL: argo-argocd-server.argo
