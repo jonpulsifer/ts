@@ -71,6 +71,7 @@ const PeoplePage = async () => {
                         alt="Profile Photo"
                         className="rounded-full"
                         fill
+                        sizes="30px"
                       />
                     ) : (
                       <span className="font-medium noselect text-gray-600 dark:text-indigo-500">
