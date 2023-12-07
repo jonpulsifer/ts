@@ -138,14 +138,8 @@ const getVisibleGiftsForUser = async () => {
     const wishlistIds = user.wishlists.map((w) => w.id);
     const gifts = await prisma.gift.findMany({
       where: {
-        wishlists: {
-          every: {
-            id: {
-              in: wishlistIds,
-            },
-          },
-        },
         ownerId: { not: id },
+        wishlists: { some: { id: { in: wishlistIds } } },
         AND: {
           OR: [
             { claimed: false },
