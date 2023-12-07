@@ -6,7 +6,7 @@ import ErrorBoundary from 'components/ErrorBoundary';
 import Page from 'components/Page';
 import Toast from 'components/Toaster';
 import { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter as Inter } from 'next/font/google';
 
 import { SessionProvider } from './providers';
 
