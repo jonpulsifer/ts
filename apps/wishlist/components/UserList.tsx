@@ -14,9 +14,9 @@ export type UserListProps = {
 
 const UserList = ({ users }: UserListProps) => {
   const action: CardAction = {
-    title: 'View All Families',
+    title: 'View All Wishlists',
     icon: faPeopleRoof,
-    link: '/family/join',
+    link: '/wishlists',
   };
   const userList = (appUsers: UserWithGifts[]) => {
     const GiftCountBadge = (count = 0) => {

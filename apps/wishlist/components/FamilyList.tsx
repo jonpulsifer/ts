@@ -3,8 +3,7 @@
 import { faDoorOpen, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Prisma } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { joinWishlist, leaveWishlist } from 'app/actions';
 import { toast } from 'react-hot-toast';
 import { Card } from 'ui';
 
@@ -23,86 +22,59 @@ interface Props {
   user: UserWithWishlists;
 }
 
-type PinValues = {
-  [K in string]: number;
-};
-
 const FamilyList = ({ wishlists, user }: Props) => {
-  const [pin, setPin] = useState<PinValues>({});
-  const router = useRouter();
-
-  const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setPin((prev) => {
-      prev[e.target.id] = Number(e.target.value);
-      return prev;
+  const handleLeaveWishlist = async (wishlist: WishlistsWithoutPasswords) => {
+    console.log('leave', wishlist);
+    const result = await leaveWishlist({
+      userId: user.id,
+      wishlistId: wishlist.id,
     });
+    if (result?.error) {
+      toast.error(result.error);
+      toast.error('Something went wrong. Please try again.');
+    } else {
+      toast.success(`Left ${wishlist.name}!`);
+    }
   };
 
-  const handleJoin = (
-    e: React.FormEvent | React.MouseEvent,
+  const handleJoinWishlist = async (
+    formData: FormData,
     wishlist: WishlistsWithoutPasswords,
   ) => {
-    e.preventDefault();
-    fetch('/api/wishlist/join', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: wishlist.id,
-        password: String(pin[wishlist.id]),
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        toast.success(`You joined ${wishlist.name}!`);
-        router.push('/people');
-      } else if (res.status === 403) {
-        toast.error(`Pin does not match for ${wishlist.name}`);
-      } else {
-        toast.error(`Something went wrong`);
-      }
+    const password = formData.get('password');
+    const result = await joinWishlist({
+      userId: user.id,
+      wishlistId: wishlist.id,
+      password: password as string,
     });
-  };
-
-  const handleLeave = (wishlist: WishlistsWithoutPasswords) => {
-    fetch('/api/wishlist/leave', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: wishlist.id,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        toast.success(`You left ${wishlist.name}`);
-        router.refresh();
-      } else {
-        toast.error(`Something went wrong`);
-      }
-    });
+    if (result?.error) {
+      toast.error(result.error);
+      toast.error('Something went wrong. Please try again.');
+    } else {
+      toast.success(`Joined ${wishlist.name}!`);
+    }
   };
 
   const familyList = (wishlists: WishlistsWithoutPasswords[]) => {
     return wishlists.map((wishlist) => {
       const form = (
-        <form className="flex flex-row items-center">
+        <form
+          name={wishlist.id}
+          action={(formData) => handleJoinWishlist(formData, wishlist)}
+          className="flex flex-row items-center"
+        >
           <input
-            id={wishlist.id.toString()}
             type="number"
+            name="password"
             pattern="\d{1,4}"
             inputMode="numeric"
             autoComplete="off"
             className="form-control block w-24 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            value={pin[wishlist.id]}
-            onChange={(e) => handlePinChange(e)}
             placeholder="Pin"
           />
           <button
             className="inline-flex ml-4 w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto "
             type="submit"
-            onClick={(e) => handleJoin(e, wishlist)}
           >
             <div className="flex">
               <FontAwesomeIcon icon={faHandshake} className="pr-2" />
@@ -116,7 +88,8 @@ const FamilyList = ({ wishlists, user }: Props) => {
       const actionMarkup = inWishlist ? (
         <button
           className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
-          onClick={() => handleLeave(wishlist)}
+          onClick={() => handleLeaveWishlist(inWishlist)}
+          type="submit"
         >
           <div className="flex items-center">
             <div className="flex">

@@ -10,31 +10,28 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Gift, User } from '@prisma/client';
+import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { GiftWithOwner } from 'types/prisma';
 import { Card } from 'ui';
 
-// use Gift or GiftWithUser or GiftWithUserAndClaimedBy
 interface Props {
   gift: Gift | GiftWithOwner;
   user: User;
 }
 
-export const GiftCard = ({ gift: initialGift, user }: Props) => {
-  const [gift, setGift] = useState<Gift>(initialGift);
+export const GiftCard = ({ gift, user }: Props) => {
   const { name, description, url } = gift;
+  const router = useRouter();
   const giftDescription = description
     ? description
     : `${user.name} hasn't added a description for this gift.`;
 
   const { data: session } = useSession();
   const currentUser = session?.user as User;
-
-  const router = useRouter();
 
   const ToastMarkup = ({ gift }: { gift: Gift }) => {
     return (
@@ -65,69 +62,32 @@ export const GiftCard = ({ gift: initialGift, user }: Props) => {
     });
   };
 
-  const handleDelete = (gift: Gift) => {
-    fetch(`/api/gift`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: gift.id }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          toast.success(`Deleted ${gift.name}`);
-          router.push('/user/me');
-        } else {
-          res.json().then((json) => toast.error(json.error));
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  const handleClaim = async (gift: Gift) => {
+    const result = await claimGift(gift.id);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Claimed ${gift.name}!`);
+    }
   };
 
-  const handleClaim = (gift: Gift) => {
-    fetch(`/api/gift/claim`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: gift.id }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          toast.success(`Claimed ${gift.name}`);
-          res.json().then((json) => setGift(json.gift));
-        } else {
-          res.json().then((json) => toast.error(json.error));
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-    router.refresh();
+  const handleUnclaim = async (gift: Gift) => {
+    const result = await unclaimGift(gift.id);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Unclaimed ${gift.name}!`);
+    }
   };
 
-  const handleUnclaim = (gift: Gift) => {
-    fetch(`/api/gift/claim`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: gift.id }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          toast.success(`Unclaimed ${gift.name}`);
-          res.json().then((json) => setGift(json.gift));
-        } else {
-          res.json().then((json) => toast.error(json.error));
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-    router.refresh();
+  const handleDelete = async (gift: Gift) => {
+    const result = await deleteGift(gift.id);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Deleted ${gift.name}`);
+      router.push('/user/me');
+    }
   };
 
   const giftAction = () => {

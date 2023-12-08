@@ -1,11 +1,10 @@
 'use client';
 
-import Spinner from 'components/Spinner';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
 import santa from 'public/santaicon.png';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const welcome = (name?: string | null) => {
@@ -14,7 +13,6 @@ const welcome = (name?: string | null) => {
 };
 
 const LoginPage = () => {
-  const [showLoading, setShowLoading] = useState(true);
   const { data: session, status } = useSession();
   const router = useRouter();
   const name = session?.user.name || session?.user.email;
@@ -25,22 +23,9 @@ const LoginPage = () => {
       router.push('/people');
       welcome(name);
     }
-
-    if (status === 'unauthenticated') {
-      setShowLoading(false);
-    }
-
-    if (status === 'loading') {
-      setShowLoading(true);
-    }
   }, [status, name, router]);
 
-  if (showLoading) {
-    return <Spinner />;
-  }
-
   const handleGoogle = async (e: React.MouseEvent | React.FormEvent) => {
-    setShowLoading(true);
     e.preventDefault();
     signIn('google', { callbackUrl: '/people', redirect: false });
   };

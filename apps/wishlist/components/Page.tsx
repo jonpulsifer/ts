@@ -22,8 +22,8 @@ const daysUntilChristmas = () => {
 // generate title from path name
 const generateTitle = (path: string | null) => {
   switch (path) {
-    case '/family/join':
-      return '👪 Join a Family';
+    case '/wishlists':
+      return '👪 Join a Wishlist';
     case '/gifts':
       return '🎁 Gifts';
     case '/people':

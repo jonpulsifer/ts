@@ -2,9 +2,8 @@
 import { faGifts } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
-import { useRouter } from 'next/navigation';
+import { addGift } from 'app/actions';
 import { Fragment, useRef } from 'react';
-import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 interface Props {
@@ -14,56 +13,36 @@ interface Props {
 
 export default function Modal({ isOpen, setIsOpen }: Props) {
   const cancelButtonRef = useRef(null);
-  const [name, setName] = useState('');
-  const [url, setURL] = useState('');
-  const [description, setDescription] = useState('');
-  const router = useRouter();
-
-  const resetForm = () => {
-    setName('');
-    setURL('');
-    setDescription('');
-  };
+  const formRef = useRef<HTMLFormElement>(null);
 
   const closeAndReset = () => {
     setIsOpen(false);
-    resetForm();
+    formRef.current?.reset();
   };
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const handleAddGift = async (formData: FormData) => {
+    const name = formData.get('name');
+    const url = formData.get('url');
+    const description = formData.get('description');
     if (!name) {
-      toast.error('Missing gift name. Tell Santa what you want!');
+      toast.error('Please fill out a name');
       return;
     }
 
-    const gift = {
-      name,
-      url,
-      description,
-    };
+    const result = await addGift({
+      name: name as string,
+      url: url as string,
+      description: description as string,
+    });
 
-    fetch('/api/gift', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ gift }),
-    })
-      .then((res) => {
-        if (res.ok) {
-          toast.success(`Added ${name} to your wishlist!`);
-          resetForm();
-          router.refresh();
-        } else {
-          toast.error('Something went wrong. Please try again.');
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error('Something went wrong. Please try again.');
-      });
-  }
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Added ${name} to your wishlist!`);
+      formRef.current?.reset();
+    }
+  };
+
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
@@ -96,7 +75,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 w-full sm:w-full sm:max-w-lg border border-gray-50 dark:border-indigo-950">
-                <form onSubmit={(e) => handleSubmit(e)}>
+                <form ref={formRef} action={handleAddGift}>
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
@@ -125,11 +104,10 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               Gift Name
                             </label>
                             <input
+                              name="name"
                               type="text"
                               autoComplete="name"
                               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
-                              value={name}
-                              onChange={(e) => setName(e.target.value)}
                               placeholder="Red Mittens"
                             />
                           </div>
@@ -141,14 +119,12 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               </p>
                             </label>
                             <input
-                              id="url"
+                              name="url"
                               type="url"
                               inputMode="url"
                               autoComplete="url"
                               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
                               placeholder="https://amazon.ca/ur-favourite-slippers"
-                              value={url}
-                              onChange={(e) => setURL(e.target.value)}
                             />
                           </div>
 
@@ -157,12 +133,10 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               Notes (optional)
                             </label>
                             <textarea
-                              id="description"
+                              name="description"
                               autoComplete="description"
                               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
                               placeholder="..."
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
                             />
                           </div>
                         </div>
@@ -174,7 +148,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                       className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                       type="submit"
                     >
-                      {`Add ${name} to your wishlist`}
+                      {`Add to wishlist`}
                     </button>
                     <button
                       type="button"

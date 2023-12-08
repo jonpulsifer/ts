@@ -4,16 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
 import type { Gift } from '@prisma/client';
 import { Fragment, useRef } from 'react';
-import React from 'react';
 
 interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   gift: Gift | null;
-  onClick: () => void;
+  action: (formData: FormData) => void;
 }
 
-export default function Modal({ isOpen, setIsOpen, gift, onClick }: Props) {
+export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
   const cancelButtonRef = useRef(null);
   if (!gift) return;
   return (
@@ -48,12 +47,14 @@ export default function Modal({ isOpen, setIsOpen, gift, onClick }: Props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <form onSubmit={() => onClick()}>
+                <form action={action}>
+                  <input type="hidden" name="id" value={gift.id} />
+
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
                         <FontAwesomeIcon
-                          className="h-6 w-6 text-red-600 dark:text-red-800"
+                          className="h-6 w-6 text-red-600 dark:text-red-600"
                           aria-hidden="true"
                           icon={faTrashCan}
                         />
@@ -79,7 +80,7 @@ export default function Modal({ isOpen, setIsOpen, gift, onClick }: Props) {
                   </div>
                   <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button
-                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-900 sm:ml-3 sm:w-auto"
+                      className="bg-red-600 hover:bg-red-500 dark:hover:bg-red-900 inline-flex w-full justify-center rounded-md px-3 py-2 font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                       type="submit"
                     >
                       Delete

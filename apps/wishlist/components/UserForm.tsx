@@ -1,9 +1,9 @@
 'use client';
 
 import { faSave } from '@fortawesome/free-solid-svg-icons';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
+import { editUser } from 'app/actions';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Card } from 'ui';
 
@@ -12,46 +12,33 @@ interface Props {
 }
 
 const UserForm = ({ user }: Props) => {
-  const [name, setName] = useState(user.name || '');
-  const [address, setAddress] = useState(user.address || '');
-  const [shirtSize, setShirtSize] = useState(user.shirt_size || '');
-  const [pantSize, setPantSize] = useState(user.pant_size || '');
-  const [shoeSize, setShoeSize] = useState(user.shoe_size || '');
   const router = useRouter();
 
-  function submit(e: MouseEvent | FormEvent) {
-    e.preventDefault();
+  const clientEditUser = async (formData: FormData) => {
+    const name = formData.get('name');
+    const address = formData.get('address');
+    const shirtSize = formData.get('shirt_size');
+    const pantSize = formData.get('pant_size');
+    const shoeSize = formData.get('shoe_size');
     if (!name) {
       toast.error('Please fill out a name');
       return;
     }
-    fetch('/api/user', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: user.id,
-        name,
-        address,
-        shirt_size: shirtSize,
-        pant_size: pantSize,
-        shoe_size: shoeSize,
-      }),
-    })
-      .then((res) => {
-        if (res.ok) {
-          toast.success(`Updated ${name}!`);
-          router.refresh();
-          router.push('/user/me');
-        } else {
-          toast.error('Something went wrong. Please try again.');
-        }
-      })
-      .catch(() => {
-        toast.error('Something went wrong. Please try again.');
-      });
-  }
+    const result = await editUser({
+      id: user.id,
+      name: name as string,
+      address: address as string,
+      shirt_size: shirtSize as string,
+      pant_size: pantSize as string,
+      shoe_size: shoeSize as string,
+    });
+    if (result?.error) {
+      toast.error(result.error);
+      toast.error('Something went wrong. Please try again.');
+    } else {
+      toast.success(`Updated ${name}!`);
+    }
+  };
 
   return (
     <Card
@@ -61,7 +48,7 @@ const UserForm = ({ user }: Props) => {
         {
           title: 'Save Profile',
           icon: faSave,
-          onClick: (e) => submit(e),
+          submit: 'editUser',
         },
         {
           title: 'Back',
@@ -70,7 +57,8 @@ const UserForm = ({ user }: Props) => {
         },
       ]}
     >
-      <form onSubmit={(e) => submit(e)} className="px-4 pb-4">
+      <form id="editUser" action={clientEditUser} className="px-4 pb-4">
+        <button formAction={clientEditUser} className="hidden" />
         <div className="mb-6">
           <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
             Display Name
@@ -78,9 +66,9 @@ const UserForm = ({ user }: Props) => {
           <input
             type="text"
             autoComplete="name"
+            name="name"
             className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            defaultValue={user.name || ''}
             placeholder="Rudolph"
           />
         </div>
@@ -91,11 +79,11 @@ const UserForm = ({ user }: Props) => {
           </label>
           <input
             id="address"
+            name="address"
             autoComplete="street-address"
             className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
             placeholder="Stable #9, North Pole, H0H 0H0"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            defaultValue={user.address || ''}
           />
         </div>
 
@@ -106,12 +94,12 @@ const UserForm = ({ user }: Props) => {
             </label>
             <input
               id="shirt"
+              name="shirt_size"
               type="textbox"
               autoComplete="shirt-size"
               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
               placeholder="S/M"
-              value={shirtSize}
-              onChange={(e) => setShirtSize(e.target.value)}
+              defaultValue={user.shirt_size || ''}
             />
           </div>
           <div className="mb-6 pr-2">
@@ -120,12 +108,12 @@ const UserForm = ({ user }: Props) => {
             </label>
             <input
               id="pants"
+              name="pant_size"
               type="textbox"
               autoComplete="pant-size"
               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
               placeholder="XL"
-              value={pantSize}
-              onChange={(e) => setPantSize(e.target.value)}
+              defaultValue={user.pant_size || ''}
             />
           </div>
           <div className="mb-6">
@@ -134,13 +122,13 @@ const UserForm = ({ user }: Props) => {
             </label>
             <input
               id="shoe"
+              name="shoe_size"
               type="textbox"
               autoComplete="shoe-size"
               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
               placeholder="7.5"
               inputMode="decimal"
-              value={shoeSize}
-              onChange={(e) => setShoeSize(e.target.value)}
+              defaultValue={user.shoe_size || ''}
             />
           </div>
         </div>

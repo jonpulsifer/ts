@@ -9,6 +9,7 @@ export interface CardAction {
   danger?: boolean;
   secondary?: boolean;
   onClick?: ((e: MouseEvent | FormEvent) => void) | (() => void) | undefined;
+  submit?: string;
   link?: string;
 }
 
@@ -73,6 +74,8 @@ const Card = ({
             className={actionsMarkup}
             onClick={action?.onClick ? action.onClick : undefined}
             key={`fb-${idx}`}
+            type={action.submit ? 'submit' : 'button'}
+            form={action.submit ? action.submit : undefined}
           >
             {actionIcon}
             {action?.title}

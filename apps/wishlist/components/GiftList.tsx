@@ -9,6 +9,7 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -149,46 +150,22 @@ const GiftList = ({ gifts }: Props) => {
     );
   }
 
-  const handleClaim = (gift: GiftWithOwner) => {
-    fetch(`/api/gift/claim`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: gift.id }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          toast.success(`Claimed ${gift.name}`);
-          router.refresh();
-        } else {
-          res.json().then((json) => toast.error(json.error));
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  const handleClaim = async (gift: GiftWithOwner) => {
+    const result = await claimGift(gift.id);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Claimed ${gift.name}!`);
+    }
   };
 
-  const handleUnclaim = (gift: GiftWithOwner) => {
-    fetch(`/api/gift/claim`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: gift.id }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          toast.success(`Unclaimed ${gift.name}`);
-          router.refresh();
-        } else {
-          res.json().then((json) => toast.error(json.error));
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  const handleUnclaim = async (gift: GiftWithOwner) => {
+    const result = await unclaimGift(gift.id);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Unclaimed ${gift.name}!`);
+    }
   };
 
   const handleConfirmDelete = (gift: GiftWithOwner) => {
@@ -196,23 +173,15 @@ const GiftList = ({ gifts }: Props) => {
     setShowDeleteModal(true);
   };
 
-  const handleActualDelete = (gift: GiftWithOwner) => {
-    fetch('/api/gift', {
-      method: 'DELETE',
-      body: JSON.stringify({ id: gift.id }),
-    })
-      .then((res) => {
-        if (res.ok) {
-          toast.success(`Deleted ${gift.name}`);
-          router.refresh();
-        } else {
-          toast.error('Something went wrong');
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
-
+  const handleActualDelete = async (formData: FormData) => {
+    const giftId = formData.get('id');
+    if (!giftId) return;
+    const result = await deleteGift(giftId as string);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Deleted ${gift?.name || 'gift'}!`);
+    }
     setGift(null);
   };
 
@@ -368,7 +337,7 @@ const GiftList = ({ gifts }: Props) => {
           isOpen={showDeleteModal}
           setIsOpen={setShowDeleteModal}
           gift={gift}
-          onClick={() => handleActualDelete(gift)}
+          action={handleActualDelete}
         />
       )}
     </>

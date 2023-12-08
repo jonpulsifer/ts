@@ -1,4 +1,29 @@
+import { faker } from '@faker-js/faker';
+
 import { prisma } from '../lib/prisma';
+
+const createRandomGift = async (userId: string, wishlistId: string) => {
+  console.log('creating gift for', userId, wishlistId);
+  return prisma.gift.upsert({
+    where: { id: faker.string.uuid() },
+    update: {},
+    create: {
+      name: faker.commerce.productName(),
+      description: `${faker.commerce.productName()} - ${faker.commerce.productDescription()}`,
+      url: faker.internet.url(),
+      owner: {
+        connect: {
+          id: userId,
+        },
+      },
+      wishlists: {
+        connect: {
+          id: wishlistId,
+        },
+      },
+    },
+  });
+};
 
 async function drop() {
   return Promise.all([
@@ -19,19 +44,21 @@ async function main() {
     },
   });
 
+  const birthdayWishlist = await prisma.wishlist.upsert({
+    where: { name: 'Birthday Wishlist' },
+    update: {},
+    create: {
+      name: 'Birthday Wishlist',
+      password: '1234',
+    },
+  });
+
   const alice = await prisma.user.upsert({
     where: { email: 'alice@example.com' },
     update: {},
     create: {
       email: 'alice@example.com',
       name: 'Alice',
-      gifts: {
-        create: {
-          name: 'Red Mittens',
-          url: 'https://www.example.com/mittens',
-          published: true,
-        },
-      },
       wishlists: {
         connect: christmasWishlist,
       },
@@ -59,7 +86,51 @@ async function main() {
     },
   });
 
-  console.log({ alice, bob, carol });
+  const dave = await prisma.user.upsert({
+    where: { email: 'dave@example.com' },
+    update: {},
+    create: {
+      email: 'dave@example.com',
+      name: 'Dave',
+      wishlists: { connect: christmasWishlist },
+    },
+  });
+
+  const emily = await prisma.user.upsert({
+    where: { email: 'emily@example.com' },
+    update: {},
+    create: {
+      email: 'emily@example.com',
+      name: 'Emily',
+      wishlists: { connect: [christmasWishlist, birthdayWishlist] },
+    },
+  });
+
+  await Promise.all([
+    createRandomGift(alice.id, christmasWishlist.id),
+    createRandomGift(alice.id, christmasWishlist.id),
+    createRandomGift(alice.id, christmasWishlist.id),
+    createRandomGift(alice.id, christmasWishlist.id),
+    createRandomGift(alice.id, christmasWishlist.id),
+    // bob
+    createRandomGift(bob.id, christmasWishlist.id),
+    createRandomGift(bob.id, christmasWishlist.id),
+    createRandomGift(bob.id, christmasWishlist.id),
+    createRandomGift(bob.id, christmasWishlist.id),
+    // carol
+    createRandomGift(carol.id, christmasWishlist.id),
+    createRandomGift(carol.id, christmasWishlist.id),
+    createRandomGift(carol.id, christmasWishlist.id),
+    createRandomGift(carol.id, christmasWishlist.id),
+    // dave
+    createRandomGift(dave.id, christmasWishlist.id),
+    createRandomGift(dave.id, christmasWishlist.id),
+    // emily
+    createRandomGift(emily.id, birthdayWishlist.id),
+    createRandomGift(emily.id, birthdayWishlist.id),
+    createRandomGift(emily.id, birthdayWishlist.id),
+  ]);
+  console.log({ alice, bob, carol, dave, emily });
 }
 main()
   .then(async () => {

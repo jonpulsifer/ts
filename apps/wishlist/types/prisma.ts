@@ -33,6 +33,10 @@ export type GiftWithOwner = Prisma.GiftGetPayload<{
   include: { owner: true };
 }>;
 
+export type GiftWithOwnerAndWishlistIds = Prisma.GiftGetPayload<{
+  include: { owner: true; wishlists: { select: { id: true } } };
+}>;
+
 export type GiftWithOwnerAndClaimedBy = Prisma.GiftGetPayload<{
   include: {
     owner: true;

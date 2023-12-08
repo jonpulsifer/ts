@@ -89,7 +89,7 @@ export const UserProfile = ({ user }: Props) => {
       {
         title: 'View Wishlists',
         icon: faPeopleRoof,
-        link: '/family/join',
+        link: '/wishlists',
       },
     );
   return (

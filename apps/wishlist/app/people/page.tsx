@@ -19,7 +19,7 @@ const PeoplePage = async () => {
   const action: CardAction = {
     title: 'View all wishlists',
     icon: faPeopleRoof,
-    link: '/family/join',
+    link: '/wishlists',
   };
   const people = users && users.length;
   const hasWishlists = user.wishlists && user.wishlists.length;
