@@ -241,7 +241,7 @@ const GiftList = ({ gifts }: Props) => {
   const giftList = (gifts: GiftWithOwner[]) => {
     return gifts.map((gift) => {
       const notesMarkup = gift.description ? (
-        <div className="text-xs text-gray-400 dark:text-gray-700 hover:text-indigo-600 hover:font-bold transition ease-in-out duration-200">
+        <div className="text-xs text-gray-400 dark:text-gray-600">
           {gift.description.length > 60
             ? `${gift.description.substring(0, 60)}...`
             : gift.description}
@@ -251,7 +251,7 @@ const GiftList = ({ gifts }: Props) => {
       return (
         <tr
           key={gift.id}
-          className="text-left border-t dark:border-gray-800 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500"
+          className="text-left border-t dark:border-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-500 transition ease-in-out duration-200"
         >
           <td className="px-4 py-2">
             <Link key={gift.id} href={`/gift/${gift.id}`}>
@@ -314,18 +314,10 @@ const GiftList = ({ gifts }: Props) => {
   const giftCards = Object.keys(giftsByOwnerId).map((ownerId) => {
     const gifts = giftsByOwnerId[ownerId];
     const name = gifts[0].owner?.name || gifts[0].owner?.email;
-    const title = name ? `${name}'s Gifts` : 'Gifts';
-    const subtitle = gifts.length > 1 ? 'Gifts' : 'Gift';
     const badges = BadgeCounter('gift', gifts);
 
     return (
-      <GiftCard
-        key={ownerId}
-        gifts={gifts}
-        title={title}
-        subtitle={subtitle}
-        badges={badges}
-      />
+      <GiftCard key={ownerId} gifts={gifts} title={name} badges={badges} />
     );
   });
 

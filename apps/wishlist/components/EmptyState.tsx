@@ -50,8 +50,8 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
   return (
     <>
       <div
-        className="fixed right-0 -z-10 w-1/2 h-1/2 
-        sm:bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top"
+        className="absolute right-0 -z-10 w-1/2 h-1/2 
+        bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top"
       />
       <div className="flex flex-col items-center justify-center text-center h-full">
         <div className="flex flex-col items-center justify-center gap-4">

@@ -31,7 +31,7 @@ const Card = ({
   const titleMarkup = (
     <div className="flex flex-row gap-4 p-4 truncate">
       <div className="flex flex-col grow dark:text-gray-400">
-        <h1 className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200">
+        <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-200">
           {title}
         </h1>
         <div className="mt-2">
