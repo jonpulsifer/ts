@@ -7,7 +7,7 @@ import { resolveValue, toast, Toaster, ToastIcon } from 'react-hot-toast';
 
 export const Toast = () => {
   return (
-    <Toaster position="bottom-center" toastOptions={{ duration: 2000 }}>
+    <Toaster position="top-center" toastOptions={{ duration: 2000 }}>
       {(t) => (
         <Transition
           appear
