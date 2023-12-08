@@ -17,7 +17,7 @@
     "eslint-config-custom": "workspace:*",
     "prettier-config": "workspace:*",
     "tsconfig": "workspace:*",
-    "turbo": "1.11.0"
+    "turbo": "1.11.1"
   },
   "engines": {
     "node": ">=18.0.0",
