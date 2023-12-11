@@ -1,9 +1,10 @@
 'use client';
-import { faGifts } from '@fortawesome/free-solid-svg-icons';
+import { faGift, faGifts } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
 import { addGift } from 'app/actions';
 import { Fragment, useRef } from 'react';
+import { useFormStatus } from 'react-dom';
 import { toast } from 'react-hot-toast';
 
 interface Props {
@@ -41,6 +42,31 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
       toast.success(`Added ${name} to your wishlist!`);
       formRef.current?.reset();
     }
+  };
+
+  const Submit = () => {
+    const status = useFormStatus();
+    return (
+      <button
+        className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+        type="submit"
+        disabled={status.pending}
+      >
+        {status.pending ? (
+          <>
+            <FontAwesomeIcon
+              className="animate-spin text-gray-600 dark:text-gray-200 mt-1"
+              icon={faGift}
+            />
+            <span className="ml-2 text-gray-600 dark:text-gray-200">
+              Adding...
+            </span>
+          </>
+        ) : (
+          `Add to wishlist`
+        )}
+      </button>
+    );
   };
 
   return (
@@ -144,12 +170,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                     </div>
                   </div>
                   <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button
-                      className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
-                      type="submit"
-                    >
-                      {`Add to wishlist`}
-                    </button>
+                    <Submit />
                     <button
                       type="button"
                       className="mt-3 dark:text-slate-400 inline-flex w-full items-center justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
