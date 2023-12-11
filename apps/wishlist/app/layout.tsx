@@ -7,6 +7,7 @@ import Page from 'components/Page';
 import Toast from 'components/Toaster';
 import { Metadata } from 'next';
 import { Inter as Inter } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import { SessionProvider } from './providers';
 
@@ -36,6 +37,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </main>
           </SessionProvider>
         </ErrorBoundary>
+        <SpeedInsights />
       </body>
     </html>
   );
