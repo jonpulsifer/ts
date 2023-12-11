@@ -34,7 +34,7 @@ const Card = ({
         <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-200">
           {title}
         </h1>
-        <div className="mt-2">
+        <div className="">
           <p className="text-sm text-gray-500 dark:text-slate-400">
             {subtitle}
           </p>
@@ -101,7 +101,7 @@ const Card = ({
   const footerMarkup = actions.length ? footer : null;
   return (
     <div className="flex flex-col h-max rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md border-transparent">
-      <div className="my-2 sm:text-left bg-white dark:bg-slate-900">
+      <div className="my-2 sm:text-left">
         {headerMarkup}
         {children}
       </div>

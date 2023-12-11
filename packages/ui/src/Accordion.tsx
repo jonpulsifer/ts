@@ -14,6 +14,7 @@ export interface AccordionAction {
   danger?: boolean;
   secondary?: boolean;
   onClick?: ((e: MouseEvent | FormEvent) => void) | (() => void) | undefined;
+  submit?: string;
   link?: string;
 }
 
@@ -60,19 +61,19 @@ const Accordion = ({
   const icon = open ? OpenedArrow : ClosedArrow;
 
   const headerMarkup = (
-    <div className="flex flex-row gap-4 p-4 truncate">
+    <div className="flex flex-row gap-4 p-2 truncate">
       <div className="flex flex-col grow dark:text-gray-400">
-        <h1 className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200">
+        <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-200">
           {title}
         </h1>
-        <div className="mt-2">
+        <div className="">
           <p className="text-sm text-gray-500 dark:text-slate-400">
             {subtitle}
           </p>
         </div>
       </div>
       <div className="flex items-center">{badges}</div>
-      <div className="flex items-center text-2xl">{icon}</div>
+      <div className="flex items-center">{icon}</div>
     </div>
   );
 
@@ -106,6 +107,8 @@ const Accordion = ({
             className={actionsMarkup}
             onClick={action?.onClick ? action.onClick : undefined}
             key={`fb-${idx}`}
+            type={action?.submit ? 'submit' : 'button'}
+            form={action?.submit ? action.submit : undefined}
           >
             {actionIcon}
             {action?.title}
@@ -122,7 +125,7 @@ const Accordion = ({
     : null;
 
   const footer = (
-    <div className="border-t dark:border-slate-800 border-gray-200 bg-gray-50 dark:bg-slate-900 rounded-b-lg px-4 py-3 sm:flex sm:flex-row-reverse">
+    <div className="bg-gray-50 dark:bg-slate-900 rounded-b-lg px-4 py-3 sm:flex sm:flex-row-reverse">
       {actionsMarkup}
     </div>
   );
@@ -130,7 +133,7 @@ const Accordion = ({
   const footerMarkup = actions.length ? footer : null;
   return (
     <div
-      className="flex flex-col sm:rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md overflow-hidden"
+      className="flex flex-col rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md overflow-hidden"
       onClick={toggleOpen}
     >
       <div className="sm:text-left">

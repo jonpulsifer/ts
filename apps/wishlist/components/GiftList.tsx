@@ -18,7 +18,6 @@ import { toast } from 'react-hot-toast';
 import { GiftWithOwner } from 'types/prisma';
 import { Card } from 'ui';
 
-import { BadgeCounter } from './BadgeCounter';
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import Modal from './GiftModal';
@@ -275,22 +274,11 @@ const GiftList = ({ gifts }: Props) => {
     gifts: GiftWithOwner[];
     title: React.ReactNode | undefined;
     subtitle?: React.ReactNode;
-    badges?: React.ReactNode;
   }
 
-  const GiftCard = ({
-    gifts,
-    title,
-    subtitle = undefined,
-    badges = undefined,
-  }: GiftCardProps) => {
+  const GiftCard = ({ gifts, title, subtitle = undefined }: GiftCardProps) => {
     return (
-      <Card
-        key={gifts[0].ownerId}
-        title={title}
-        subtitle={subtitle}
-        badges={badges}
-      >
+      <Card key={gifts[0].ownerId} title={title} subtitle={subtitle}>
         <table className="table-auto w-full rounded-lg">
           <tbody>{giftList(gifts)}</tbody>
         </table>
@@ -314,11 +302,8 @@ const GiftList = ({ gifts }: Props) => {
   const giftCards = Object.keys(giftsByOwnerId).map((ownerId) => {
     const gifts = giftsByOwnerId[ownerId];
     const name = gifts[0].owner?.name || gifts[0].owner?.email;
-    const badges = BadgeCounter('gift', gifts);
 
-    return (
-      <GiftCard key={ownerId} gifts={gifts} title={name} badges={badges} />
-    );
+    return <GiftCard key={ownerId} gifts={gifts} title={name} />;
   });
 
   return (
