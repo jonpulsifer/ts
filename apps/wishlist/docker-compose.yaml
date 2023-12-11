@@ -2,7 +2,7 @@
 
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:15-alpine@sha256:022dd7c26449f0a87b0155b40f0b0637486d679d7b184bbef8cdf7c6325d7a47
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -13,7 +13,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4:latest@sha256:2f162ef35d3afca1396c4222a0403eb861b9800039bcf368074fd19ff02b8cd8
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: password
