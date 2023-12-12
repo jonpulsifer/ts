@@ -94,7 +94,7 @@ const getClaimedGiftsForMe = async () => {
 const getVisibleGiftsForUserById = async (id: string) => {
   const session = await isAuthenticated();
   const currentUserId = session.user.id;
-  return prisma.gift.findMany({
+  const gifts = await prisma.gift.findMany({
     where: {
       ownerId: id,
       AND: {
@@ -117,6 +117,7 @@ const getVisibleGiftsForUserById = async (id: string) => {
       name: 'asc',
     },
   });
+  return { gifts, user: session.user };
 };
 
 const isAuthenticated = async () => {

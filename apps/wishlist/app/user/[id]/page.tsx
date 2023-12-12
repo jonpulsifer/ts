@@ -18,11 +18,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const ProfilePage = async ({ params }: Props) => {
-  const user = await getUserById(params.id);
-  const gifts = await getVisibleGiftsForUserById(params.id);
+  const profile = await getUserById(params.id);
+  const { gifts, user } = await getVisibleGiftsForUserById(params.id);
   return (
     <div className="space-y-16">
-      <UserProfile user={user} />
+      <UserProfile user={profile} />
       <GiftList gifts={gifts} currentUserId={user.id} />
     </div>
   );
