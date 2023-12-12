@@ -11,8 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { GiftWithOwner } from 'types/prisma';
@@ -21,26 +20,17 @@ import { Card } from 'ui';
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import Modal from './GiftModal';
-import Spinner from './Spinner';
 
 interface Props {
   gifts: GiftWithOwner[];
+  currentUserId: string;
 }
 
-const GiftList = ({ gifts }: Props) => {
+const GiftList = ({ gifts, currentUserId }: Props) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [gift, setGift] = useState<GiftWithOwner | null>(null);
   const path = usePathname();
-  const router = useRouter();
-
-  const { data: session, status } = useSession();
-  const user = session?.user;
-  if (!user || status === 'loading') return <Spinner />;
-  if (status === 'unauthenticated') {
-    toast.error('You must be logged in to view this page');
-    router.push('/login');
-  }
 
   const getEmptyState = () => {
     const defaultMarkup = (
@@ -98,7 +88,7 @@ const GiftList = ({ gifts }: Props) => {
     );
 
     switch (path) {
-      case `/user/${user.id}`:
+      case `/user/${currentUserId}`:
         return myGiftsMarkup;
       case '/user/me':
         return myGiftsMarkup;
@@ -192,7 +182,7 @@ const GiftList = ({ gifts }: Props) => {
     const buttonDanger =
       'text-red-600 dark:text-red-100 hover:text-white dark:hover:text-red-500 bg-red-50 dark:bg-red-950/25 dark:hover:bg-red-950/25 hover:bg-red-600 ring-red-700/10 dark:ring-red-600/20';
 
-    if (gift.ownerId === user.id)
+    if (gift.ownerId === currentUserId)
       return (
         <div className="flex flex-row space-x-2">
           <Link href={`/gift/${gift.id}/edit`}>
@@ -212,8 +202,8 @@ const GiftList = ({ gifts }: Props) => {
           </button>
         </div>
       );
-    if (gift.claimedById && gift.claimedById !== user.id) return null;
-    if (gift.claimedById === user.id) {
+    if (gift.claimedById && gift.claimedById !== currentUserId) return null;
+    if (gift.claimedById === currentUserId) {
       return (
         <button
           className={`${buttonClass} ${buttonDanger}`}
@@ -237,8 +227,23 @@ const GiftList = ({ gifts }: Props) => {
     );
   };
 
-  const giftList = (gifts: GiftWithOwner[]) => {
-    return gifts.map((gift) => {
+  // create a hash of gifts by owner id
+  const giftsByOwnerId = gifts.reduce(
+    (acc, gift) => {
+      const ownerId = gift.ownerId || currentUserId;
+      const ownerGifts = acc[ownerId] || [];
+      return {
+        ...acc,
+        [ownerId]: [...ownerGifts, gift],
+      };
+    },
+    {} as { [key: string]: GiftWithOwner[] },
+  );
+
+  const giftCards = Object.keys(giftsByOwnerId).map((ownerId) => {
+    const gifts = giftsByOwnerId[ownerId];
+    const name = gifts[0].owner?.name || gifts[0].owner?.email;
+    const giftList = gifts.map((gift) => {
       const notesMarkup = gift.description ? (
         <div className="text-xs text-gray-400 dark:text-gray-600">
           {gift.description.length > 60
@@ -268,55 +273,25 @@ const GiftList = ({ gifts }: Props) => {
         </tr>
       );
     });
-  };
-
-  interface GiftCardProps {
-    gifts: GiftWithOwner[];
-    title: React.ReactNode | undefined;
-    subtitle?: React.ReactNode;
-  }
-
-  const GiftCard = ({ gifts, title, subtitle = undefined }: GiftCardProps) => {
     return (
-      <Card key={gifts[0].ownerId} title={title} subtitle={subtitle}>
+      // add a key to the card
+      <Card key={ownerId} title={name}>
         <table className="table-auto w-full rounded-lg">
-          <tbody>{giftList(gifts)}</tbody>
+          <tbody>{giftList}</tbody>
         </table>
       </Card>
     );
-  };
-
-  // create a hash of gifts by owner id
-  const giftsByOwnerId = gifts.reduce(
-    (acc, gift) => {
-      const ownerId = gift.ownerId || user.id;
-      const ownerGifts = acc[ownerId] || [];
-      return {
-        ...acc,
-        [ownerId]: [...ownerGifts, gift],
-      };
-    },
-    {} as { [key: string]: GiftWithOwner[] },
-  );
-
-  const giftCards = Object.keys(giftsByOwnerId).map((ownerId) => {
-    const gifts = giftsByOwnerId[ownerId];
-    const name = gifts[0].owner?.name || gifts[0].owner?.email;
-
-    return <GiftCard key={ownerId} gifts={gifts} title={name} />;
   });
 
   return (
     <>
       {giftCards}
-      {gift && (
-        <DeleteModal
-          isOpen={showDeleteModal}
-          setIsOpen={setShowDeleteModal}
-          gift={gift}
-          action={handleActualDelete}
-        />
-      )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        setIsOpen={setShowDeleteModal}
+        gift={gift}
+        action={handleActualDelete}
+      />
     </>
   );
 };

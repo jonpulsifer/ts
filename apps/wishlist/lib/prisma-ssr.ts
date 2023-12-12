@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 
 import {
-  GiftWithOwner,
   UserWithGifts,
   UserWithGiftsAndWishlists,
   UserWithGiftsWithOwners,
@@ -34,7 +33,7 @@ const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
   });
 };
 
-const getUserWithGifts = async (id: string): Promise<UserWithGifts> => {
+const getUserWithGifts = async (id: string) => {
   return getUserById(id, true, false);
 };
 
@@ -73,13 +72,13 @@ const getUserWithGiftsById = async (id: string): Promise<UserWithGifts> => {
   return getUserById(id, true, false);
 };
 
-const getClaimedGiftsForMe = async (): Promise<GiftWithOwner[]> => {
+const getClaimedGiftsForMe = async () => {
   const session = await isAuthenticated();
-  const id = session.user.id;
-  return prisma.gift.findMany({
+  const user = session.user;
+  const gifts = await prisma.gift.findMany({
     where: {
       claimedById: {
-        equals: id,
+        equals: session.user.id,
       },
     },
     include: {
@@ -89,6 +88,7 @@ const getClaimedGiftsForMe = async (): Promise<GiftWithOwner[]> => {
       name: 'asc',
     },
   });
+  return { gifts, user };
 };
 
 const getVisibleGiftsForUserById = async (id: string) => {
@@ -132,7 +132,8 @@ const getVisibleGiftsForUser = async () => {
   const session = await isAuthenticated();
   const { id } = session.user;
   const user = await getUserById(id, true, true);
-  if (!user.wishlists || !user.wishlists.length) return { gifts: [] };
+  if (!user.wishlists || !user.wishlists.length)
+    return { gifts: [], user: session.user };
 
   try {
     const wishlistIds = user.wishlists.map((w) => w.id);
@@ -165,8 +166,7 @@ const getVisibleGiftsForUser = async () => {
         },
       ],
     });
-
-    return { gifts };
+    return { gifts, user: session.user };
   } catch (e) {
     console.log(JSON.stringify(e));
   }

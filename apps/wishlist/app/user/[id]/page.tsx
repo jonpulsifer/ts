@@ -23,7 +23,7 @@ const ProfilePage = async ({ params }: Props) => {
   return (
     <div className="space-y-16">
       <UserProfile user={user} />
-      <GiftList gifts={gifts} />
+      <GiftList gifts={gifts} currentUserId={user.id} />
     </div>
   );
 };

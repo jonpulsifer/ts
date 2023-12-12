@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 };
 
 const GiftsPage = async () => {
-  const { gifts } = await getVisibleGiftsForUser();
-  return <GiftList gifts={gifts} />;
+  const { gifts, user } = await getVisibleGiftsForUser();
+  return <GiftList gifts={gifts} currentUserId={user.id} />;
 };
 
 export default GiftsPage;

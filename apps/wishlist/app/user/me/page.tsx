@@ -13,7 +13,7 @@ const MePage = async () => {
   return (
     <div className="w-full space-y-4">
       <UserProfile user={user} />
-      <GiftList gifts={user.gifts} />
+      <GiftList gifts={user.gifts} currentUserId={user.id} />
     </div>
   );
 };
