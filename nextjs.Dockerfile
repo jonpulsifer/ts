@@ -1,4 +1,4 @@
-FROM node:18-alpine@sha256:2c4153ba382be0bd3af790595330c6600a99f7ebd566c83843b19fb529e8aaff AS base
+FROM node:18-alpine@sha256:b1a0356f7d6b86c958a06949d3db3f7fb27f95f627aa6157cb98bc65c801efa2 AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo
 
