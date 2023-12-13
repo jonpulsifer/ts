@@ -59,11 +59,11 @@ const Card = ({
           </div>
         ) : null;
         const baseButtonClass =
-          'font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
+          'font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
         const secondaryButtonClass =
           'font-semibold text-gray-900 dark:text-slate-400 mt-3 inline-flex w-full justify-center items-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto';
-        const dangerClass = `bg-red-500 ${baseButtonClass}`;
-        const infoClass = `bg-indigo-600 ${baseButtonClass}`;
+        const dangerClass = `bg-red-500 hover:bg-red-500 ${baseButtonClass}`;
+        const infoClass = `bg-indigo-600 hover:bg-indigo-500 ${baseButtonClass}`;
 
         const buttonClass = action.danger ? dangerClass : infoClass;
         const actionsMarkup = action.secondary
