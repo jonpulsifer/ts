@@ -187,10 +187,14 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
   const giftCards = Object.keys(giftsByOwnerId).map((ownerId) => {
     const gifts = giftsByOwnerId[ownerId];
     const name = gifts[0].owner?.name || gifts[0].owner?.email;
+    const domainFromUrl = (url: string) => {
+      const urlObj = new URL(url);
+      return urlObj.hostname;
+    };
     const giftList = gifts.map((gift) => {
-      const notesMarkup = gift.description ? (
-        <div className="text-xs text-gray-400 dark:text-gray-600 whitespace-nowrap truncate w-64">
-          {gift.description}
+      const notesMarkup = gift.url ? (
+        <div className="text-xs text-gray-400 dark:text-gray-600">
+          {domainFromUrl(gift.url)}
         </div>
       ) : null;
 

@@ -1,11 +1,9 @@
 'use client';
 
-import { faSave, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { Gift } from '@prisma/client';
-import { addGift, deleteGift, updateGift } from 'app/actions';
-import DeleteModal from 'components/DeleteModal';
+import { addGift, updateGift } from 'app/actions';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Card } from 'ui';
 interface Props {
@@ -14,7 +12,6 @@ interface Props {
 
 const GiftForm = ({ gift }: Props) => {
   const router = useRouter();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const upsertGift = async (formData: FormData) => {
     const name = formData.get('name');
     const url = formData.get('url');
@@ -47,37 +44,15 @@ const GiftForm = ({ gift }: Props) => {
     }
   };
 
-  const actuallyDeleteGift = async () => {
-    if (!gift) {
-      toast.error('No gift to delete');
-      return;
-    }
-
-    const result = await deleteGift(gift.id as string);
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success(`Deleted ${gift?.name} from your wishlist!`);
-      router.back();
-    }
-  };
-
   return (
     <>
       <Card
         title="Add a new gift"
-        subtitle="Tell Santa what you want"
         action={[
           {
             title: 'Update gift',
             icon: faSave,
             submit: 'upsertGift',
-          },
-          {
-            title: 'Delete gift',
-            icon: faTrashCan,
-            danger: true,
-            onClick: () => setShowDeleteModal(true),
           },
           {
             title: 'Back',
@@ -136,14 +111,6 @@ const GiftForm = ({ gift }: Props) => {
           </div>
         </form>
       </Card>
-      {gift && (
-        <DeleteModal
-          isOpen={showDeleteModal}
-          setIsOpen={setShowDeleteModal}
-          gift={gift}
-          action={actuallyDeleteGift}
-        />
-      )}
     </>
   );
 };
