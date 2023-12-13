@@ -3,7 +3,6 @@
 import {
   faEdit,
   faGift,
-  faGifts,
   faMinusSquare,
   faPlusSquare,
   faTrashCan,
@@ -12,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { GiftWithOwner } from 'types/prisma';
 import { Card } from 'ui';
@@ -33,31 +32,6 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
   const path = usePathname();
 
   const getEmptyState = () => {
-    const defaultMarkup = (
-      <p>
-        People need to{' '}
-        <span className="font-semibold text-black dark:text-slate-200">
-          add more gifts
-        </span>{' '}
-        to their wishlists
-      </p>
-    );
-    const defaultStateProps = {
-      title: '🎁 No Gifts Found',
-      subtitle: 'People need to add more gifts to their wishlists',
-      action: {
-        title: 'Add one now!',
-        onClick: () => setIsOpen(true),
-        icon: faGift,
-      },
-    };
-    const defaultEmptyState = (
-      <EmptyState {...defaultStateProps}>
-        <div className="p-4">{defaultMarkup}</div>
-      </EmptyState>
-    );
-    if (!path) return defaultEmptyState;
-
     const currentUserGiftsMarkup = (
       <p>
         You haven&apos;t added any gifts,{' '}
@@ -94,39 +68,6 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
         return myGiftsMarkup;
       case '/mine':
         return myGiftsMarkup;
-      case path.match(/\/user\/\w+/)?.input:
-        return (
-          <EmptyState
-            title="🎁 No Gifts Found"
-            subtitle="The elves could not find any gifts for this person"
-          >
-            <div className="p-4">{defaultMarkup}</div>
-          </EmptyState>
-        );
-      case '/claimed':
-        // return the state for the claimed route
-        return (
-          <EmptyState
-            title="🛒 No Claimed Gifts"
-            subtitle="You have not claimed any gifts"
-            action={{
-              title: 'View gifts',
-              link: '/gifts',
-              icon: faGifts,
-            }}
-          >
-            <div className="p-4">
-              <p>
-                <span className="font-semibold dark:text-slate-200 text-black dark:text-slate-200">
-                  Claim a gift
-                </span>{' '}
-                before they&apos;re all gone.
-              </p>
-            </div>
-          </EmptyState>
-        );
-      default:
-        return defaultEmptyState;
     }
   };
 
@@ -176,7 +117,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
 
   const giftActions = (gift: GiftWithOwner) => {
     const buttonClass =
-      'inline-flex items-center rounded-md px-3 py-2 font-semibold shadow-sm w-auto ring-1 ring-inset';
+      'text-xs inline-flex items-center rounded-md px-3 py-2 font-semibold shadow-sm w-auto ring-1 ring-inset';
     const buttonInfo =
       'text-indigo-600 dark:text-indigo-100 hover:text-white dark:hover:text-indigo-500 bg-indigo-50 dark:bg-indigo-950/25 dark:hover:bg-indigo-950/25 hover:bg-indigo-600 ring-indigo-700/10 dark:ring-indigo-600/20';
     const buttonDanger =
@@ -189,6 +130,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
             <button className={`${buttonClass} ${buttonInfo}`}>
               <div className="flex">
                 <FontAwesomeIcon icon={faEdit} />
+                Edit
               </div>
             </button>
           </Link>
@@ -209,8 +151,9 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
           className={`${buttonClass} ${buttonDanger}`}
           onClick={() => handleUnclaim(gift)}
         >
-          <div className="flex">
+          <div className="flex items-center gap-1">
             <FontAwesomeIcon icon={faMinusSquare} />
+            Unclaim
           </div>
         </button>
       );
@@ -220,9 +163,10 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
         className={`${buttonClass} ${buttonInfo}`}
         onClick={() => handleClaim(gift)}
       >
-        <div className="flex">
+        <div className="flex items-center gap-1">
           <FontAwesomeIcon icon={faPlusSquare} />
-        </div>
+          Claim
+        </div>{' '}
       </button>
     );
   };
@@ -247,7 +191,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
       const notesMarkup = gift.description ? (
         <div className="text-xs text-gray-400 dark:text-gray-600">
           {gift.description.length > 60
-            ? `${gift.description.substring(0, 60)}...`
+            ? `${gift.description.substring(0, 50)}...`
             : gift.description}
         </div>
       ) : null;
@@ -257,15 +201,15 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
           key={gift.id}
           className="text-left border-t dark:border-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-500 transition ease-in-out duration-200"
         >
-          <td className="px-4 py-2">
+          <td className="px-4 py-1">
             <Link key={gift.id} href={`/gift/${gift.id}`}>
               <div className="flex flex-col">
-                <div className="font-semibold text-lg">{gift.name}</div>
+                <div className="font-semibold text-base">{gift.name}</div>
                 {notesMarkup}
               </div>
             </Link>
           </td>
-          <td className="px-4 py-2">
+          <td className="px-4">
             <div className="grid justify-items-end overflow-hidden">
               {giftActions(gift)}
             </div>
@@ -275,7 +219,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
     });
     return (
       // add a key to the card
-      <Card key={ownerId} title={name}>
+      <Card key={ownerId} title={`${name}'s gifts`}>
         <table className="table-auto w-full rounded-lg">
           <tbody>{giftList}</tbody>
         </table>

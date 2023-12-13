@@ -1,5 +1,4 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
-import { BadgeCounter } from 'components/BadgeCounter';
 import EmptyState from 'components/EmptyState';
 import { getPeopleForUser } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
@@ -84,9 +83,6 @@ const PeoplePage = async () => {
                       {name || email}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center pr-4 text-center">
-                  {BadgeCounter('gift', user.gifts)}
                 </div>
               </Link>
             </div>

@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 
@@ -19,18 +19,29 @@ const getMe = async (): Promise<User> => {
 const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
   const session = await isAuthenticated();
   const { id } = session.user;
-  return prisma.user.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      gifts: {
-        include: {
-          owner: true,
+  try {
+    const user = prisma.user.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      include: {
+        gifts: {
+          include: {
+            owner: true,
+          },
         },
       },
-    },
-  });
+    });
+    return user;
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2025' || e.code === 'P2016') {
+        console.error('User not found');
+      }
+    }
+    console.error('getMeWithGifts', JSON.stringify(e));
+  }
+  return redirect('/login');
 };
 
 const getUserWithGifts = async (id: string) => {
@@ -45,27 +56,48 @@ const getMeWithGiftsAndWishlists =
   };
 
 const getUserById = async (id: string, gifts = false, wishlists = false) => {
-  return prisma.user.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      gifts: gifts,
-      wishlists: wishlists,
-    },
-  });
+  try {
+    const user = prisma.user.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      include: {
+        gifts: gifts,
+        wishlists: wishlists,
+      },
+    });
+    return user;
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2025' || e.code === 'P2016') {
+        console.error('User not found');
+      }
+    }
+    console.error('getUserById', JSON.stringify(e));
+  }
+  return redirect('/login');
 };
 
 const getGiftById = async (id: string, owner = false, claimedBy = false) => {
-  return prisma.gift.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      owner: owner,
-      claimedBy: claimedBy,
-    },
-  });
+  try {
+    const gift = prisma.gift.findUniqueOrThrow({
+      where: {
+        id,
+      },
+      include: {
+        owner: owner,
+        claimedBy: claimedBy,
+      },
+    });
+    return gift;
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2025' || e.code === 'P2016') {
+        console.error('Gift not found');
+      }
+    }
+    console.error('getGiftById', JSON.stringify(e));
+  }
 };
 
 const getUserWithGiftsById = async (id: string): Promise<UserWithGifts> => {
@@ -123,8 +155,8 @@ const getVisibleGiftsForUserById = async (id: string) => {
 const isAuthenticated = async () => {
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
-    console.log('could not get user from session, redirecting to login');
-    redirect('/login');
+    console.error('could not get user from session, redirecting to login');
+    return redirect('/login');
   }
   return session;
 };
@@ -188,9 +220,9 @@ const getWishlists = async () => {
 
     return { wishlists, user };
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.error('getWishlists', JSON.stringify(e));
   }
-  redirect('/login');
+  return redirect('/login');
 };
 
 const getPeopleForUser = async () => {
@@ -234,7 +266,7 @@ const getPeopleForUser = async () => {
     const user = await getUserById(id, false, true);
     return { users: users, user };
   } catch (e) {
-    console.log('error in getPeopleForUser', JSON.stringify(e));
+    console.error('getPeopleForUser', JSON.stringify(e));
   }
   redirect('/login');
 };

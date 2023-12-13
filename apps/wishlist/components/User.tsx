@@ -1,29 +1,27 @@
-'use client';
-
 import {
   faAt,
   faLocationDot,
-  faPeopleRoof,
   faPersonRunning,
   faShirt,
   faSignature,
   faSocks,
   faUserEdit,
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { User } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import { Card, CardAction } from 'ui';
+import { Card } from 'ui';
 
 interface Props {
   user: User;
+  currentUserId: string;
 }
 
-export const UserProfile = ({ user }: Props) => {
-  const { data: session } = useSession();
+export const UserProfile = ({ user, currentUserId }: Props) => {
   const { id, name, email, address, shirt_size, shoe_size, pant_size } = user;
-  const isUserProfile = session?.user?.id === id;
-  const title = isUserProfile ? `Your Profile` : `${user?.name}'s Profile`;
+  const isUserProfile = currentUserId === id;
+  const nameOrEmailOrDefault = name || email || 'Anonymous';
+  const title = isUserProfile
+    ? `Your Profile`
+    : `${nameOrEmailOrDefault}'s Profile`;
   const fields = [
     {
       icon: faSignature,
@@ -40,10 +38,6 @@ export const UserProfile = ({ user }: Props) => {
       content: address,
       label: 'Address',
     },
-    // {
-    //   icon: faLayerGroup,
-    //   content: gift_theme,
-    // },
     {
       icon: faSocks,
       content: shoe_size,
@@ -64,34 +58,33 @@ export const UserProfile = ({ user }: Props) => {
   const fieldsMarkup = fields.map((field, i) => {
     if (!field.content) return null;
     return (
-      <div key={i} className="flex flex-row justify-between">
-        <div className="flex flex-row gap-2">
-          <FontAwesomeIcon icon={field.icon} />
-          <span>{field.label}</span>
+      <div key={i} className="flex flex-col items-left">
+        <div className="text-xs">
+          <span className="">{field.label}</span>
         </div>
-        <div
-          style={field.label === 'Address' ? { whiteSpace: 'pre-wrap' } : {}}
-        >
+        <div className="text-sm font-bold dark:text-gray-200">
           {field.content}
         </div>{' '}
       </div>
     );
   });
 
-  const actions: CardAction[] = [];
-  if (isUserProfile)
-    actions.push(
-      {
-        icon: faUserEdit,
-        title: 'Edit Profile',
-        link: `/user/${id}/edit`,
-      },
-      {
-        title: 'View Wishlists',
-        icon: faPeopleRoof,
-        link: '/wishlists',
-      },
+  if (!isUserProfile) {
+    return (
+      <Card title={title}>
+        <div className="flex flex-col gap-4 px-4">{fieldsMarkup}</div>
+      </Card>
     );
+  }
+
+  const actions = [
+    {
+      icon: faUserEdit,
+      title: 'Edit Profile',
+      link: `/user/${id}/edit`,
+    },
+  ];
+
   return (
     <Card title={title} action={actions}>
       <div className="flex flex-col gap-4 px-4">{fieldsMarkup}</div>
