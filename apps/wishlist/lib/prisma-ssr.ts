@@ -80,7 +80,7 @@ const getUserById = async (id: string, gifts = false, wishlists = false) => {
 
 const getGiftById = async (id: string, owner = false, claimedBy = false) => {
   try {
-    const gift = prisma.gift.findUniqueOrThrow({
+    const gift = await prisma.gift.findUniqueOrThrow({
       where: {
         id,
       },
