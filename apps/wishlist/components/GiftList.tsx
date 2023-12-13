@@ -128,7 +128,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
         <div className="flex flex-row space-x-2">
           <Link href={`/gift/${gift.id}/edit`}>
             <button className={`${buttonClass} ${buttonInfo}`}>
-              <div className="flex">
+              <div className="flex items-center gap-1">
                 <FontAwesomeIcon icon={faEdit} />
                 Edit
               </div>
@@ -138,8 +138,8 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
             className={`${buttonClass} ${buttonDanger}`}
             onClick={() => handleConfirmDelete(gift)}
           >
-            <div className="flex">
-              <FontAwesomeIcon icon={faTrashCan} />
+            <div className="flex items-center gap-1">
+              <FontAwesomeIcon icon={faTrashCan} /> Delete
             </div>
           </button>
         </div>
@@ -189,7 +189,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
     const name = gifts[0].owner?.name || gifts[0].owner?.email;
     const giftList = gifts.map((gift) => {
       const notesMarkup = gift.description ? (
-        <div className="text-xs text-gray-400 dark:text-gray-600 text-ellipsis overflow-hidden">
+        <div className="text-xs text-gray-400 dark:text-gray-600 whitespace-nowrap truncate w-64">
           {gift.description}
         </div>
       ) : null;

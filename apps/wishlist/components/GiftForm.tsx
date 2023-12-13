@@ -1,8 +1,11 @@
 'use client';
 
-import { faSave } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { Gift } from '@prisma/client';
-import { addGift, updateGift } from 'app/actions';
+import { addGift, deleteGift, updateGift } from 'app/actions';
+import DeleteModal from 'components/DeleteModal';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Card } from 'ui';
 interface Props {
@@ -10,6 +13,8 @@ interface Props {
 }
 
 const GiftForm = ({ gift }: Props) => {
+  const router = useRouter();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const upsertGift = async (formData: FormData) => {
     const name = formData.get('name');
     const url = formData.get('url');
@@ -42,66 +47,104 @@ const GiftForm = ({ gift }: Props) => {
     }
   };
 
+  const actuallyDeleteGift = async () => {
+    if (!gift) {
+      toast.error('No gift to delete');
+      return;
+    }
+
+    const result = await deleteGift(gift.id as string);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success(`Deleted ${gift?.name} from your wishlist!`);
+      router.back();
+    }
+  };
+
   return (
-    <Card
-      title="Add a new gift"
-      subtitle="Tell Santa what you want"
-      action={{
-        title: `Update gift`,
-        icon: faSave,
-        submit: 'upsertGift',
-      }}
-    >
-      <form
-        id="upsertGift"
-        action={upsertGift}
-        className="flex flex-col p-4 space-y-4 text-left"
+    <>
+      <Card
+        title="Add a new gift"
+        subtitle="Tell Santa what you want"
+        action={[
+          {
+            title: 'Update gift',
+            icon: faSave,
+            submit: 'upsertGift',
+          },
+          {
+            title: 'Delete gift',
+            icon: faTrashCan,
+            danger: true,
+            onClick: () => setShowDeleteModal(true),
+          },
+          {
+            title: 'Back',
+            onClick: () => router.back(),
+            secondary: true,
+          },
+        ]}
       >
-        <div className="col-span-full">
-          <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
-            What&apos;s the name of the thing you wish for?
-          </label>
-          <input
-            type="text"
-            name="name"
-            autoComplete="name"
-            className="form-control block w-full px-4 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            defaultValue={gift?.name || ''}
-            placeholder="Red Mittens"
-          />
-        </div>
+        <form
+          id="upsertGift"
+          action={upsertGift}
+          className="flex flex-col p-4 space-y-4 text-left"
+        >
+          <div className="col-span-full">
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
+              What&apos;s the name of the thing you wish for?
+            </label>
+            <input
+              type="text"
+              name="name"
+              autoComplete="name"
+              className="form-control block w-full px-4 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+              defaultValue={gift?.name || ''}
+              placeholder="Red Mittens"
+            />
+          </div>
 
-        <div className="col-span-full">
-          <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
-            Where can we find it? Remember that Amazon is also available in 🇨🇦
-            (optional)
-          </label>
-          <input
-            id="url"
-            name="url"
-            type="textbox"
-            autoComplete="url"
-            className="form-control block w-full px-4 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            placeholder="https://amazon.ca/ur-favourite-slippers"
-            defaultValue={gift?.url || ''}
-          />
-        </div>
+          <div className="col-span-full">
+            <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
+              Where can we find it? Remember that Amazon is also available in 🇨🇦
+              (optional)
+            </label>
+            <input
+              id="url"
+              name="url"
+              type="textbox"
+              autoComplete="url"
+              className="form-control block w-full px-4 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+              placeholder="https://amazon.ca/ur-favourite-slippers"
+              defaultValue={gift?.url || ''}
+            />
+          </div>
 
-        <div className="col-span-full">
-          <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
-            Notes (optional)
-          </label>
-          <textarea
-            id="notes"
-            autoComplete="notes"
-            name="description"
-            className="form-control block w-full px-4 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            placeholder="..."
-            defaultValue={gift?.description || ''}
-          />
-        </div>
-      </form>
-    </Card>
+          <div className="col-span-full">
+            <label className="text-sm font-medium dark:text-gray-400 text-gray-800">
+              Notes (optional)
+            </label>
+            <textarea
+              id="notes"
+              autoComplete="notes"
+              name="description"
+              className="form-control block w-full px-4 py-2 font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+              placeholder="..."
+              defaultValue={gift?.description || ''}
+            />
+          </div>
+        </form>
+      </Card>
+      {gift && (
+        <DeleteModal
+          isOpen={showDeleteModal}
+          setIsOpen={setShowDeleteModal}
+          gift={gift}
+          action={actuallyDeleteGift}
+        />
+      )}
+    </>
   );
 };
 
