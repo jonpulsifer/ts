@@ -189,10 +189,8 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
     const name = gifts[0].owner?.name || gifts[0].owner?.email;
     const giftList = gifts.map((gift) => {
       const notesMarkup = gift.description ? (
-        <div className="text-xs text-gray-400 dark:text-gray-600">
-          {gift.description.length > 60
-            ? `${gift.description.substring(0, 50)}...`
-            : gift.description}
+        <div className="text-xs text-gray-400 dark:text-gray-600 text-ellipsis overflow-hidden">
+          {gift.description}
         </div>
       ) : null;
 
