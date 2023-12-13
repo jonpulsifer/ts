@@ -209,7 +209,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
               </div>
             </Link>
           </td>
-          <td className="px-4">
+          <td className="px-4 py-2">
             <div className="grid justify-items-end overflow-hidden">
               {giftActions(gift)}
             </div>
