@@ -210,8 +210,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tailwind-config
       tailwindcss:
-        specifier: 3.3.6
-        version: 3.3.6(ts-node@10.9.2)
+        specifier: 3.3.7
+        version: 3.3.7(ts-node@10.9.2)
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -324,10 +324,10 @@ importers:
         version: 8.3.1
       '@headlessui/tailwindcss':
         specifier: 0.2.0
-        version: 0.2.0(tailwindcss@3.3.6)
+        version: 0.2.0(tailwindcss@3.3.7)
       '@tailwindcss/forms':
         specifier: 0.5.7
-        version: 0.5.7(tailwindcss@3.3.6)
+        version: 0.5.7(tailwindcss@3.3.7)
       '@types/node':
         specifier: 20.10.2
         version: 20.10.2
@@ -356,8 +356,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tailwind-config
       tailwindcss:
-        specifier: 3.3.6
-        version: 3.3.6(ts-node@10.9.2)
+        specifier: 3.3.7
+        version: 3.3.7(ts-node@10.9.2)
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@20.10.2)(typescript@5.3.3)
@@ -410,8 +410,8 @@ importers:
   packages/tailwind-config:
     devDependencies:
       tailwindcss:
-        specifier: 3.3.6
-        version: 3.3.6(ts-node@10.9.2)
+        specifier: 3.3.7
+        version: 3.3.7(ts-node@10.9.2)
 
   packages/tsconfig: {}
 
@@ -479,7 +479,7 @@ packages:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
     engines: {node: '>=6.0.0'}
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.2
+      '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
     dev: true
 
@@ -633,7 +633,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/types': 7.22.5
-      '@jridgewell/gen-mapping': 0.3.2
+      '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
       jsesc: 2.5.2
     dev: true
@@ -1382,13 +1382,13 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@headlessui/tailwindcss@0.2.0(tailwindcss@3.3.6):
+  /@headlessui/tailwindcss@0.2.0(tailwindcss@3.3.7):
     resolution: {integrity: sha512-fpL830Fln1SykOCboExsWr3JIVeQKieLJ3XytLe/tt1A0XzqUthOftDmjcCYLW62w7mQI7wXcoPXr3tZ9QfGxw==}
     engines: {node: '>=10'}
     peerDependencies:
       tailwindcss: ^3.0
     dependencies:
-      tailwindcss: 3.3.6(ts-node@10.9.2)
+      tailwindcss: 3.3.7(ts-node@10.9.2)
     dev: true
 
   /@humanwhocodes/config-array@0.11.13:
@@ -1869,7 +1869,7 @@ packages:
   /@jridgewell/source-map@0.3.5:
     resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.2
+      '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
     dev: true
 
@@ -2542,13 +2542,13 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tailwindcss/forms@0.5.7(tailwindcss@3.3.6):
+  /@tailwindcss/forms@0.5.7(tailwindcss@3.3.7):
     resolution: {integrity: sha512-QE7X69iQI+ZXwldE+rzasvbJiyV/ju1FGHH0Qn2W3FKbuYtqp8LKcy6iSw79fVUT5/Vvf+0XgLCeYVG+UV6hOw==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.3.6(ts-node@10.9.2)
+      tailwindcss: 3.3.7(ts-node@10.9.2)
     dev: true
 
   /@tsconfig/node10@1.0.9:
@@ -8100,8 +8100,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /tailwindcss@3.3.6(ts-node@10.9.2):
-    resolution: {integrity: sha512-AKjF7qbbLvLaPieoKeTjG1+FyNZT6KaJMJPFeQyLfIp7l82ggH1fbHJSsYIvnbTFQOlkh+gBYpyby5GT1LIdLw==}
+  /tailwindcss@3.3.7(ts-node@10.9.2):
+    resolution: {integrity: sha512-pjgQxDZPvyS/nG3ZYkyCvsbONJl7GdOejfm24iMt2ElYQQw8Jc4p0m8RdMp7mznPD0kUhfzwV3zAwa80qI0zmQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
