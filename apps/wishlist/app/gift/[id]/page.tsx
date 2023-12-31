@@ -1,4 +1,5 @@
 import { GiftCard } from 'components/Gift';
+import Page from 'components/Page';
 import { getGiftById, getUserWithGiftsById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -21,7 +22,11 @@ const GiftPage = async ({ params }: Props) => {
     notFound();
   }
   const user = await getUserWithGiftsById(gift.ownerId);
-  return <GiftCard gift={gift} user={user} />;
+  return (
+    <Page>
+      <GiftCard gift={gift} user={user} />
+    </Page>
+  );
 };
 
 export default GiftPage;

@@ -1,5 +1,6 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Page from 'components/Page';
 import UserForm from 'components/UserForm';
 import { getUserById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
@@ -27,7 +28,7 @@ const ProfilePage = async ({ params }: Props) => {
   const { email } = user;
 
   return (
-    <>
+    <Page>
       {user ? (
         <>
           <Card>
@@ -43,7 +44,7 @@ const ProfilePage = async ({ params }: Props) => {
       ) : (
         <Card title="User Not Found" />
       )}
-    </>
+    </Page>
   );
 };
 

@@ -1,4 +1,5 @@
 import GiftList from 'components/GiftList';
+import Page from 'components/Page';
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 
@@ -9,7 +10,11 @@ export const metadata: Metadata = {
 
 const GiftsPage = async () => {
   const { gifts, user } = await getVisibleGiftsForUser();
-  return <GiftList gifts={gifts} currentUserId={user.id} />;
+  return (
+    <Page>
+      <GiftList gifts={gifts} currentUserId={user.id} />
+    </Page>
+  );
 };
 
 export default GiftsPage;

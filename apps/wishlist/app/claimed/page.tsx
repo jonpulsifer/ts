@@ -1,6 +1,7 @@
 import { faGifts } from '@fortawesome/free-solid-svg-icons';
 import EmptyState from 'components/EmptyState';
 import GiftList from 'components/GiftList';
+import Page from 'components/Page';
 import { getClaimedGiftsForMe } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 
@@ -34,7 +35,11 @@ const ClaimedPage = async () => {
       </EmptyState>
     );
   }
-  return <GiftList gifts={gifts} currentUserId={user.id} />;
+  return (
+    <Page>
+      <GiftList gifts={gifts} currentUserId={user.id} />
+    </Page>
+  );
 };
 
 export default ClaimedPage;

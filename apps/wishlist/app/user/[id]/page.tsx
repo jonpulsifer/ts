@@ -1,5 +1,6 @@
 import EmptyState from 'components/EmptyState';
 import GiftList from 'components/GiftList';
+import Page from 'components/Page';
 import { UserProfile } from 'components/User';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
@@ -40,10 +41,12 @@ const ProfilePage = async ({ params }: Props) => {
     );
   }
   return (
-    <div className="space-y-4">
-      <UserProfile user={profile} currentUserId={user.id} />
-      <GiftList gifts={gifts} currentUserId={user.id} />
-    </div>
+    <Page>
+      <div className="space-y-4">
+        <UserProfile user={profile} currentUserId={user.id} />
+        <GiftList gifts={gifts} currentUserId={user.id} />
+      </div>
+    </Page>
   );
 };
 

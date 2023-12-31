@@ -5,7 +5,6 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import ErrorBoundary from 'components/ErrorBoundary';
-import Page from 'components/Page';
 import Toast from 'components/Toaster';
 import { Metadata } from 'next';
 import { Inter as Inter } from 'next/font/google';
@@ -33,7 +32,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <ErrorBoundary>
           <SessionProvider>
             <main className="flex flex-col h-full w-full">
-              <Page>{children}</Page>
+              {children}
               <Toast />
             </main>
           </SessionProvider>

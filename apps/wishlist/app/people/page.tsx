@@ -1,5 +1,6 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import EmptyState from 'components/EmptyState';
+import Page from 'components/Page';
 import { getPeopleForUser } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -98,13 +99,15 @@ const PeoplePage = async () => {
     );
   };
   return (
-    <Card
-      title="Family Members"
-      subtitle="This is a list of everyone that can see your wishlist."
-      action={action}
-    >
-      {userTable(users)}
-    </Card>
+    <Page>
+      <Card
+        title="Family Members"
+        subtitle="This is a list of everyone that can see your wishlist."
+        action={action}
+      >
+        {userTable(users)}
+      </Card>
+    </Page>
   );
 };
 
