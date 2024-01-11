@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "prisma generate && prisma db push && next build",
+    "build:vercel": "./env2files.sh && prisma generate && prisma db push && next build",
     "start": "next start",
     "lint": "next lint --fix",
     "postinstall": "prisma generate"
