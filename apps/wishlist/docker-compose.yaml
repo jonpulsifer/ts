@@ -13,7 +13,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   pgadmin:
-    image: dpage/pgadmin4:latest@sha256:79388691706e7b4c3f1e4d567a594ade467d4cab4ecf1a97aaa0beb5b19b5b53
+    image: dpage/pgadmin4:latest@sha256:3b480788bfd84c9c46f09ce4984867f36fa8b8d8736b2044b376506cb0702ae2
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: password
