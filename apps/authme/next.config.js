@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    typedRoutes: true,
-  },
   reactStrictMode: true,
+  transpilePackages: ['ui'],
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
+    ],
+  },
+  output: process.env.IS_DOCKER ? 'standalone' : undefined,
 };
 
 module.exports = nextConfig;

@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: app
+spec:
+  listeners:
+    - name: tls-gateway
+      hostname: &hostname authme.lolwtf.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: *hostname

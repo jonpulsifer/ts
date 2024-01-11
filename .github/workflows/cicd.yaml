@@ -52,8 +52,8 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/wishlist?schema=public
-          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/wishlist?schema=public
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/db?schema=public
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/db?schema=public
 
       - name: Test
         run: pnpm test
@@ -70,6 +70,8 @@ jobs:
             stack: nestjs
           - app: rosie
             stack: generic
+          - app: authme
+            stack: nextjs
     steps:
       - name: Check out code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -118,7 +120,7 @@ jobs:
   deploy:
     strategy:
       matrix:
-        app: [request-headers, rosie, nested]
+        app: [request-headers, rosie, nested, authme]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [build, containerize]
     runs-on: ts

@@ -1,30 +1,39 @@
 import './globals.css';
+import 'ui/globals.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+
+import { SessionProvider } from './providers';
 
 export const metadata: Metadata = {
-  title: 'Authme',
-  description: 'A little app that validates jwt tokens',
-  viewport: 'width=device-width, initial-scale=1',
+  title: 'Sandbox',
+  description: 'My little application Sandbox',
+  // viewport: 'width=device-width, initial-scale=1',
   robots: {
     index: false,
   },
   icons: 'favicon.ico',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <head />
-      <body>{children}</body>
+    <html className="h-full w-full" lang="en">
+      <SessionProvider>
+        <body
+          className={`h-full w-full bg-gray-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
+        >
+          <main className="flex flex-col h-full w-full">{children}</main>
+        </body>
+      </SessionProvider>
     </html>
   );
-}
+};
+
+export default Layout;

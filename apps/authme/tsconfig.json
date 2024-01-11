@@ -1,7 +1,10 @@
 {
-  "extends": "tsconfig/nextjs.json",
+  "extends": "../../packages/tsconfig/nextjs.json",
   "compilerOptions": {
-    "target": "ES6",
+    "baseUrl": ".",
+    "paths": {
+      "ui": ["../../packages/ui/src"],
+    },
     "plugins": [
       {
         "name": "next"
@@ -14,6 +17,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts"
   ],
+  "paths": {
+    "ui": ["../../packages/ui/src"]
+  },
   "exclude": [
     "node_modules"
   ]

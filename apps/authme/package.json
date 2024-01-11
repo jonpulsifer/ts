@@ -1,25 +1,36 @@
 {
   "name": "authme",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3002",
-    "build": "next build",
+    "dev": "next dev --port 3000",
+    "build": "prisma generate && prisma db push && next build",
     "start": "next start",
-    "lint": "next lint --fix"
+    "lint": "next lint --fix",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
-    "google-auth-library": "9.4.2",
+    "@auth/prisma-adapter": "1.0.14",
+    "@prisma/client": "5.7.1",
     "next": "14.0.4",
+    "next-auth": "4.24.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "ui": "workspace:*"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@types/node": "20.10.2",
     "@types/react": "18.2.47",
     "@types/react-dom": "18.2.18",
     "eslint-config-custom": "workspace:*",
+    "prisma": "5.7.1",
+    "tailwind-config": "workspace:*",
+    "tailwindcss": "3.4.1",
     "tsconfig": "workspace:*",
     "typescript": "5.3.3"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
