@@ -25,7 +25,9 @@ export const UserCard = ({ user }: Props) => {
   return (
     <Card title={name} subtitle={`${email}`}>
       <div className="p-4">
-        <pre>{id}</pre>
+        <p className="font-bold">This is you.</p>
+        <p className="text-sm text-gray-500">ID</p>
+        <pre className="text-xs">{id}</pre>
       </div>
     </Card>
   );

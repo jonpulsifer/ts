@@ -25,13 +25,14 @@ export const Login = () => {
     e.preventDefault();
     signIn('google', { callbackUrl: '/', redirect: false });
   };
+
   const handleSignOut = async (e: React.MouseEvent | React.FormEvent) => {
     setLoading(true);
     e.preventDefault();
     const results = await signOut({ callbackUrl: '/', redirect: false });
     router.push(results.url);
   };
-  // render loading... if loading, Sign in with Google if not authenticated, or Sign out if authenticated
+
   const googleButton = (
     <button
       className="flex w-full h-10 justify-center font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-slate-800 text-center inline-flex items-center bg-white text-black dark:bg-slate-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"

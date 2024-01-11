@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
-import { getMe, getRandomUser } from './actions';
+import { getMe } from './actions';
 import { Login } from './components/Login';
 import { UserCard } from './components/UserCard';
 
@@ -11,12 +11,11 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  const randomUser = await getRandomUser();
   return (
     <div className="flex flex-col justify-center items-center gap-4 max-w-full w-full">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mt-4">
         <h1 className="text-4xl font-bold">Authme</h1>
-        <p className="text-lg">
+        <p className="text-xs text-gray-400">
           A little application with a user model, database, and log in.
         </p>
       </div>
@@ -25,7 +24,6 @@ const Home = async () => {
         <Suspense fallback={<div>Suspended...</div>}>
           <UserCard user={await getMe()} />
         </Suspense>
-        <UserCard user={randomUser} />
       </div>
     </div>
   );

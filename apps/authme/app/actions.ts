@@ -5,7 +5,10 @@ import { prisma } from 'lib/prisma';
 import { getServerSession } from 'next-auth/next';
 
 const getRandomUser = async () => {
-  await getMe();
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return null;
+  }
   const user = await prisma.user.findFirst();
   return user;
 };
@@ -32,7 +35,7 @@ const getUserById = (id: string) => {
 const getMe = async () => {
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
-    throw new Error('could not get user from session');
+    return null;
   }
   return session.user as User;
 };

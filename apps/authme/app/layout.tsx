@@ -29,7 +29,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <body
           className={`h-full w-full bg-gray-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
         >
-          <main className="flex flex-col h-full w-full">{children}</main>
+          <main className="flex flex-col h-full w-full items-center">
+            {children}
+          </main>
         </body>
       </SessionProvider>
     </html>
