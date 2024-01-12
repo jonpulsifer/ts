@@ -51,8 +51,9 @@ const getDatabaseInfo = async () => {
 
   // Extract and type assert the results
   const version = dbVersionResult[0]?.version || 'Unknown';
-  const connections = currentConnectionsResult[0]?.count || 0;
-  const maxConnections = maxConnectionsResult[0]?.max_connections || 0;
+  const connections = String(currentConnectionsResult[0]?.count) || '0';
+  const maxConnections =
+    String(maxConnectionsResult[0]?.max_connections) || '0';
 
   return {
     version,

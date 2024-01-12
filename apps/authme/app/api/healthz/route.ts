@@ -9,15 +9,12 @@ export async function GET() {
   writeEncodedCertsFromEnv();
 
   // Execute the database queries
-  const dbVersionResult: PrismaRawResults =
-    await prisma.$queryRaw`SELECT version();`;
   const currentConnectionsResult: PrismaRawResults =
     await prisma.$queryRaw`SELECT COUNT(1) FROM pg_stat_activity;`;
   const maxConnectionsResult: PrismaRawResults =
     await prisma.$queryRaw`SHOW max_connections;`;
 
   // Extract and type assert the results
-  const dbVersion = dbVersionResult[0]?.version || 'Unknown';
   const currentConnections = currentConnectionsResult[0]?.count || '0';
   const maxConnections = maxConnectionsResult[0]?.max_connections || '0';
 
@@ -29,7 +26,6 @@ export async function GET() {
         current: String(currentConnections),
         max: String(maxConnections),
       },
-      version: dbVersion,
     },
     {
       headers: {
