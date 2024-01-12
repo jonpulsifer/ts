@@ -17,11 +17,9 @@ export async function GET() {
     await prisma.$queryRaw`SHOW max_connections;`;
 
   // Extract and type assert the results
-  const dbVersion = (dbVersionResult[0]?.version as string) || 'Unknown';
-  const currentConnections =
-    (currentConnectionsResult[0]?.count as number) || 0;
-  const maxConnections =
-    (maxConnectionsResult[0]?.max_connections as number) || 0;
+  const dbVersion = dbVersionResult[0]?.version || 'Unknown';
+  const currentConnections = currentConnectionsResult[0]?.count || 0;
+  const maxConnections = maxConnectionsResult[0]?.max_connections || 0;
 
   return NextResponse.json(
     {
