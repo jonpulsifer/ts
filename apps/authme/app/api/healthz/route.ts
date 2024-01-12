@@ -2,14 +2,36 @@ import { writeEncodedCertsFromEnv } from 'lib/certs';
 import { prisma } from 'lib/prisma';
 import { NextResponse } from 'next/server';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PrismaRawResults = any[];
+
 export async function GET() {
   writeEncodedCertsFromEnv();
-  const dbVersion = await prisma.$queryRaw`SELECT version();`;
+
+  // Execute the database queries
+  const dbVersionResult: PrismaRawResults =
+    await prisma.$queryRaw`SELECT version();`;
+  const currentConnectionsResult: PrismaRawResults =
+    await prisma.$queryRaw`SELECT COUNT(1) FROM pg_stat_activity;`;
+  const maxConnectionsResult: PrismaRawResults =
+    await prisma.$queryRaw`SHOW max_connections;`;
+
+  // Extract and type assert the results
+  const dbVersion = (dbVersionResult[0]?.version as string) || 'Unknown';
+  const currentConnections =
+    (currentConnectionsResult[0]?.count as number) || 0;
+  const maxConnections =
+    (maxConnectionsResult[0]?.max_connections as number) || 0;
+
   return NextResponse.json(
     {
       status: 'ok',
-      dbVersion: dbVersion,
       rev: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
+      connections: {
+        current: currentConnections,
+        max: maxConnections,
+      },
+      version: dbVersion,
     },
     {
       headers: {

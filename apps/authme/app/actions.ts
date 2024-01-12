@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 import { Prisma, User } from '@prisma/client';
 import { authOptions } from 'lib/auth';
@@ -40,4 +41,25 @@ const getMe = async () => {
   return session.user as User;
 };
 
-export { getMe, getRandomUser, getUserById };
+const getDatabaseInfo = async () => {
+  // Execute the database queries
+  const dbVersionResult: any[] = await prisma.$queryRaw`SELECT version();`;
+  const currentConnectionsResult: any[] =
+    await prisma.$queryRaw`SELECT COUNT(1) FROM pg_stat_activity;`;
+  const maxConnectionsResult: any[] =
+    await prisma.$queryRaw`SHOW max_connections;`;
+
+  // Extract and type assert the results
+  const version = (dbVersionResult[0]?.version as string) || 'Unknown';
+  const connections = (currentConnectionsResult[0]?.count as number) || 0;
+  const maxConnections =
+    (maxConnectionsResult[0]?.max_connections as number) || 0;
+
+  return {
+    version,
+    connections,
+    maxConnections,
+  };
+};
+
+export { getDatabaseInfo, getMe, getRandomUser, getUserById };
