@@ -26,8 +26,8 @@ export async function GET() {
       status: 'ok',
       rev: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
       connections: {
-        current: currentConnections as string,
-        max: maxConnections as string,
+        current: String(currentConnections),
+        max: String(maxConnections),
       },
       version: dbVersion,
     },
