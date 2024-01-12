@@ -18,16 +18,16 @@ export async function GET() {
 
   // Extract and type assert the results
   const dbVersion = dbVersionResult[0]?.version || 'Unknown';
-  const currentConnections = currentConnectionsResult[0]?.count || 0;
-  const maxConnections = maxConnectionsResult[0]?.max_connections || 0;
+  const currentConnections = currentConnectionsResult[0]?.count || '0';
+  const maxConnections = maxConnectionsResult[0]?.max_connections || '0';
 
   return NextResponse.json(
     {
       status: 'ok',
       rev: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
       connections: {
-        current: currentConnections as number,
-        max: maxConnections as number,
+        current: currentConnections as string,
+        max: maxConnections as string,
       },
       version: dbVersion,
     },
