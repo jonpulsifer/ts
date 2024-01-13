@@ -5,7 +5,7 @@ import { User } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { UserWithGifts } from 'types/prisma';
-import { Card, CardAction } from 'ui';
+import { Card, CardAction } from 'ui/card';
 
 export type UserListProps = {
   users: UserWithGifts[];

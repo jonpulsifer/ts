@@ -4,10 +4,9 @@ import { NextResponse } from 'next/server';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PrismaRawResults = any[];
+writeEncodedCertsFromEnv();
 
 export async function GET() {
-  writeEncodedCertsFromEnv();
-
   // Execute the database queries
   const currentConnectionsResult: PrismaRawResults =
     await prisma.$queryRaw`SELECT COUNT(1) FROM pg_stat_activity;`;

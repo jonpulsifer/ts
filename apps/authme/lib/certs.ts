@@ -1,6 +1,11 @@
 import fs from 'fs';
 
 export const writeEncodedCertsFromEnv = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.debug('Skipping cert writing since NODE_ENV is not production');
+    return;
+  }
+
   const envToFileMap = {
     SERVER_CA: '/tmp/server-ca.pem',
     CLIENT_IDENTITY_PKCS12: '/tmp/client-identity.p12',
@@ -16,7 +21,6 @@ export const writeEncodedCertsFromEnv = () => {
 
     // Skip writing if the file already exists
     if (fs.existsSync(filePath)) {
-      console.debug(`File already exists, skipping: ${filePath}`);
       continue;
     }
 

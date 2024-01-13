@@ -1,5 +1,5 @@
 'use client';
-import { Card } from 'ui';
+import { Card } from 'ui/card';
 
 interface Props {
   version: string;

@@ -5,7 +5,7 @@ import { Gift } from '@prisma/client';
 import { addGift, updateGift } from 'app/actions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { Card } from 'ui';
+import { Card } from 'ui/card';
 interface Props {
   gift?: Gift;
 }

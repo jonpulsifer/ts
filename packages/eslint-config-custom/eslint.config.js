@@ -1,3 +1,7 @@
+const { resolve } = require('node:path');
+
+const project = resolve(process.cwd(), 'tsconfig.json');
+
 module.exports = {
   extends: [
     'next',
@@ -21,10 +25,20 @@ module.exports = {
   plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
+    project,
+  },
+  globals: {
+    React: true,
+    JSX: true,
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project,
+      },
+      node: {
+        extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
+      },
     },
   },
 };

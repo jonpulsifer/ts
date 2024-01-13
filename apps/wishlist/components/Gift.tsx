@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { GiftWithOwner } from 'types/prisma';
-import { Card } from 'ui';
+import { Card } from 'ui/card';
 
 interface Props {
   gift: Gift | GiftWithOwner;

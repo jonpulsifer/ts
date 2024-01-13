@@ -14,7 +14,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { GiftWithOwner } from 'types/prisma';
-import { Card } from 'ui';
+import { Card } from 'ui/card';
 
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';

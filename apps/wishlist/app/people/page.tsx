@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { UserWithGifts } from 'types/prisma';
-import { Card, CardAction } from 'ui';
+import { Card, CardAction } from 'ui/card';
 
 export const metadata: Metadata = {
   title: 'People',

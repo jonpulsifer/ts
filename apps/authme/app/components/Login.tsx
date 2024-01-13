@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { Card } from 'ui';
+import { Card } from 'ui/card';
 
 export const Login = () => {
   const [isLoading, setLoading] = useState(true);

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Prisma } from '@prisma/client';
 import { joinWishlist, leaveWishlist } from 'app/actions';
 import { toast } from 'react-hot-toast';
-import { Card } from 'ui';
+import { Card } from 'ui/card';
 
 import EmptyState from './EmptyState';
 

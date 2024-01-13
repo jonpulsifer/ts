@@ -2,7 +2,7 @@
 import { User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { Card } from 'ui';
+import { Card } from 'ui/card';
 
 interface Props {
   user: User | null;

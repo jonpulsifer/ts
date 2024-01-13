@@ -1,9 +1,12 @@
 {
   "name": "tailwind-config",
   "version": "0.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "exports": {
+    ".": "./tailwind.config.ts"
+  },
   "devDependencies": {
+    "tsconfig": "workspace:*",
     "tailwindcss": "3.4.1"
   },
   "private": true

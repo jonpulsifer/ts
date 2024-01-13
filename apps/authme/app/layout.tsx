@@ -1,6 +1,5 @@
 import './globals.css';
-import 'ui/globals.css';
-import '@fortawesome/fontawesome-svg-core/styles.css';
+import 'ui/styles.css';
 
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';

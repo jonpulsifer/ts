@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { Accordion } from 'ui';
+import { Card } from 'ui/card';
 
 const { NODE_NAME, NODE_IP, POD_NAME, POD_IP, POD_CHANGE_ME } = process.env;
 const isInKubernetes = !!process.env.POD_NAME;
@@ -98,14 +98,10 @@ const HeadersTable = () => {
   );
 };
 
-const KubernetesAccordion = isInKubernetes ? (
-  <Accordion
-    title="Kubernetes"
-    subtitle="Kubernetes related environment variables"
-    isOpen
-  >
+const KubernetesCard = isInKubernetes ? (
+  <Card title="Kubernetes" subtitle="Kubernetes related environment variables">
     <KubernetesTable />
-  </Accordion>
+  </Card>
 ) : null;
 
 export const metadata: Metadata = {
@@ -129,19 +125,19 @@ const Home = async () => {
         <span className={starColor}>☆</span>
       </h1>
       <div className="flex flex-col gap-4 max-w-full sm:max-w-2xl">
-        {KubernetesAccordion}
-        <Accordion
+        {KubernetesCard}
+        <Card
           title="Environment Variables"
           subtitle="All environment variables visible on the server"
         >
           <EnvironmentTable />
-        </Accordion>
-        <Accordion
+        </Card>
+        <Card
           title="Request Headers"
           subtitle="HTTP headers received by the server"
         >
           <HeadersTable />
-        </Accordion>
+        </Card>
       </div>
     </div>
   );
