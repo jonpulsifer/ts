@@ -32,7 +32,6 @@
     "**/*.css"
   ],
   "exports": {
-    ".": "./src",
     "./card": "./src/card.tsx",
     "./styles.css": "./dist/index.css"
   },
