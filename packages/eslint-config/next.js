@@ -12,6 +12,12 @@ module.exports = {
     // increase the severity of rules so they are auto-fixable
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
+    // 'import/order': 'error',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-shadow': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
   env: {
     browser: true,

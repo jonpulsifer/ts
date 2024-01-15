@@ -3,8 +3,7 @@ import {
   type ButtonProps as HeadlessButtonProps,
 } from '@headlessui/react';
 import { clsx } from 'clsx';
-import React from 'react';
-
+import { forwardRef } from 'react';
 import { Link } from './link';
 
 const styles = {
@@ -189,7 +188,7 @@ type ButtonProps = (
     | React.ComponentPropsWithoutRef<typeof Link>
   );
 
-export const Button = React.forwardRef(function Button(
+export const Button = forwardRef(function Button(
   { color, outline, plain, className, children, ...props }: ButtonProps,
   ref: React.ForwardedRef<HTMLElement>,
 ) {
@@ -228,8 +227,8 @@ export function TouchTarget({ children }: { children: React.ReactNode }) {
     <>
       {children}
       <span
-        className="absolute left-1/2 top-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 [@media(pointer:fine)]:hidden"
         aria-hidden="true"
+        className="absolute left-1/2 top-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 [@media(pointer:fine)]:hidden"
       />
     </>
   );

@@ -1,7 +1,8 @@
 'use client';
 import type { User } from '@prisma/client';
+import { Button } from '@repo/ui/button';
 import { Card } from '@repo/ui/card';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 interface UserCardProps {
@@ -29,6 +30,7 @@ export function UserCard({ user }: UserCardProps): JSX.Element | null {
         <p className="text-sm text-gray-500">ID</p>
         <pre className="text-xs">{id}</pre>
       </div>
+      <Button onClick={() => signOut({ redirect: false })}>Logout</Button>
     </Card>
   );
 }

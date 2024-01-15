@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import React, { FormEvent, MouseEvent } from 'react';
+import type { FormEvent, MouseEvent } from 'react';
+import React from 'react';
 
 export interface CardAction {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cause i'm migrating
   icon?: any;
   title: string;
   danger?: boolean;
@@ -20,13 +21,13 @@ export interface CardProps {
   action?: CardAction | CardAction[];
 }
 
-export const Card = ({
+export function Card({
   title,
   subtitle,
   action,
   badges,
   children,
-}: CardProps): JSX.Element => {
+}: CardProps): JSX.Element {
   const titleMarkup = (
     <div className="flex flex-row gap-4 p-4 truncate">
       <div className="flex flex-col grow dark:text-gray-400">
@@ -51,7 +52,7 @@ export const Card = ({
   }
 
   const actionsMarkup = actions.length
-    ? actions.map((action, idx) => {
+    ? actions.map((action) => {
         const actionIcon = action.icon ? (
           <div className="flex">{action.icon}</div>
         ) : null;
@@ -63,23 +64,23 @@ export const Card = ({
         const infoClass = `bg-indigo-600 hover:bg-indigo-500 ${baseButtonClass}`;
 
         const buttonClass = action.danger ? dangerClass : infoClass;
-        const actionsMarkup = action.secondary
+        const buttonMarkup = action.secondary
           ? secondaryButtonClass
           : buttonClass;
         const button = (
           <button
-            className={actionsMarkup}
-            onClick={action?.onClick ? action.onClick : undefined}
-            key={`fb-${idx}`}
-            type={action.submit ? 'submit' : 'button'}
+            className={buttonMarkup}
             form={action.submit ? action.submit : undefined}
+            key={action.title}
+            onClick={action.onClick ? action.onClick : undefined}
+            type={action.submit ? 'submit' : 'button'}
           >
             {actionIcon}
-            {action?.title}
+            {action.title}
           </button>
         );
         return action.link ? (
-          <Link href={{ pathname: action.link }} key={`fb-${idx}`}>
+          <Link href={{ pathname: action.link }} key={action.title}>
             {button}
           </Link>
         ) : (
@@ -105,4 +106,4 @@ export const Card = ({
       {footerMarkup}
     </div>
   );
-};
+}
