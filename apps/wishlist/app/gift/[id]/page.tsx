@@ -1,14 +1,16 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { GiftCard } from 'components/Gift';
-import Page from 'components/Page';
-import { getGiftById, getUserWithGiftsById } from 'lib/prisma-ssr';
+import { getGiftById, getUserWithGiftsById } from '../../../lib/prisma-ssr';
+import Page from '../../../components/Page';
+import { GiftCard } from '../../../components/Gift';
 
-interface Props {
+interface PageProps {
   params: { [K in string]: string };
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const gift = await getGiftById(params.id);
   return {
     title: gift?.name || 'Gift',
@@ -16,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const GiftPage = async ({ params }: Props) => {
+const GiftPage = async ({ params }: PageProps) => {
   const gift = await getGiftById(params.id);
   if (!gift) {
     notFound();

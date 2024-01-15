@@ -4,10 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { CardAction } from '@repo/ui/card';
 import { Card } from '@repo/ui/card';
-import EmptyState from 'components/EmptyState';
-import Page from 'components/Page';
-import { getPeopleForUser } from 'lib/prisma-ssr';
-import type { UserWithGifts } from 'types/prisma';
+import EmptyState from '../../components/EmptyState';
+import Page from '../../components/Page';
+import { getPeopleForUser } from '../../lib/prisma-ssr';
+import type { UserWithGifts } from '../../types/prisma';
 
 export const metadata: Metadata = {
   title: 'People',
@@ -22,8 +22,8 @@ const PeoplePage = async () => {
     icon: faPeopleRoof,
     link: '/wishlists',
   };
-  const people = users && users.length;
-  const hasWishlists = user.wishlists && user.wishlists.length;
+  const people = users.length;
+  const hasWishlists = user.wishlists.length;
   const noPeopleMarkup = hasWishlists ? (
     <p>
       You&apos;re the first one here!{' '}

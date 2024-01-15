@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import santa from 'public/santaicon.png';
-import Spinner from 'components/Spinner';
+import santa from '../../public/santaicon.png';
+import Spinner from '../../components/Spinner';
 
 const welcome = (name?: string | null) => {
   const text = name ? `Welcome ${name}!` : 'Welcome!';
@@ -42,7 +42,11 @@ function LoginPage() {
   const handleGoogle = async (e: React.MouseEvent | React.FormEvent) => {
     setShowLoading(true);
     e.preventDefault();
-    signIn('google', { callbackUrl: '/people', redirect: false });
+    signIn('google', { callbackUrl: '/people', redirect: false }).finally(
+      () => {
+        setShowLoading(false);
+      },
+    );
   };
 
   return (
@@ -133,6 +137,7 @@ function LoginPage() {
               onClick={(e) => {
                 handleGoogle(e);
               }}
+              type="button"
             >
               <svg
                 className="mr-1 -ml-1 w-10 h-6"
