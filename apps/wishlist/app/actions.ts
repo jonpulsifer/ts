@@ -1,9 +1,9 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { prisma } from 'lib/prisma';
 import { isAuthenticated } from 'lib/prisma-ssr';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export const editUser = async (user: {
   id: string;

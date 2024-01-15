@@ -2,6 +2,7 @@
 import { Prisma } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
+
 import type {
   UserWithGifts,
   UserWithGiftsAndWishlists,
@@ -165,8 +166,7 @@ const getVisibleGiftsForUser = async () => {
   const session = await isAuthenticated();
   const { id } = session.user;
   const user = await getUserById(id, true, true);
-  if (!user.wishlists.length)
-    return { gifts: [], user: session.user };
+  if (!user.wishlists.length) return { gifts: [], user: session.user };
 
   try {
     const wishlistIds = user.wishlists.map((w) => w.id);

@@ -1,5 +1,6 @@
-import type { Metadata } from 'next';
 import { Card } from '@repo/ui/card';
+import type { Metadata } from 'next';
+
 import EmptyState from '../../../../components/EmptyState';
 import GiftForm from '../../../../components/GiftForm';
 import Page from '../../../../components/Page';

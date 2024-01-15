@@ -1,5 +1,6 @@
 'use client';
 import { usePathname } from 'next/navigation';
+
 import { BottomNav, Sidebar } from './Nav';
 
 interface Props {

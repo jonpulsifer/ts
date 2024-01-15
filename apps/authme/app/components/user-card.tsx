@@ -1,8 +1,8 @@
 'use client';
 import type { User } from '@prisma/client';
+import { Card } from '@repo/ui/card';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { Card } from '@repo/ui/card';
 
 interface UserCardProps {
   user: User | null;

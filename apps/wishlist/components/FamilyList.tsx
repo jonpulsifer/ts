@@ -3,9 +3,10 @@
 import { faDoorOpen, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Prisma } from '@prisma/client';
-import { toast } from 'react-hot-toast';
 import { Card } from '@repo/ui/card';
 import { joinWishlist, leaveWishlist } from 'app/actions';
+import { toast } from 'react-hot-toast';
+
 import EmptyState from './EmptyState';
 
 type UserWithWishlists = Prisma.UserGetPayload<{

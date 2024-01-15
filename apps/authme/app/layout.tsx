@@ -3,6 +3,7 @@ import '@repo/ui/styles.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+
 import { SessionProvider } from './providers';
 
 export const metadata: Metadata = {

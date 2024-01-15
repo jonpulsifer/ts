@@ -1,6 +1,6 @@
+import { Card } from '@repo/ui/card';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { Card } from '@repo/ui/card';
 
 const { NODE_NAME, NODE_IP, POD_NAME, POD_IP, POD_CHANGE_ME } = process.env;
 const isInKubernetes = Boolean(process.env.POD_NAME);

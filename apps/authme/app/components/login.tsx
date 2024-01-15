@@ -1,9 +1,9 @@
 'use client';
 
+import { Card } from '@repo/ui/card';
 import { useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { Card } from '@repo/ui/card';
 
 export function Login(): JSX.Element {
   const [loading, setLoading] = useState(true);

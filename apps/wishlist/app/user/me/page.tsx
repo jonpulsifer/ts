@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
 import GiftList from 'components/GiftList';
 import Page from 'components/Page';
 import { UserProfile } from 'components/User';
 import { getMeWithGifts } from 'lib/prisma-ssr';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Your Profile',

@@ -1,5 +1,6 @@
 import { faGifts } from '@fortawesome/free-solid-svg-icons';
 import type { Metadata } from 'next';
+
 import EmptyState from '../../components/EmptyState';
 import GiftList from '../../components/GiftList';
 import Page from '../../components/Page';

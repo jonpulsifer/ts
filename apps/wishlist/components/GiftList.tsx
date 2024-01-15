@@ -8,13 +8,14 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Card } from '@repo/ui/card';
+import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Card } from '@repo/ui/card';
 import type { GiftWithOwner } from 'types/prisma';
-import { claimGift, deleteGift, unclaimGift } from 'app/actions';
+
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import Modal from './GiftModal';
@@ -37,7 +38,9 @@ function GiftList({ gifts, currentUserId }: Props) {
         <Link
           className="font-semibold text-indigo-600"
           href=""
-          onClick={() => { setIsOpen(true); }}
+          onClick={() => {
+            setIsOpen(true);
+          }}
         >
           add one now!
         </Link>
@@ -135,7 +138,9 @@ function GiftList({ gifts, currentUserId }: Props) {
           </Link>
           <button
             className={`${buttonClass} ${buttonDanger}`}
-            onClick={() => { handleConfirmDelete(gift); }}
+            onClick={() => {
+              handleConfirmDelete(gift);
+            }}
           >
             <div className="flex items-center gap-1">
               <FontAwesomeIcon icon={faTrashCan} /> Delete

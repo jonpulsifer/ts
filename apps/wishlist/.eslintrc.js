@@ -11,9 +11,4 @@ module.exports = {
     'no-nested-ternary': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
   },
-  parserOptions: {
-    babelOptions: {
-      presets: [require.resolve('next/babel')],
-    },
-  },
 };

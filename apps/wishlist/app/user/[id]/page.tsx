@@ -1,9 +1,9 @@
-import type { Metadata } from 'next';
 import EmptyState from 'components/EmptyState';
 import GiftList from 'components/GiftList';
 import Page from 'components/Page';
 import { UserProfile } from 'components/User';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
+import type { Metadata } from 'next';
 
 interface Props {
   params: { [K in string]: string };

@@ -1,11 +1,11 @@
 import { faAt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Card } from '@repo/ui/card';
 import Page from 'components/Page';
 import UserForm from 'components/UserForm';
 import { getUserById } from 'lib/prisma-ssr';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
 interface Props {
   params: { [K in string]: string };

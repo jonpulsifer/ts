@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
 import type { CardAction } from '@repo/ui/card';
+import Link from 'next/link';
 
 interface Props {
   children?: React.ReactNode;
@@ -65,7 +65,9 @@ export function EmptyState({ children, title, subtitle, action }: Props) {
         <div className="text-gray-600 dark:text-slate-400 text-sm">
           {children}
         </div>
-        {action ? <div className="flex flex-row gap-4">{actionsMarkup}</div> : null}
+        {action ? (
+          <div className="flex flex-row gap-4">{actionsMarkup}</div>
+        ) : null}
       </div>
     </>
   );

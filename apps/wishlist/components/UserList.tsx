@@ -2,10 +2,10 @@
 
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import type { User } from '@prisma/client';
-import Image from 'next/image';
-import Link from 'next/link';
 import type { CardAction } from '@repo/ui/card';
 import { Card } from '@repo/ui/card';
+import Image from 'next/image';
+import Link from 'next/link';
 import type { UserWithGifts } from 'types/prisma';
 
 export interface UserListProps {

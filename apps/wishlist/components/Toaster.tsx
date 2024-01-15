@@ -18,7 +18,9 @@ export function Toast() {
           leave="transition-all duration-150"
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-75"
-          onClick={() => { toast.dismiss(t.id); }}
+          onClick={() => {
+            toast.dismiss(t.id);
+          }}
           show={t.visible}
         >
           <div className="flex items-center">
@@ -41,10 +43,17 @@ export const dismissable = (content: string | JSX.Element) => {
       />
     );
     return (
-      <div className="flex items-center" onClick={() => { toast.dismiss(t.id); }}>
+      <div
+        className="flex items-center"
+        onClick={() => {
+          toast.dismiss(t.id);
+        }}
+      >
         <button
           className="fixed top-1 right-2 text-slate-200 hover:text-slate-600 dark:hover:text-indigo-400 dark:text-indigo-600 pl-4"
-          onClick={() => { toast.dismiss(t.id); }}
+          onClick={() => {
+            toast.dismiss(t.id);
+          }}
         >
           <FontAwesomeIcon icon={faClose} />
         </button>

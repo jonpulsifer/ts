@@ -2,10 +2,10 @@
 
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import type { User } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
 import { Card } from '@repo/ui/card';
 import { editUser } from 'app/actions';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 interface Props {
   user: User;
@@ -50,7 +50,9 @@ function UserForm({ user }: Props) {
         },
         {
           title: 'Back',
-          onClick: () => { router.back(); },
+          onClick: () => {
+            router.back();
+          },
           secondary: true,
         },
       ]}

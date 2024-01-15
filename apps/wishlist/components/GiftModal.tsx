@@ -2,10 +2,10 @@
 import { faGift, faGifts } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
+import { addGift } from 'app/actions';
 import { Fragment, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { toast } from 'react-hot-toast';
-import { addGift } from 'app/actions';
 
 interface Props {
   isOpen: boolean;
@@ -75,7 +75,9 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={() => { closeAndReset(); }}
+        onClose={() => {
+          closeAndReset();
+        }}
       >
         <Transition.Child
           as={Fragment}
@@ -173,7 +175,9 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                     <Submit />
                     <button
                       className="mt-3 dark:text-slate-400 inline-flex w-full items-center justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                      onClick={() => { closeAndReset(); }}
+                      onClick={() => {
+                        closeAndReset();
+                      }}
                       ref={cancelButtonRef}
                       type="button"
                     >

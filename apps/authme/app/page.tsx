@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+
 import { getDatabaseInfo, getMe } from './actions';
 import { DatabaseCard } from './components/database-card';
 import { Login } from './components/login';

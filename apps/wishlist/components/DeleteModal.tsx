@@ -21,7 +21,9 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={() => { setIsOpen(false); }}
+        onClose={() => {
+          setIsOpen(false);
+        }}
       >
         <Transition.Child
           as={Fragment}
@@ -87,7 +89,9 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
                     </button>
                     <button
                       className="font-semibold text-gray-900 mt-3 dark:text-slate-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                      onClick={() => { setIsOpen(false); }}
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
                       ref={cancelButtonRef}
                       type="button"
                     >

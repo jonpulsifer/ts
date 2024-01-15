@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 import { writeEncodedCertsFromEnv } from './certs';
 
 // eslint-disable-next-line no-undef -- Global is defined

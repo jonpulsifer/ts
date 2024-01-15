@@ -1,9 +1,10 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
+import type { CardAction } from '@repo/ui/card';
+import { Card } from '@repo/ui/card';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { CardAction } from '@repo/ui/card';
-import { Card } from '@repo/ui/card';
+
 import EmptyState from '../../components/EmptyState';
 import Page from '../../components/Page';
 import { getPeopleForUser } from '../../lib/prisma-ssr';

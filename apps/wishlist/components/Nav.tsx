@@ -1,20 +1,20 @@
 'use client';
 
-import type {
-  IconDefinition} from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
   faGifts,
   faListCheck,
   faPeopleGroup,
   faPersonRays,
   faPlusSquare,
-  faSignOut
+  faSignOut,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
+
 import Modal from './GiftModal';
 
 interface NavLink {
@@ -31,7 +31,9 @@ export function Sidebar() {
     {
       title: 'Add Gift',
       href: '#',
-      onClick: () => { setShowGiftModal(true); },
+      onClick: () => {
+        setShowGiftModal(true);
+      },
       icon: faPlusSquare,
     },
     {
@@ -154,7 +156,9 @@ export function BottomNav() {
     {
       title: 'Add',
       href: '#',
-      onClick: () => { setShowGiftModal(true); },
+      onClick: () => {
+        setShowGiftModal(true);
+      },
       icon: faPlusSquare,
     },
     {

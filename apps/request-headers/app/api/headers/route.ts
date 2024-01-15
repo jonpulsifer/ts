@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access -- science */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment -- science */
-/* eslint-disable @typescript-eslint/no-unsafe-call -- science */
-import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
+
 import * as myJson from './data/my.json';
 
 export function GET(): NextResponse {

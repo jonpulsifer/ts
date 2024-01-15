@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { writeEncodedCertsFromEnv } from '../../../lib/certs';
 import { prisma } from '../../../lib/prisma';
 
@@ -18,7 +19,8 @@ export async function GET(): Promise<NextResponse> {
 
   // Extract and type assert the results
   const currentConnections = String(currentConnectionsResult[0]?.count) || '0';
-  const maxConnections = String(maxConnectionsResult[0]?.max_connections) || '0';
+  const maxConnections =
+    String(maxConnectionsResult[0]?.max_connections) || '0';
 
   return NextResponse.json(
     {

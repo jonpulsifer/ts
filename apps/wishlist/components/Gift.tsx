@@ -10,13 +10,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Gift, User } from '@prisma/client';
+import { Card } from '@repo/ui/card';
+import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
-import { Card } from '@repo/ui/card';
 import type { GiftWithOwner } from 'types/prisma';
-import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 
 interface Props {
   gift: Gift | GiftWithOwner;
@@ -36,16 +36,16 @@ export function GiftCard({ gift, user }: Props) {
   function ToastMarkup({ gift }: { gift: Gift }) {
     return (
       <button className="flex flex-row items-center space-x-4 h-max">
-          <div className="flex h-max">
-            Are you sure you want to delete {gift.name}?
-          </div>
-          <div
-            className="flex pl-6 items-center border-l border-gray-300 h-16 hover:text-red-800 hover:drop-shadow transition ease-in-out duration-200 text-red-600 text-xs font-semibold uppercase"
-            onClick={() => handleDelete(gift)}
-          >
-            delete
-          </div>
-        </button>
+        <div className="flex h-max">
+          Are you sure you want to delete {gift.name}?
+        </div>
+        <div
+          className="flex pl-6 items-center border-l border-gray-300 h-16 hover:text-red-800 hover:drop-shadow transition ease-in-out duration-200 text-red-600 text-xs font-semibold uppercase"
+          onClick={() => handleDelete(gift)}
+        >
+          delete
+        </div>
+      </button>
     );
   }
 
@@ -97,7 +97,9 @@ export function GiftCard({ gift, user }: Props) {
           title: 'Edit Gift',
         },
         {
-          onClick: () => { handleConfirmDelete(gift); },
+          onClick: () => {
+            handleConfirmDelete(gift);
+          },
           icon: faTrashCan,
           title: 'Delete Gift',
           danger: true,
