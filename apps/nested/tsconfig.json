@@ -9,10 +9,8 @@
     "baseUrl": "./",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "noEmit": false,
     "target": "ES6"
   },
-
-  "exclude": [
-    "dist"
-  ]
+  "exclude": ["dist"]
 }
