@@ -24,8 +24,8 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
             />
             <div>
               <div className="font-medium">{user.name}</div>
-              <div className="text-zinc-500">
-                <a href="#" className="hover:text-zinc-700">
+              <div className="text-slate-500">
+                <a href="#" className="hover:text-slate-700">
                   {user.email}
                 </a>
               </div>
@@ -33,7 +33,7 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
           </div>
         </TableCell>
         <TableCell>
-          <Badge color="zinc">Offline</Badge>
+          <Badge color="slate">Offline</Badge>
         </TableCell>
       </TableRow>
     );

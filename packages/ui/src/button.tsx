@@ -59,54 +59,54 @@ const styles = {
   ],
   outline: [
     // Base
-    'border-zinc-950/10 text-zinc-950 data-[active]:bg-zinc-950/[2.5%] data-[hover]:bg-zinc-950/[2.5%]',
+    'border-slate-950/10 text-slate-950 data-[active]:bg-slate-950/[2.5%] data-[hover]:bg-slate-950/[2.5%]',
 
     // Dark mode
     'dark:border-white/15 dark:text-white dark:[--btn-bg:transparent] dark:data-[active]:bg-white/5 dark:data-[hover]:bg-white/5',
 
     // Icon
-    '[--btn-icon:theme(colors.zinc.500)] data-[active]:[--btn-icon:theme(colors.zinc.700)] data-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]',
+    '[--btn-icon:theme(colors.slate.500)] data-[active]:[--btn-icon:theme(colors.slate.700)] data-[hover]:[--btn-icon:theme(colors.slate.700)] dark:data-[active]:[--btn-icon:theme(colors.slate.400)] dark:data-[hover]:[--btn-icon:theme(colors.slate.400)]',
   ],
   plain: [
     // Base
-    'border-transparent text-zinc-950 data-[active]:bg-zinc-950/5 data-[hover]:bg-zinc-950/5',
+    'border-transparent text-slate-950 data-[active]:bg-slate-950/5 data-[hover]:bg-slate-950/5',
 
     // Dark mode
     'dark:text-white dark:data-[active]:bg-white/10 dark:data-[hover]:bg-white/10',
 
     // Icon
-    '[--btn-icon:theme(colors.zinc.500)] data-[active]:[--btn-icon:theme(colors.zinc.700)] data-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:[--btn-icon:theme(colors.zinc.500)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]',
+    '[--btn-icon:theme(colors.slate.500)] data-[active]:[--btn-icon:theme(colors.slate.700)] data-[hover]:[--btn-icon:theme(colors.slate.700)] dark:[--btn-icon:theme(colors.slate.500)] dark:data-[active]:[--btn-icon:theme(colors.slate.400)] dark:data-[hover]:[--btn-icon:theme(colors.slate.400)]',
   ],
   colors: {
-    'dark/zinc': [
-      'text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]',
-      'dark:text-white dark:[--btn-bg:theme(colors.zinc.600)] dark:[--btn-hover-overlay:theme(colors.white/5%)]',
-      '[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)]',
+    'dark/slate': [
+      'text-white [--btn-bg:theme(colors.slate.900)] [--btn-border:theme(colors.slate.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]',
+      'dark:text-white dark:[--btn-bg:theme(colors.slate.600)] dark:[--btn-hover-overlay:theme(colors.white/5%)]',
+      '[--btn-icon:theme(colors.slate.400)] data-[active]:[--btn-icon:theme(colors.slate.300)] data-[hover]:[--btn-icon:theme(colors.slate.300)]',
     ],
     light: [
-      'text-zinc-950 [--btn-bg:white] [--btn-border:theme(colors.zinc.950/10%)] [--btn-hover-overlay:theme(colors.zinc.950/2.5%)] data-[active]:[--btn-border:theme(colors.zinc.950/15%)] data-[hover]:[--btn-border:theme(colors.zinc.950/15%)]',
-      'dark:text-white dark:[--btn-hover-overlay:theme(colors.white/5%)] dark:[--btn-bg:theme(colors.zinc.800)]',
-      '[--btn-icon:theme(colors.zinc.500)] data-[active]:[--btn-icon:theme(colors.zinc.700)] data-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:[--btn-icon:theme(colors.zinc.500)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]',
+      'text-slate-950 [--btn-bg:white] [--btn-border:theme(colors.slate.950/10%)] [--btn-hover-overlay:theme(colors.slate.950/2.5%)] data-[active]:[--btn-border:theme(colors.slate.950/15%)] data-[hover]:[--btn-border:theme(colors.slate.950/15%)]',
+      'dark:text-white dark:[--btn-hover-overlay:theme(colors.white/5%)] dark:[--btn-bg:theme(colors.slate.800)]',
+      '[--btn-icon:theme(colors.slate.500)] data-[active]:[--btn-icon:theme(colors.slate.700)] data-[hover]:[--btn-icon:theme(colors.slate.700)] dark:[--btn-icon:theme(colors.slate.500)] dark:data-[active]:[--btn-icon:theme(colors.slate.400)] dark:data-[hover]:[--btn-icon:theme(colors.slate.400)]',
     ],
     'dark/white': [
-      'text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]',
-      'dark:text-zinc-950 dark:[--btn-bg:white] dark:[--btn-hover-overlay:theme(colors.zinc.950/5%)]',
-      '[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)] dark:[--btn-icon:theme(colors.zinc.500)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]',
+      'text-white [--btn-bg:theme(colors.slate.900)] [--btn-border:theme(colors.slate.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]',
+      'dark:text-slate-950 dark:[--btn-bg:white] dark:[--btn-hover-overlay:theme(colors.slate.950/5%)]',
+      '[--btn-icon:theme(colors.slate.400)] data-[active]:[--btn-icon:theme(colors.slate.300)] data-[hover]:[--btn-icon:theme(colors.slate.300)] dark:[--btn-icon:theme(colors.slate.500)] dark:data-[active]:[--btn-icon:theme(colors.slate.400)] dark:data-[hover]:[--btn-icon:theme(colors.slate.400)]',
     ],
     dark: [
-      'text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]',
-      'dark:[--btn-hover-overlay:theme(colors.white/5%)] dark:[--btn-bg:theme(colors.zinc.800)]',
-      '[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)]',
+      'text-white [--btn-bg:theme(colors.slate.900)] [--btn-border:theme(colors.slate.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]',
+      'dark:[--btn-hover-overlay:theme(colors.white/5%)] dark:[--btn-bg:theme(colors.slate.800)]',
+      '[--btn-icon:theme(colors.slate.400)] data-[active]:[--btn-icon:theme(colors.slate.300)] data-[hover]:[--btn-icon:theme(colors.slate.300)]',
     ],
     white: [
-      'text-zinc-950 [--btn-bg:white] [--btn-border:theme(colors.zinc.950/10%)] [--btn-hover-overlay:theme(colors.zinc.950/2.5%)] data-[active]:[--btn-border:theme(colors.zinc.950/15%)] data-[hover]:[--btn-border:theme(colors.zinc.950/15%)]',
-      'dark:[--btn-hover-overlay:theme(colors.zinc.950/5%)]',
-      '[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.500)] data-[hover]:[--btn-icon:theme(colors.zinc.500)]',
+      'text-slate-950 [--btn-bg:white] [--btn-border:theme(colors.slate.950/10%)] [--btn-hover-overlay:theme(colors.slate.950/2.5%)] data-[active]:[--btn-border:theme(colors.slate.950/15%)] data-[hover]:[--btn-border:theme(colors.slate.950/15%)]',
+      'dark:[--btn-hover-overlay:theme(colors.slate.950/5%)]',
+      '[--btn-icon:theme(colors.slate.400)] data-[active]:[--btn-icon:theme(colors.slate.500)] data-[hover]:[--btn-icon:theme(colors.slate.500)]',
     ],
-    zinc: [
-      'text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.zinc.600)] [--btn-border:theme(colors.zinc.700/90%)]',
+    slate: [
+      'text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.slate.600)] [--btn-border:theme(colors.slate.700/90%)]',
       'dark:[--btn-hover-overlay:theme(colors.white/5%)]',
-      '[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)]',
+      '[--btn-icon:theme(colors.slate.400)] data-[active]:[--btn-icon:theme(colors.slate.300)] data-[hover]:[--btn-icon:theme(colors.slate.300)]',
     ],
     indigo: [
       'text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.indigo.500)] [--btn-border:theme(colors.indigo.600/90%)]',
@@ -199,7 +199,7 @@ export const Button = forwardRef(function Button(
       ? styles.outline
       : plain
         ? styles.plain
-        : clsx(styles.solid, styles.colors[color ?? 'dark/zinc']),
+        : clsx(styles.solid, styles.colors[color ?? 'dark/slate']),
   );
 
   return 'href' in props ? (

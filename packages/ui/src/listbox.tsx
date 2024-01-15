@@ -52,7 +52,7 @@ export function Listbox<T>({
           'after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:data-[focus]:ring-2 sm:after:data-[focus]:ring-blue-500',
 
           // Disabled state
-          'data-[disabled]:opacity-50 before:data-[disabled]:bg-zinc-950/5 before:data-[disabled]:shadow-none',
+          'data-[disabled]:opacity-50 before:data-[disabled]:bg-slate-950/5 before:data-[disabled]:shadow-none',
         ])}
       >
         <HeadlessListboxSelectedOption
@@ -60,7 +60,7 @@ export function Listbox<T>({
           options={options}
           placeholder={
             placeholder && (
-              <span className="block truncate text-zinc-500">
+              <span className="block truncate text-slate-500">
                 {placeholder}
               </span>
             )
@@ -76,10 +76,10 @@ export function Listbox<T>({
             'pl-[calc(theme(spacing[3.5])-1px)] pr-[calc(theme(spacing.7)-1px)] sm:pl-[calc(theme(spacing.3)-1px)]',
 
             // Typography
-            'text-left text-base/6 text-zinc-950 placeholder:text-zinc-500 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
+            'text-left text-base/6 text-slate-950 placeholder:text-slate-500 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
 
             // Border
-            'border border-zinc-950/10 group-data-[active]:border-zinc-950/20 group-data-[hover]:border-zinc-950/20 dark:border-white/10 dark:group-data-[active]:border-white/20 dark:group-data-[hover]:border-white/20',
+            'border border-slate-950/10 group-data-[active]:border-slate-950/20 group-data-[hover]:border-slate-950/20 dark:border-white/10 dark:group-data-[active]:border-white/20 dark:group-data-[hover]:border-white/20',
 
             // Background color
             'bg-transparent dark:bg-white/5',
@@ -88,12 +88,12 @@ export function Listbox<T>({
             'group-data-[invalid]:border-red-500 group-data-[invalid]:group-data-[hover]:border-red-500 group-data-[invalid]:dark:border-red-600 group-data-[invalid]:data-[hover]:dark:border-red-600',
 
             // Disabled state
-            'group-data-[disabled]:border-zinc-950/20 group-data-[disabled]:opacity-100 group-data-[disabled]:dark:border-white/15 group-data-[disabled]:dark:bg-white/[2.5%] dark:data-[hover]:group-data-[disabled]:border-white/15',
+            'group-data-[disabled]:border-slate-950/20 group-data-[disabled]:opacity-100 group-data-[disabled]:dark:border-white/15 group-data-[disabled]:dark:bg-white/[2.5%] dark:data-[hover]:group-data-[disabled]:border-white/15',
           ])}
         />
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <svg
-            className="size-5 stroke-zinc-500 group-data-[disabled]:stroke-zinc-600 sm:size-4 dark:stroke-zinc-400 forced-colors:stroke-[CanvasText]"
+            className="size-5 stroke-slate-500 group-data-[disabled]:stroke-slate-600 sm:size-4 dark:stroke-slate-400 forced-colors:stroke-[CanvasText]"
             viewBox="0 0 16 16"
             aria-hidden="true"
             fill="none"
@@ -140,10 +140,10 @@ export function Listbox<T>({
             'overflow-y-scroll overscroll-contain',
 
             // Popover background
-            'bg-white/75 backdrop-blur-xl dark:bg-zinc-800/75',
+            'bg-white/75 backdrop-blur-xl dark:bg-slate-800/75',
 
             // Shadows
-            'shadow-lg ring-1 ring-zinc-950/10 dark:ring-inset dark:ring-white/10',
+            'shadow-lg ring-1 ring-slate-950/10 dark:ring-inset dark:ring-white/10',
           )}
         >
           {options}
@@ -163,7 +163,7 @@ export function ListboxOption<T>({
     'flex min-w-0 items-center',
 
     // Icons
-    '[&>[data-slot=icon]]:size-5 [&>[data-slot=icon]]:shrink-0 [&>[data-slot=icon]]:text-zinc-500 [&>[data-slot=icon]]:group-data-[focus]/option:text-white sm:[&>[data-slot=icon]]:size-4 forced-colors:[&>[data-slot=icon]]:text-[CanvasText] forced-colors:[&>[data-slot=icon]]:group-data-[focus]/option:text-[Canvas]',
+    '[&>[data-slot=icon]]:size-5 [&>[data-slot=icon]]:shrink-0 [&>[data-slot=icon]]:text-slate-500 [&>[data-slot=icon]]:group-data-[focus]/option:text-white sm:[&>[data-slot=icon]]:size-4 forced-colors:[&>[data-slot=icon]]:text-[CanvasText] forced-colors:[&>[data-slot=icon]]:group-data-[focus]/option:text-[Canvas]',
 
     // Avatars
     '[&>[data-slot=avatar]]:size-6 sm:[&>[data-slot=avatar]]:size-5',
@@ -185,7 +185,7 @@ export function ListboxOption<T>({
               'group/option grid cursor-default grid-cols-[theme(spacing.5),1fr] items-baseline gap-x-1.5 rounded-lg py-2.5 pl-2.5 pr-3.5 sm:grid-cols-[theme(spacing.4),1fr] sm:py-1.5 sm:pl-2 sm:pr-3',
 
               // Typography
-              'text-base/6 text-zinc-950 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
+              'text-base/6 text-slate-950 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
 
               // Focus
               'outline-none data-[focus]:bg-blue-500 data-[focus]:text-white',
@@ -244,7 +244,7 @@ export function ListboxDescription({
     <span
       className={clsx(
         className,
-        'flex flex-1 overflow-hidden text-zinc-500 before:w-2 before:min-w-0 before:shrink group-data-[focus]/option:text-white dark:text-zinc-400',
+        'flex flex-1 overflow-hidden text-slate-500 before:w-2 before:min-w-0 before:shrink group-data-[focus]/option:text-white dark:text-slate-400',
       )}
       {...props}
     >

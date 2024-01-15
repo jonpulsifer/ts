@@ -48,7 +48,7 @@ export function Dialog({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 flex w-screen justify-center overflow-y-auto bg-zinc-950/25 px-2 py-2 focus:outline-0 sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-zinc-950/50" />
+          <div className="fixed inset-0 flex w-screen justify-center overflow-y-auto bg-slate-950/25 px-2 py-2 focus:outline-0 sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-slate-950/50" />
         </HeadlessTransitionChild>
 
         <HeadlessTransitionChild
@@ -66,7 +66,7 @@ export function Dialog({
               className={clsx(
                 className,
                 sizes[size],
-                'row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-[--gutter] shadow-lg ring-1 ring-zinc-950/10 [--gutter:theme(spacing.8)] sm:mb-auto sm:rounded-2xl dark:bg-zinc-900 dark:ring-white/10 forced-colors:outline',
+                'row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-[--gutter] shadow-lg ring-1 ring-slate-950/10 [--gutter:theme(spacing.8)] sm:mb-auto sm:rounded-2xl dark:bg-slate-900 dark:ring-white/10 forced-colors:outline',
               )}
               enter="ease-out duration-100"
               enterFrom="sm:scale-95"
@@ -93,7 +93,7 @@ export function DialogTitle({
       {...props}
       className={clsx(
         className,
-        'text-balance text-lg/6 font-semibold text-zinc-950 sm:text-base/6 dark:text-white',
+        'text-balance text-lg/6 font-semibold text-slate-950 sm:text-base/6 dark:text-white',
       )}
     />
   );

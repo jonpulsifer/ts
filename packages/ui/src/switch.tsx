@@ -56,25 +56,25 @@ export function SwitchField({ className, ...props }: HeadlessFieldProps) {
 }
 
 const colors = {
-  'dark/zinc': [
-    '[--switch-bg-ring:theme(colors.zinc.950/90%)] [--switch-bg:theme(colors.zinc.900)] dark:[--switch-bg-ring:transparent] dark:[--switch-bg:theme(colors.white/25%)]',
-    '[--switch-ring:theme(colors.zinc.950/90%)] [--switch-shadow:theme(colors.black/10%)] [--switch:white] dark:[--switch-ring:theme(colors.zinc.700/90%)]',
+  'dark/slate': [
+    '[--switch-bg-ring:theme(colors.slate.950/90%)] [--switch-bg:theme(colors.slate.900)] dark:[--switch-bg-ring:transparent] dark:[--switch-bg:theme(colors.white/25%)]',
+    '[--switch-ring:theme(colors.slate.950/90%)] [--switch-shadow:theme(colors.black/10%)] [--switch:white] dark:[--switch-ring:theme(colors.slate.700/90%)]',
   ],
   'dark/white': [
-    '[--switch-bg-ring:theme(colors.zinc.950/90%)] [--switch-bg:theme(colors.zinc.900)] dark:[--switch-bg-ring:transparent] dark:[--switch-bg:theme(colors.white)]',
-    '[--switch-ring:theme(colors.zinc.950/90%)] [--switch-shadow:theme(colors.black/10%)] [--switch:white] dark:[--switch-ring:transparent] dark:[--switch:theme(colors.zinc.900)]',
+    '[--switch-bg-ring:theme(colors.slate.950/90%)] [--switch-bg:theme(colors.slate.900)] dark:[--switch-bg-ring:transparent] dark:[--switch-bg:theme(colors.white)]',
+    '[--switch-ring:theme(colors.slate.950/90%)] [--switch-shadow:theme(colors.black/10%)] [--switch:white] dark:[--switch-ring:transparent] dark:[--switch:theme(colors.slate.900)]',
   ],
   dark: [
-    '[--switch-bg-ring:theme(colors.zinc.950/90%)] [--switch-bg:theme(colors.zinc.900)] dark:[--switch-bg-ring:theme(colors.white/15%)]',
-    '[--switch-ring:theme(colors.zinc.950/90%)] [--switch-shadow:theme(colors.black/10%)] [--switch:white]',
+    '[--switch-bg-ring:theme(colors.slate.950/90%)] [--switch-bg:theme(colors.slate.900)] dark:[--switch-bg-ring:theme(colors.white/15%)]',
+    '[--switch-ring:theme(colors.slate.950/90%)] [--switch-shadow:theme(colors.black/10%)] [--switch:white]',
   ],
-  zinc: [
-    '[--switch-bg-ring:theme(colors.zinc.700/90%)] [--switch-bg:theme(colors.zinc.600)] dark:[--switch-bg-ring:transparent]',
-    '[--switch-shadow:theme(colors.black/10%)] [--switch:white] [--switch-ring:theme(colors.zinc.700/90%)]',
+  slate: [
+    '[--switch-bg-ring:theme(colors.slate.700/90%)] [--switch-bg:theme(colors.slate.600)] dark:[--switch-bg-ring:transparent]',
+    '[--switch-shadow:theme(colors.black/10%)] [--switch:white] [--switch-ring:theme(colors.slate.700/90%)]',
   ],
   white: [
     '[--switch-bg-ring:theme(colors.black/15%)] [--switch-bg:white] dark:[--switch-bg-ring:transparent]',
-    '[--switch-shadow:theme(colors.black/10%)] [--switch-ring:transparent] [--switch:theme(colors.zinc.950)]',
+    '[--switch-shadow:theme(colors.black/10%)] [--switch-ring:transparent] [--switch:theme(colors.slate.950)]',
   ],
   red: [
     '[--switch-bg-ring:theme(colors.red.700/90%)] [--switch-bg:theme(colors.red.600)] dark:[--switch-bg-ring:transparent]',
@@ -149,7 +149,7 @@ const colors = {
 type Color = keyof typeof colors;
 
 export function Switch({
-  color = 'dark/zinc',
+  color = 'dark/slate',
   className,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   children,
@@ -175,7 +175,7 @@ export function Switch({
         'forced-colors:outline forced-colors:[--switch-bg:Highlight] dark:forced-colors:[--switch-bg:Highlight]',
 
         // Unchecked
-        'bg-zinc-200 ring-1 ring-inset ring-black/5 dark:bg-white/5 dark:ring-white/15',
+        'bg-slate-200 ring-1 ring-inset ring-black/5 dark:bg-white/5 dark:ring-white/15',
 
         // Checked
         'data-[checked]:bg-[--switch-bg] data-[checked]:ring-[--switch-bg-ring] dark:data-[checked]:bg-[--switch-bg] dark:data-[checked]:ring-[--switch-bg-ring]',
@@ -188,7 +188,7 @@ export function Switch({
         'dark:data-[hover]:data-[checked]:ring-[--switch-bg-ring] dark:data-[hover]:ring-white/25',
 
         // Disabled
-        'data-[disabled]:bg-zinc-200 data-[disabled]:data-[checked]:bg-zinc-200 data-[disabled]:opacity-50 data-[disabled]:data-[checked]:ring-black/5',
+        'data-[disabled]:bg-slate-200 data-[disabled]:data-[checked]:bg-slate-200 data-[disabled]:opacity-50 data-[disabled]:data-[checked]:ring-black/5',
         'dark:data-[disabled]:bg-white/15 dark:data-[disabled]:data-[checked]:bg-white/15 dark:data-[disabled]:data-[checked]:ring-white/15',
 
         // Color specific styles
