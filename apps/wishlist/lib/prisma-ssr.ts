@@ -240,7 +240,7 @@ const getPeopleForUser = async () => {
             },
           },
         },
-        NOT: { id },
+        // NOT: { id },
       },
       orderBy: {
         name: 'asc',

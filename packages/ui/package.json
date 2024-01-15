@@ -6,8 +6,11 @@
   ],
   "exports": {
     "./styles.css": "./dist/index.css",
+    "./avatar": "./src/avatar.tsx",
     "./button": "./src/button.tsx",
-    "./card": "./src/card.tsx"
+    "./badge": "./src/badge.tsx",
+    "./card": "./src/card.tsx",
+    "./table": "./src/table.tsx"
   },
   "license": "MIT",
   "scripts": {
