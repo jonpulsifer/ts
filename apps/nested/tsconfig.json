@@ -10,6 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noEmit": false,
+    "allowImportingTsExtensions": false,
     "target": "ES6"
   },
   "exclude": ["dist"]
