@@ -1,25 +1,26 @@
 'use client';
 
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { UserWithGifts } from 'types/prisma';
-import { Card, CardAction } from '@repo/ui/card';
+import type { CardAction } from '@repo/ui/card';
+import { Card } from '@repo/ui/card';
+import type { UserWithGifts } from 'types/prisma';
 
-export type UserListProps = {
+export interface UserListProps {
   users: UserWithGifts[];
   user: User;
-};
+}
 
-const UserList = ({ users }: UserListProps) => {
+function UserList({ users }: UserListProps) {
   const action: CardAction = {
     title: 'View All Wishlists',
     icon: faPeopleRoof,
     link: '/wishlists',
   };
   const userList = (appUsers: UserWithGifts[]) => {
-    const GiftCountBadge = (count = 0) => {
+    function GiftCountBadge(count = 0) {
       const baseFontColor =
         'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950/25 ring-indigo-700/10 dark:ring-indigo-500/10';
       const fontColor =
@@ -37,13 +38,13 @@ const UserList = ({ users }: UserListProps) => {
           {count} gift{count > 1 || count === 0 ? 's' : ''}
         </div>
       );
-    };
+    }
     return appUsers.map((appUser) => {
       const { id, name, email, image } = appUser;
       return (
         <tr
-          key={id}
           className="border-t hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-950 transition ease-in-out duration-300 select-none"
+          key={id}
         >
           <td className="flex flex-row w-full">
             <div className="w-full">
@@ -56,10 +57,10 @@ const UserList = ({ users }: UserListProps) => {
                   >
                     {image ? (
                       <Image
-                        src={image}
                         alt="Profile Photo"
                         className="rounded-full"
                         fill
+                        src={image}
                       />
                     ) : (
                       <span className="font-medium noselect text-gray-600 dark:text-indigo-500">
@@ -74,7 +75,7 @@ const UserList = ({ users }: UserListProps) => {
                   </div>
                 </div>
                 <div className="flex items-center pr-4 text-center">
-                  {GiftCountBadge(appUser.gifts?.length)}
+                  {GiftCountBadge(appUser.gifts.length)}
                 </div>
               </Link>
             </div>
@@ -86,15 +87,15 @@ const UserList = ({ users }: UserListProps) => {
 
   return (
     <Card
-      title="Family Members"
-      subtitle="This is a list of everyone that can see your wishlist."
       action={action}
+      subtitle="This is a list of everyone that can see your wishlist."
+      title="Family Members"
     >
       <table className="table-auto w-full">
         <tbody>{userList(users)}</tbody>
       </table>
     </Card>
   );
-};
+}
 
 export default UserList;

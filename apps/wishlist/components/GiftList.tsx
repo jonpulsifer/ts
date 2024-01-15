@@ -8,14 +8,13 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { GiftWithOwner } from 'types/prisma';
 import { Card } from '@repo/ui/card';
-
+import type { GiftWithOwner } from 'types/prisma';
+import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import Modal from './GiftModal';
@@ -25,7 +24,7 @@ interface Props {
   currentUserId: string;
 }
 
-const GiftList = ({ gifts, currentUserId }: Props) => {
+function GiftList({ gifts, currentUserId }: Props) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [gift, setGift] = useState<GiftWithOwner | null>(null);
@@ -38,7 +37,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
         <Link
           className="font-semibold text-indigo-600"
           href=""
-          onClick={() => setIsOpen(true)}
+          onClick={() => { setIsOpen(true); }}
         >
           add one now!
         </Link>
@@ -71,7 +70,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
     }
   };
 
-  if (!gifts || !gifts.length) {
+  if (!gifts.length) {
     return (
       <>
         {getEmptyState()}
@@ -136,7 +135,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
           </Link>
           <button
             className={`${buttonClass} ${buttonDanger}`}
-            onClick={() => handleConfirmDelete(gift)}
+            onClick={() => { handleConfirmDelete(gift); }}
           >
             <div className="flex items-center gap-1">
               <FontAwesomeIcon icon={faTrashCan} /> Delete
@@ -172,7 +171,7 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
   };
 
   // create a hash of gifts by owner id
-  const giftsByOwnerId = gifts.reduce(
+  const giftsByOwnerId = gifts.reduce<Record<string, GiftWithOwner[]>>(
     (acc, gift) => {
       const ownerId = gift.ownerId || currentUserId;
       const ownerGifts = acc[ownerId] || [];
@@ -181,12 +180,12 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
         [ownerId]: [...ownerGifts, gift],
       };
     },
-    {} as { [key: string]: GiftWithOwner[] },
+    {},
   );
 
   const giftCards = Object.keys(giftsByOwnerId).map((ownerId) => {
     const gifts = giftsByOwnerId[ownerId];
-    const name = gifts[0].owner?.name || gifts[0].owner?.email;
+    const name = gifts[0].owner.name || gifts[0].owner.email;
     const domainFromUrl = (url: string) => {
       const urlObj = new URL(url);
       return urlObj.hostname;
@@ -200,11 +199,11 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
 
       return (
         <tr
-          key={gift.id}
           className="text-left border-t dark:border-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-500 transition ease-in-out duration-200"
+          key={gift.id}
         >
           <td className="px-4 py-1">
-            <Link key={gift.id} href={`/gift/${gift.id}`}>
+            <Link href={`/gift/${gift.id}`} key={gift.id}>
               <div className="flex flex-col">
                 <div className="font-semibold text-base">{gift.name}</div>
                 {notesMarkup}
@@ -233,12 +232,12 @@ const GiftList = ({ gifts, currentUserId }: Props) => {
     <>
       {giftCards}
       <DeleteModal
+        action={handleActualDelete}
+        gift={gift}
         isOpen={showDeleteModal}
         setIsOpen={setShowDeleteModal}
-        gift={gift}
-        action={handleActualDelete}
       />
     </>
   );
-};
+}
 export default GiftList;

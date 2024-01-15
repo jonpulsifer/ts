@@ -2,11 +2,11 @@ export default function Head() {
   return (
     <>
       <title>wishin.app</title>
-      <link rel="manifest" href="/site.webmanifest" />
-      <link rel="icon" href="/favicon.ico" />
+      <link href="/site.webmanifest" rel="manifest" />
+      <link href="/favicon.ico" rel="icon" />
       <meta
-        name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1"
+        name="viewport"
       />
     </>
   );

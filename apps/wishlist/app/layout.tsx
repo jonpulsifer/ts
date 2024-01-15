@@ -4,11 +4,10 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import ErrorBoundary from 'components/ErrorBoundary';
 import Toast from 'components/Toaster';
-import { Metadata } from 'next';
-import { Inter as Inter } from 'next/font/google';
-
 import { SessionProvider } from './providers';
 
 const inter = Inter({
@@ -23,7 +22,7 @@ export const metadata: Metadata = {
   },
 };
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html className="h-full w-full" lang="en">
       <body
@@ -42,6 +41,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </body>
     </html>
   );
-};
+}
 
 export default Layout;

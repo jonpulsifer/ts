@@ -1,6 +1,5 @@
 'use client';
 import { usePathname } from 'next/navigation';
-
 import { BottomNav, Sidebar } from './Nav';
 
 interface Props {
@@ -36,7 +35,7 @@ const generateTitle = (path: string | null) => {
   }
 };
 
-const DaysUntilChristmas = (count = daysUntilChristmas()) => {
+function DaysUntilChristmas(count = daysUntilChristmas()) {
   const baseFontColor =
     'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950/25 ring-indigo-700/10 dark:ring-indigo-500/10';
   const fontColor =
@@ -53,9 +52,9 @@ const DaysUntilChristmas = (count = daysUntilChristmas()) => {
       🎅 {count} day{count > 1 || count === 0 ? 's' : ''} to Christmas
     </span>
   );
-};
+}
 
-const Page = ({ title, children }: Props) => {
+function Page({ title, children }: Props) {
   const path = usePathname();
   if (path === '/' || path === '/login') {
     return <>{children}</>;
@@ -80,6 +79,6 @@ const Page = ({ title, children }: Props) => {
       <BottomNav />
     </div>
   );
-};
+}
 
 export default Page;

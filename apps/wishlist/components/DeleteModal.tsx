@@ -16,12 +16,12 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
   const cancelButtonRef = useRef(null);
   if (!gift) return;
   return (
-    <Transition.Root show={isOpen} as={Fragment}>
+    <Transition.Root as={Fragment} show={isOpen}>
       <Dialog
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={() => setIsOpen(false)}
+        onClose={() => { setIsOpen(false); }}
       >
         <Transition.Child
           as={Fragment}
@@ -48,14 +48,14 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <form action={action}>
-                  <input type="hidden" name="id" value={gift.id} />
+                  <input name="id" type="hidden" value={gift.id} />
 
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
                         <FontAwesomeIcon
-                          className="h-6 w-6 text-red-600 dark:text-red-600"
                           aria-hidden="true"
+                          className="h-6 w-6 text-red-600 dark:text-red-600"
                           icon={faTrashCan}
                         />
                       </div>
@@ -86,10 +86,10 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
                       Delete
                     </button>
                     <button
-                      type="button"
                       className="font-semibold text-gray-900 mt-3 dark:text-slate-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => { setIsOpen(false); }}
                       ref={cancelButtonRef}
+                      type="button"
                     >
                       Close
                     </button>

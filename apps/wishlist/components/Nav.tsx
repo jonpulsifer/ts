@@ -1,28 +1,28 @@
 'use client';
 
+import type {
+  IconDefinition} from '@fortawesome/free-solid-svg-icons';
 import {
   faGifts,
   faListCheck,
   faPeopleGroup,
   faPersonRays,
   faPlusSquare,
-  faSignOut,
-  IconDefinition,
+  faSignOut
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
-
 import Modal from './GiftModal';
 
-type NavLink = {
+interface NavLink {
   title: string;
   href?: string;
   icon: IconDefinition;
   onClick?: () => void;
-};
+}
 
 export function Sidebar() {
   const path = usePathname();
@@ -31,7 +31,7 @@ export function Sidebar() {
     {
       title: 'Add Gift',
       href: '#',
-      onClick: () => setShowGiftModal(true),
+      onClick: () => { setShowGiftModal(true); },
       icon: faPlusSquare,
     },
     {
@@ -72,16 +72,16 @@ export function Sidebar() {
       if (!link.href) {
         linx.push(
           <Link
-            href="#"
-            onClick={link.onClick}
-            key={link.title}
             className={linkStyle}
+            href="#"
+            key={link.title}
+            onClick={link.onClick}
           >
             <div className="flex flex-row items-center justify-center">
               <div className="flex">
                 <FontAwesomeIcon
-                  icon={link.icon}
                   className="w-10"
+                  icon={link.icon}
                   key={link.title}
                 />
               </div>
@@ -99,10 +99,10 @@ export function Sidebar() {
               ? `${linkStyle} text-gray-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500 shadow-sm bg-gray-100 dark:bg-slate-800 dark:bg-opacity-50`
               : linkStyle
           }
-          key={link.title}
           href={link.href}
-          prefetch={false}
+          key={link.title}
           onClick={link.onClick}
+          prefetch={false}
         >
           <div
             className={`flex flex-row items-center justify-center ${
@@ -111,9 +111,9 @@ export function Sidebar() {
           >
             <div className="flex">
               <FontAwesomeIcon
-                key={link.title}
-                icon={link.icon}
                 className="w-10 text-gray-600 dark:text-slate-400"
+                icon={link.icon}
+                key={link.title}
               />
             </div>
             <div className="flex flex-grow">{link.title}</div>
@@ -154,7 +154,7 @@ export function BottomNav() {
     {
       title: 'Add',
       href: '#',
-      onClick: () => setShowGiftModal(true),
+      onClick: () => { setShowGiftModal(true); },
       icon: faPlusSquare,
     },
     {
@@ -182,28 +182,28 @@ export function BottomNav() {
       const isAdd = link.title === 'Add';
       return (
         <button
-          type="button"
           className={
             isActive
               ? `${buttonClass} bg-gray-50 text-indigo-600 dark:text-indigo-500 border-t-2 border-indigo-600 dark:border-indigo-500`
               : buttonClass
           }
           key={link.title}
+          type="button"
         >
           <Link
-            href={href}
             className="flex flex-col items-center gap-1"
-            prefetch={false}
+            href={href}
             onClick={link.onClick ? link.onClick : undefined}
+            prefetch={false}
           >
             <FontAwesomeIcon
-              icon={link.icon}
               className={
                 isActive || isAdd
                   ? `${iconClass} text-indigo-600 dark:text-indigo-400`
                   : iconClass
               }
               fill="currentColor"
+              icon={link.icon}
             />
             <span
               className={

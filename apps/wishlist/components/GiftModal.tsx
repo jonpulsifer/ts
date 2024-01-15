@@ -2,10 +2,10 @@
 import { faGift, faGifts } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, Transition } from '@headlessui/react';
-import { addGift } from 'app/actions';
 import { Fragment, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { toast } from 'react-hot-toast';
+import { addGift } from 'app/actions';
 
 interface Props {
   isOpen: boolean;
@@ -44,13 +44,13 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
     }
   };
 
-  const Submit = () => {
+  function Submit() {
     const status = useFormStatus();
     return (
       <button
         className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
-        type="submit"
         disabled={status.pending}
+        type="submit"
       >
         {status.pending ? (
           <>
@@ -67,15 +67,15 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
         )}
       </button>
     );
-  };
+  }
 
   return (
-    <Transition.Root show={isOpen} as={Fragment}>
+    <Transition.Root as={Fragment} show={isOpen}>
       <Dialog
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={() => closeAndReset()}
+        onClose={() => { closeAndReset(); }}
       >
         <Transition.Child
           as={Fragment}
@@ -101,13 +101,13 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 w-full sm:w-full sm:max-w-lg border border-gray-50 dark:border-indigo-950">
-                <form ref={formRef} action={handleAddGift}>
+                <form action={handleAddGift} ref={formRef}>
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
                         <FontAwesomeIcon
-                          className="h-6 w-6 text-indigo-600 dark:text-indigo-400"
                           aria-hidden="true"
+                          className="h-6 w-6 text-indigo-600 dark:text-indigo-400"
                           icon={faGifts}
                         />
                       </div>
@@ -130,11 +130,11 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               Gift Name
                             </label>
                             <input
-                              name="name"
-                              type="text"
                               autoComplete="name"
                               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                              name="name"
                               placeholder="Red Mittens"
+                              type="text"
                             />
                           </div>
                           <div className="col-span-full">
@@ -145,12 +145,12 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               </p>
                             </label>
                             <input
-                              name="url"
-                              type="url"
-                              inputMode="url"
                               autoComplete="url"
                               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                              inputMode="url"
+                              name="url"
                               placeholder="https://amazon.ca/ur-favourite-slippers"
+                              type="url"
                             />
                           </div>
 
@@ -159,9 +159,9 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                               Notes (optional)
                             </label>
                             <textarea
-                              name="description"
                               autoComplete="description"
                               className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                              name="description"
                               placeholder="..."
                             />
                           </div>
@@ -172,10 +172,10 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                   <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <Submit />
                     <button
-                      type="button"
                       className="mt-3 dark:text-slate-400 inline-flex w-full items-center justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                      onClick={() => closeAndReset()}
+                      onClick={() => { closeAndReset(); }}
                       ref={cancelButtonRef}
+                      type="button"
                     >
                       Close
                     </button>

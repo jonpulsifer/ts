@@ -1,8 +1,8 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { GiftCard } from 'components/Gift';
 import Page from 'components/Page';
 import { getGiftById, getUserWithGiftsById } from 'lib/prisma-ssr';
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 interface Props {
   params: { [K in string]: string };

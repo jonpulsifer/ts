@@ -1,8 +1,8 @@
 import { faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import Spinner from 'components/Spinner';
 
-const Loading = () => {
+function Loading() {
   return <Spinner icon={faSnowflake} />;
-};
+}
 
 export default Loading;

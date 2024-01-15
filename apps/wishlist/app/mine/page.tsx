@@ -1,7 +1,7 @@
+import type { Metadata } from 'next';
 import GiftList from 'components/GiftList';
 import Page from 'components/Page';
 import { getMeWithGifts } from 'lib/prisma-ssr';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'My Wishlist',
@@ -12,7 +12,7 @@ const MyGiftsPage = async () => {
   const user = await getMeWithGifts();
   return (
     <Page>
-      <GiftList gifts={user.gifts} currentUserId={user.id} />
+      <GiftList currentUserId={user.id} gifts={user.gifts} />
     </Page>
   );
 };

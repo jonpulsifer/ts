@@ -2,11 +2,10 @@
 
 import { faDoorOpen, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Prisma } from '@prisma/client';
-import { joinWishlist, leaveWishlist } from 'app/actions';
+import type { Prisma } from '@prisma/client';
 import { toast } from 'react-hot-toast';
 import { Card } from '@repo/ui/card';
-
+import { joinWishlist, leaveWishlist } from 'app/actions';
 import EmptyState from './EmptyState';
 
 type UserWithWishlists = Prisma.UserGetPayload<{
@@ -22,14 +21,14 @@ interface Props {
   user: UserWithWishlists;
 }
 
-const FamilyList = ({ wishlists, user }: Props) => {
+function FamilyList({ wishlists, user }: Props) {
   const handleLeaveWishlist = async (wishlist: WishlistsWithoutPasswords) => {
     console.log('leave', wishlist);
     const result = await leaveWishlist({
       userId: user.id,
       wishlistId: wishlist.id,
     });
-    if (result?.error) {
+    if (result.error) {
       toast.error(result.error);
       toast.error('Something went wrong. Please try again.');
     } else {
@@ -47,7 +46,7 @@ const FamilyList = ({ wishlists, user }: Props) => {
       wishlistId: wishlist.id,
       password: password as string,
     });
-    if (result?.error) {
+    if (result.error) {
       toast.error(result.error);
       toast.error('Something went wrong. Please try again.');
     } else {
@@ -59,25 +58,25 @@ const FamilyList = ({ wishlists, user }: Props) => {
     return wishlists.map((wishlist) => {
       const form = (
         <form
-          name={wishlist.id}
           action={(formData) => handleJoinWishlist(formData, wishlist)}
           className="flex flex-row items-center"
+          name={wishlist.id}
         >
           <input
-            type="number"
-            name="password"
-            pattern="\d{1,4}"
-            inputMode="numeric"
             autoComplete="off"
             className="form-control block w-24 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
+            inputMode="numeric"
+            name="password"
+            pattern="\d{1,4}"
             placeholder="Pin"
+            type="number"
           />
           <button
             className="inline-flex ml-4 w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto "
             type="submit"
           >
             <div className="flex">
-              <FontAwesomeIcon icon={faHandshake} className="pr-2" />
+              <FontAwesomeIcon className="pr-2" icon={faHandshake} />
             </div>
             Join
           </button>
@@ -93,7 +92,7 @@ const FamilyList = ({ wishlists, user }: Props) => {
         >
           <div className="flex items-center">
             <div className="flex">
-              <FontAwesomeIcon icon={faDoorOpen} className="pr-2" />
+              <FontAwesomeIcon className="pr-2" icon={faDoorOpen} />
             </div>
             Leave
           </div>
@@ -104,8 +103,8 @@ const FamilyList = ({ wishlists, user }: Props) => {
 
       return (
         <tr
+          className="border-t hover:bg-gray-100 dark:hover:bg-gray-950 transition dark:border-gray-800 ease-in-out duration-300"
           key={`${wishlist.name}-${wishlist.id}`}
-          className={`border-t hover:bg-gray-100 dark:hover:bg-gray-950 transition dark:border-gray-800 ease-in-out duration-300`}
         >
           <td className="w-full py-2">
             <div className="flex items-center p-2 px-4">
@@ -129,8 +128,8 @@ const FamilyList = ({ wishlists, user }: Props) => {
 
   return wishlists.length ? (
     <Card
-      title="Family Wishlists"
       subtitle="Find your family and join their wishlist by entering a matching pin"
+      title="Family Wishlists"
     >
       <div className="flex flex-row overflow-x-auto select-none">
         <table className="table-auto w-full rounded-lg">
@@ -140,12 +139,12 @@ const FamilyList = ({ wishlists, user }: Props) => {
     </Card>
   ) : (
     <EmptyState
-      title="👨‍👩‍👧‍👦 No Wishlists Found"
       subtitle="Something is broken, talk to the webmaster"
+      title="👨‍👩‍👧‍👦 No Wishlists Found"
     >
       <div className="p-4">The elves could not find any wishlists.</div>
     </EmptyState>
   );
-};
+}
 
 export default FamilyList;

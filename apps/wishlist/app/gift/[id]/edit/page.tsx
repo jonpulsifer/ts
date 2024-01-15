@@ -1,9 +1,10 @@
+import type { Metadata } from 'next';
+import { Card } from '@repo/ui/card';
 import EmptyState from 'components/EmptyState';
 import GiftForm from 'components/GiftForm';
 import Page from 'components/Page';
 import { getGiftById } from 'lib/prisma-ssr';
-import { Metadata } from 'next';
-import { Card } from '@repo/ui/card';
+
 interface Props {
   params: { [K in string]: string };
 }

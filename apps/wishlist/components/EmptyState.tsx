@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { CardAction } from '@repo/ui/card';
+import type { CardAction } from '@repo/ui/card';
 
 interface Props {
   children?: React.ReactNode;
@@ -8,7 +8,7 @@ interface Props {
   subtitle?: string;
   action?: CardAction | CardAction[];
 }
-export const EmptyState = ({ children, title, subtitle, action }: Props) => {
+export function EmptyState({ children, title, subtitle, action }: Props) {
   const actions: CardAction[] = [];
   if (action && Array.isArray(action)) {
     actions.push(...action);
@@ -20,7 +20,7 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
     ? actions.map((action, idx) => {
         const actionIcon = action.icon ? (
           <div className="flex">
-            <FontAwesomeIcon icon={action.icon} className="pr-2" />
+            <FontAwesomeIcon className="pr-2" icon={action.icon} />
           </div>
         ) : null;
         const baseButtonClass =
@@ -31,11 +31,11 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
         const button = (
           <button
             className={buttonClass}
-            onClick={action?.onClick ? action.onClick : undefined}
             key={`fb-${idx}`}
+            onClick={action.onClick ? action.onClick : undefined}
           >
             {actionIcon}
-            {action?.title}
+            {action.title}
           </button>
         );
         return action.link ? (
@@ -65,10 +65,10 @@ export const EmptyState = ({ children, title, subtitle, action }: Props) => {
         <div className="text-gray-600 dark:text-slate-400 text-sm">
           {children}
         </div>
-        {action && <div className="flex flex-row gap-4">{actionsMarkup}</div>}
+        {action ? <div className="flex flex-row gap-4">{actionsMarkup}</div> : null}
       </div>
     </>
   );
-};
+}
 
 export default EmptyState;

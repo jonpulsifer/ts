@@ -1,4 +1,4 @@
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faGift } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
@@ -7,7 +7,7 @@ interface Props {
   icon?: IconDefinition;
 }
 
-const Spinner = ({ icon = faGift }: Props) => {
+function Spinner({ icon = faGift }: Props) {
   return (
     <div className="flex justify-center items-center h-full">
       <FontAwesomeIcon
@@ -16,6 +16,6 @@ const Spinner = ({ icon = faGift }: Props) => {
       />
     </div>
   );
-};
+}
 
 export default Spinner;

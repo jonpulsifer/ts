@@ -9,21 +9,21 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Gift, User } from '@prisma/client';
-import { claimGift, deleteGift, unclaimGift } from 'app/actions';
+import type { Gift, User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
-import { GiftWithOwner } from 'types/prisma';
 import { Card } from '@repo/ui/card';
+import type { GiftWithOwner } from 'types/prisma';
+import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 
 interface Props {
   gift: Gift | GiftWithOwner;
   user: User;
 }
 
-export const GiftCard = ({ gift, user }: Props) => {
+export function GiftCard({ gift, user }: Props) {
   const { name, description, url } = gift;
   const router = useRouter();
   const giftDescription = description
@@ -33,30 +33,28 @@ export const GiftCard = ({ gift, user }: Props) => {
   const { data: session } = useSession();
   const currentUser = session?.user as User;
 
-  const ToastMarkup = ({ gift }: { gift: Gift }) => {
+  function ToastMarkup({ gift }: { gift: Gift }) {
     return (
-      <>
-        <button className="flex flex-row items-center space-x-4 h-max">
+      <button className="flex flex-row items-center space-x-4 h-max">
           <div className="flex h-max">
             Are you sure you want to delete {gift.name}?
           </div>
           <div
-            onClick={() => handleDelete(gift)}
             className="flex pl-6 items-center border-l border-gray-300 h-16 hover:text-red-800 hover:drop-shadow transition ease-in-out duration-200 text-red-600 text-xs font-semibold uppercase"
+            onClick={() => handleDelete(gift)}
           >
             delete
           </div>
         </button>
-      </>
     );
-  };
+  }
 
   const handleConfirmDelete = (gift: Gift) => {
     toast.error(<ToastMarkup gift={gift} />, {
       icon: (
         <FontAwesomeIcon
-          icon={faTrashCan}
           className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600"
+          icon={faTrashCan}
         />
       ),
     });
@@ -91,7 +89,7 @@ export const GiftCard = ({ gift, user }: Props) => {
   };
 
   const giftAction = () => {
-    if (gift.ownerId === currentUser?.id)
+    if (gift.ownerId === currentUser.id)
       return [
         {
           link: `/gift/${gift.id}/edit`,
@@ -99,15 +97,15 @@ export const GiftCard = ({ gift, user }: Props) => {
           title: 'Edit Gift',
         },
         {
-          onClick: () => handleConfirmDelete(gift),
+          onClick: () => { handleConfirmDelete(gift); },
           icon: faTrashCan,
           title: 'Delete Gift',
           danger: true,
         },
       ];
-    if (gift.claimedById && gift.claimedById !== currentUser?.id)
+    if (gift.claimedById && gift.claimedById !== currentUser.id)
       return undefined;
-    if (gift.claimedById === currentUser?.id) {
+    if (gift.claimedById === currentUser.id) {
       return {
         onClick: () => handleUnclaim(gift),
         icon: faMinusSquare,
@@ -122,7 +120,7 @@ export const GiftCard = ({ gift, user }: Props) => {
   };
 
   return (
-    <Card title={name} subtitle={user.name} action={giftAction()}>
+    <Card action={giftAction()} subtitle={user.name} title={name}>
       <div className="p-4">
         <div className="flex flex-col space-y-4 truncate">
           {url ? (
@@ -134,8 +132,8 @@ export const GiftCard = ({ gift, user }: Props) => {
               <div className="truncate">
                 <Link
                   className="text-lg text-indigo-600 font-medium hover:text-indigo-600"
-                  target="gift"
                   href={url}
+                  target="gift"
                 >
                   {url}
                 </Link>
@@ -153,4 +151,4 @@ export const GiftCard = ({ gift, user }: Props) => {
       </div>
     </Card>
   );
-};
+}

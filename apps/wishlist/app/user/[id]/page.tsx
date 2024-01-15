@@ -1,9 +1,9 @@
+import type { Metadata } from 'next';
 import EmptyState from 'components/EmptyState';
 import GiftList from 'components/GiftList';
 import Page from 'components/Page';
 import { UserProfile } from 'components/User';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
-import { Metadata } from 'next';
 
 interface Props {
   params: { [K in string]: string };
@@ -25,8 +25,8 @@ const ProfilePage = async ({ params }: Props) => {
   if (!gifts.length) {
     return (
       <EmptyState
-        title="🎁 No Gifts Found"
         subtitle="The elves could not find any gifts for this person"
+        title="🎁 No Gifts Found"
       >
         <div className="p-4">
           <p>
@@ -43,8 +43,8 @@ const ProfilePage = async ({ params }: Props) => {
   return (
     <Page>
       <div className="space-y-4">
-        <UserProfile user={profile} currentUserId={user.id} />
-        <GiftList gifts={gifts} currentUserId={user.id} />
+        <UserProfile currentUserId={user.id} user={profile} />
+        <GiftList currentUserId={user.id} gifts={gifts} />
       </div>
     </Page>
   );

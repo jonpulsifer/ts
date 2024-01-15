@@ -1,4 +1,4 @@
-export const BadgeCounter = (name = 'thing', arr: unknown[]) => {
+export function BadgeCounter(name = 'thing', arr: unknown[]) {
   const count = arr.length;
   const label = count > 1 || count === 0 ? `${name}s` : name;
   const baseFontColor =
@@ -18,4 +18,4 @@ export const BadgeCounter = (name = 'thing', arr: unknown[]) => {
       {count} {label}
     </div>
   );
-};
+}

@@ -1,9 +1,9 @@
 import { faGifts } from '@fortawesome/free-solid-svg-icons';
+import type { Metadata } from 'next';
 import EmptyState from '../../components/EmptyState';
 import GiftList from '../../components/GiftList';
 import Page from '../../components/Page';
 import { getClaimedGiftsForMe } from '../../lib/prisma-ssr';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Claimed Gifts',
@@ -16,13 +16,13 @@ const ClaimedPage = async () => {
   if (!gifts.length) {
     return (
       <EmptyState
-        title="🛒 No Claimed Gifts"
-        subtitle="You have not claimed any gifts"
         action={{
           title: 'View gifts',
           link: '/gifts',
           icon: faGifts,
         }}
+        subtitle="You have not claimed any gifts"
+        title="🛒 No Claimed Gifts"
       >
         <div className="p-4">
           <p>
@@ -37,7 +37,7 @@ const ClaimedPage = async () => {
   }
   return (
     <Page>
-      <GiftList gifts={gifts} currentUserId={user.id} />
+      <GiftList currentUserId={user.id} gifts={gifts} />
     </Page>
   );
 };

@@ -1,12 +1,13 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import type { CardAction } from '@repo/ui/card';
+import { Card } from '@repo/ui/card';
 import EmptyState from 'components/EmptyState';
 import Page from 'components/Page';
 import { getPeopleForUser } from 'lib/prisma-ssr';
-import { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import { UserWithGifts } from 'types/prisma';
-import { Card, CardAction } from '@repo/ui/card';
+import type { UserWithGifts } from 'types/prisma';
 
 export const metadata: Metadata = {
   title: 'People',
@@ -39,9 +40,9 @@ const PeoplePage = async () => {
   if (!people) {
     return (
       <EmptyState
-        title="👪 No People Found"
-        subtitle="The elves could not find anyone but you!"
         action={action}
+        subtitle="The elves could not find anyone but you!"
+        title="👪 No People Found"
       >
         <div className="p-4">{noPeopleMarkup}</div>
       </EmptyState>
@@ -53,8 +54,8 @@ const PeoplePage = async () => {
       const { id, name, email, image } = user;
       return (
         <tr
-          key={id}
           className="border-t hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-950 transition ease-in-out duration-300 select-none"
+          key={id}
         >
           <td className="flex flex-row w-full">
             <div className="w-full">
@@ -67,11 +68,11 @@ const PeoplePage = async () => {
                   >
                     {image ? (
                       <Image
-                        src={image}
                         alt="Profile Photo"
                         className="rounded-full"
                         fill
                         sizes="30px"
+                        src={image}
                       />
                     ) : (
                       <span className="font-medium noselect text-gray-600 dark:text-indigo-500">
@@ -101,9 +102,9 @@ const PeoplePage = async () => {
   return (
     <Page>
       <Card
-        title="Family Members"
-        subtitle="This is a list of everyone that can see your wishlist."
         action={action}
+        subtitle="This is a list of everyone that can see your wishlist."
+        title="Family Members"
       >
         {userTable(users)}
       </Card>

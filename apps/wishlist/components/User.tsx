@@ -7,7 +7,7 @@ import {
   faSocks,
   faUserEdit,
 } from '@fortawesome/free-solid-svg-icons';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { Card } from '@repo/ui/card';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
   currentUserId: string;
 }
 
-export const UserProfile = ({ user, currentUserId }: Props) => {
+export function UserProfile({ user, currentUserId }: Props) {
   const { id, name, email, address, shirt_size, shoe_size, pant_size } = user;
   const isUserProfile = currentUserId === id;
   const nameOrEmailOrDefault = name || email || 'Anonymous';
@@ -58,7 +58,7 @@ export const UserProfile = ({ user, currentUserId }: Props) => {
   const fieldsMarkup = fields.map((field, i) => {
     if (!field.content) return null;
     return (
-      <div key={i} className="flex flex-col items-left">
+      <div className="flex flex-col items-left" key={i}>
         <div className="text-xs">
           <span className="">{field.label}</span>
         </div>
@@ -86,8 +86,8 @@ export const UserProfile = ({ user, currentUserId }: Props) => {
   ];
 
   return (
-    <Card title={title} action={actions}>
+    <Card action={actions} title={title}>
       <div className="flex flex-col gap-4 px-4">{fieldsMarkup}</div>
     </Card>
   );
-};
+}

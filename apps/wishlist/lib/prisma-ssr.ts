@@ -1,8 +1,8 @@
-import { Prisma, User } from '@prisma/client';
+import type { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
-
-import {
+import type {
   UserWithGifts,
   UserWithGiftsAndWishlists,
   UserWithGiftsWithOwners,
@@ -62,8 +62,8 @@ const getUserById = async (id: string, gifts = false, wishlists = false) => {
         id,
       },
       include: {
-        gifts: gifts,
-        wishlists: wishlists,
+        gifts,
+        wishlists,
       },
     });
     return user;
@@ -85,8 +85,8 @@ const getGiftById = async (id: string, owner = false, claimedBy = false) => {
         id,
       },
       include: {
-        owner: owner,
-        claimedBy: claimedBy,
+        owner,
+        claimedBy,
       },
     });
     return gift;
@@ -165,7 +165,7 @@ const getVisibleGiftsForUser = async () => {
   const session = await isAuthenticated();
   const { id } = session.user;
   const user = await getUserById(id, true, true);
-  if (!user.wishlists || !user.wishlists.length)
+  if (!user.wishlists.length)
     return { gifts: [], user: session.user };
 
   try {
@@ -264,7 +264,7 @@ const getPeopleForUser = async () => {
       },
     });
     const user = await getUserById(id, false, true);
-    return { users: users, user };
+    return { users, user };
   } catch (e) {
     console.error('getPeopleForUser', JSON.stringify(e));
   }
