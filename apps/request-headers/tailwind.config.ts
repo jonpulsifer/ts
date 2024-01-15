@@ -1,4 +1,4 @@
-import sharedConfig from 'tailwind-config';
+import sharedConfig from '@repo/tailwind-config';
 import type { Config } from 'tailwindcss';
 
 const config: Pick<Config, 'content' | 'presets'> = {

@@ -1,7 +1,7 @@
 import './globals.css';
-import 'ui/styles.css';
+import '@repo/ui/styles.css';
 
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ const inter = Inter({
   display: 'swap',
 });
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+function Layout({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <html className="h-full w-full" lang="en">
       <body
@@ -29,6 +29,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </body>
     </html>
   );
-};
+}
 
 export default Layout;

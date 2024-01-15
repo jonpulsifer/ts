@@ -27,7 +27,8 @@
         "DATABASE_URL",
         "DIRECT_URL",
         "CLIENT_IDENTITY_PKCS12",
-        "SERVER_CA"
+        "SERVER_CA",
+        "IS_DOCKER"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },

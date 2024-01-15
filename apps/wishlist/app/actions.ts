@@ -242,7 +242,7 @@ export const claimGift = async (id: string) => {
     });
 
     // determine if the gift has been claimed by someone else
-    const isClaimed = !!gift?.claimedBy;
+    const isClaimed = Boolean(gift?.claimedBy);
     if (isClaimed) {
       revalidatePath(`/gift`, 'layout');
       revalidatePath('/gifts');

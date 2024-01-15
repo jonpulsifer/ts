@@ -5,7 +5,7 @@ import type { User } from '@prisma/client';
 import { editUser } from 'app/actions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { Card } from 'ui/card';
+import { Card } from '@repo/ui/card';
 
 interface Props {
   user: User;

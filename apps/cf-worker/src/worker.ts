@@ -1,5 +1,5 @@
 const handler: ExportedHandler = {
-  async fetch(request: Request) {
+  fetch(request: Request) {
     const url = new URL(request.url);
 
     switch (url.pathname) {

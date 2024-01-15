@@ -1,19 +1,13 @@
-import { defineConfig, Options } from 'tsup';
+import { defineConfig, Options } from "tsup";
 
 export default defineConfig((options: Options) => ({
   treeshake: true,
   splitting: true,
-  entry: ['src/**/*.tsx', 'src/**/*.ts'],
-  format: ['esm'],
+  entry: ["src/**/*.tsx"],
+  format: ["esm"],
   dts: true,
   minify: true,
   clean: true,
-  external: ['react', 'next'],
-  esbuildOptions: (options) => {
-    // Append "use client" to the top of the react entry point
-    options.banner = {
-      js: '"use client";',
-    };
-  },
+  external: ["react"],
   ...options,
 }));

@@ -1,9 +1,8 @@
 import './globals.css';
-import 'ui/styles.css';
+import '@repo/ui/styles.css';
 
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-
 import { SessionProvider } from './providers';
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ const inter = Inter({
   display: 'swap',
 });
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+function Layout({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <html className="h-full w-full" lang="en">
       <SessionProvider>
@@ -35,6 +34,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </SessionProvider>
     </html>
   );
-};
+}
 
 export default Layout;

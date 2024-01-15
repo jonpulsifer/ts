@@ -3,7 +3,7 @@ const nextConfig = {
   experimental: {
     typedRoutes: true,
   },
-  transpilePackages: ['ui'],
+  transpilePackages: ['@repo/ui'],
   reactStrictMode: true,
   output: process.env.IS_DOCKER ? 'standalone' : undefined,
 };

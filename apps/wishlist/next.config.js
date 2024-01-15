@@ -6,7 +6,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
     ],
   },
-  transpilePackages: ['ui'],
+  transpilePackages: ['@repo/ui'],
   async headers() {
     return [
       {

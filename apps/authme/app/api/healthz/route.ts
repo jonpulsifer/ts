@@ -1,12 +1,15 @@
-import { writeEncodedCertsFromEnv } from 'lib/certs';
-import { prisma } from 'lib/prisma';
 import { NextResponse } from 'next/server';
+import { writeEncodedCertsFromEnv } from '../../../lib/certs';
+import { prisma } from '../../../lib/prisma';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PrismaRawResults = any[];
+type PrismaRawResults = {
+  count?: number;
+  max_connections?: number;
+}[];
+
 writeEncodedCertsFromEnv();
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   // Execute the database queries
   const currentConnectionsResult: PrismaRawResults =
     await prisma.$queryRaw`SELECT COUNT(1) FROM pg_stat_activity;`;
@@ -14,8 +17,8 @@ export async function GET() {
     await prisma.$queryRaw`SHOW max_connections;`;
 
   // Extract and type assert the results
-  const currentConnections = currentConnectionsResult[0]?.count || '0';
-  const maxConnections = maxConnectionsResult[0]?.max_connections || '0';
+  const currentConnections = String(currentConnectionsResult[0]?.count) || '0';
+  const maxConnections = String(maxConnectionsResult[0]?.max_connections) || '0';
 
   return NextResponse.json(
     {

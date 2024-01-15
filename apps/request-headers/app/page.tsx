@@ -1,44 +1,46 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { Card } from 'ui/card';
+import { Card } from '@repo/ui/card';
 
 const { NODE_NAME, NODE_IP, POD_NAME, POD_IP, POD_CHANGE_ME } = process.env;
-const isInKubernetes = !!process.env.POD_NAME;
+const isInKubernetes = Boolean(process.env.POD_NAME);
 
-const KubernetesTable = () => (
-  <table className="min-w-full table-auto">
-    <thead>
-      <tr>
-        <th className="text-left px-4 py-2">Item</th>
-        <th className="text-left px-4 py-2">Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr className="border-b dark:border-slate-800 border-gray-200">
-        <td className="px-4 py-2">Node</td>
-        <td className="px-4 py-2">{NODE_NAME}</td>
-      </tr>
-      <tr className="border-b dark:border-slate-800 border-gray-200">
-        <td className="px-4 py-2">Node IP</td>
-        <td className="px-4 py-2">{NODE_IP}</td>
-      </tr>
-      <tr className="border-b dark:border-slate-800 border-gray-200">
-        <td className="px-4 py-2">Pod</td>
-        <td className="px-4 py-2">{POD_NAME}</td>
-      </tr>
-      <tr className="border-b dark:border-slate-800 border-gray-200">
-        <td className="px-4 py-2">Pod IP</td>
-        <td className="px-4 py-2">{POD_IP}</td>
-      </tr>
-      <tr className="border-b dark:border-slate-800 border-gray-200">
-        <td className="px-4 py-2">Pod Change Me</td>
-        <td className="px-4 py-2">{POD_CHANGE_ME}</td>
-      </tr>
-    </tbody>
-  </table>
-);
+function KubernetesTable(): JSX.Element {
+  return (
+    <table className="min-w-full table-auto">
+      <thead>
+        <tr>
+          <th className="text-left px-4 py-2">Item</th>
+          <th className="text-left px-4 py-2">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr className="border-b dark:border-slate-800 border-gray-200">
+          <td className="px-4 py-2">Node</td>
+          <td className="px-4 py-2">{NODE_NAME}</td>
+        </tr>
+        <tr className="border-b dark:border-slate-800 border-gray-200">
+          <td className="px-4 py-2">Node IP</td>
+          <td className="px-4 py-2">{NODE_IP}</td>
+        </tr>
+        <tr className="border-b dark:border-slate-800 border-gray-200">
+          <td className="px-4 py-2">Pod</td>
+          <td className="px-4 py-2">{POD_NAME}</td>
+        </tr>
+        <tr className="border-b dark:border-slate-800 border-gray-200">
+          <td className="px-4 py-2">Pod IP</td>
+          <td className="px-4 py-2">{POD_IP}</td>
+        </tr>
+        <tr className="border-b dark:border-slate-800 border-gray-200">
+          <td className="px-4 py-2">Pod Change Me</td>
+          <td className="px-4 py-2">{POD_CHANGE_ME}</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+}
 
-const EnvironmentTable = () => {
+function EnvironmentTable() {
   return (
     <table className="min-w-full table-auto">
       <thead>
@@ -52,8 +54,8 @@ const EnvironmentTable = () => {
           if (!value) return;
           return (
             <tr
-              key={key}
               className="border-b dark:border-slate-800 border-gray-200"
+              key={key}
             >
               <td className="px-4 py-2">{key}</td>
               <td className="px-4 py-2 break-all">{value}</td>
@@ -63,10 +65,10 @@ const EnvironmentTable = () => {
       </tbody>
     </table>
   );
-};
+}
 
-const HeadersTable = () => {
-  const obj: { [key: string]: string } = {};
+function HeadersTable() {
+  const obj: Record<string, string> = {};
 
   // Iterate through the headers using Headers.values()
   for (const [key, value] of headers().entries()) {
@@ -85,8 +87,8 @@ const HeadersTable = () => {
           if (!value) return;
           return (
             <tr
-              key={key}
               className="border-b dark:border-slate-800 border-gray-200"
+              key={key}
             >
               <td className="px-4 py-2 whitespace-nowrap">{key}</td>
               <td className="px-4 py-2 break-all">{value}</td>
@@ -96,10 +98,10 @@ const HeadersTable = () => {
       </tbody>
     </table>
   );
-};
+}
 
 const KubernetesCard = isInKubernetes ? (
-  <Card title="Kubernetes" subtitle="Kubernetes related environment variables">
+  <Card subtitle="Kubernetes related environment variables" title="Kubernetes">
     <KubernetesTable />
   </Card>
 ) : null;
@@ -112,7 +114,7 @@ export const metadata: Metadata = {
 // change me
 const starColor = 'text-yellow-300 hover:animate-ping hover:text-pink-600';
 
-const Home = async () => {
+const Home = () => {
   return (
     <div className="flex flex-col justify-center items-center gap-4 max-w-full w-full">
       <h1 className="text-md sm:text-2xl md:text-3xl lg:text-4xl tracking-tight font-extrabold pt-4">
@@ -127,14 +129,14 @@ const Home = async () => {
       <div className="flex flex-col gap-4 max-w-full sm:max-w-2xl">
         {KubernetesCard}
         <Card
-          title="Environment Variables"
           subtitle="All environment variables visible on the server"
+          title="Environment Variables"
         >
           <EnvironmentTable />
         </Card>
         <Card
-          title="Request Headers"
           subtitle="HTTP headers received by the server"
+          title="Request Headers"
         >
           <HeadersTable />
         </Card>

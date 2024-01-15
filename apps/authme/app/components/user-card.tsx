@@ -1,14 +1,14 @@
 'use client';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { Card } from 'ui/card';
+import { Card } from '@repo/ui/card';
 
-interface Props {
+interface UserCardProps {
   user: User | null;
 }
 
-export const UserCard = ({ user }: Props) => {
+export function UserCard({ user }: UserCardProps): JSX.Element | null {
   const [currentUser, setCurrentUser] = useState(user);
   const { status } = useSession();
 
@@ -23,7 +23,7 @@ export const UserCard = ({ user }: Props) => {
 
   const { email, name, id } = currentUser;
   return (
-    <Card title={name} subtitle={`${email}`}>
+    <Card subtitle={email} title={name}>
       <div className="p-4">
         <p className="font-bold">This is you.</p>
         <p className="text-sm text-gray-500">ID</p>
@@ -31,4 +31,4 @@ export const UserCard = ({ user }: Props) => {
       </div>
     </Card>
   );
-};
+}

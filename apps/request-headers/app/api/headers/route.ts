@@ -1,10 +1,11 @@
-import { headers } from 'next/headers';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access -- science */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment -- science */
+/* eslint-disable @typescript-eslint/no-unsafe-call -- science */
 import { NextResponse } from 'next/server';
-
-// import file from filesystem
+import { headers } from 'next/headers';
 import * as myJson from './data/my.json';
 
-export async function GET() {
+export function GET(): NextResponse {
   const res = Object.create(null);
   for (const [key, value] of headers().entries()) {
     res[key] = value;
@@ -13,6 +14,6 @@ export async function GET() {
   const { data } = myJson;
 
   // use data
-  res['fromFile'] = data;
+  res.fromFile = data;
   return NextResponse.json({ ...res });
 }

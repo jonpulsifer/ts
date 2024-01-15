@@ -8,7 +8,7 @@ import {
   faUserEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import { User } from '@prisma/client';
-import { Card } from 'ui/card';
+import { Card } from '@repo/ui/card';
 
 interface Props {
   user: User;

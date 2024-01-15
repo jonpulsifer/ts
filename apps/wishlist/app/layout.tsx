@@ -1,5 +1,5 @@
 import './globals.css';
-import 'ui/styles.css';
+import '@repo/ui/styles.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import { Analytics } from '@vercel/analytics/react';

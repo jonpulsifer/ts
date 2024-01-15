@@ -1,8 +1,8 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
-export const writeEncodedCertsFromEnv = () => {
+export const writeEncodedCertsFromEnv = (): void => {
   if (process.env.NODE_ENV !== 'production') {
-    console.debug('Skipping cert writing since NODE_ENV is not production');
+    // console.debug('Skipping cert writing since NODE_ENV is not production');
     return;
   }
 
@@ -27,6 +27,6 @@ export const writeEncodedCertsFromEnv = () => {
     // Decode and write content to file
     const decodedContent = Buffer.from(content, 'base64');
     fs.writeFileSync(filePath, decodedContent);
-    console.debug(`File written: ${filePath} (${decodedContent.length} bytes)`);
+    // console.debug(`File written: ${filePath} (${decodedContent.length} bytes)`);
   }
 };

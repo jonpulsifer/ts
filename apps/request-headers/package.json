@@ -12,16 +12,16 @@
     "next": "14.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "ui": "workspace:*"
+    "@repo/ui": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "20.10.2",
     "@types/react": "18.2.47",
     "@types/react-dom": "18.2.18",
-    "eslint-config-custom": "workspace:*",
-    "tailwind-config": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
     "tailwindcss": "3.4.1",
-    "tsconfig": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "typescript": "5.3.3"
   }
 }

@@ -1,20 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console -- this is wild */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access -- this is wild */
+/* eslint-disable @typescript-eslint/no-explicit-any -- this is wild */
 'use server';
-import { Prisma, User } from '@prisma/client';
-import { authOptions } from 'lib/auth';
-import { prisma } from 'lib/prisma';
+import type { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../lib/auth';
+import { prisma } from '../lib/prisma';
 
-const getRandomUser = async () => {
+const getRandomUser = async (): Promise<User | null> => {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user) {
+  if (!session?.user) {
     return null;
   }
   const user = await prisma.user.findFirst();
   return user;
 };
 
-const getUserById = (id: string) => {
+const getUserById = (id: string): Promise<User> => {
   try {
     const user = prisma.user.findUniqueOrThrow({
       where: {
@@ -33,15 +36,21 @@ const getUserById = (id: string) => {
   throw new Error('User not found');
 };
 
-const getMe = async () => {
+const getMe = async (): Promise<User | null> => {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user) {
+  if (!session?.user) {
     return null;
   }
   return session.user as User;
 };
 
-const getDatabaseInfo = async () => {
+interface DatabaseInfo {
+  version: string;
+  connections: string;
+  maxConnections: string;
+}
+
+const getDatabaseInfo = async (): Promise<DatabaseInfo> => {
   // Execute the database queries
   const dbVersionResult: any[] = await prisma.$queryRaw`SELECT version();`;
   const currentConnectionsResult: any[] =
@@ -50,7 +59,7 @@ const getDatabaseInfo = async () => {
     await prisma.$queryRaw`SHOW max_connections;`;
 
   // Extract and type assert the results
-  const version = dbVersionResult[0]?.version || 'Unknown';
+  const version = String(dbVersionResult[0]?.version) || 'Unknown';
   const connections = String(currentConnectionsResult[0]?.count) || '0';
   const maxConnections =
     String(maxConnectionsResult[0]?.max_connections) || '0';

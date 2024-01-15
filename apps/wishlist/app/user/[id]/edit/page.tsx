@@ -5,7 +5,7 @@ import UserForm from 'components/UserForm';
 import { getUserById } from 'lib/prisma-ssr';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card } from 'ui/card';
+import { Card } from '@repo/ui/card';
 
 interface Props {
   params: { [K in string]: string };

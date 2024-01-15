@@ -1,17 +1,16 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
-
 import { getDatabaseInfo, getMe } from './actions';
-import { DatabaseCard } from './components/DatabaseCard';
-import { Login } from './components/Login';
-import { UserCard } from './components/UserCard';
+import { DatabaseCard } from './components/database-card';
+import { Login } from './components/login';
+import { UserCard } from './components/user-card';
 
 export const metadata: Metadata = {
   title: 'Sandbox',
   description: 'My little application Sandbox',
 };
 
-const Home = async () => {
+const Home = async (): Promise<JSX.Element> => {
   const { connections, maxConnections, version } = await getDatabaseInfo();
   const user = await getMe();
   return (

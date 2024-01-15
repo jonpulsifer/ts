@@ -1,26 +1,9 @@
 {
-  "extends": "tsconfig/nextjs.json",
+  "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "downlevelIteration": true,
-    "paths": {
-      "ui": ["../../packages/ui"],
-    },
-    "plugins": [{ "name": "next" }
-    ],
-    "strictNullChecks": true,
-    "target": "ESNext"
+    "plugins": [{ "name": "next" }],
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "next-env.d.ts"
-  ],
-  "paths": {
-    "ui": ["../../packages/ui/src"]
-  },
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"],
+  "exclude": ["node_modules"]
 }
