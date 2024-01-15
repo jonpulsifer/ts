@@ -19,7 +19,7 @@ const inter = Inter({
   display: 'swap',
 });
 
-function Layout({ children }: { children: React.ReactNode }): JSX.Element {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html className="h-full w-full" lang="en">
       <body

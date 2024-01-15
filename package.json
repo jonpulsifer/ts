@@ -22,8 +22,8 @@
     "turbo": "1.11.3"
   },
   "engines": {
-    "node": ">=18.19.0",
-    "npm": ">=9.0.0"
+    "node": ">=18.*.*",
+    "npm": ">=9.*.*"
   },
   "packageManager": "pnpm@8.14.1",
   "cspell": {
