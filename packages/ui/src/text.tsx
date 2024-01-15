@@ -1,5 +1,4 @@
 import { clsx } from 'clsx';
-
 import { Link } from './link';
 
 export function Text({
@@ -9,11 +8,11 @@ export function Text({
   return (
     <p
       {...props}
-      data-slot="text"
       className={clsx(
         className,
         'text-base/6 text-zinc-500 sm:text-sm/6 dark:text-zinc-400',
       )}
+      data-slot="text"
     />
   );
 }

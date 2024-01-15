@@ -11,40 +11,46 @@ import {
 import { UserWithGifts } from 'types/prisma';
 
 export function UserTable({ users }: { users: UserWithGifts[] }) {
+  const tableRows = users.map((user) => {
+    const initials = user.name ? user.name[0].toUpperCase() : '';
+    return (
+      <TableRow key={user.name || ''} href={`/user/${user.id}`}>
+        <TableCell>
+          <div className="flex items-center gap-4">
+            <Avatar
+              src={user.image}
+              initials={!user.image ? initials : undefined}
+              className="size-10 sm:size-12"
+            />
+            <div>
+              <div className="font-medium">{user.name}</div>
+              <div className="text-zinc-500">
+                <a href="#" className="hover:text-zinc-700">
+                  {user.email}
+                </a>
+              </div>
+            </div>
+          </div>
+        </TableCell>
+        <TableCell>
+          <Badge color="zinc">Offline</Badge>
+        </TableCell>
+      </TableRow>
+    );
+  });
+
   return (
-    <Table className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]">
+    <Table
+      bleed
+      className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]"
+    >
       <TableHead>
         <TableRow>
           <TableHeader>Name</TableHeader>
-          <TableHeader>Joined</TableHeader>
           <TableHeader>Status</TableHeader>
         </TableRow>
       </TableHead>
-      <TableBody>
-        {users.map((user) => (
-          <TableRow key={user.name || ''} href={`/user/${user.id}`}>
-            <TableCell>
-              <div className="flex items-center gap-4">
-                <Avatar src={user.image} className="size-12" />
-                <div>
-                  <div className="font-medium">{user.name}</div>
-                  <div className="text-zinc-500">
-                    <a href="#" className="hover:text-zinc-700">
-                      {user.email}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </TableCell>
-            <TableCell className="text-zinc-500">
-              {user.createdAt.toDateString()}
-            </TableCell>
-            <TableCell>
-              <Badge color="zinc">Offline</Badge>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
+      <TableBody>{tableRows}</TableBody>
     </Table>
   );
 }

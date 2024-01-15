@@ -10,7 +10,8 @@
     "./button": "./src/button.tsx",
     "./badge": "./src/badge.tsx",
     "./card": "./src/card.tsx",
-    "./table": "./src/table.tsx"
+    "./table": "./src/table.tsx",
+    "./text": "./src/text.tsx"
   },
   "license": "MIT",
   "scripts": {

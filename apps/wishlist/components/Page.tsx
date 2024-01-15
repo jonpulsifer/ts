@@ -71,7 +71,7 @@ function Page({ title, children }: Props) {
       </header>
       <div className="flex flex-row h-full">
         <Sidebar />
-        <div className="flex flex-col w-full items-center p-2 sm:p-4 h-full">
+        <div className="flex flex-col w-full items-center h-full">
           <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
             <div className="space-y-4 pb-28 sm:pb-0 grow">{children}</div>
           </div>

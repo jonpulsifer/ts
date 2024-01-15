@@ -4,7 +4,7 @@ import {
 } from '@headlessui/react';
 import clsx from 'clsx';
 import Image from 'next/image';
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { TouchTarget } from './button';
 import { Link } from './link';
 
@@ -59,7 +59,7 @@ export function Avatar({
           </text>
         </svg>
       ) : null}
-      {src ? <Image alt={alt} src={src} width={48} height={48} /> : null}
+      {src ? <Image alt={alt} height={48} src={src} width={48} /> : null}
       {/* Add an inset border that sits on top of the image */}
       <span
         aria-hidden="true"
@@ -69,7 +69,7 @@ export function Avatar({
   );
 }
 
-export const AvatarButton = React.forwardRef(function AvatarButton(
+export const AvatarButton = forwardRef(function AvatarButton(
   {
     src,
     square = false,

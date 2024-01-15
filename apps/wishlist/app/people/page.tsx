@@ -1,5 +1,6 @@
 import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import { Card } from '@repo/ui/card';
+import { Strong, Text } from '@repo/ui/text';
 import type { Metadata } from 'next';
 
 import EmptyState from '../../components/EmptyState';
@@ -23,16 +24,15 @@ const PeoplePage = async () => {
   const people = users.length;
   const hasWishlists = user.wishlists.length;
   const noPeopleMarkup = hasWishlists ? (
-    <p>
+    <Text>
       You&apos;re the first one here!{' '}
-      <span className="font-semibold">Share wishin.app with your family!</span>
-    </p>
+      <Strong>Share wishin.app with your family!</Strong>
+    </Text>
   ) : (
-    <p>
-      Please{' '}
-      <span className="font-bold dark:text-slate-200">join a wishlist</span> or{' '}
-      <span className="font-bold dark:text-slate-200">invite your family</span>
-    </p>
+    <Text>
+      Please <Strong className="dark:text-slate-200">join a wishlist</Strong> or{' '}
+      <Strong className="dark:text-slate-200">invite your family</Strong>
+    </Text>
   );
 
   if (!people) {
@@ -50,8 +50,8 @@ const PeoplePage = async () => {
   return (
     <Page>
       <Card
-        subtitle="This is a list of everyone that can see your wishlist."
-        title="Family Members"
+        title="People in your wishlists"
+        subtitle="This is a list of everyone that can see your wishlist"
       >
         <UserTable users={users} />
       </Card>

@@ -28,14 +28,14 @@ export function Card({
   badges,
   children,
 }: CardProps): JSX.Element {
-  const titleMarkup = (
-    <div className="flex flex-row gap-4 p-4 truncate">
-      <div className="flex flex-col grow dark:text-gray-400">
-        <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-200">
+  const headerContent = (
+    <div className="flex flex-row">
+      <div className="flex flex-col grow">
+        <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-400">
           {title}
         </h1>
         <div className="">
-          <p className="text-sm text-gray-500 dark:text-slate-400">
+          <p className="text-sm text-gray-500 dark:text-slate-500">
             {subtitle}
           </p>
         </div>
@@ -89,20 +89,15 @@ export function Card({
       })
     : null;
 
-  const footer = (
-    <div className="bg-gray-50 dark:bg-slate-900 rounded-b-lg px-4 py-3 sm:flex sm:flex-row-reverse">
-      {actionsMarkup}
-    </div>
-  );
+  const footer = <div className="px-4 py-4 sm:px-6">{actionsMarkup}</div>;
+  const header = <div className="px-4 py-5 sm:px-6">{headerContent}</div>;
 
-  const headerMarkup = title ? titleMarkup : null;
+  const headerMarkup = title ? header : null;
   const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="flex flex-col h-max rounded-lg bg-white dark:bg-slate-900 sm:max-w-2xl dark:text-gray-400 shadow shadow-md border-transparent">
-      <div className="my-2 sm:text-left">
-        {headerMarkup}
-        {children}
-      </div>
+    <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent">
+      {headerMarkup}
+      <div className="px-4 py-5 sm:p-6">{children}</div>
       {footerMarkup}
     </div>
   );
