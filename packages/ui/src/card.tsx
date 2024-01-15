@@ -95,7 +95,7 @@ export function Card({
   const headerMarkup = title ? header : null;
   const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent">
+    <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden sm:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent">
       {headerMarkup}
       <div className="px-4 py-5 sm:p-6">{children}</div>
       {footerMarkup}
