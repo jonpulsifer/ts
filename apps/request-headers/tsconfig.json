@@ -1,8 +1,8 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
-    "downlevelIteration": true,
     "plugins": [{ "name": "next" }],
+    "downlevelIteration": true,
   },
   "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"],
   "exclude": ["node_modules"]
