@@ -9,19 +9,19 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
+    "@repo/ui": "workspace:*",
     "next": "14.0.4",
-    "react": "18.2.0",
     "react-dom": "18.2.0",
-    "@repo/ui": "workspace:*"
+    "react": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.10.2",
-    "@types/react": "18.2.47",
-    "@types/react-dom": "18.2.18",
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
-    "tailwindcss": "3.4.1",
     "@repo/typescript-config": "workspace:*",
+    "@types/node": "20.10.2",
+    "@types/react-dom": "18.2.18",
+    "@types/react": "18.2.47",
+    "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
   }
 }
