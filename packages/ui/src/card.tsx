@@ -30,12 +30,12 @@ export function Card({
 }: CardProps): JSX.Element {
   const headerContent = (
     <div className="flex flex-row">
-      <div className="flex flex-col grow">
-        <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-400">
+      <div className="flex flex-col grow xs:gap-2">
+        <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-200">
           {title}
         </h1>
-        <div className="">
-          <p className="text-sm text-gray-500 dark:text-slate-500">
+        <div>
+          <p className="text-xs text-gray-500 dark:text-slate-500">
             {subtitle}
           </p>
         </div>
@@ -90,12 +90,12 @@ export function Card({
     : null;
 
   const footer = <div className="px-4 py-4 sm:px-6">{actionsMarkup}</div>;
-  const header = <div className="px-4 py-5 sm:px-6">{headerContent}</div>;
+  const header = <div className="px-4 py-4 sm:px-6">{headerContent}</div>;
 
   const headerMarkup = title ? header : null;
   const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden sm:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent">
+    <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent">
       {headerMarkup}
       <div className="px-4 py-5 sm:p-6">{children}</div>
       {footerMarkup}

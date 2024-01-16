@@ -1,3 +1,4 @@
+import { Text } from '@repo/ui/text';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -16,13 +17,13 @@ const Home = async (): Promise<JSX.Element> => {
   const user = await getMe();
   return (
     <div className="flex flex-col justify-center items-center gap-4 max-w-full w-full">
-      <div className="flex flex-col items-center mt-4">
+      <div className="flex flex-col items-center mx-4 mt-2">
         <h1 className="text-4xl font-bold">Authme</h1>
-        <p className="text-xs text-gray-400">
+        <Text>
           A little application with a user model, database, and log in.
-        </p>
+        </Text>
       </div>
-      <div className="flex flex-col gap-4 min-w-64 max-w-96">
+      <div className="flex flex-col gap-4 max-w-lg">
         <Login />
         <Suspense fallback={<div>Suspended...</div>}>
           <UserCard user={user} />

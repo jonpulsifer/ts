@@ -23,14 +23,12 @@ const inter = Inter({
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html className="h-full w-full" lang="en">
+    <html lang="en">
       <SessionProvider>
         <body
-          className={`h-full w-full bg-gray-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
+          className={`bg-gray-200 dark:bg-slate-950 dark:text-zinc-200 ${inter.className}`}
         >
-          <main className="flex flex-col h-full w-full items-center">
-            {children}
-          </main>
+          <main className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</main>
         </body>
       </SessionProvider>
     </html>
