@@ -11,7 +11,9 @@
     "experimentalDecorators": true,
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "target": "ES6"
+    "target": "ES6",
+    "module": "commonjs",
+    "moduleResolution": "node",
   },
   "exclude": ["dist"]
 }
