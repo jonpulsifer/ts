@@ -48,6 +48,9 @@ jobs:
           node-version: 18
           cache: pnpm
 
+      - name: Prepare dotenv files
+        run: find . -type f -name '.env.development' -execdir cp -v {} .env \;
+
       - name: Install dependencies
         run: pnpm install
 
