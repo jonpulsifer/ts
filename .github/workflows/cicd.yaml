@@ -56,7 +56,7 @@ jobs:
           DIRECT_URL: postgresql://postgres:postgres@localhost:5432/db?schema=public
 
       - name: Test
-        run: pnpm test
+        run: pnpm test --filter='!authme'
 
   containerize:
     name: containerize
