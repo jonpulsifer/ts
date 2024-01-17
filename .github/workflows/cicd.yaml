@@ -23,7 +23,7 @@ jobs:
         image: postgres:16@sha256:49c276fa02e3d61bd9b8db81dfb4784fe814f50f778dce5980a03817438293e3
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: wishlist
+          POSTGRES_MULTIPLE_DATABASES: authme,wishlist
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -31,6 +31,8 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+        volumes:
+          - .github/scripts:/docker-entrypoint-initdb.d
 
     steps:
       - name: Check out code
@@ -50,13 +52,10 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build --filter='!authme'
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/db?schema=public
-          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/db?schema=public
+        run: pnpm build
 
       - name: Test
-        run: pnpm test --filter='!authme'
+        run: pnpm test
 
   containerize:
     name: containerize
