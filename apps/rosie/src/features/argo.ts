@@ -1,6 +1,6 @@
 import { ArgoCD } from '../clients/argocd';
 import { timeSince } from '../lib';
-import { BotMessage } from '../types';
+import type { BotMessage } from '../types';
 
 export async function argoListApps({ message, say }: BotMessage) {
   const argo = new ArgoCD(
@@ -11,10 +11,10 @@ export async function argoListApps({ message, say }: BotMessage) {
 
   if (message.subtype === undefined || message.subtype === 'bot_message') {
     const applications = await argo.applications().catch(console.error);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const applicationBlocks: any[] = [];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     applications.items.forEach((app: any, index: number, array: []) => {
       // get the distance between now and last reconciled
       const lastDeployment = app.status.history[app.status.history.length - 1];

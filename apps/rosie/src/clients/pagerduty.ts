@@ -1,7 +1,7 @@
 import { api } from '@pagerduty/pdjs';
-import { PartialCall } from '@pagerduty/pdjs/build/src/api';
+import type { PartialCall } from '@pagerduty/pdjs/build/src/api';
 
-interface oncallsType {
+interface OnCallsType {
   escalation_policy: {
     id: string;
     type: string;
@@ -47,15 +47,12 @@ export class PagerDuty {
     return this.pd
       .get('/oncalls')
       .then(({ resource }) => {
-        return resource as oncallsType[];
+        return resource as OnCallsType[];
       })
       .catch(console.error);
   }
 
   async createIncident(pdUser: string, description?: string | null) {
-    if (!description) {
-      description = 'No description provided';
-    }
     return this.pd
       .post('/incidents', {
         data: {
@@ -68,7 +65,7 @@ export class PagerDuty {
             },
             body: {
               type: 'incident_body',
-              details: description,
+              details: description || 'No description provided',
             },
             urgency: 'high',
             incident_key: `${Date.now().toString()}-rosie-slack`,

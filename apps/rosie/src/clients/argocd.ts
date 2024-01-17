@@ -30,7 +30,7 @@ export class ArgoCD {
     path: string,
     method: 'GET' | 'POST' | 'PUT' | 'PATCH',
     body?: object,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
   ): Promise<any> {
     await this.login();
     const url = `${this.server}/api/v1/${path}`;
@@ -38,8 +38,8 @@ export class ArgoCD {
       Authorization: `Bearer ${this.token}`,
     };
     const options: RequestInit = {
-      method: method,
-      headers: headers,
+      method,
+      headers,
     };
     if (body) {
       headers['Content-Type'] = 'application/json';
@@ -68,7 +68,7 @@ export class ArgoCD {
       apiVersion: 'argoproj.io/v1alpha1',
       kind: 'Application',
       metadata: {
-        name: name,
+        name,
         finalizers: ['resources-finalizer.argocd.argoproj.io'],
       },
       spec: {
@@ -78,7 +78,7 @@ export class ArgoCD {
         },
         project: 'default',
         source: {
-          path: path,
+          path,
           repoURL: repoUrl,
           targetRevision: 'HEAD',
         },

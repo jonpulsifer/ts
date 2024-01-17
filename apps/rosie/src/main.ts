@@ -1,11 +1,11 @@
-import { App, BlockAction, LogLevel } from '@slack/bolt';
-import dotenv from 'dotenv';
+import type { BlockAction } from '@slack/bolt';
+import { App, LogLevel } from '@slack/bolt';
+import { config } from 'dotenv';
 import { distance } from 'fastest-levenshtein';
-
 import { argoListApps } from './features/argo';
 import { pdListOncalls, pdPageSomeone } from './features/oncall';
 
-dotenv.config();
+if (process.env.NODE_ENV === 'development') config();
 
 const app = new App({
   signingSecret: process.env.SLACK_CLIENT_SIGNING_SECRET,
@@ -23,7 +23,7 @@ interface CommandInfo {
   command: string;
   description: string;
   subCommands?: CommandInfo[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   action?: (args: string[], event: any, say: any, app?: any) => void;
 }
 
@@ -125,7 +125,7 @@ function findCommand(
     return dist <= DISTANCE_THRESHOLD;
   });
 
-  if (closestCommand && closestCommand.subCommands && args[1]) {
+  if (closestCommand?.subCommands && args[1]) {
     return findCommand(closestCommand.subCommands, args.slice(1));
   }
 

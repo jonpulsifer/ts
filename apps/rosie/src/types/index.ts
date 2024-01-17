@@ -1,13 +1,12 @@
-import {
+import type {
   AckFn,
   AppMentionEvent,
   BlockAction,
-  BlockElementAction,
   KnownEventFromType,
   Logger,
   SayFn,
 } from '@slack/bolt';
-import { WebClient } from '@slack/web-api';
+import type { WebClient } from '@slack/web-api';
 
 export interface BotMessage {
   message: KnownEventFromType<'message'> | AppMentionEvent;
@@ -15,7 +14,7 @@ export interface BotMessage {
 }
 
 export interface BotAction {
-  body: BlockAction<BlockElementAction>;
+  body: BlockAction;
   client: WebClient;
   ack: AckFn<void>;
   logger: Logger;
