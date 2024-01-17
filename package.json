@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "eslint": "8.56.0",
-    "prettier": "3.2.3",
+    "prettier": "3.2.4",
     "@repo/eslint-config": "workspace:*",
     "@repo/prettier-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
