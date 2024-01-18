@@ -20,7 +20,7 @@
     "@fortawesome/react-fontawesome": "0.2.0",
     "@headlessui/react": "1.7.18",
     "@prisma/client": "5.8.1",
-    "@vercel/analytics": "1.1.1",
+    "@vercel/analytics": "1.1.2",
     "@vercel/speed-insights": "^1.0.1",
     "next": "14.0.4",
     "next-auth": "4.24.5",
