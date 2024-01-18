@@ -12,9 +12,10 @@ import { UserWithGifts } from 'types/prisma';
 
 export function UserTable({ users }: { users: UserWithGifts[] }) {
   const tableRows = users.map((user) => {
-    const initials = user.name ? user.name[0].toUpperCase() : '';
+    const displayName = user.name || user.email;
+    const initials = displayName ? displayName[0].toUpperCase() : '';
     return (
-      <TableRow key={user.name || ''} href={`/user/${user.id}`}>
+      <TableRow key={user.id} href={`/user/${user.id}`}>
         <TableCell>
           <div className="flex items-center gap-4">
             <Avatar
@@ -23,12 +24,12 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
               className="size-10 sm:size-12"
             />
             <div>
-              <div className="font-medium">{user.name}</div>
-              <div className="text-slate-500">
+              <div className="font-medium">{displayName}</div>
+              {/* <div className="text-slate-500">
                 <a href="#" className="hover:text-slate-700">
                   {user.email}
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
         </TableCell>

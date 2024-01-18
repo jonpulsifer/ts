@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import ErrorBoundary from 'components/ErrorBoundary';
 import Toast from 'components/Toaster';
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import { SessionProvider } from './providers';
@@ -14,14 +14,11 @@ import { SessionProvider } from './providers';
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
+  weight: 'variable',
 });
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | wishin.app',
-    default: 'wishin.app', // a default is required when creating a template
-  },
-};
+const title = 'wishin.app';
+const description = 'A wishlist app for not everyone';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -43,5 +40,50 @@ function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://wishin.app'),
+  robots: {
+    index: true,
+    follow: true,
+  },
+  title: {
+    template: `%s | ${title}`,
+    default: title,
+  },
+  description: description,
+  openGraph: {
+    title: {
+      template: `%s | ${title}`,
+      default: title,
+    },
+    description: description,
+    url: '/',
+    siteName: title,
+    locale: 'en_CA',
+    type: 'website',
+  },
+  alternates: {
+    canonical: '/',
+  },
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/santa.png',
+    apple: '/apple-touch-icon.png',
+    other: {
+      rel: 'apple-touch-icon-precomposed',
+      url: '/apple-touch-icon-precomposed.png',
+    },
+  },
+  manifest: 'https://wishin.app/site.webmanifest',
+};
+
+// these are the default values
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: 1,
+};
 
 export default Layout;

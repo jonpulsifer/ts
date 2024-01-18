@@ -1,7 +1,8 @@
 'use client';
+import { Badge } from '@repo/ui/badge';
 import { usePathname } from 'next/navigation';
 
-import { BottomNav, Sidebar } from './Nav';
+import { BottomNav } from './Nav';
 
 interface Props {
   children: React.ReactNode;
@@ -36,41 +37,34 @@ const generateTitle = (path: string | null) => {
   }
 };
 
-function DaysUntilChristmas(count = daysUntilChristmas()) {
-  const baseFontColor =
-    'text-indigo-700 dark:text-indigo-500 bg-indigo-50 dark:bg-slate-950/25 ring-indigo-700/10 dark:ring-indigo-500/10';
-  const fontColor =
+const DaysUntilChristmasBadge = () => {
+  const count = daysUntilChristmas();
+  const color =
     count >= 0 && count < 30
-      ? 'text-red-700 dark:text-red-500 bg-red-50 dark:bg-red-950/25 ring-red-700/10 dark:ring-red-500/10'
+      ? 'red'
       : count > 30 && count < 90
-        ? 'text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-950/25 ring-yellow-700/10 dark:ring-yellow-500/10'
+        ? 'yellow'
         : count > 90 && count < 180
-          ? 'text-green-700 dark:text-green-500 bg-green-50 dark:bg-green-950/25 ring-green-700/10 dark:ring-green-500/10'
-          : baseFontColor;
-  const baseClass = `text-center inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset ${fontColor}`;
+          ? 'green'
+          : 'indigo';
   return (
-    <span className={baseClass}>
+    <Badge color={color}>
       🎅 {count} day{count > 1 || count === 0 ? 's' : ''} to Christmas
-    </span>
+    </Badge>
   );
-}
+};
 
-function Page({ title, children }: Props) {
-  const path = usePathname();
-  if (path === '/' || path === '/login') {
-    return <>{children}</>;
-  }
-  const pageTitle = title || generateTitle(path);
+function Page({ children }: Props) {
+  const title = generateTitle(usePathname());
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex flex-row items-center w-full gap-2 p-2 bg-inherit dark:sm:bg-slate-950 dark:sm:border-slate-800 dark:border-slate-800 text-black dark:text-slate-400 items-center text-semibold border-b border-transparent">
-        <h1 className="grow flex-none font-bold text-2xl noselect drop-shadow-lg">
-          {pageTitle}
+    <div>
+      <header className="flex flex-row items-center gap-2 p-2 bg-inherit dark:sm:bg-slate-950 dark:sm:border-slate-800 dark:border-slate-800 text-black dark:text-slate-400 items-center text-semibold border-b border-transparent">
+        <h1 className="grow tracking-tightflex-none font-bold text-2xl noselect drop-shadow-lg">
+          {title}
         </h1>
-        <div className="flex-end">{DaysUntilChristmas()}</div>
+        <DaysUntilChristmasBadge />
       </header>
       <div className="flex flex-row h-full">
-        <Sidebar />
         <div className="flex flex-col w-full items-center h-full">
           <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
             <div className="space-y-4 pb-28 sm:pb-0 grow">{children}</div>

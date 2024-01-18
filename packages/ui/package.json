@@ -6,12 +6,25 @@
   ],
   "exports": {
     "./styles.css": "./dist/index.css",
+    "./alert": "./src/alert.tsx",
     "./avatar": "./src/avatar.tsx",
-    "./button": "./src/button.tsx",
     "./badge": "./src/badge.tsx",
+    "./button": "./src/button.tsx",
     "./card": "./src/card.tsx",
+    "./checkbox": "./src/checkbox.tsx",
+    "./dialog": "./src/dialog.tsx",
+    "./dropdown": "./src/dropdown.tsx",
+    "./fieldset": "./src/fieldset.tsx",
+    "./input": "./src/input.tsx",
+    "./link": "./src/link.tsx",
+    "./listbox": "./src/listbox.tsx",
+    "./pagination": "./src/pagination.tsx",
+    "./radio": "./src/radio.tsx",
+    "./select": "./src/select.tsx",
+    "./switch": "./src/switch.tsx",
     "./table": "./src/table.tsx",
-    "./text": "./src/text.tsx"
+    "./text": "./src/text.tsx",
+    "./textarea": "./src/textarea.tsx"
   },
   "license": "MIT",
   "scripts": {

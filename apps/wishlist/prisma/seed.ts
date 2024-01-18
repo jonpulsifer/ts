@@ -58,7 +58,7 @@ async function main() {
     update: {},
     create: {
       email: 'alice@example.com',
-      name: 'Alice',
+      name: faker.person.fullName(),
       wishlists: {
         connect: christmasWishlist,
       },
@@ -70,7 +70,7 @@ async function main() {
     update: {},
     create: {
       email: 'bob@example.com',
-      name: 'Bob',
+      name: faker.person.fullName(),
       wishlists: {
         connect: christmasWishlist,
       },
@@ -82,7 +82,7 @@ async function main() {
     update: {},
     create: {
       email: 'carol@example.com',
-      name: 'Carol',
+      name: faker.person.fullName(),
     },
   });
 
@@ -91,7 +91,6 @@ async function main() {
     update: {},
     create: {
       email: 'dave@example.com',
-      name: 'Dave',
       wishlists: { connect: christmasWishlist },
     },
   });
@@ -101,7 +100,7 @@ async function main() {
     update: {},
     create: {
       email: 'emily@example.com',
-      name: 'Emily',
+      name: faker.person.fullName(),
       wishlists: { connect: [christmasWishlist, birthdayWishlist] },
     },
   });
