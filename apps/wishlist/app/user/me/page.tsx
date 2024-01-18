@@ -1,5 +1,4 @@
 import Page from 'components/Page';
-import { UserProfile } from 'components/User';
 import UserForm from 'components/UserForm';
 import { getMeWithGifts } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
