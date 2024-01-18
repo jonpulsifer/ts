@@ -1,5 +1,4 @@
 import EmptyState from 'components/EmptyState';
-import GiftList from 'components/GiftList';
 import Page from 'components/Page';
 import { UserProfile } from 'components/User';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
@@ -42,10 +41,7 @@ const ProfilePage = async ({ params }: Props) => {
   }
   return (
     <Page>
-      <div className="space-y-4">
-        <UserProfile currentUserId={user.id} user={profile} />
-        <GiftList currentUserId={user.id} gifts={gifts} />
-      </div>
+      <UserProfile currentUserId={user.id} user={profile} />
     </Page>
   );
 };

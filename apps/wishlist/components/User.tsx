@@ -67,7 +67,7 @@ export function UserProfile({ user, currentUserId }: UserProfileProps) {
     return (
       <div className="flex flex-col items-left text-left" key={field.label}>
         <div className="text-xs">{field.label}</div>
-        <div className="text-sm font-bold dark:text-gray-200">
+        <div className="text-sm flex flex-grow font-bold dark:text-gray-200">
           {field.content}
         </div>
       </div>

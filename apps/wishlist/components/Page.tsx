@@ -64,12 +64,8 @@ function Page({ children }: Props) {
         </h1>
         <DaysUntilChristmasBadge />
       </header>
-      <div className="flex flex-row h-full">
-        <div className="flex flex-col w-full items-center h-full">
-          <div className="sm:max-w-2xl w-full flex flex-col space-y-4 h-full">
-            <div className="space-y-4 pb-28 sm:pb-0 grow">{children}</div>
-          </div>
-        </div>
+      <div className="mx-auto max-w-3xl sm:px-6 lg:px-8 items-center pb-28">
+        {children}
       </div>
       <BottomNav />
     </div>

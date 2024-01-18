@@ -1,6 +1,6 @@
-import GiftList from 'components/GiftList';
 import Page from 'components/Page';
 import { UserProfile } from 'components/User';
+import UserForm from 'components/UserForm';
 import { getMeWithGifts } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 
@@ -13,10 +13,7 @@ const MePage = async () => {
   const user = await getMeWithGifts();
   return (
     <Page>
-      <div className="w-full space-y-4">
-        <UserProfile currentUserId={user.id} user={user} />
-        <GiftList currentUserId={user.id} gifts={user.gifts} />
-      </div>
+      <UserForm user={user} />
     </Page>
   );
 };
