@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@repo/ui/table';
+import { Strong, Text } from '@repo/ui/text';
 import { GiftWithOwner } from 'types/prisma';
 
 interface Props {
@@ -20,7 +21,9 @@ export function GiftTable({ gifts }: Props) {
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
         <TableCell>
           <div className="flex items-center gap-4">
-            <div className="font-medium">{gift.name}</div>
+            <Text>
+              <Strong>{gift.name}</Strong>
+            </Text>
             {/* <div className="text-slate-500">
                 <a href="#" className="hover:text-slate-700">
                   {user.email}

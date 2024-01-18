@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@repo/ui/table';
+import { Strong, Text } from '@repo/ui/text';
 import { UserWithGifts } from 'types/prisma';
 
 export function UserTable({ users }: { users: UserWithGifts[] }) {
@@ -21,10 +22,12 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
             <Avatar
               src={user.image}
               initials={!user.image ? initials : undefined}
-              className="size-10 sm:size-12"
+              className="size-10 sm:size-12 dark:bg-slate-950 dark:text-indigo-500"
             />
             <div>
-              <div className="font-medium">{displayName}</div>
+              <Text>
+                <Strong>{displayName}</Strong>
+              </Text>
               {/* <div className="text-slate-500">
                 <a href="#" className="hover:text-slate-700">
                   {user.email}

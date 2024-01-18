@@ -5,7 +5,6 @@ import {
   faShirt,
   faSignature,
   faSocks,
-  faUserEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import type { User } from '@prisma/client';
 import { Card } from '@repo/ui/card';
@@ -66,36 +65,20 @@ export function UserProfile({ user, currentUserId }: UserProfileProps) {
   const fieldsMarkup = fields.map((field) => {
     if (!field.content) return null;
     return (
-      <div className="flex flex-col items-left" key={field.label}>
-        <div className="text-xs">
-          <span className="">{field.label}</span>
-        </div>
+      <div className="flex flex-col items-left text-left" key={field.label}>
+        <div className="text-xs">{field.label}</div>
         <div className="text-sm font-bold dark:text-gray-200">
           {field.content}
-        </div>{' '}
+        </div>
       </div>
     );
   });
 
-  if (!isUserProfile) {
-    return (
-      <Card title={title}>
-        <div className="flex flex-col gap-4 px-4">{fieldsMarkup}</div>
-      </Card>
-    );
-  }
-
-  const actions = [
-    {
-      icon: faUserEdit,
-      title: 'Edit Profile',
-      link: `/user/${id}/edit`,
-    },
-  ];
-
   return (
-    <Card action={actions} title={title}>
-      <div className="flex flex-col gap-4 px-4">{fieldsMarkup}</div>
+    <Card title={title}>
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+        {fieldsMarkup}
+      </div>
     </Card>
   );
 }
