@@ -11,7 +11,6 @@ export const Textarea = forwardRef<
 >(function Textarea({ className, resizable = true, ...props }, ref) {
   return (
     <span
-      data-slot="control"
       className={clsx([
         className,
 
@@ -30,9 +29,9 @@ export const Textarea = forwardRef<
         // Disabled state
         'has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-slate-950/5 before:has-[[data-disabled]]:shadow-none',
       ])}
+      data-slot="control"
     >
       <HeadlessTextarea
-        ref={ref}
         className={clsx([
           // Basic layout
           'relative block h-full w-full appearance-none rounded-lg px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]',
@@ -58,6 +57,7 @@ export const Textarea = forwardRef<
           // Resizable
           resizable ? 'resize-y' : 'resize-none',
         ])}
+        ref={ref}
         {...props}
       />
     </span>

@@ -21,9 +21,7 @@ import {
   Transition as HeadlessTransition,
 } from '@headlessui/react';
 import clsx from 'clsx';
-import type React from 'react';
-import { Fragment } from 'react';
-
+import React, { Fragment } from 'react';
 import { Button } from './button';
 import { Link } from './link';
 
@@ -186,8 +184,8 @@ export function DropdownLabel({ className, ...props }: HeadlessLabelProps) {
   return (
     <HeadlessLabel
       {...props}
-      data-slot="label"
       className={clsx(className, 'col-start-2 row-start-1')}
+      data-slot="label"
       {...props}
     />
   );
@@ -225,13 +223,14 @@ export function DropdownShortcut({
     >
       {(Array.isArray(keys) ? keys : keys.split('')).map((char, index) => (
         <kbd
-          key={index}
           className={clsx([
             'min-w-[2ch] text-center font-sans capitalize text-slate-400 group-data-[focus]:text-white forced-colors:group-data-[focus]:text-[HighlightText]',
 
             // Make sure key names that are longer than one character (like "Tab") have extra space
             index > 0 && char.length > 1 && 'pl-1',
           ])}
+          // eslint-disable-next-line react/no-array-index-key
+          key={index}
         >
           {char}
         </kbd>

@@ -9,7 +9,6 @@ export const Select = forwardRef<HTMLSelectElement, HeadlessSelectProps>(
   function Select({ className, multiple, ...props }, ref) {
     return (
       <span
-        data-slot="control"
         className={clsx([
           className,
 
@@ -28,10 +27,11 @@ export const Select = forwardRef<HTMLSelectElement, HeadlessSelectProps>(
           // Disabled state
           'has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-slate-950/5 before:has-[[data-disabled]]:shadow-none',
         ])}
+        data-slot="control"
       >
         <HeadlessSelect
-          ref={ref}
           multiple={multiple}
+          ref={ref}
           {...props}
           className={clsx([
             // Basic layout
@@ -67,22 +67,22 @@ export const Select = forwardRef<HTMLSelectElement, HeadlessSelectProps>(
         {!multiple && (
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <svg
-              className="size-5 stroke-slate-500 group-has-[[data-disabled]]:stroke-slate-600 sm:size-4 dark:stroke-slate-400 forced-colors:stroke-[CanvasText]"
-              viewBox="0 0 16 16"
               aria-hidden="true"
+              className="size-5 stroke-slate-500 group-has-[[data-disabled]]:stroke-slate-600 sm:size-4 dark:stroke-slate-400 forced-colors:stroke-[CanvasText]"
               fill="none"
+              viewBox="0 0 16 16"
             >
               <path
                 d="M5.75 10.75L8 13L10.25 10.75"
-                strokeWidth={1.5}
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                strokeWidth={1.5}
               />
               <path
                 d="M10.25 5.25L8 3L5.75 5.25"
-                strokeWidth={1.5}
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                strokeWidth={1.5}
               />
             </svg>
           </span>

@@ -3,8 +3,7 @@ import {
   type ButtonProps as HeadlessButtonProps,
 } from '@headlessui/react';
 import clsx from 'clsx';
-import React from 'react';
-
+import React, { forwardRef } from 'react';
 import { TouchTarget } from './button';
 import { Link } from './link';
 
@@ -35,10 +34,13 @@ const colors = {
     'bg-fuchsia-400/15 text-fuchsia-700 group-data-[hover]:bg-fuchsia-400/25 dark:bg-fuchsia-400/10 dark:text-fuchsia-400 dark:group-data-[hover]:bg-fuchsia-400/20',
   pink: 'bg-pink-400/15 text-pink-700 group-data-[hover]:bg-pink-400/25 dark:bg-pink-400/10 dark:text-pink-400 dark:group-data-[hover]:bg-pink-400/20',
   rose: 'bg-rose-400/15 text-rose-700 group-data-[hover]:bg-rose-400/25 dark:bg-rose-400/10 dark:text-rose-400 dark:group-data-[hover]:bg-rose-400/20',
-  slate: 'bg-slate-600/10 text-slate-700 group-data-[hover]:bg-slate-600/20 dark:bg-white/5 dark:text-slate-400 dark:group-data-[hover]:bg-white/10',
+  slate:
+    'bg-slate-600/10 text-slate-700 group-data-[hover]:bg-slate-600/20 dark:bg-white/5 dark:text-slate-400 dark:group-data-[hover]:bg-white/10',
 };
 
-type BadgeProps = { color?: keyof typeof colors };
+interface BadgeProps {
+  color?: keyof typeof colors;
+}
 
 export function Badge({
   color = 'slate',
@@ -57,7 +59,7 @@ export function Badge({
   );
 }
 
-export const BadgeButton = React.forwardRef(function BadgeButton(
+export const BadgeButton = forwardRef(function BadgeButton(
   {
     color = 'slate',
     className,

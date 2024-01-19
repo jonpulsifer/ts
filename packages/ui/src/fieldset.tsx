@@ -11,7 +11,7 @@ import {
   type LegendProps as HeadlessLegendProps,
 } from '@headlessui/react';
 import clsx from 'clsx';
-import type React from 'react';
+import React from 'react';
 
 export function Fieldset({
   className,
@@ -32,11 +32,11 @@ export function Legend({ ...props }: HeadlessLegendProps) {
   return (
     <HeadlessLegend
       {...props}
-      data-slot="legend"
       className={clsx(
         props.className,
         'text-base/6 font-semibold text-slate-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white',
       )}
+      data-slot="legend"
     />
   );
 }
@@ -48,8 +48,8 @@ export function FieldGroup({
   return (
     <div
       {...props}
-      data-slot="control"
       className={clsx(className, 'space-y-8')}
+      data-slot="control"
     />
   );
 }
@@ -78,11 +78,11 @@ export function Label({
   return (
     <HeadlessLabel
       {...props}
-      data-slot="label"
       className={clsx(
         className,
         'select-none text-base/6 text-slate-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white',
       )}
+      data-slot="label"
     />
   );
 }
@@ -96,11 +96,11 @@ export function Description({
   return (
     <HeadlessDescription
       {...props}
-      data-slot="description"
       className={clsx(
         className,
         'text-base/6 text-slate-500 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-slate-400',
       )}
+      data-slot="description"
     />
   );
 }
@@ -114,11 +114,11 @@ export function ErrorMessage({
   return (
     <HeadlessDescription
       {...props}
-      data-slot="error"
       className={clsx(
         className,
         'text-base/6 text-red-600 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-red-500',
       )}
+      data-slot="error"
     />
   );
 }

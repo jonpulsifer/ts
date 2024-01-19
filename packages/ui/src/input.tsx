@@ -24,7 +24,6 @@ export const Input = forwardRef<
 >(function Input({ className, ...props }, ref) {
   return (
     <span
-      data-slot="control"
       className={clsx([
         className,
 
@@ -46,9 +45,9 @@ export const Input = forwardRef<
         // Invalid state
         'before:has-[[data-invalid]]:shadow-red-500/10',
       ])}
+      data-slot="control"
     >
       <HeadlessInput
-        ref={ref}
         className={clsx([
           // Date classes
           props.type &&
@@ -88,6 +87,7 @@ export const Input = forwardRef<
           // Disabled state
           'data-[disabled]:border-slate-950/20 dark:data-[hover]:data-[disabled]:border-white/15 data-[disabled]:dark:border-white/15 data-[disabled]:dark:bg-white/[2.5%]',
         ])}
+        ref={ref}
         {...props}
       />
     </span>

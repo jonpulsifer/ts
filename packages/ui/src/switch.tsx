@@ -5,7 +5,7 @@ import {
   type SwitchProps as HeadlessSwitchProps,
 } from '@headlessui/react';
 import { clsx } from 'clsx';
-import type React from 'react';
+import React from 'react';
 
 export function SwitchGroup({
   className,
@@ -161,7 +161,6 @@ export function Switch({
 } & Omit<HeadlessSwitchProps, 'children'>) {
   return (
     <HeadlessSwitch
-      data-slot="control"
       className={clsx(
         className,
 
@@ -194,6 +193,7 @@ export function Switch({
         // Color specific styles
         colors[color],
       )}
+      data-slot="control"
       {...props}
     >
       <span

@@ -97,7 +97,7 @@ export function AlertTitle({
   );
 }
 
-// eslint-disable-next-line
+ 
 export function AlertDescription({
   className,
   ...props

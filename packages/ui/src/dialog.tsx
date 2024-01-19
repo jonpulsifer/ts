@@ -8,9 +8,7 @@ import {
   TransitionChild as HeadlessTransitionChild,
 } from '@headlessui/react';
 import clsx from 'clsx';
-import type React from 'react';
-import { Fragment } from 'react';
-
+import React, { Fragment } from 'react';
 import { Text } from './text';
 
 const sizes = {

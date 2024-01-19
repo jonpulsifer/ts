@@ -30,9 +30,9 @@ export function Listbox<T>({
   return (
     <HeadlessListbox {...props} multiple={false}>
       <HeadlessListboxButton
-        autoFocus={autoFocus}
-        data-slot="control"
         aria-label={ariaLabel}
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus={autoFocus}
         className={clsx([
           className,
 
@@ -54,17 +54,10 @@ export function Listbox<T>({
           // Disabled state
           'data-[disabled]:opacity-50 before:data-[disabled]:bg-slate-950/5 before:data-[disabled]:shadow-none',
         ])}
+        data-slot="control"
       >
         <HeadlessListboxSelectedOption
           as="span"
-          options={options}
-          placeholder={
-            placeholder && (
-              <span className="block truncate text-slate-500">
-                {placeholder}
-              </span>
-            )
-          }
           className={clsx([
             // Basic layout
             'relative block w-full appearance-none rounded-lg py-[calc(theme(spacing[2.5])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]',
@@ -90,25 +83,33 @@ export function Listbox<T>({
             // Disabled state
             'group-data-[disabled]:border-slate-950/20 group-data-[disabled]:opacity-100 group-data-[disabled]:dark:border-white/15 group-data-[disabled]:dark:bg-white/[2.5%] dark:data-[hover]:group-data-[disabled]:border-white/15',
           ])}
+          options={options}
+          placeholder={
+            placeholder ? (
+              <span className="block truncate text-slate-500">
+                {placeholder}
+              </span>
+            ) : null
+          }
         />
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <svg
-            className="size-5 stroke-slate-500 group-data-[disabled]:stroke-slate-600 sm:size-4 dark:stroke-slate-400 forced-colors:stroke-[CanvasText]"
-            viewBox="0 0 16 16"
             aria-hidden="true"
+            className="size-5 stroke-slate-500 group-data-[disabled]:stroke-slate-600 sm:size-4 dark:stroke-slate-400 forced-colors:stroke-[CanvasText]"
             fill="none"
+            viewBox="0 0 16 16"
           >
             <path
               d="M5.75 10.75L8 13L10.25 10.75"
-              strokeWidth={1.5}
               strokeLinecap="round"
               strokeLinejoin="round"
+              strokeWidth={1.5}
             />
             <path
               d="M10.25 5.25L8 3L5.75 5.25"
-              strokeWidth={1.5}
               strokeLinecap="round"
               strokeLinejoin="round"
+              strokeWidth={1.5}
             />
           </svg>
         </span>
@@ -120,12 +121,12 @@ export function Listbox<T>({
         leaveTo="opacity-0"
       >
         <HeadlessListboxOptions
-          as="div"
           anchor={{
             to: 'selection start',
             offset: 'var(--anchor-offset)',
             padding: 'var(--anchor-padding)',
           }}
+          as="div"
           className={clsx(
             // Anchor positioning
             '[--anchor-offset:-1.625rem] [--anchor-padding:theme(spacing.4)] sm:[--anchor-offset:-1.375rem]',
@@ -198,16 +199,16 @@ export function ListboxOption<T>({
             )}
           >
             <svg
-              className="relative hidden size-5 self-center stroke-current group-data-[selected]/option:inline sm:size-4"
-              viewBox="0 0 16 16"
-              fill="none"
               aria-hidden="true"
+              className="relative hidden size-5 self-center stroke-current group-data-[selected]/option:inline sm:size-4"
+              fill="none"
+              viewBox="0 0 16 16"
             >
               <path
                 d="M4 8.5l3 3L12 4"
-                strokeWidth={1.5}
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                strokeWidth={1.5}
               />
             </svg>
             <span className={clsx(className, sharedClasses, 'col-start-2')}>

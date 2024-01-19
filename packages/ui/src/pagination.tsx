@@ -1,6 +1,5 @@
 import clsx from 'clsx';
-import type React from 'react';
-
+import React from 'react';
 import { Button } from './button';
 
 export function Pagination({
@@ -28,21 +27,21 @@ export function PaginationPrevious({
     <span className="grow basis-0">
       <Button
         {...(href === null ? { disabled: true } : { href })}
-        plain
         aria-label="Previous page"
+        plain
       >
         <svg
+          aria-hidden="true"
           className="stroke-current"
           data-slot="icon"
-          viewBox="0 0 16 16"
           fill="none"
-          aria-hidden="true"
+          viewBox="0 0 16 16"
         >
           <path
             d="M2.75 8H13.25M2.75 8L5.25 5.5M2.75 8L5.25 10.5"
-            strokeWidth={1.5}
             strokeLinecap="round"
             strokeLinejoin="round"
+            strokeWidth={1.5}
           />
         </svg>
         {children}
@@ -62,22 +61,22 @@ export function PaginationNext({
     <span className="flex grow basis-0 justify-end">
       <Button
         {...(href === null ? { disabled: true } : { href })}
-        plain
         aria-label="Next page"
+        plain
       >
         {children}
         <svg
+          aria-hidden="true"
           className="stroke-current"
           data-slot="icon"
-          viewBox="0 0 16 16"
           fill="none"
-          aria-hidden="true"
+          viewBox="0 0 16 16"
         >
           <path
             d="M13.25 8L2.75 8M13.25 8L10.75 10.5M13.25 8L10.75 5.5"
-            strokeWidth={1.5}
             strokeLinecap="round"
             strokeLinejoin="round"
+            strokeWidth={1.5}
           />
         </svg>
       </Button>
@@ -102,14 +101,14 @@ export function PaginationPage({
 }) {
   return (
     <Button
-      href={href}
-      plain
-      aria-label={`Page ${children}`}
       aria-current={current ? 'page' : undefined}
+      aria-label={`Page ${children}`}
       className={clsx(
         'min-w-[2.25rem] before:absolute before:-inset-px before:rounded-lg',
         current && 'before:bg-slate-950/5 dark:before:bg-white/10',
       )}
+      href={href}
+      plain
     >
       <span className="-mx-0.5">{children}</span>
     </Button>
