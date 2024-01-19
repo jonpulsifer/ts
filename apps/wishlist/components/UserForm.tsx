@@ -2,7 +2,11 @@
 
 import type { User } from '@prisma/client';
 import { Button } from '@repo/ui/button';
+import { Field, FieldGroup, Fieldset, Label, Legend } from '@repo/ui/fieldset';
+import { Input } from '@repo/ui/input';
+import { Text } from '@repo/ui/text';
 import { editUser } from 'app/actions';
+import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 
 interface Props {
@@ -10,6 +14,8 @@ interface Props {
 }
 
 function UserForm({ user }: Props) {
+  const router = useRouter();
+
   const clientEditUser = async (formData: FormData) => {
     const name = formData.get('name');
     const address = formData.get('address');
@@ -37,86 +43,98 @@ function UserForm({ user }: Props) {
   };
 
   return (
-    <form action={clientEditUser} className="px-4 pb-4" id="editUser">
-      <button className="hidden" formAction={clientEditUser} />
-      <div className="mb-6">
-        <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
-          Display Name
-        </label>
-        <input
-          autoComplete="name"
-          className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-          defaultValue={user.name || ''}
-          name="name"
-          placeholder="Rudolph"
-          type="text"
-        />
+    <form action={clientEditUser} id="editUser">
+      <div className="border-b border-gray-900/10 pb-12 p-4">
+        <Fieldset>
+          <Legend>Profile Details</Legend>
+          <Text>
+            Without this Santa might not be able to deliver your gifts!
+          </Text>
+          <FieldGroup>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+              <Field>
+                <Label>Name</Label>
+                <Input
+                  autoComplete="name"
+                  name="name"
+                  defaultValue={user.name || ''}
+                  placeholder="Rudolph"
+                  type="text"
+                />
+              </Field>
+              <Field>
+                <Label>Email</Label>
+                <Input
+                  autoComplete="street-address"
+                  defaultValue={user.email}
+                  name="email"
+                  disabled
+                  type="text"
+                />
+              </Field>
+            </div>
+            <Field>
+              <Label>Address</Label>
+              <Input
+                autoComplete="street-address"
+                defaultValue={user.address || ''}
+                name="address"
+                placeholder="Stable #9, North Pole, H0H 0H0"
+                type="text"
+              />
+            </Field>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
+              <Field>
+                <Label>Shirt Size</Label>
+                <Input
+                  autoComplete="shirt-size"
+                  defaultValue={user.shirt_size || ''}
+                  name="shirt_size"
+                  placeholder="S/M"
+                  type="text"
+                  className="colspan-1"
+                />
+              </Field>
+              <Field>
+                <Label>Pant Size</Label>
+                <Input
+                  autoComplete="pant-size"
+                  defaultValue={user.pant_size || ''}
+                  name="pant_size"
+                  placeholder="XL"
+                  type="text"
+                  className="colspan-1"
+                />
+              </Field>
+              <Field>
+                <Label>Shoe Size</Label>
+                <Input
+                  autoComplete="shoe-size"
+                  defaultValue={user.shoe_size || ''}
+                  inputMode="decimal"
+                  name="shoe_size"
+                  placeholder="7.5"
+                  type="text"
+                  className="colspan-1"
+                />
+              </Field>
+            </div>
+          </FieldGroup>
+        </Fieldset>
       </div>
-
-      <div className="mb-6">
-        <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
-          Address
-        </label>
-        <input
-          autoComplete="street-address"
-          className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-          defaultValue={user.address || ''}
-          id="address"
-          name="address"
-          placeholder="Stable #9, North Pole, H0H 0H0"
-        />
-      </div>
-
-      <div className="flex flex-row">
-        <div className="mb-6 pr-2">
-          <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
-            Shirt Size
-          </label>
-          <input
-            autoComplete="shirt-size"
-            className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            defaultValue={user.shirt_size || ''}
-            id="shirt"
-            name="shirt_size"
-            placeholder="S/M"
-            type="textbox"
-          />
-        </div>
-        <div className="mb-6 pr-2">
-          <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
-            Pant Size
-          </label>
-          <input
-            autoComplete="pant-size"
-            className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            defaultValue={user.pant_size || ''}
-            id="pants"
-            name="pant_size"
-            placeholder="XL"
-            type="textbox"
-          />
-        </div>
-        <div className="mb-6">
-          <label className="mb-2 text-sm text-gray-800 dark:text-gray-400">
-            Shoe Size
-          </label>
-          <input
-            autoComplete="shoe-size"
-            className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            defaultValue={user.shoe_size || ''}
-            id="shoe"
-            inputMode="decimal"
-            name="shoe_size"
-            placeholder="7.5"
-            type="textbox"
-          />
-        </div>
-      </div>
-      <div className="flex gap-4">
+      <div className="mt-6 flex items-center justify-end gap-x-6">
+        <Button
+          plain
+          onClick={() => {
+            router.back();
+          }}
+          type="button"
+        >
+          Back
+        </Button>
         <Button color="indigo" onClick={() => clientEditUser} type="submit">
           Save
         </Button>
-        <Button type="button">Back</Button>
       </div>
     </form>
   );
