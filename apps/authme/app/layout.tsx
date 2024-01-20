@@ -26,7 +26,7 @@ function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <SessionProvider>
         <body
-          className={`bg-gray-200 dark:bg-slate-950 dark:text-zinc-200 ${inter.className}`}
+          className={`bg-zinc-200 dark:bg-slate-950 dark:text-zinc-200 ${inter.className}`}
         >
           <main className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</main>
         </body>

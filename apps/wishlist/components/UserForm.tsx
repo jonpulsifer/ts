@@ -6,6 +6,7 @@ import { Field, FieldGroup, Fieldset, Label } from '@repo/ui/fieldset';
 import { Input } from '@repo/ui/input';
 import { updateUser } from 'app/actions';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import toast from 'react-hot-toast';
@@ -104,6 +105,16 @@ function UserForm({ user }: Props) {
         </Fieldset>
       </div>
       <div className="mt-4 sm:mt-6 flex items-center justify-end gap-x-6 p-4">
+        <Button
+          plain
+          onClick={() => {
+            signOut({ callbackUrl: '/', redirect: true });
+          }}
+          type="button"
+        >
+          <span className="text-red-500">Sign Out</span>
+        </Button>
+
         <Button
           plain
           onClick={() => {

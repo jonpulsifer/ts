@@ -1,22 +1,29 @@
 'use client';
 import { Disclosure, Transition } from '@headlessui/react-1';
-import { Text } from '@repo/ui';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 
 interface Props {
   title?: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   children: React.ReactNode;
+  isOpen?: boolean;
+  button?: React.ReactNode;
 }
 
-export const Accordion = ({ children, title, subtitle }: Props) => {
+export const Accordion = ({
+  children,
+  title,
+  subtitle,
+  isOpen,
+  button,
+}: Props) => {
   return (
-    <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-sm border-transparent">
-      <Disclosure>
+    <div className="divide-y dark:divide-slate-800 divide-zinc-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-zinc-400 shadow shadow-sm border-transparent">
+      <Disclosure defaultOpen={isOpen}>
         {({ open }) => (
           <>
-            <div className="px-2 pt-2 w-full">
+            <div className="p-2 sm:p-4 w-full flex justify-between">
               <Disclosure.Button>
                 <div className="flex">
                   <div className="mr-2">
@@ -26,24 +33,23 @@ export const Accordion = ({ children, title, subtitle }: Props) => {
                       <ChevronRight width={16} />
                     )}
                   </div>
-                  <div className="">
-                    <h1 className="text-xl font-semibold leading-6 text-gray-900 dark:text-slate-200">
+                  <div className="text-left">
+                    <h1 className="text-xl font-semibold leading-6 text-zinc-900 dark:text-slate-200">
                       {title}
                     </h1>
-                    <div>
-                      <Text className="text-xs">{subtitle}</Text>
-                    </div>
+                    <div>{subtitle}</div>
                   </div>
                 </div>
               </Disclosure.Button>
+              <div className="flex-shrink-0">{button}</div>
             </div>
             <Transition
-              enter="transition ease-in-out duration-300 transform"
-              enterFrom="-translate-y-full"
-              enterTo="translate-y-0"
-              leave="transition ease-in-out duration-300 transform"
-              leaveFrom="translate-y-0"
-              leaveTo="-translate-y-full"
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Suspense>
                 <Transition.Child
@@ -54,7 +60,7 @@ export const Accordion = ({ children, title, subtitle }: Props) => {
                   leaveFrom="transform scale-100 opacity-100"
                   leaveTo="transform scale-95 opacity-0"
                 >
-                  <Disclosure.Panel className="text-gray-500">
+                  <Disclosure.Panel className="text-zinc-500">
                     <div className="p-2 sm:p-4">{children}</div>
                   </Disclosure.Panel>
                 </Transition.Child>

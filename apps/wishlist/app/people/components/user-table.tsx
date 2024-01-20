@@ -20,9 +20,10 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
         <TableCell>
           <div className="flex items-center gap-4">
             <Avatar
+              square
               src={user.image}
               initials={!user.image ? initials : undefined}
-              className="size-10 sm:size-12 dark:bg-slate-950 dark:text-indigo-500"
+              className="size-10 sm:size-12 bg-zinc-200 dark:bg-slate-950 dark:text-indigo-500"
             />
             <div>
               <Text>

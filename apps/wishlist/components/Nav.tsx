@@ -44,7 +44,7 @@ export function BottomNav() {
 
   const styles = {
     activeButtonClass:
-      'bg-gray-50 text-indigo-600 dark:text-indigo-500 border-t-2 border-indigo-600 dark:border-indigo-500',
+      'bg-gray-50 text-indigo-600 dark:text-indigo-500 border-t-2 border-indigo-500 dark:border-indigo-500',
     buttonClass:
       'inline-flex flex-col text-gray-900 dark:text-slate-400 dark:bg-slate-950 items-center justify-center px-5 group border-indigo-950 hover:border-t-2 hover:border-indigo-600 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-500 transition ease-in-out hover:duration-150',
     iconClass: 'w-6 h-6 text-xl',

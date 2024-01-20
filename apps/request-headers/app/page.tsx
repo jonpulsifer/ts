@@ -15,23 +15,23 @@ function KubernetesTable(): JSX.Element {
         </tr>
       </thead>
       <tbody>
-        <tr className="border-b dark:border-slate-800 border-gray-200">
+        <tr className="border-b dark:border-slate-800 border-zinc-200">
           <td className="px-4 py-2">Node</td>
           <td className="px-4 py-2">{NODE_NAME}</td>
         </tr>
-        <tr className="border-b dark:border-slate-800 border-gray-200">
+        <tr className="border-b dark:border-slate-800 border-zinc-200">
           <td className="px-4 py-2">Node IP</td>
           <td className="px-4 py-2">{NODE_IP}</td>
         </tr>
-        <tr className="border-b dark:border-slate-800 border-gray-200">
+        <tr className="border-b dark:border-slate-800 border-zinc-200">
           <td className="px-4 py-2">Pod</td>
           <td className="px-4 py-2">{POD_NAME}</td>
         </tr>
-        <tr className="border-b dark:border-slate-800 border-gray-200">
+        <tr className="border-b dark:border-slate-800 border-zinc-200">
           <td className="px-4 py-2">Pod IP</td>
           <td className="px-4 py-2">{POD_IP}</td>
         </tr>
-        <tr className="border-b dark:border-slate-800 border-gray-200">
+        <tr className="border-b dark:border-slate-800 border-zinc-200">
           <td className="px-4 py-2">Pod Change Me</td>
           <td className="px-4 py-2">{POD_CHANGE_ME}</td>
         </tr>
@@ -54,7 +54,7 @@ function EnvironmentTable() {
           if (!value) return;
           return (
             <tr
-              className="border-b dark:border-slate-800 border-gray-200"
+              className="border-b dark:border-slate-800 border-zinc-200"
               key={key}
             >
               <td className="px-4 py-2">{key}</td>
@@ -87,7 +87,7 @@ function HeadersTable() {
           if (!value) return;
           return (
             <tr
-              className="border-b dark:border-slate-800 border-gray-200"
+              className="border-b dark:border-slate-800 border-zinc-200"
               key={key}
             >
               <td className="px-4 py-2 whitespace-nowrap">{key}</td>

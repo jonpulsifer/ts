@@ -58,8 +58,8 @@ function Page({ children }: Props) {
   const title = generateTitle(usePathname());
   return (
     <div>
-      <header className="flex flex-row items-center gap-2 p-2 bg-inherit text-black dark:text-slate-400 items-center text-semibold border-b border-transparent">
-        <h1 className="grow tracking-tightflex-none font-bold text-2xl noselect drop-shadow-lg">
+      <header className="flex flex-row items-center gap-2 p-2 bg-inherit items-center text-semibold border-b border-transparent">
+        <h1 className="grow tracking-tight flex-none font-bold text-2xl noselect drop-shadow-lg">
           {title}
         </h1>
         <DaysUntilChristmasBadge />
