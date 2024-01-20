@@ -2,9 +2,8 @@
 
 import type { User } from '@prisma/client';
 import { Button } from '@repo/ui/button';
-import { Field, FieldGroup, Fieldset, Label, Legend } from '@repo/ui/fieldset';
+import { Field, FieldGroup, Fieldset, Label } from '@repo/ui/fieldset';
 import { Input } from '@repo/ui/input';
-import { Text } from '@repo/ui/text';
 import { updateUser } from 'app/actions';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
