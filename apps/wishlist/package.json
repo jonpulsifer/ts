@@ -20,8 +20,10 @@
     "@fortawesome/react-fontawesome": "0.2.0",
     "@headlessui/react": "1.7.18",
     "@prisma/client": "5.8.1",
+    "@repo/ui": "workspace:*",
     "@vercel/analytics": "1.1.2",
     "@vercel/speed-insights": "^1.0.1",
+    "lucide-react": "0.312.0",
     "next": "14.1.0",
     "next-auth": "4.24.5",
     "nookies": "2.5.2",
@@ -29,8 +31,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "2.4.1",
-    "sharp": "0.33.1",
-    "@repo/ui": "workspace:*"
+    "sharp": "0.33.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
@@ -40,8 +41,8 @@
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/forms": "0.5.7",
     "@types/node": "20.10.2",
-    "@types/react-dom": "18.2.18",
     "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.17",
     "postcss": "8.4.33",
     "prettier-plugin-tailwindcss": "0.5.11",

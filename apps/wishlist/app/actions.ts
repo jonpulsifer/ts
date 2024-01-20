@@ -27,8 +27,10 @@ export const updateUser = async (_state: unknown, formData: FormData) => {
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {
+      console.error(error.message);
       return { error: error.message };
     }
+    console.error(error);
     return { error: 'Something went wrong in the server action' };
   }
 };

@@ -1,14 +1,7 @@
 'use client';
 
-import {
-  faGifts,
-  faListCheck,
-  faPeopleGroup,
-  faPersonRays,
-  faPlusSquare,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from '@repo/ui/link';
+import { Gift, ListChecks, PlusSquare, UserCog, Users } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -21,12 +14,12 @@ export function BottomNav() {
     {
       title: 'Gifts',
       href: '/gifts',
-      icon: faGifts,
+      icon: Gift,
     },
     {
       title: 'People',
       href: '/people',
-      icon: faPeopleGroup,
+      icon: Users,
     },
     {
       title: 'Add',
@@ -34,18 +27,18 @@ export function BottomNav() {
       onClick: () => {
         setShowGiftModal(true);
       },
-      icon: faPlusSquare,
+      icon: PlusSquare,
     },
     {
       title: 'Claimed',
       href: '/claimed',
-      icon: faListCheck,
+      icon: ListChecks,
     },
 
     {
       title: 'Profile',
       href: '/user/me',
-      icon: faPersonRays,
+      icon: UserCog,
     },
   ];
 
@@ -81,15 +74,15 @@ export function BottomNav() {
           onClick={link.onClick ? link.onClick : undefined}
           prefetch={false}
         >
-          <FontAwesomeIcon
+          <div
             className={
               isActive || isAdd
                 ? `${styles.iconClass} ${styles.iconActiveClass}`
                 : styles.iconClass
             }
-            fill="currentColor"
-            icon={link.icon}
-          />
+          >
+            <link.icon />
+          </div>
           <span
             className={
               isActive || isAdd

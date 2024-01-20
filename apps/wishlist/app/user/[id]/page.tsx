@@ -21,27 +21,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ProfilePage = async ({ params }: Props) => {
   const profile = await getUserById(params.id);
   const { gifts, user } = await getVisibleGiftsForUserById(params.id);
-  if (!gifts.length) {
-    return (
-      <EmptyState
-        subtitle="The elves could not find any gifts for this person"
-        title="🎁 No Gifts Found"
-      >
-        <div className="p-4">
-          <p>
-            People need to{' '}
-            <span className="font-semibold text-black dark:text-slate-200">
-              add more gifts
-            </span>{' '}
-            to their wishlists
-          </p>
-        </div>
-      </EmptyState>
-    );
-  }
+
   return (
     <Page>
-      <UserProfile currentUserId={user.id} user={profile} />
+      {gifts.length ? (
+        <UserProfile currentUserId={user.id} user={profile} />
+      ) : (
+        <EmptyState
+          subtitle="The elves could not find any gifts for this person"
+          title="🎁 No Gifts Found"
+        >
+          <div className="p-4">
+            <p>
+              People need to{' '}
+              <span className="font-semibold text-black dark:text-slate-200">
+                add more gifts
+              </span>{' '}
+              to their wishlists
+            </p>
+          </div>
+        </EmptyState>
+      )}
     </Page>
   );
 };

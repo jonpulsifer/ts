@@ -1,10 +1,9 @@
 'use client';
 
-import { faDoorOpen, faHandshake } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Prisma } from '@prisma/client';
 import { Card } from '@repo/ui/card';
 import { joinWishlist, leaveWishlist } from 'app/actions';
+import { DoorOpen, HeartHandshake } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 import EmptyState from './EmptyState';
@@ -77,7 +76,7 @@ function FamilyList({ wishlists, user }: Props) {
             type="submit"
           >
             <div className="flex">
-              <FontAwesomeIcon className="pr-2" icon={faHandshake} />
+              <HeartHandshake />
             </div>
             Join
           </button>
@@ -93,7 +92,7 @@ function FamilyList({ wishlists, user }: Props) {
         >
           <div className="flex items-center">
             <div className="flex">
-              <FontAwesomeIcon className="pr-2" icon={faDoorOpen} />
+              <DoorOpen />
             </div>
             Leave
           </div>

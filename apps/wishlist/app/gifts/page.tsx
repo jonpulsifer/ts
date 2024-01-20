@@ -27,15 +27,18 @@ const GiftsPage = async () => {
 
   const ownerCards = Object.keys(giftsByOwnerId).map((ownerId) => {
     const gifts = giftsByOwnerId[ownerId];
-    const userDisplayName = gifts[0].owner.name || gifts[0].owner.email;
-    const title = `${userDisplayName}'s Gifts`;
+    const title = gifts[0].owner.name || gifts[0].owner.email;
     return (
       <Card title={title}>
         <GiftTable gifts={gifts} currentUserId={user.id} />
       </Card>
     );
   });
-  return <Page>{ownerCards}</Page>;
+  return (
+    <Page>
+      <div className="grid gap-4 sm:gap-8">{ownerCards}</div>
+    </Page>
+  );
 };
 
 export default GiftsPage;

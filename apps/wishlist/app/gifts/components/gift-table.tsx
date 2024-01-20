@@ -1,12 +1,5 @@
-import { Badge } from '@repo/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@repo/ui/table';
+import { Button } from '@repo/ui/button';
+import { Table, TableBody, TableCell, TableRow } from '@repo/ui/table';
 import { Strong, Text } from '@repo/ui/text';
 import { GiftWithOwner } from 'types/prisma';
 
@@ -15,24 +8,47 @@ interface Props {
   currentUserId: string;
 }
 
-export function GiftTable({ gifts }: Props) {
+const ClaimButton = ({
+  gift,
+  currentUserId,
+}: {
+  gift: GiftWithOwner;
+  currentUserId: string;
+}) => {
+  if (gift.ownerId === currentUserId) {
+    return null;
+  }
+
+  if (gift.claimedById === currentUserId) {
+    return (
+      <Button plain>
+        <div className="text-red-500">Claim</div>
+      </Button>
+    );
+  }
+
+  return (
+    <Button plain>
+      <div className="text-indigo-500">Claim</div>
+    </Button>
+  );
+};
+
+export function GiftTable({ gifts, currentUserId }: Props) {
   const tableRows = gifts.map((gift) => {
     return (
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
         <TableCell>
-          <div className="flex items-center gap-4">
-            <Text>
-              <Strong>{gift.name}</Strong>
-            </Text>
-            {/* <div className="text-slate-500">
-                <a href="#" className="hover:text-slate-700">
-                  {user.email}
-                </a>
-              </div> */}
-          </div>
+          <Text>
+            <Strong>{gift.name}</Strong>
+          </Text>
         </TableCell>
-        <TableCell>
-          <Badge color="indigo">Claim</Badge>
+        <TableCell className="text-right">
+          <ClaimButton
+            key={`button-${gift.id}`}
+            gift={gift}
+            currentUserId={currentUserId}
+          />
         </TableCell>
       </TableRow>
     );
@@ -41,14 +57,9 @@ export function GiftTable({ gifts }: Props) {
   return (
     <Table
       bleed
+      dense
       className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]"
     >
-      <TableHead>
-        <TableRow>
-          <TableHeader>Name</TableHeader>
-          <TableHeader>Action</TableHeader>
-        </TableRow>
-      </TableHead>
       <TableBody>{tableRows}</TableBody>
     </Table>
   );
