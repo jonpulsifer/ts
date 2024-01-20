@@ -1,9 +1,9 @@
 'use client';
 
-import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import type { User } from '@prisma/client';
 import type { CardAction } from '@repo/ui/card';
 import { Card } from '@repo/ui/card';
+import { BookMarked } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { UserWithGifts } from 'types/prisma';
@@ -16,7 +16,7 @@ export interface UserListProps {
 function UserList({ users }: UserListProps) {
   const action: CardAction = {
     title: 'View All Wishlists',
-    icon: faPeopleRoof,
+    icon: BookMarked,
     link: '/wishlists',
   };
   const userList = (appUsers: UserWithGifts[]) => {

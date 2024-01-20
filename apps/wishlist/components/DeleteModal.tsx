@@ -1,8 +1,8 @@
 'use client';
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dialog, Transition } from '@headlessui/react';
+
+import { Dialog, Transition } from '@headlessui/react-1';
 import type { Gift } from '@prisma/client';
+import { Trash } from 'lucide-react';
 import { Fragment, useRef } from 'react';
 
 interface Props {
@@ -55,11 +55,7 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
-                        <FontAwesomeIcon
-                          aria-hidden="true"
-                          className="h-6 w-6 text-red-600 dark:text-red-600"
-                          icon={faTrashCan}
-                        />
+                        <Trash />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title

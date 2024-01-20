@@ -1,10 +1,12 @@
 {
   "name": "@repo/ui",
   "version": "0.0.0",
+  "license": "https://tailwindui.com/license",
   "sideEffects": [
     "**/*.css"
   ],
   "exports": {
+    ".": "./src/index.ts",
     "./styles.css": "./dist/index.css",
     "./alert": "./src/alert.tsx",
     "./avatar": "./src/avatar.tsx",
@@ -26,7 +28,6 @@
     "./text": "./src/text.tsx",
     "./textarea": "./src/textarea.tsx"
   },
-  "license": "MIT",
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o dist/index.css",
     "lint": "eslint src/",
@@ -51,7 +52,7 @@
   },
   "dependencies": {
     "@headlessui/react": "2.0.0-alpha.4",
-    "@heroicons/react": "^2.1.1",
-    "clsx": "^2.1.0"
+    "clsx": "2.1.0",
+    "lucide-react": "0.312.0"
   }
 }

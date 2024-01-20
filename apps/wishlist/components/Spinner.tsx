@@ -1,19 +1,16 @@
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faGift } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Gift, LucideIcon } from 'lucide-react';
 import React from 'react';
 
 interface Props {
-  icon?: IconDefinition;
+  Icon?: LucideIcon;
 }
 
-function Spinner({ icon = faGift }: Props) {
+function Spinner({ Icon = Gift }: Props) {
   return (
     <div className="flex justify-center items-center h-full">
-      <FontAwesomeIcon
-        className="animate-spin text-7xl text-indigo-600 dark:text-indigo-500"
-        icon={icon}
-      />
+      <div className="animate-spin text-indigo-600 dark:text-indigo-500">
+        <Icon width={96} />
+      </div>
     </div>
   );
 }

@@ -1,17 +1,16 @@
 'use client';
 
-import {
-  faFeather,
-  faLink,
-  faMinusSquare,
-  faPencil,
-  faPlusSquare,
-  faTrashCan,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Gift, User } from '@prisma/client';
 import { Card } from '@repo/ui/card';
 import { claimGift, deleteGift, unclaimGift } from 'app/actions';
+import {
+  Edit,
+  Link as LucideLink,
+  MinusSquare,
+  Notebook,
+  PlusSquare,
+  Trash,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -52,10 +51,9 @@ export function GiftCard({ gift, user }: Props) {
   const handleConfirmDelete = (gift: Gift) => {
     toast.error(<ToastMarkup gift={gift} />, {
       icon: (
-        <FontAwesomeIcon
-          className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600"
-          icon={faTrashCan}
-        />
+        <div className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-red-600">
+          <Trash />
+        </div>
       ),
     });
   };
@@ -89,18 +87,19 @@ export function GiftCard({ gift, user }: Props) {
   };
 
   const giftAction = () => {
+    if (!currentUser) return undefined;
     if (gift.ownerId === currentUser.id)
       return [
         {
           link: `/gift/${gift.id}/edit`,
-          icon: faPencil,
+          icon: Edit,
           title: 'Edit Gift',
         },
         {
           onClick: () => {
             handleConfirmDelete(gift);
           },
-          icon: faTrashCan,
+          icon: Trash,
           title: 'Delete Gift',
           danger: true,
         },
@@ -110,13 +109,13 @@ export function GiftCard({ gift, user }: Props) {
     if (gift.claimedById === currentUser.id) {
       return {
         onClick: () => handleUnclaim(gift),
-        icon: faMinusSquare,
+        icon: MinusSquare,
         title: 'Unclaim Gift',
       };
     }
     return {
       onClick: () => handleClaim(gift),
-      icon: faPlusSquare,
+      icon: PlusSquare,
       title: 'Claim Gift',
     };
   };
@@ -128,7 +127,7 @@ export function GiftCard({ gift, user }: Props) {
           {url ? (
             <div className="flex flex-col sm:flex-row">
               <div className="flex flex-row sm:shrink-0 sm:w-24 items-center space-x-2 mb-2 text-gray-600">
-                <FontAwesomeIcon icon={faLink} />
+                <LucideLink />
                 <p className="font-semibold">Link</p>
               </div>
               <div className="truncate">
@@ -144,7 +143,7 @@ export function GiftCard({ gift, user }: Props) {
           ) : null}
           <div className="flex flex-col sm:flex-row items-start">
             <div className="flex flex-row sm:shrink-0 sm:w-24 items-center space-x-2 mb-2 text-gray-600">
-              <FontAwesomeIcon icon={faFeather} />
+              <Notebook />
               <p className="font-semibold">Notes</p>
             </div>
             <div className="whitespace-pre-line">{giftDescription}</div>

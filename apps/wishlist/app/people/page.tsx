@@ -1,6 +1,6 @@
-import { faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
 import { Card } from '@repo/ui/card';
 import { Strong, Text } from '@repo/ui/text';
+import { BookMarked } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import EmptyState from '../../components/EmptyState';
@@ -18,7 +18,7 @@ const PeoplePage = async () => {
 
   const action = {
     title: 'View all wishlists',
-    icon: faPeopleRoof,
+    icon: BookMarked,
     link: '/wishlists',
   };
   const people = users.length;

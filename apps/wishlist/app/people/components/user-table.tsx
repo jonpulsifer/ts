@@ -1,5 +1,5 @@
-import { Avatar } from '@repo/ui/avatar';
-import { Badge } from '@repo/ui/badge';
+import { Avatar } from '@repo/ui';
+import { Badge } from '@repo/ui';
 import {
   Table,
   TableBody,
@@ -46,6 +46,7 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
   return (
     <Table
       bleed
+      dense
       className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]"
     >
       <TableHead>

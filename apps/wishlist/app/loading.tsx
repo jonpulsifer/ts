@@ -1,8 +1,8 @@
-import { faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import Spinner from 'components/Spinner';
+import { Snowflake } from 'lucide-react';
 
 function Loading() {
-  return <Spinner icon={faSnowflake} />;
+  return <Spinner Icon={Snowflake} />;
 }
 
 export default Loading;

@@ -1,8 +1,8 @@
 'use client';
-import { faGift, faGifts } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dialog, Transition } from '@headlessui/react';
+
+import { Dialog, Transition } from '@headlessui/react-1';
 import { addGift } from 'app/actions';
+import { Gift } from 'lucide-react';
 import { Fragment, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { toast } from 'react-hot-toast';
@@ -53,15 +53,12 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
         type="submit"
       >
         {status.pending ? (
-          <>
-            <FontAwesomeIcon
-              className="animate-spin text-gray-600 dark:text-gray-200 mt-1"
-              icon={faGift}
-            />
+          <div className="animate-spin text-gray-600 dark:text-gray-200 mt-1">
+            <Gift />
             <span className="ml-2 text-gray-600 dark:text-gray-200">
               Adding...
             </span>
-          </>
+          </div>
         ) : (
           `Add to wishlist`
         )}
@@ -107,11 +104,12 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
-                        <FontAwesomeIcon
+                        <div
                           aria-hidden="true"
                           className="h-6 w-6 text-indigo-600 dark:text-indigo-400"
-                          icon={faGifts}
-                        />
+                        >
+                          <Gift />
+                        </div>
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title

@@ -1,9 +1,9 @@
 'use client';
 
-import { faSave } from '@fortawesome/free-solid-svg-icons';
 import type { Gift } from '@prisma/client';
 import { Card } from '@repo/ui/card';
 import { addGift, updateGift } from 'app/actions';
+import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 
@@ -50,7 +50,7 @@ function GiftForm({ gift }: Props) {
       action={[
         {
           title: 'Update gift',
-          icon: faSave,
+          icon: Save,
           submit: 'upsertGift',
         },
         {

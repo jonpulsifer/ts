@@ -1,38 +1,13 @@
-import { Button } from '@repo/ui/button';
+'use client';
 import { Table, TableBody, TableCell, TableRow } from '@repo/ui/table';
 import { Strong, Text } from '@repo/ui/text';
+import { ClaimButton } from 'components/claim-button';
 import { GiftWithOwner } from 'types/prisma';
 
 interface Props {
   gifts: GiftWithOwner[];
   currentUserId: string;
 }
-
-const ClaimButton = ({
-  gift,
-  currentUserId,
-}: {
-  gift: GiftWithOwner;
-  currentUserId: string;
-}) => {
-  if (gift.ownerId === currentUserId) {
-    return null;
-  }
-
-  if (gift.claimedById === currentUserId) {
-    return (
-      <Button plain>
-        <div className="text-red-500">Claim</div>
-      </Button>
-    );
-  }
-
-  return (
-    <Button plain>
-      <div className="text-indigo-500">Claim</div>
-    </Button>
-  );
-};
 
 export function GiftTable({ gifts, currentUserId }: Props) {
   const tableRows = gifts.map((gift) => {

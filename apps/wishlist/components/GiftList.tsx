@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  faEdit,
-  faGift,
-  faMinusSquare,
-  faPlusSquare,
-  faTrashCan,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card } from '@repo/ui/card';
 import { claimGift, deleteGift, unclaimGift } from 'app/actions';
+import { Edit, Gift, Minus, PlusSquare, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -54,7 +47,7 @@ function GiftList({ gifts, currentUserId }: Props) {
         onClick: () => {
           setIsOpen(true);
         },
-        icon: faGift,
+        icon: Gift,
       },
     };
     const myGiftsMarkup = (
@@ -131,7 +124,7 @@ function GiftList({ gifts, currentUserId }: Props) {
           <Link href={`/gift/${gift.id}/edit`}>
             <button className={`${buttonClass} ${buttonInfo}`}>
               <div className="flex items-center gap-1">
-                <FontAwesomeIcon icon={faEdit} />
+                <Edit />
                 Edit
               </div>
             </button>
@@ -143,7 +136,7 @@ function GiftList({ gifts, currentUserId }: Props) {
             }}
           >
             <div className="flex items-center gap-1">
-              <FontAwesomeIcon icon={faTrashCan} /> Delete
+              <Trash /> Delete
             </div>
           </button>
         </div>
@@ -156,7 +149,7 @@ function GiftList({ gifts, currentUserId }: Props) {
           onClick={() => handleUnclaim(gift)}
         >
           <div className="flex items-center gap-1">
-            <FontAwesomeIcon icon={faMinusSquare} />
+            <Minus />
             Unclaim
           </div>
         </button>
@@ -168,7 +161,7 @@ function GiftList({ gifts, currentUserId }: Props) {
         onClick={() => handleClaim(gift)}
       >
         <div className="flex items-center gap-1">
-          <FontAwesomeIcon icon={faPlusSquare} />
+          <PlusSquare />
           Claim
         </div>{' '}
       </button>

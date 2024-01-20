@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { CardAction } from '@repo/ui/card';
 import Link from 'next/link';
 
@@ -19,9 +18,7 @@ export function EmptyState({ children, title, subtitle, action }: Props) {
   const actionsMarkup = actions.length
     ? actions.map((action, idx) => {
         const actionIcon = action.icon ? (
-          <div className="flex">
-            <FontAwesomeIcon className="pr-2" icon={action.icon} />
-          </div>
+          <div className="flex">{<action.icon />}</div>
         ) : null;
         const baseButtonClass =
           'font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';

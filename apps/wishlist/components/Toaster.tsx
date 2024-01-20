@@ -1,7 +1,7 @@
 'use client';
-import { faClose, faLightbulb } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Transition } from '@headlessui/react';
+
+import { Transition } from '@headlessui/react-1';
+import { DoorClosed, Lightbulb } from 'lucide-react';
 import React from 'react';
 import { resolveValue, toast, Toaster, ToastIcon } from 'react-hot-toast';
 
@@ -36,12 +36,7 @@ export function Toast() {
 export const dismissable = (content: string | JSX.Element) => {
   toast((t) => {
     t.duration = Infinity;
-    t.icon = (
-      <FontAwesomeIcon
-        className="text-slate-200 dark:text-indigo-600"
-        icon={faLightbulb}
-      />
-    );
+    t.icon = <Lightbulb />;
     return (
       <div
         className="flex items-center"
@@ -55,7 +50,7 @@ export const dismissable = (content: string | JSX.Element) => {
             toast.dismiss(t.id);
           }}
         >
-          <FontAwesomeIcon icon={faClose} />
+          <DoorClosed />
         </button>
         <p className="font-bold">{content}</p>
       </div>

@@ -1,4 +1,4 @@
-import { faGifts } from '@fortawesome/free-solid-svg-icons';
+import { Gift } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import EmptyState from '../../components/EmptyState';
@@ -20,7 +20,7 @@ const ClaimedPage = async () => {
         action={{
           title: 'View gifts',
           link: '/gifts',
-          icon: faGifts,
+          icon: Gift,
         }}
         subtitle="You have not claimed any gifts"
         title="🛒 No Claimed Gifts"

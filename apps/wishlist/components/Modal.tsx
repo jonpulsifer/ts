@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, Transition } from '@headlessui/react-1';
 import { AlertTriangle } from 'lucide-react';
 import { Fragment, useRef, useState } from 'react';
 

@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import type { FormEvent, MouseEvent } from 'react';
 import React from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 export interface CardAction {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cause i'm migrating
-  icon?: any;
+  icon?: LucideIcon;
   title: string;
   danger?: boolean;
   secondary?: boolean;
@@ -54,7 +54,9 @@ export function Card({
   const actionsMarkup = actions.length
     ? actions.map((action) => {
         const actionIcon = action.icon ? (
-          <div className="flex">{action.icon}</div>
+          <div className="flex">
+            <action.icon />
+          </div>
         ) : null;
         const baseButtonClass =
           'font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';

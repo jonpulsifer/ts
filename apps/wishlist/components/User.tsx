@@ -1,13 +1,6 @@
-import {
-  faAt,
-  faLocationDot,
-  faPersonRunning,
-  faShirt,
-  faSignature,
-  faSocks,
-} from '@fortawesome/free-solid-svg-icons';
 import type { User } from '@prisma/client';
 import { Card } from '@repo/ui/card';
+import { AtSign, Footprints, Locate, Magnet, Pen, Shirt } from 'lucide-react';
 
 interface UserProfileProps {
   user: User;
@@ -31,32 +24,32 @@ export function UserProfile({ user, currentUserId }: UserProfileProps) {
     : `${nameOrEmailOrDefault}'s Profile`;
   const fields = [
     {
-      icon: faSignature,
+      icon: Pen,
       content: name,
       label: 'Name',
     },
     {
-      icon: faAt,
+      icon: AtSign,
       content: email,
       label: 'Email',
     },
     {
-      icon: faLocationDot,
+      icon: Locate,
       content: address,
       label: 'Address',
     },
     {
-      icon: faSocks,
+      icon: Footprints,
       content: shoeSize,
       label: 'Shoe Size',
     },
     {
-      icon: faPersonRunning,
+      icon: Magnet,
       content: pantSize,
       label: 'Pant Size',
     },
     {
-      icon: faShirt,
+      icon: Shirt,
       content: shirtSize,
       label: 'Shirt Size',
     },
