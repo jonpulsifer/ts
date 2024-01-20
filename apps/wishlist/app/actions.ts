@@ -5,33 +5,32 @@ import { isAuthenticated } from 'lib/prisma-ssr';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export const editUser = async (user: {
-  id: string;
-  name: string;
-  address: string;
-  shirt_size: string;
-  pant_size: string;
-  shoe_size: string;
-}) => {
+export const updateUser = async (_state: unknown, formData: FormData) => {
+  const { user } = await isAuthenticated();
+  const name = formData.get('name') as string;
+  const address = formData.get('address') as string;
+  const shirt_size = formData.get('shirt_size') as string;
+  const pant_size = formData.get('pant_size') as string;
+  const shoe_size = formData.get('shoe_size') as string;
   try {
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        name: user.name,
-        address: user.address,
-        shirt_size: user.shirt_size,
-        pant_size: user.pant_size,
-        shoe_size: user.shoe_size,
+        name,
+        address,
+        shirt_size,
+        pant_size,
+        shoe_size,
       },
     });
+    revalidatePath(`/user/${user.id}`, 'layout');
+    return { success: true };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath(`/user/${user.id}`, 'layout');
-  redirect('/user/me');
 };
 
 export const leaveWishlist = async ({

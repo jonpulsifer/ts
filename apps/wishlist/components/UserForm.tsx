@@ -5,9 +5,11 @@ import { Button } from '@repo/ui/button';
 import { Field, FieldGroup, Fieldset, Label, Legend } from '@repo/ui/fieldset';
 import { Input } from '@repo/ui/input';
 import { Text } from '@repo/ui/text';
-import { editUser } from 'app/actions';
+import { updateUser } from 'app/actions';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import { useEffect } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
+import toast from 'react-hot-toast';
 
 interface Props {
   user: User;
@@ -15,44 +17,35 @@ interface Props {
 
 function UserForm({ user }: Props) {
   const router = useRouter();
+  const { pending } = useFormStatus();
+  const [state, formAction] = useFormState(updateUser, null);
 
-  const clientEditUser = async (formData: FormData) => {
-    const name = formData.get('name');
-    const address = formData.get('address');
-    const shirtSize = formData.get('shirt_size');
-    const pantSize = formData.get('pant_size');
-    const shoeSize = formData.get('shoe_size');
-    if (!name) {
-      toast.error('Please fill out a name');
-      return;
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state?.error);
     }
-    const result = await editUser({
-      id: user.id,
-      name: name as string,
-      address: address as string,
-      shirt_size: shirtSize as string,
-      pant_size: pantSize as string,
-      shoe_size: shoeSize as string,
-    });
-    if (result.error) {
-      toast.error(result.error);
-      toast.error('Something went wrong. Please try again.');
-    } else {
-      toast.success(`Updated ${name}!`);
+    if (state?.success) {
+      toast.success('User updated');
     }
-  };
+  }, [state]);
 
   return (
-    <form action={clientEditUser} id="editUser">
-      <div className="border-b border-gray-900/10 pb-12 p-4">
+    <form action={formAction} id="editUser">
+      <div className="border-b dark:border-gray-200/10 border-gray-900/10 pb-12 p-4">
         <Fieldset>
-          <Legend>Profile Details</Legend>
-          <Text>
-            Without this Santa might not be able to deliver your gifts!
-          </Text>
           <FieldGroup>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
-              <Field>
+              <Field className="col-span-2">
+                <Label>Email</Label>
+                <Input
+                  autoComplete="email"
+                  defaultValue={user.email}
+                  name="email"
+                  disabled
+                  type="text"
+                />
+              </Field>
+              <Field className="col-span-2">
                 <Label>Name</Label>
                 <Input
                   autoComplete="name"
@@ -62,28 +55,20 @@ function UserForm({ user }: Props) {
                   type="text"
                 />
               </Field>
-              <Field>
-                <Label>Email</Label>
+              <Field className="col-span-2">
+                <Label>Address</Label>
                 <Input
                   autoComplete="street-address"
-                  defaultValue={user.email}
-                  name="email"
-                  disabled
+                  defaultValue={user.address || ''}
+                  name="address"
+                  placeholder="Stable #9, North Pole, H0H 0H0"
                   type="text"
+                  className="colspan-1"
                 />
               </Field>
             </div>
-            <Field>
-              <Label>Address</Label>
-              <Input
-                autoComplete="street-address"
-                defaultValue={user.address || ''}
-                name="address"
-                placeholder="Stable #9, North Pole, H0H 0H0"
-                type="text"
-              />
-            </Field>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
+
+            <div className="grid grid-cols-3 gap-4 sm:gap-8">
               <Field>
                 <Label>Shirt Size</Label>
                 <Input
@@ -92,7 +77,6 @@ function UserForm({ user }: Props) {
                   name="shirt_size"
                   placeholder="S/M"
                   type="text"
-                  className="colspan-1"
                 />
               </Field>
               <Field>
@@ -103,7 +87,6 @@ function UserForm({ user }: Props) {
                   name="pant_size"
                   placeholder="XL"
                   type="text"
-                  className="colspan-1"
                 />
               </Field>
               <Field>
@@ -115,14 +98,13 @@ function UserForm({ user }: Props) {
                   name="shoe_size"
                   placeholder="7.5"
                   type="text"
-                  className="colspan-1"
                 />
               </Field>
             </div>
           </FieldGroup>
         </Fieldset>
       </div>
-      <div className="mt-6 flex items-center justify-end gap-x-6">
+      <div className="mt-4 sm:mt-6 flex items-center justify-end gap-x-6 p-4">
         <Button
           plain
           onClick={() => {
@@ -132,8 +114,8 @@ function UserForm({ user }: Props) {
         >
           Back
         </Button>
-        <Button color="indigo" onClick={() => clientEditUser} type="submit">
-          Save
+        <Button color="indigo" type="submit">
+          {pending ? 'Loading...' : 'Save'}
         </Button>
       </div>
     </form>
