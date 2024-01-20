@@ -1,4 +1,4 @@
-import { Card } from '@repo/ui/card';
+import { Accordion } from 'components/accordion';
 import Page from 'components/Page';
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
@@ -29,9 +29,9 @@ const GiftsPage = async () => {
     const gifts = giftsByOwnerId[ownerId];
     const title = gifts[0].owner.name || gifts[0].owner.email;
     return (
-      <Card title={title}>
+      <Accordion title={title}>
         <GiftTable gifts={gifts} currentUserId={user.id} />
-      </Card>
+      </Accordion>
     );
   });
   return (
