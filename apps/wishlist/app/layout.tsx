@@ -4,6 +4,7 @@ import '@repo/ui/styles.css';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import ErrorBoundary from 'components/ErrorBoundary';
+import { BottomNav } from 'components/Nav';
 import Toast from 'components/Toaster';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -29,6 +30,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <SessionProvider>
             <main className="flex flex-col h-full w-full">
               {children}
+              <BottomNav />
               <Toast />
             </main>
           </SessionProvider>

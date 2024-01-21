@@ -1,8 +1,6 @@
 'use client';
 import { Badge } from '@repo/ui';
 
-import { BottomNav } from './Nav';
-
 interface Props {
   children: React.ReactNode;
   title?: string;
@@ -40,14 +38,13 @@ function Page({ children, title }: Props) {
     <div className="h-full">
       <div className="mx-auto h-full max-w-3xl sm:px-6 lg:px-8 items-center">
         <header className="flex flex-row items-center gap-2 p-2 bg-inherit items-center text-semibold border-b border-transparent">
-          <h1 className="grow tracking-tight flex-none font-bold text-2xl noselect drop-shadow-lg">
+          <h1 className="grow tracking-tight flex-none font-bold text-2xl noselect drop-shadow-lg ">
             {title || 'wishin.app'}
           </h1>
           <DaysUntilChristmasBadge />
         </header>
-        {children}
+        <div className="pb-20">{children}</div>
       </div>
-      <BottomNav />
     </div>
   );
 }
