@@ -98,7 +98,7 @@ export function BottomNav() {
   });
 
   return (
-    <div className="fixed bottom-0 block w-full h-16 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800 xs:rounded-t-lg">
+    <div className="fixed bottom-0 w-full h-16 bg-gray-50 border-t border-gray-200 dark:bg-slate-950 dark:border-slate-800 xs:rounded-t-lg">
       <div className="grid h-full max-w-lg grid-cols-5 mx-auto">{buttons}</div>
       <Modal isOpen={showGiftModal} setIsOpen={setShowGiftModal} />
     </div>

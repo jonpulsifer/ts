@@ -32,7 +32,7 @@ export function EmptyState({ children, title, subtitle, action }: Props) {
       })
     : null;
   return (
-    <div className="h-full">
+    <>
       <div
         className="absolute right-0 -z-10 w-1/2 h-1/2 
         bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top"
@@ -53,7 +53,7 @@ export function EmptyState({ children, title, subtitle, action }: Props) {
           <div className="flex flex-row gap-4">{actionsMarkup}</div>
         ) : null}
       </div>
-    </div>
+    </>
   );
 }
 

@@ -37,7 +37,7 @@ const ClaimedPage = async () => {
     </EmptyState>
   );
 
-  return <Page title="Your Claimed Gifts">{markup}</Page>;
+  return <Page title="Claimed Gifts">{markup}</Page>;
 };
 
 export default ClaimedPage;
