@@ -157,7 +157,7 @@ const isAuthenticated = async () => {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     console.error('could not get user from session, redirecting to login');
-    return redirect('/api/auth/signout');
+    return redirect('/login');
   }
   return session;
 };
