@@ -1,5 +1,5 @@
 'use client';
-import { Badge } from '@repo/ui/badge';
+import { Badge } from '@repo/ui';
 
 import { BottomNav } from './Nav';
 
