@@ -8,6 +8,12 @@ const config: Omit<Config, "content"> = {
       'xs': '475px',
       ...defaultTheme.screens,
     },
+    extend: {
+      animation: {
+        'spin-slow': 'spin 2s linear infinite',
+        'spin-slower': 'spin 3s linear infinite',
+      },
+    },
   },
   plugins: [],
 };

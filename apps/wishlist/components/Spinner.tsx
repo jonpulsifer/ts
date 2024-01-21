@@ -1,16 +1,44 @@
-import { Gift, LucideIcon } from 'lucide-react';
+import { LucideIcon, Snowflake } from 'lucide-react';
 import React from 'react';
 
 interface Props {
   Icon?: LucideIcon;
 }
 
-function Spinner({ Icon = Gift }: Props) {
+const LOADING_MESSAGES = [
+  'Makin a list, checkin it twice',
+  'Oh no, the Grinch stole the gifts!',
+  'Santa is on his way',
+  'Making sure the reindeer are fed',
+  'No coal for you',
+  'Checking the naughty list',
+  'Checking the nice list',
+  'Putting up the tree',
+  'Putting up the lights',
+  'Wrapping presents',
+  'Making hot chocolate',
+  'Making cookies for Santa',
+];
+
+const PulsingText = () => {
+  const loadingMessage =
+    LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="animate-spin text-indigo-600 dark:text-indigo-500">
-        <Icon width={96} />
+    <div className="flex flex-row items-center">
+      <h1 className="animate-pulse text-xl opacity-10 font-bold dark:text-indigo-500 text-indigo-600 tracking-tight">
+        {loadingMessage}
+      </h1>
+    </div>
+  );
+};
+
+function Spinner({ Icon = Snowflake }: Props) {
+  return (
+    <div className="flex flex-col gap-2 justify-center items-center h-full">
+      <div className="animate-spin-slow text-indigo-600 dark:text-indigo-500">
+        <Icon className="w-16 h-16" />
       </div>
+      <PulsingText />
     </div>
   );
 }

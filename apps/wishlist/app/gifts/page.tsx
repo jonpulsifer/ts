@@ -57,7 +57,7 @@ const GiftsPage = async () => {
       </Accordion>
     );
   });
-  // set the first one to open
+
   return (
     <Page title="Gifts">
       <div className="grid gap-4 sm:gap-8">{ownerCards}</div>
