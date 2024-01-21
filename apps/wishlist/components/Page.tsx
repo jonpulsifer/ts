@@ -2,8 +2,6 @@
 import { Badge } from '@repo/ui';
 
 import { BottomNav } from './Nav';
-import { Suspense } from 'react';
-import Spinner from './Spinner';
 
 interface Props {
   children: React.ReactNode;
