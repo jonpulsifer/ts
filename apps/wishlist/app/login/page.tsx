@@ -53,7 +53,7 @@ function LoginPage() {
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center items-center leading-9 tracking-tight px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
-        <Image alt="Santa" height={100} src={santa} width={100} />
+        <Image priority alt="Santa" height={100} src={santa} width={100} />
 
         <h1 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-black dark:text-white">
           wishin.app
