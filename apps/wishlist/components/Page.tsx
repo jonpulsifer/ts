@@ -1,6 +1,5 @@
 'use client';
 import { Badge } from '@repo/ui/badge';
-import { usePathname } from 'next/navigation';
 
 import { BottomNav } from './Nav';
 
@@ -17,24 +16,6 @@ const daysUntilChristmas = () => {
   }
   const oneDay = 1000 * 60 * 60 * 24;
   return Math.ceil((christmas.getTime() - today.getTime()) / oneDay);
-};
-
-// generate title from path name
-const generateTitle = (path: string | null) => {
-  switch (path) {
-    case '/wishlists':
-      return '👪 Join a Wishlist';
-    case '/gifts':
-      return '🎁 Gifts';
-    case '/people':
-      return '👪 People';
-    case '/claimed':
-      return '🛒 Claimed Gifts';
-    case '/user/me':
-      return '👤 Profile';
-    default:
-      return '🎁 wishin.app';
-  }
 };
 
 const DaysUntilChristmasBadge = () => {
@@ -54,17 +35,16 @@ const DaysUntilChristmasBadge = () => {
   );
 };
 
-function Page({ children }: Props) {
-  const title = generateTitle(usePathname());
+function Page({ children, title }: Props) {
   return (
-    <div>
-      <header className="flex flex-row items-center gap-2 p-2 bg-inherit items-center text-semibold border-b border-transparent">
-        <h1 className="grow tracking-tight flex-none font-bold text-2xl noselect drop-shadow-lg">
-          {title}
-        </h1>
-        <DaysUntilChristmasBadge />
-      </header>
-      <div className="mx-auto max-w-3xl sm:px-6 lg:px-8 items-center pb-28">
+    <div className="h-full">
+      <div className="mx-auto h-full max-w-3xl sm:px-6 lg:px-8 items-center pb-28">
+        <header className="flex flex-row items-center gap-2 p-2 bg-inherit items-center text-semibold border-b border-transparent">
+          <h1 className="grow tracking-tight flex-none font-bold text-2xl noselect drop-shadow-lg">
+            {title || 'wishin.app'}
+          </h1>
+          <DaysUntilChristmasBadge />
+        </header>
         {children}
       </div>
       <BottomNav />

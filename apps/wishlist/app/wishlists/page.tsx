@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const WishlistsPage = async () => {
   const { wishlists, user } = await getWishlists();
   return (
-    <Page>
+    <Page title="Wishlists">
       <FamilyList user={user} wishlists={wishlists} />
     </Page>
   );

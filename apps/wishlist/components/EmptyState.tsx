@@ -1,5 +1,5 @@
+import { Button } from '@repo/ui';
 import type { CardAction } from '@repo/ui/card';
-import Link from 'next/link';
 
 interface Props {
   children?: React.ReactNode;
@@ -17,41 +17,28 @@ export function EmptyState({ children, title, subtitle, action }: Props) {
 
   const actionsMarkup = actions.length
     ? actions.map((action, idx) => {
-        const actionIcon = action.icon ? (
-          <div className="flex">{<action.icon />}</div>
-        ) : null;
-        const baseButtonClass =
-          'font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
-        const dangerClass = `bg-red-500 ${baseButtonClass}`;
-        const infoClass = `bg-indigo-600 ${baseButtonClass}`;
-        const buttonClass = action.danger ? dangerClass : infoClass;
-        const button = (
-          <button
-            className={buttonClass}
+        const actionIcon = action.icon ? <action.icon width={20} /> : null;
+        return (
+          <Button
+            color={action.color}
+            href={action.link ? action.link : undefined}
             key={`fb-${idx}`}
             onClick={action.onClick ? action.onClick : undefined}
           >
             {actionIcon}
             {action.title}
-          </button>
-        );
-        return action.link ? (
-          <Link href={action.link} key={`fb-${idx}`}>
-            {button}
-          </Link>
-        ) : (
-          button
+          </Button>
         );
       })
     : null;
   return (
-    <>
+    <div className="h-full">
       <div
         className="absolute right-0 -z-10 w-1/2 h-1/2 
         bg-[url('/santa.png')] bg-origin-border bg-no-repeat bg-right-top"
       />
-      <div className="flex flex-col items-center justify-center text-center h-full">
-        <div className="flex flex-col items-center justify-center gap-4">
+      <div className="flex flex-col items-center h-full justify-center">
+        <div className="flex flex-col items-center gap-4">
           <h1 className="text-2xl font-bold text-black dark:text-slate-200">
             {title}
           </h1>
@@ -66,7 +53,7 @@ export function EmptyState({ children, title, subtitle, action }: Props) {
           <div className="flex flex-row gap-4">{actionsMarkup}</div>
         ) : null}
       </div>
-    </>
+    </div>
   );
 }
 

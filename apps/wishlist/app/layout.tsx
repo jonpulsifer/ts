@@ -41,7 +41,6 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://wishin.app'),
   robots: {
     index: true,
     follow: true,
@@ -74,7 +73,7 @@ export const metadata: Metadata = {
       url: '/apple-touch-icon-precomposed.png',
     },
   },
-  manifest: 'https://wishin.app/site.webmanifest',
+  manifest: '/site.webmanifest',
 };
 
 // these are the default values

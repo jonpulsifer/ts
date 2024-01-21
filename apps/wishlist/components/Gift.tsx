@@ -1,7 +1,7 @@
 'use client';
 
 import type { Gift, User } from '@prisma/client';
-import { Card } from '@repo/ui/card';
+import { Card, CardAction } from '@repo/ui/card';
 import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import {
   Edit,
@@ -59,31 +59,37 @@ export function GiftCard({ gift, user }: Props) {
   };
 
   const handleClaim = async (gift: Gift) => {
-    const result = await claimGift(gift.id);
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success(`Claimed ${gift.name}!`);
-    }
+    toast.promise(claimGift(gift.id), {
+      loading: 'Claiming...',
+      success: (results) => {
+        if (results?.error) throw new Error(results.error);
+        return `Claimed ${gift.name}!`;
+      },
+      error: (err) => `Error: ${err}`,
+    });
   };
 
   const handleUnclaim = async (gift: Gift) => {
-    const result = await unclaimGift(gift.id);
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success(`Unclaimed ${gift.name}!`);
-    }
+    toast.promise(unclaimGift(gift.id), {
+      loading: 'Unclaiming...',
+      success: (results) => {
+        if (results?.error) throw new Error(results.error);
+        return `Unclaimed ${gift.name}!`;
+      },
+      error: (err) => `Error: ${err}`,
+    });
   };
 
   const handleDelete = async (gift: Gift) => {
-    const result = await deleteGift(gift.id);
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success(`Deleted ${gift.name}`);
-      router.push('/user/me');
-    }
+    toast.promise(deleteGift(gift.id), {
+      loading: 'Deleting...',
+      success: (results) => {
+        if (results?.error) throw new Error(results.error);
+        router.back();
+        return `Deleted ${gift.name}!`;
+      },
+      error: (err) => `Error: ${err}`,
+    });
   };
 
   const giftAction = () => {
@@ -91,7 +97,7 @@ export function GiftCard({ gift, user }: Props) {
     if (gift.ownerId === currentUser.id)
       return [
         {
-          link: `/gift/${gift.id}/edit`,
+          href: `/gift/${gift.id}/edit`,
           icon: Edit,
           title: 'Edit Gift',
         },
@@ -101,9 +107,9 @@ export function GiftCard({ gift, user }: Props) {
           },
           icon: Trash,
           title: 'Delete Gift',
-          danger: true,
+          color: 'red',
         },
-      ];
+      ] satisfies CardAction[];
     if (gift.claimedById && gift.claimedById !== currentUser.id)
       return undefined;
     if (gift.claimedById === currentUser.id) {
@@ -111,7 +117,7 @@ export function GiftCard({ gift, user }: Props) {
         onClick: () => handleUnclaim(gift),
         icon: MinusSquare,
         title: 'Unclaim Gift',
-      };
+      } satisfies CardAction;
     }
     return {
       onClick: () => handleClaim(gift),

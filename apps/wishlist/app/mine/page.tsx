@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const MyGiftsPage = async () => {
   const user = await getMeWithGifts();
   return (
-    <Page>
+    <Page title="My Gifts">
       <GiftList currentUserId={user.id} gifts={user.gifts} />
     </Page>
   );

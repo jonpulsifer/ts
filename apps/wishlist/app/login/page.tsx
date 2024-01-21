@@ -22,7 +22,7 @@ function LoginPage() {
 
   // if the user is already logged in, redirect them to the people page
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (session?.user && status === 'authenticated') {
       router.push('/people');
       welcome(name);
     }
@@ -34,13 +34,13 @@ function LoginPage() {
     if (status === 'loading') {
       setShowLoading(true);
     }
-  }, [status, name, router]);
+  }, [session, status, name, router]);
 
   if (showLoading) {
     return <Spinner />;
   }
 
-  const handleGoogle = async (e: React.MouseEvent | React.FormEvent) => {
+  const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
     setShowLoading(true);
     e.preventDefault();
     signIn('google', { callbackUrl: '/people', redirect: false }).finally(

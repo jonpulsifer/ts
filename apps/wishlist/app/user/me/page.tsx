@@ -4,14 +4,14 @@ import { getMeWithGifts } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Your Profile',
-  description: 'See your profile',
+  title: 'My Profile',
+  description: 'Edit your profile',
 };
 
 const MePage = async () => {
   const user = await getMeWithGifts();
   return (
-    <Page>
+    <Page title="My Profile">
       <UserForm user={user} />
     </Page>
   );

@@ -26,7 +26,7 @@ const EditGiftPage = async ({ params }: PageProps) => {
     return EmptyState({ title: 'Gift not found' });
   }
   return (
-    <Page>
+    <Page title={`Edit ${gift.name}`}>
       <Card>
         <GiftForm gift={gift} />
       </Card>

@@ -26,7 +26,7 @@ const GiftPage = async ({ params }: PageProps) => {
   }
   const user = await getUserWithGiftsById(gift.ownerId);
   return (
-    <Page>
+    <Page title={gift.name}>
       <GiftCard gift={gift} user={user} />
     </Page>
   );

@@ -52,13 +52,13 @@ function GiftForm({ gift }: Props) {
           title: 'Update gift',
           icon: Save,
           submit: 'upsertGift',
+          color: 'indigo',
         },
         {
           title: 'Back',
           onClick: () => {
             router.back();
           },
-          secondary: true,
         },
       ]}
       title="Add a new gift"

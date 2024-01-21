@@ -14,33 +14,30 @@ export const metadata: Metadata = {
 const ClaimedPage = async () => {
   const { gifts, user } = await getClaimedGiftsForMe();
 
-  if (!gifts.length) {
-    return (
-      <EmptyState
-        action={{
-          title: 'View gifts',
-          link: '/gifts',
-          icon: Gift,
-        }}
-        subtitle="You have not claimed any gifts"
-        title="🛒 No Claimed Gifts"
-      >
-        <div className="p-4">
-          <p>
-            <span className="font-semibold dark:text-slate-200 text-black dark:text-slate-200">
-              Claim a gift
-            </span>{' '}
-            before they&apos;re all gone.
-          </p>
-        </div>
-      </EmptyState>
-    );
-  }
-  return (
-    <Page>
-      <GiftList currentUserId={user.id} gifts={gifts} />
-    </Page>
+  const markup = gifts.length ? (
+    <GiftList currentUserId={user.id} gifts={gifts} />
+  ) : (
+    <EmptyState
+      action={{
+        title: 'View gifts',
+        link: '/gifts',
+        icon: Gift,
+      }}
+      subtitle="You have not claimed any gifts"
+      title="🛒 No Claimed Gifts"
+    >
+      <div className="p-4">
+        <p>
+          <span className="font-semibold dark:text-slate-200 text-black dark:text-slate-200">
+            Claim a gift
+          </span>{' '}
+          before they&apos;re all gone.
+        </p>
+      </div>
+    </EmptyState>
   );
+
+  return <Page title="Your Claimed Gifts">{markup}</Page>;
 };
 
 export default ClaimedPage;

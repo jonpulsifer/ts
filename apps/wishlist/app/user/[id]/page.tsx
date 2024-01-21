@@ -21,9 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ProfilePage = async ({ params }: Props) => {
   const profile = await getUserById(params.id);
   const { gifts, user } = await getVisibleGiftsForUserById(params.id);
-
   return (
-    <Page>
+    <Page title="View Profile">
       {gifts.length ? (
         <UserProfile currentUserId={user.id} user={profile} />
       ) : (

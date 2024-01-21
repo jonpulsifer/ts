@@ -3,7 +3,7 @@ import { claimGift, unclaimGift } from 'app/actions';
 import toast from 'react-hot-toast';
 import { GiftWithOwner } from 'types/prisma';
 
-export const ClaimButton = async ({
+export const ClaimButton = ({
   gift,
   currentUserId,
 }: {
@@ -18,13 +18,15 @@ export const ClaimButton = async ({
     return (
       <Button
         plain
-        onClick={async () => {
-          const results = await unclaimGift(gift.id);
-          if (results?.error) {
-            toast.error(results.error);
-          } else {
-            toast.success(`Unclaimed ${gift.name}!`);
-          }
+        onClick={() => {
+          toast.promise(unclaimGift(gift.id), {
+            loading: 'Unclaiming...',
+            success: (results) => {
+              if (results?.error) throw new Error(results.error);
+              return `Unclaimed ${gift.name}!`;
+            },
+            error: (err) => `Error: ${err}`,
+          });
         }}
       >
         <div className="text-red-500">Unclaim</div>
@@ -35,13 +37,15 @@ export const ClaimButton = async ({
   return (
     <Button
       plain
-      onClick={async () => {
-        const results = await claimGift(gift.id);
-        if (results?.error) {
-          toast.error(results.error);
-        } else {
-          toast.success(`Claimed ${gift.name}!`);
-        }
+      onClick={() => {
+        toast.promise(claimGift(gift.id), {
+          loading: 'Claiming...',
+          success: (results) => {
+            if (results?.error) throw new Error(results.error);
+            return `Claimed ${gift.name}!`;
+          },
+          error: (err) => `Error: ${err}`,
+        });
       }}
     >
       <div className="text-indigo-500">Claim</div>

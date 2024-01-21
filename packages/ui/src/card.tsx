@@ -1,13 +1,14 @@
-import Link from 'next/link';
 import type { FormEvent, MouseEvent } from 'react';
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
+import type { ButtonProps } from './button';
+import { Button } from './button';
 
 export interface CardAction {
   icon?: LucideIcon;
   title: string;
-  danger?: boolean;
-  secondary?: boolean;
+  href?: string;
+  color?: ButtonProps['color'];
   onClick?: ((e: MouseEvent | FormEvent) => void) | (() => void) | undefined;
   submit?: string;
   link?: string;
@@ -58,35 +59,19 @@ export function Card({
             <action.icon />
           </div>
         ) : null;
-        const baseButtonClass =
-          'font-semibold text-white inline-flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-2 shadow-sm sm:ml-3 sm:w-auto mt-2 sm:mt-0';
-        const secondaryButtonClass =
-          'font-semibold text-gray-900 dark:text-slate-400 mt-3 inline-flex w-full justify-center items-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto';
-        const dangerClass = `bg-red-500 hover:bg-red-500 ${baseButtonClass}`;
-        const infoClass = `bg-indigo-600 hover:bg-indigo-500 ${baseButtonClass}`;
 
-        const buttonClass = action.danger ? dangerClass : infoClass;
-        const buttonMarkup = action.secondary
-          ? secondaryButtonClass
-          : buttonClass;
-        const button = (
-          <button
-            className={buttonMarkup}
+        return (
+          <Button
+            color={action.color ? action.color : undefined}
             form={action.submit ? action.submit : undefined}
+            href={action.href ? action.href : ''}
             key={action.title}
             onClick={action.onClick ? action.onClick : undefined}
             type={action.submit ? 'submit' : 'button'}
           >
             {actionIcon}
             {action.title}
-          </button>
-        );
-        return action.link ? (
-          <Link href={{ pathname: action.link }} key={action.title}>
-            {button}
-          </Link>
-        ) : (
-          button
+          </Button>
         );
       })
     : null;

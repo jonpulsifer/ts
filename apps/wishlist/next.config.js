@@ -28,6 +28,7 @@ const ContentSecurityPolicy = `
     style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com;
     img-src * blob: data:;
     media-src 'none';
+    manifest-src 'self';
     connect-src 'self' ${isDev ? '*' : '*.googleapis.com'};
     font-src 'self' cdnjs.cloudflare.com fonts.gstatic.com;
 `;

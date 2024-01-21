@@ -48,9 +48,9 @@ const PeoplePage = async () => {
   }
 
   return (
-    <Page>
+    <Page title="People">
       <Card
-        title="People in your wishlists"
+        title="Everyone in your wishlists"
         subtitle="This is a list of everyone that can see your wishlist"
       >
         <UserTable users={users} />

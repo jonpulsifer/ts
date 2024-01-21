@@ -59,7 +59,7 @@ const GiftsPage = async () => {
   });
   // set the first one to open
   return (
-    <Page title="All Gifts">
+    <Page title="Everyone's Gifts">
       <div className="grid gap-4 sm:gap-8">{ownerCards}</div>
     </Page>
   );
