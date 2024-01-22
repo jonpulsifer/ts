@@ -7,9 +7,10 @@ import { GiftWithOwner } from 'types/prisma';
 interface Props {
   gifts: GiftWithOwner[];
   currentUserId: string;
+  showGiftOwner?: boolean;
 }
 
-export function GiftTable({ gifts, currentUserId }: Props) {
+export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   const tableRows = gifts.map((gift) => {
     return (
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
@@ -17,6 +18,9 @@ export function GiftTable({ gifts, currentUserId }: Props) {
           <Text>
             <Strong>{gift.name}</Strong>
           </Text>
+          {showGiftOwner && gift.owner && (
+            <span className="text-xs text-slate-400">{gift.owner.name}</span>
+          )}
         </TableCell>
         <TableCell className="text-right">
           <ClaimButton

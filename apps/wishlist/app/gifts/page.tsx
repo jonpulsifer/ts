@@ -35,7 +35,10 @@ const GiftsPage = async () => {
 
     // subtitle is the count of gifts for this owner
     const subtitleMarkup = (
-      <div className="flex flex-row gap-4 text-xs text-zinc-500 dark:text-zinc-400">
+      <div
+        key={ownerId}
+        className="flex flex-row gap-4 text-xs text-zinc-500 dark:text-zinc-400"
+      >
         <div className="flex flex-row items-center">
           <Gift width={16} className="mr-1" />
           {gifts.length} gift{gifts.length > 1 ? 's' : ''}

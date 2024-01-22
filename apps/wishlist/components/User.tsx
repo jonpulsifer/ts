@@ -1,15 +1,12 @@
 import type { User } from '@prisma/client';
-import { Card } from '@repo/ui/card';
-import { AtSign, Footprints, Locate, Magnet, Pen, Shirt } from 'lucide-react';
 
 interface UserProfileProps {
   user: User;
   currentUserId: string;
 }
 
-export function UserProfile({ user, currentUserId }: UserProfileProps) {
+export function UserProfile({ user }: UserProfileProps) {
   const {
-    id,
     name,
     email,
     address,
@@ -17,61 +14,77 @@ export function UserProfile({ user, currentUserId }: UserProfileProps) {
     shoe_size: shoeSize,
     pant_size: pantSize,
   } = user;
-  const isUserProfile = currentUserId === id;
-  const nameOrEmailOrDefault = name || email || 'Anonymous';
-  const title = isUserProfile
-    ? `Your Profile`
-    : `${nameOrEmailOrDefault}'s Profile`;
-  const fields = [
-    {
-      icon: Pen,
-      content: name,
-      label: 'Name',
-    },
-    {
-      icon: AtSign,
-      content: email,
-      label: 'Email',
-    },
-    {
-      icon: Locate,
-      content: address,
-      label: 'Address',
-    },
-    {
-      icon: Footprints,
-      content: shoeSize,
-      label: 'Shoe Size',
-    },
-    {
-      icon: Magnet,
-      content: pantSize,
-      label: 'Pant Size',
-    },
-    {
-      icon: Shirt,
-      content: shirtSize,
-      label: 'Shirt Size',
-    },
-  ];
 
-  const fieldsMarkup = fields.map((field) => {
-    if (!field.content) return null;
-    return (
-      <div className="flex flex-col items-left text-left" key={field.label}>
-        <div className="text-xs">{field.label}</div>
-        <div className="text-sm flex flex-grow font-bold dark:text-gray-200">
-          {field.content}
-        </div>
+  const nameMarkup = name ? (
+    <div>
+      <div className="text-xs">Name</div>
+      <div className="text-sm font-bold dark:text-gray-200 col-span-1">
+        {name || 'n/a'}
       </div>
-    );
-  });
+    </div>
+  ) : null;
+
+  const emailMarkup = email ? (
+    <div>
+      <div className="text-xs">Email</div>
+      <div className="text-sm font-bold dark:text-gray-200 col-span-1">
+        {email}
+      </div>
+    </div>
+  ) : null;
+
+  const addressMarkup = address ? (
+    <div className="sm:col-span-3">
+      <div className="text-xs">Address</div>
+      <div className="text-sm font-bold dark:text-gray-200 col-span-2">
+        {address || 'n/a'}
+      </div>
+    </div>
+  ) : null;
+
+  const shirtSizeMarkup = shirtSize ? (
+    <div className="sm:col-span-1">
+      <div className="text-xs">Shirt Size</div>
+      <div className="text-sm font-bold dark:text-gray-200">
+        {shirtSize || 'n/a'}
+      </div>
+    </div>
+  ) : null;
+
+  const shoeSizeMarkup = shoeSize ? (
+    <div className="sm:col-span-1">
+      <div className="text-xs">Shoe Size</div>
+      <div className="text-sm font-bold dark:text-gray-200">
+        {shoeSize || 'n/a'}
+      </div>
+    </div>
+  ) : null;
+
+  const pantSizeMarkup = pantSize ? (
+    <div className="sm:col-span-1">
+      <div className="text-xs">Pant Size</div>
+      <div className="text-sm font-bold dark:text-gray-200">
+        {pantSize || 'n/a'}
+      </div>
+    </div>
+  ) : null;
+
+  const sizesMarkup =
+    shirtSizeMarkup || shoeSizeMarkup || pantSizeMarkup ? (
+      <div className="grid grid-cols-3 gap-4 sm:gap-8 sm:col-span-2">
+        {' '}
+        {shirtSizeMarkup}
+        {shoeSizeMarkup}
+        {pantSizeMarkup}
+      </div>
+    ) : null;
 
   return (
-    <Card title={title}>
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-        {fieldsMarkup}
-      </div>
-    </Card>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+      {nameMarkup}
+      {emailMarkup}
+      {addressMarkup}
+      {sizesMarkup}
+    </div>
   );
 }

@@ -1,8 +1,9 @@
+import { Card } from '@repo/ui';
+import { GiftTable } from 'app/gifts/components/gift-table';
 import { Gift } from 'lucide-react';
 import type { Metadata } from 'next';
 
 import EmptyState from '../../components/EmptyState';
-import GiftList from '../../components/GiftList';
 import Page from '../../components/Page';
 import { getClaimedGiftsForMe } from '../../lib/prisma-ssr';
 
@@ -15,7 +16,12 @@ const ClaimedPage = async () => {
   const { gifts, user } = await getClaimedGiftsForMe();
 
   const markup = gifts.length ? (
-    <GiftList currentUserId={user.id} gifts={gifts} />
+    <Card
+      title="🛒 Reserved items"
+      subtitle="These are all of the items you have claimed (reserved). You can unclaim them if you change your mind. Make sure to purchase the gift when you are ready."
+    >
+      <GiftTable currentUserId={user.id} gifts={gifts} showGiftOwner />
+    </Card>
   ) : (
     <EmptyState
       action={{

@@ -1,7 +1,9 @@
 import { Card } from '@repo/ui/card';
 import { Strong, Text } from '@repo/ui/text';
+import Spinner from 'components/Spinner';
 import { BookMarked } from 'lucide-react';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 import EmptyState from '../../components/EmptyState';
 import Page from '../../components/Page';
@@ -49,12 +51,14 @@ const PeoplePage = async () => {
 
   return (
     <Page title="People">
-      <Card
-        title="Everyone in your wishlists"
-        subtitle="This is a list of everyone that can see your wishlist"
-      >
-        <UserTable users={users} />
-      </Card>
+      <Suspense fallback={<Spinner />}>
+        <Card
+          title="Everyone in your wishlists"
+          subtitle="This is a list of everyone that can see your wishlist"
+        >
+          <UserTable users={users} />
+        </Card>
+      </Suspense>
     </Page>
   );
 };

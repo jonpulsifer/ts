@@ -1,4 +1,5 @@
-import EmptyState from 'components/EmptyState';
+import { Card, Strong, Text } from '@repo/ui';
+import { GiftTable } from 'app/gifts/components/gift-table';
 import Page from 'components/Page';
 import { UserProfile } from 'components/User';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
@@ -21,26 +22,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ProfilePage = async ({ params }: Props) => {
   const profile = await getUserById(params.id);
   const { gifts, user } = await getVisibleGiftsForUserById(params.id);
+  const isUserProfile = user.id === profile.id;
+  const nameOrEmailOrDefault = profile.name || profile.email || 'Anonymous';
+  const title = isUserProfile
+    ? `Your Profile`
+    : `${nameOrEmailOrDefault}'s Profile`;
   return (
     <Page title="View Profile">
-      {gifts.length ? (
+      <Card title={title}>
         <UserProfile currentUserId={user.id} user={profile} />
-      ) : (
-        <EmptyState
-          subtitle="The elves could not find any gifts for this person"
-          title="🎁 No Gifts Found"
-        >
-          <div className="p-4">
-            <p>
-              People need to{' '}
-              <span className="font-semibold text-black dark:text-slate-200">
-                add more gifts
-              </span>{' '}
-              to their wishlists
-            </p>
-          </div>
-        </EmptyState>
-      )}
+        <div className="mt-4 sm:mt-8">
+          <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-slate-200">
+            {isUserProfile ? 'Your' : `${nameOrEmailOrDefault}'s`} gifts
+          </h3>
+          {gifts.length ? (
+            <GiftTable currentUserId={user.id} gifts={gifts} />
+          ) : (
+            <Text>
+              No gifts found. <Strong>Add more gifts</Strong> to this wishlist!
+            </Text>
+          )}
+        </div>
+      </Card>
     </Page>
   );
 };

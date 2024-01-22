@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3000",
+    "dev": "next dev --turbo --port 3000",
     "build": "prisma generate && prisma db push && next build",
     "start": "next start",
     "lint": "next lint --fix",
@@ -19,7 +19,7 @@
     "@prisma/client": "5.8.1",
     "@repo/ui": "workspace:*",
     "@vercel/analytics": "1.1.2",
-    "@vercel/speed-insights": "^1.0.1",
+    "@vercel/speed-insights": "1.0.1",
     "next": "14.1.0",
     "next-auth": "4.24.5",
     "nookies": "2.5.2",
@@ -30,7 +30,7 @@
     "sharp": "0.33.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.3.1",
+    "@faker-js/faker": "8.3.1",
     "@headlessui/tailwindcss": "0.2.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
