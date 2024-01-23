@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: test
-      TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.VERCEL_ID }}
     services:
       postgres:
@@ -59,7 +59,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build
+        run: pnpm build --remote-only
 
       - name: Test
         run: pnpm test
