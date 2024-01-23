@@ -23,8 +23,8 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   const tableRows = gifts.map((gift) => {
     return (
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
-        <TableCell>
-          <Text>
+        <TableCell className="overflow-hidden">
+          <Text className="max-w-40 truncate">
             <Strong>{gift.name}</Strong>
           </Text>
           {showGiftOwner && gift.owner && (

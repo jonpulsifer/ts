@@ -27,7 +27,7 @@ export const Accordion = ({
         square
         src={avatar.src}
         initials={avatar.initials}
-        className="size-10 sm:size-12 bg-zinc-200 dark:bg-slate-950 dark:text-indigo-500"
+        className="size-10 sm:size-12 bg-zinc-200/80 dark:bg-slate-950 dark:text-indigo-500"
       />
     </div>
   ) : null;

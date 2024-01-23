@@ -1,6 +1,7 @@
 'use client';
 
 import { Dialog, Transition } from '@headlessui/react-1';
+import { Button } from '@repo/ui';
 import { addGift } from 'app/actions';
 import { Gift } from 'lucide-react';
 import { Fragment, useRef } from 'react';
@@ -47,22 +48,9 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
   function Submit() {
     const status = useFormStatus();
     return (
-      <button
-        className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
-        disabled={status.pending}
-        type="submit"
-      >
-        {status.pending ? (
-          <div className="animate-spin text-gray-600 dark:text-gray-200 mt-1">
-            <Gift />
-            <span className="ml-2 text-gray-600 dark:text-gray-200">
-              Adding...
-            </span>
-          </div>
-        ) : (
-          `Add to wishlist`
-        )}
-      </button>
+      <Button type="submit" color="indigo" disabled={status.pending}>
+        {status.pending ? 'Adding...' : 'Add to wishlist'}
+      </Button>
     );
   }
 
@@ -169,10 +157,10 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:px-6 flex flex-row-reverse gap-4">
                     <Submit />
-                    <button
-                      className="mt-3 dark:text-slate-400 inline-flex w-full items-center justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    <Button
+                      plain
                       onClick={() => {
                         closeAndReset();
                       }}
@@ -180,7 +168,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                       type="button"
                     >
                       Close
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </Dialog.Panel>

@@ -1,9 +1,10 @@
 import { Card, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
 import Page from 'components/Page';
-import { UserProfile } from 'components/User';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
+
+import { UserProfile } from './components/user-profile';
 
 interface Props {
   params: { [K in string]: string };
