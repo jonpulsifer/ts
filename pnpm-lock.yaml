@@ -430,6 +430,9 @@ importers:
 
   packages/tailwind-config:
     devDependencies:
+      '@headlessui/tailwindcss':
+        specifier: 0.2.0
+        version: 0.2.0(tailwindcss@3.4.1)
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

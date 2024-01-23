@@ -1,5 +1,6 @@
 'use client';
 import { Disclosure, Transition } from '@headlessui/react-1';
+import { Avatar, AvatarProps } from '@repo/ui';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import React, { Suspense } from 'react';
 
@@ -9,6 +10,7 @@ interface Props {
   children: React.ReactNode;
   isOpen?: boolean;
   button?: React.ReactNode;
+  avatar?: AvatarProps;
 }
 
 export const Accordion = ({
@@ -17,7 +19,19 @@ export const Accordion = ({
   subtitle,
   isOpen,
   button,
+  avatar,
 }: Props) => {
+  const avatarMarkup = avatar ? (
+    <div className="">
+      <Avatar
+        square
+        src={avatar.src}
+        initials={avatar.initials}
+        className="size-10 sm:size-12 bg-zinc-200 dark:bg-slate-950 dark:text-indigo-500"
+      />
+    </div>
+  ) : null;
+
   return (
     <div className="divide-y dark:divide-slate-800 divide-zinc-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-zinc-400 shadow shadow-sm border-transparent">
       <Disclosure defaultOpen={isOpen}>
@@ -25,14 +39,15 @@ export const Accordion = ({
           <>
             <div className="p-2 sm:p-4 w-full flex justify-between">
               <Disclosure.Button>
-                <div className="flex">
-                  <div className="mr-2">
+                <div className="flex space-x-2">
+                  <div className="">
                     {open ? (
                       <ChevronDown width={16} />
                     ) : (
                       <ChevronRight width={16} />
                     )}
                   </div>
+                  {avatarMarkup}
                   <div className="text-left">
                     <h1 className="text-xl font-semibold leading-6 text-zinc-900 dark:text-slate-200">
                       {title}

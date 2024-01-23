@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+import pluginHeadlessUi from '@headlessui/tailwindcss';
+
 // We want each package to be responsible for its own content.
 const config: Omit<Config, "content"> = {
   theme: {
@@ -15,6 +17,6 @@ const config: Omit<Config, "content"> = {
       },
     },
   },
-  plugins: [],
+  plugins: [pluginHeadlessUi],
 };
 export default config;

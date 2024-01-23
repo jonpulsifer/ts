@@ -45,6 +45,27 @@ const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
   return redirect('/login');
 };
 
+const getGiftsWithOwnerByUserId = async (id: string) => {
+  await isAuthenticated();
+  try {
+    const gifts = await prisma.gift.findMany({
+      where: {
+        ownerId: id,
+      },
+      include: {
+        owner: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    return gifts;
+  } catch (e) {
+    console.error('getGiftsWithOwnerByUserId', JSON.stringify(e));
+  }
+  return redirect('/login');
+};
+
 const getUserWithGifts = async (id: string) => {
   return getUserById(id, true, false);
 };
@@ -274,6 +295,7 @@ const getPeopleForUser = async () => {
 export {
   getClaimedGiftsForMe,
   getGiftById,
+  getGiftsWithOwnerByUserId,
   getMe,
   getMeWithGifts,
   getMeWithGiftsAndWishlists,

@@ -84,7 +84,7 @@ export function Card({
   return (
     <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent">
       {headerMarkup}
-      <div className="px-4 py-4 sm:px-6 space-y-12 ">{children}</div>
+      <div className="px-4 py-4 sm:px-6">{children}</div>
       {footerMarkup}
     </div>
   );

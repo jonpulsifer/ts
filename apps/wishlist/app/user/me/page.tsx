@@ -1,7 +1,8 @@
 import Page from 'components/Page';
-import UserForm from 'components/UserForm';
-import { getMeWithGifts } from 'lib/prisma-ssr';
+import { getGiftsWithOwnerByUserId, getMe } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
+
+import ProfileTabs from './components/profile-tabs';
 
 export const metadata: Metadata = {
   title: 'My Profile',
@@ -9,10 +10,11 @@ export const metadata: Metadata = {
 };
 
 const MePage = async () => {
-  const user = await getMeWithGifts();
+  const user = await getMe();
+  const gifts = await getGiftsWithOwnerByUserId(user.id);
   return (
     <Page title="My Profile">
-      <UserForm user={user} />
+      <ProfileTabs user={user} gifts={gifts} />
     </Page>
   );
 };

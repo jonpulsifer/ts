@@ -1,5 +1,5 @@
 import { Card } from '@repo/ui';
-import { GiftTable } from 'app/gifts/components/gift-table';
+import { GiftTable } from 'components/gift-table';
 import { Gift } from 'lucide-react';
 import type { Metadata } from 'next';
 

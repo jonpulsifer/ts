@@ -1,5 +1,5 @@
 import { Card, Strong, Text } from '@repo/ui';
-import { GiftTable } from 'app/gifts/components/gift-table';
+import { GiftTable } from 'components/gift-table';
 import Page from 'components/Page';
 import { UserProfile } from 'components/User';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
