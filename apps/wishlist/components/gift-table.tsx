@@ -2,6 +2,8 @@
 import { Table, TableBody, TableCell, TableRow } from '@repo/ui/table';
 import { Strong, Text } from '@repo/ui/text';
 import { ClaimButton } from 'components/claim-button';
+import { DeleteButton } from 'components/delete-button';
+import { EditButton } from 'components/edit-button';
 import { GiftWithOwner, GiftWithOwnerAndWishlistIds } from 'types/prisma';
 
 interface Props {
@@ -30,11 +32,9 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
           )}
         </TableCell>
         <TableCell className="text-right">
-          <ClaimButton
-            key={`button-${gift.id}`}
-            gift={gift}
-            currentUserId={currentUserId}
-          />
+          <EditButton gift={gift} currentUserId={currentUserId} />
+          <DeleteButton gift={gift} currentUserId={currentUserId} />
+          <ClaimButton gift={gift} currentUserId={currentUserId} />
         </TableCell>
       </TableRow>
     );

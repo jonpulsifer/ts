@@ -65,6 +65,7 @@ const PeoplePage = async () => {
         subtitle={subtitleMarkup}
         button={button}
         avatar={avatar}
+        key={ownerId}
       >
         <GiftTable gifts={gifts} currentUserId={user.id} />
       </Accordion>
@@ -72,7 +73,7 @@ const PeoplePage = async () => {
   });
 
   return (
-    <Page title="Gifts">
+    <Page title="People">
       <div className="grid gap-4 sm:gap-8">{ownerCards}</div>
     </Page>
   );
