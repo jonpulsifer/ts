@@ -53,7 +53,7 @@ jobs:
           POSTGRES_MULTIPLE_DATABASES: authme,wishlist
         run: |
           ./.github/scripts/create-multiple-postgresql-databases.sh
-          find . -type f -name '.env.test.local' -execdir cp -v {} .env \;
+          find . -type f -name '.env.development' -execdir cp -v {} .env \;
 
       - name: Install dependencies
         run: pnpm install
