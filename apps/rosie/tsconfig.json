@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "module": "es2015",
+    "module": "CommonJS",
     "esModuleInterop": true,
     "rootDirs": [
       "src",
