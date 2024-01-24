@@ -59,7 +59,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build --force
+        run: pnpm build --go-fallback
 
       - name: Test
         run: pnpm test
