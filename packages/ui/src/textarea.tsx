@@ -24,7 +24,7 @@ export const Textarea = forwardRef<
         'dark:before:hidden',
 
         // Focus ring
-        'after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:focus-within:ring-2 sm:after:focus-within:ring-blue-500',
+        'after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:focus-within:ring-2 sm:after:focus-within:ring-indigo-500',
 
         // Disabled state
         'has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-slate-950/5 before:has-[[data-disabled]]:shadow-none',

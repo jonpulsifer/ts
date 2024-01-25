@@ -119,7 +119,7 @@ const Home = () => {
     <div className="flex flex-col justify-center items-center gap-4 max-w-full w-full">
       <h1 className="text-md sm:text-2xl md:text-3xl lg:text-4xl tracking-tight font-extrabold pt-4">
         <span>(∩ ͡° ͜ʖ ͡°)⊃</span>
-        <span className="text-blue-600">━</span>
+        <span className="text-indigo-600">━</span>
         <span className="font-mono text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
           <span className={starColor}>⭑</span>·~-.¸.·~
           <span className={starColor}>⭒</span>·._.·

@@ -111,7 +111,7 @@ export function TableRow({
         className={clsx(
           className,
           href &&
-            'has-[[data-row-link][data-focus]]:outline has-[[data-row-link][data-focus]]:outline-2 has-[[data-row-link][data-focus]]:-outline-offset-2 has-[[data-row-link][data-focus]]:outline-blue-500 dark:focus-within:bg-white/[2.5%]',
+            'has-[[data-row-link][data-focus]]:outline has-[[data-row-link][data-focus]]:outline-2 has-[[data-row-link][data-focus]]:-outline-offset-2 has-[[data-row-link][data-focus]]:outline-indigo-500 dark:focus-within:bg-white/[2.5%]',
           striped && 'even:bg-slate-950/[2.5%] dark:even:bg-white/[2.5%]',
           href && striped && 'hover:bg-slate-950/5 dark:hover:bg-white/5',
           href &&
@@ -168,14 +168,16 @@ export function TableCell({
         !bleed && 'sm:first:pl-2 sm:last:pr-2',
       )}
     >
-      {href ? <Link
+      {href ? (
+        <Link
           aria-label={title}
           className="absolute inset-0 focus:outline-none"
           data-row-link
           href={href}
           tabIndex={cellRef?.previousElementSibling === null ? 0 : -1}
           target={target}
-        /> : null}
+        />
+      ) : null}
       {children}
     </td>
   );

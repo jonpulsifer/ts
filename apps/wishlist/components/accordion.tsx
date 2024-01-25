@@ -27,7 +27,7 @@ export const Accordion = ({
         square
         src={avatar.src}
         initials={avatar.initials}
-        className="size-10 sm:size-12 bg-zinc-200/80 dark:bg-slate-950 dark:text-indigo-500"
+        className="size-12 bg-zinc-200/80 dark:bg-slate-950 dark:text-indigo-500"
       />
     </div>
   ) : null;
@@ -37,16 +37,22 @@ export const Accordion = ({
       <Disclosure defaultOpen={isOpen}>
         {({ open }) => (
           <>
-            <div className="p-2 sm:p-4 w-full flex justify-between">
+            <div className="p-2 w-full flex justify-between">
               <Disclosure.Button>
-                <div className="flex space-x-2">
-                  <div className="">
+                <div className="flex gap-2">
+                  <>
                     {open ? (
-                      <ChevronDown width={16} />
+                      <ChevronDown
+                        width={20}
+                        className="hover:animate-pulse hover:text-indigo-600 -mr-1"
+                      />
                     ) : (
-                      <ChevronRight width={16} />
+                      <ChevronRight
+                        width={20}
+                        className="hover:animate-pulse hover:text-indigo-600 -mr-1"
+                      />
                     )}
-                  </div>
+                  </>
                   {avatarMarkup}
                   <div className="text-left">
                     <h1 className="text-xl font-semibold leading-6 text-zinc-900 dark:text-slate-200">
@@ -76,7 +82,7 @@ export const Accordion = ({
                   leaveTo="transform scale-95 opacity-0"
                 >
                   <Disclosure.Panel className="text-zinc-500">
-                    <div className="p-2 sm:p-4">{children}</div>
+                    <div className="px-2">{children}</div>
                   </Disclosure.Panel>
                 </Transition.Child>
               </Suspense>

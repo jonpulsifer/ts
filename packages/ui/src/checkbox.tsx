@@ -80,7 +80,7 @@ const base = [
   'dark:after:-inset-px dark:after:hidden dark:after:rounded-[0.3125rem] dark:group-data-[checked]:after:block',
 
   // Focus ring
-  'group-data-[focus]:outline group-data-[focus]:outline-2 group-data-[focus]:outline-offset-2 group-data-[focus]:outline-blue-500',
+  'group-data-[focus]:outline group-data-[focus]:outline-2 group-data-[focus]:outline-offset-2 group-data-[focus]:outline-indigo-500',
 
   // Disabled state
   'group-data-[disabled]:opacity-50',
@@ -104,7 +104,8 @@ const colors = {
   white:
     '[--checkbox-check:theme(colors.slate.900)] [--checkbox-checked-bg:theme(colors.white)] [--checkbox-checked-border:theme(colors.slate.950/15%)]',
   dark: '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.slate.900)] [--checkbox-checked-border:theme(colors.slate.950/90%)]',
-  slate: '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.slate.600)] [--checkbox-checked-border:theme(colors.slate.700/90%)]',
+  slate:
+    '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.slate.600)] [--checkbox-checked-border:theme(colors.slate.700/90%)]',
   red: '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.red.600)] [--checkbox-checked-border:theme(colors.red.700/90%)]',
   orange:
     '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.orange.500)] [--checkbox-checked-border:theme(colors.orange.600/90%)]',
