@@ -5,6 +5,7 @@
     "noEmit": false,
     "allowImportingTsExtensions": false,
     "module": "CommonJS",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "rootDirs": [
       "src",
