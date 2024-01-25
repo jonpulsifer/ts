@@ -30,7 +30,7 @@
     "sharp": "0.33.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "8.3.1",
+    "@faker-js/faker": "8.4.0",
     "@headlessui/tailwindcss": "0.2.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
