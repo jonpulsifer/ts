@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { writeEncodedCertsFromEnv } from './certs';
+// import { writeEncodedCertsFromEnv } from './certs';
 
 declare const global: Global & { prisma?: PrismaClient };
 
@@ -8,7 +8,7 @@ export let prisma: PrismaClient;
 
 if (typeof window === 'undefined') {
   // console.log('Initializing Prisma on the server');
-  writeEncodedCertsFromEnv();
+  // writeEncodedCertsFromEnv();
 
   if (process.env.NODE_ENV === 'production') {
     prisma = new PrismaClient();

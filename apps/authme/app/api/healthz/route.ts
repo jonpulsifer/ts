@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { writeEncodedCertsFromEnv } from '../../../lib/certs';
+// import { writeEncodedCertsFromEnv } from '../../../lib/certs';
 import { prisma } from '../../../lib/prisma';
 
 type PrismaRawResults = {
@@ -8,7 +8,7 @@ type PrismaRawResults = {
   max_connections?: number;
 }[];
 
-writeEncodedCertsFromEnv();
+// writeEncodedCertsFromEnv();
 
 export async function GET(): Promise<NextResponse> {
   // Execute the database queries
