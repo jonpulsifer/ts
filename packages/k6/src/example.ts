@@ -31,7 +31,7 @@ export default () => {
 
   check(res, {
     'status is 200': () => res.status === 200,
-    'response body test': () => res.json('fromFile') === 'myData',
+    'response body test': () => res.json('data') === 'k6',
   });
   // sleep(1);
 };
