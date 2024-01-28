@@ -1,0 +1,12 @@
+apiVersion: k6.io/v1alpha1
+kind: K6
+metadata:
+  name: k6-example
+spec:
+  parallelism: 1
+  script:
+    configMap:
+      name: k6-script
+      # Replace 'example.js' with the name of the script you want to run
+      file: example.js
+  arguments: --tag my-tag=my-value

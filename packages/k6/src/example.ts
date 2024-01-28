@@ -15,9 +15,9 @@ export const options: Options = {
       stages: [
         // ramp up to load of 10 virtual users
         { duration: '10s', target: 10 },
-        // immediately jump to 500 virtual users and stay there for 10s
-        { duration: '0s', target: 500 },
-        { duration: '10s', target: 500 },
+        // immediately jump to 25 virtual users and stay there for 10s
+        { duration: '0s', target: 25 },
+        { duration: '10s', target: 25 },
         // ramp down to zero
         { duration: '5s', target: 0 },
       ],
