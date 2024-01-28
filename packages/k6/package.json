@@ -1,0 +1,21 @@
+{
+  "name": "k6-scripts",
+  "version": "0.0.1",
+  "description": "my k6 scripts",
+  "repository": "https://github.com/jonpulsifer/ts/tree/main/packages/k6-scripts",
+  "private": true,
+  "devDependencies": {
+    "@types/k6": "0.48.0",
+    "@types/node": "20.10.2",
+    "@repo/eslint-config": "workspace:*",
+    "ts-node": "10.9.2",
+    "@repo/typescript-config": "workspace*",
+    "typescript": "5.3.3"
+  },
+  "scripts": {
+    "lint": "eslint --fix",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "dev": "tsc --watch"
+  }
+}
