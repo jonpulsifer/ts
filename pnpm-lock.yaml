@@ -30,8 +30,8 @@ importers:
   apps/authme:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: 1.1.0
-        version: 1.1.0(@prisma/client@5.9.0)
+        specifier: 1.2.0
+        version: 1.2.0(@prisma/client@5.9.0)
       '@prisma/client':
         specifier: 5.9.0
         version: 5.9.0(prisma@5.9.0)
@@ -259,8 +259,8 @@ importers:
   apps/wishlist:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: 1.1.0
-        version: 1.1.0(@prisma/client@5.9.0)
+        specifier: 1.2.0
+        version: 1.2.0(@prisma/client@5.9.0)
       '@headlessui/react-1':
         specifier: npm:@headlessui/react@1.7.18
         version: /@headlessui/react@1.7.18(react-dom@18.2.0)(react@18.2.0)
@@ -573,8 +573,8 @@ packages:
       - chokidar
     dev: true
 
-  /@auth/core@0.24.0:
-    resolution: {integrity: sha512-wwTyapljg4ydyvtQRXSeOaj6nBVSvPkVoXws6i+/vPfINxz4lo9UuLifPLqW7iO72/f4Ttaez0g3XA42VtKQ8A==}
+  /@auth/core@0.25.0:
+    resolution: {integrity: sha512-UxENsD+WNlY1NOFsr3Ygc7F1Ypbia8VCd9NU8cbAhSJ0Z8dtyZ0xmssRo1G3ZW50QnW0AaAMuYzY5oumnPMQzA==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -590,12 +590,12 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/prisma-adapter@1.1.0(@prisma/client@5.9.0):
-    resolution: {integrity: sha512-FSHnAmdrrW7b87pKjtnSCOgEthNK9ZAdZJDfncuG3YpXr4whiDfFhqg4UXgmnn/nEXuCIAY6wL3eZIa044vIOQ==}
+  /@auth/prisma-adapter@1.2.0(@prisma/client@5.9.0):
+    resolution: {integrity: sha512-yn1ZHX/a57x8hhU+rwi+GL1IHx8k92Fhqk5w9R5toAtO9PxAr9xD+sNjD0OgrAMrO7GttKyW/mac6t8G0NYDEg==}
     peerDependencies:
       '@prisma/client': '>=2.26.0 || >=3 || >=4 || >=5'
     dependencies:
-      '@auth/core': 0.24.0
+      '@auth/core': 0.25.0
       '@prisma/client': 5.9.0(prisma@5.9.0)
     transitivePeerDependencies:
       - nodemailer
