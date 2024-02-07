@@ -30,8 +30,8 @@ importers:
   apps/authme:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: 1.3.2
-        version: 1.3.2(@prisma/client@5.9.1)
+        specifier: 1.3.3
+        version: 1.3.3(@prisma/client@5.9.1)
       '@prisma/client':
         specifier: 5.9.1
         version: 5.9.1(prisma@5.9.1)
@@ -259,8 +259,8 @@ importers:
   apps/wishlist:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: 1.3.2
-        version: 1.3.2(@prisma/client@5.9.1)
+        specifier: 1.3.3
+        version: 1.3.3(@prisma/client@5.9.1)
       '@headlessui/react-1':
         specifier: npm:@headlessui/react@1.7.18
         version: /@headlessui/react@1.7.18(react-dom@18.2.0)(react@18.2.0)
@@ -604,8 +604,8 @@ packages:
       - chokidar
     dev: true
 
-  /@auth/core@0.26.2:
-    resolution: {integrity: sha512-BK+NaUDLcX8AMW/O32wxzk+SE9lr/xvjO4PsTgla9ToHHanoPMl+6pYu2/WoNKnZomdHBWOl/00LFfajuulIVA==}
+  /@auth/core@0.26.3:
+    resolution: {integrity: sha512-Ka6rMjWMdiQCvLW/CnYZxj4Rq2bhQ/ZtU32NLxmtyAaixGb0mRXQ9MxJUBZA7GHovbghdzu55p2Cb54qNlVFzw==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.1
@@ -627,12 +627,12 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/prisma-adapter@1.3.2(@prisma/client@5.9.1):
-    resolution: {integrity: sha512-16FU1drUeCq8Ht+ujZpHLFdMGcneLCkMSnwUidV3oRKBmzbDQ+ESWD7IOxYP3C88mFfhKf+YKMbaaF7daRAqHg==}
+  /@auth/prisma-adapter@1.3.3(@prisma/client@5.9.1):
+    resolution: {integrity: sha512-KVR4a6ekgVzaX2i62XgWbKThOFOhB22bEVsITbMrA9kDZM4dHOZ9QOBbzpXP/e6hSUxTdO97zy1LZ8pASR1Ybw==}
     peerDependencies:
       '@prisma/client': '>=2.26.0 || >=3 || >=4 || >=5'
     dependencies:
-      '@auth/core': 0.26.2
+      '@auth/core': 0.26.3
       '@prisma/client': 5.9.1(prisma@5.9.1)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
