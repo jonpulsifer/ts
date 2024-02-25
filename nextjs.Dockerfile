@@ -28,9 +28,6 @@ COPY --from=builder /app/out ./out
 COPY .prettierrc.json .
 #COPY turbo.json turbo.json
 
-ENV DATABASE_URL postgres://postgres:postgres@postgres:5432/${APP:-postgres}?schema=public
-ENV DATABASE_URL_NON_POOLING postgres://postgres:postgres@postgres:5432/${APP:-postgres}?schema=public&max_connections=1
-
 # Build the project
 RUN turbo run build --filter=${APP}
 
