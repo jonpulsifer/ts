@@ -4,8 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "prisma generate && prisma db push && next build",
+    "build": "prisma generate && next build",
     "build:certs": "./env2files.sh && prisma generate && prisma db push && next build",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "db:seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
+    "db:reset": "prisma migrate reset --force && prisma migrate dev --name init",
+    "db:studio": "prisma studio",
     "start": "next start",
     "lint": "next lint --fix"
   },
