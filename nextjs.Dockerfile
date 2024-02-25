@@ -21,15 +21,15 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-* ./
-RUN pnpm install --prod --frozen-lockfile --filter=${APP}...
+RUN pnpm install --frozen-lockfile --filter=${APP}...
 
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out ./out
 COPY .prettierrc.json .
 #COPY turbo.json turbo.json
 
-# Prepare .env for the build
-RUN cp /app/apps/${APP}/.env.development /app/apps/${APP}/.env
+ENV DATABASE_URL postgres://postgres:postgres@postgres:5432/${APP:-postgres}?schema=public
+ENV DATABASE_URL_NON_POOLING postgres://postgres:postgres@postgres:5432/${APP:-postgres}?schema=public&max_connections=1
 
 # Build the project
 RUN turbo run build --filter=${APP}
