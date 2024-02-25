@@ -92,6 +92,10 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Prepare env files (authme)
+        if: ${{ matrix.app == 'authme' }}
+        run: find . -type f -name '.env.development' -execdir cp -v {} .env \;
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3
 
