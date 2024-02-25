@@ -72,6 +72,8 @@ jobs:
         include:
           - app: request-headers
             stack: nextjs
+          - app: authme
+            stack: nextjs
           - app: nested
             stack: nestjs
           - app: rosie
