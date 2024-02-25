@@ -35,7 +35,7 @@ ARG TURBO_TOKEN
 ENV TURBO_TOKEN=$TURBO_TOKEN
 
 # Build the project
-RUN turbo run build --filter=${APP} --go-fallback
+RUN turbo run build --filter=${APP}
 
 FROM cgr.dev/chainguard/node:20@sha256:f30d39c6980f0a50119f2aa269498307a80c2654928d8e23bb25431b9cbbdc4f AS runner
 ARG APP
