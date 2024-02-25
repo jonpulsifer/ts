@@ -30,7 +30,7 @@ COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out ./out
 RUN turbo run build --filter=${APP}...
 
-FROM cgr.dev/chainguard/node:18@sha256:af073516c203b6bd0b55a77a806a0950b486f2e9ea7387a32b0f41ea72f20886 AS runner
+FROM cgr.dev/chainguard/node:20@sha256:f30d39c6980f0a50119f2aa269498307a80c2654928d8e23bb25431b9cbbdc4f AS runner
 ARG APP
 WORKDIR /app/apps/${APP}
 COPY --from=installer --chown=65532:65532 /app/node_modules /app/node_modules
