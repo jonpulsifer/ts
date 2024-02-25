@@ -3,6 +3,7 @@ FROM node:20-alpine@sha256:f4c96a28c0b2d8981664e03f461c2677152cd9a756012ffa8e2c6
 RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo
 
 FROM base AS builder
+ENV TURBO_TELEMETRY_DISABLED=1
 ARG APP
 WORKDIR /app
 COPY . .
@@ -11,6 +12,13 @@ RUN turbo prune --scope=${APP} --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 ARG APP
+# Uncomment and use build args to enable remote caching
+ARG TURBO_TEAM
+ENV TURBO_TEAM=$TURBO_TEAM
+ARG TURBO_TOKEN
+ENV TURBO_TOKEN=$TURBO_TOKEN
+ENV TURBO_TELEMETRY_DISABLED=1
+
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
@@ -18,12 +26,6 @@ COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-* ./
 RUN pnpm install --frozen-lockfile --filter=${APP}
-
-# Uncomment and use build args to enable remote caching
-ARG TURBO_TEAM
-ENV TURBO_TEAM=$TURBO_TEAM
-ARG TURBO_TOKEN
-ENV TURBO_TOKEN=$TURBO_TOKEN
 
 # Build the project
 COPY --from=builder /app/out/full/ .

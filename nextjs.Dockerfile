@@ -4,6 +4,7 @@ RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo
 
 FROM base AS builder
 ARG APP
+ENV TURBO_TELEMETRY_DISABLED=1
 # Set working directory
 WORKDIR /app
 COPY . .
@@ -14,7 +15,7 @@ FROM base AS installer
 ARG APP
 ENV IS_DOCKER=1
 ENV NEXT_TELEMETRY_DISABLED 1
-
+ENV TURBO_TELEMETRY_DISABLED=1
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
