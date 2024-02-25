@@ -4,6 +4,7 @@
 'use server';
 import type { User } from '@prisma/client';
 import { Prisma } from '@prisma/client';
+import { headers } from 'next/headers';
 import { getServerSession } from 'next-auth/next';
 
 import { authOptions } from '../lib/auth';
@@ -49,9 +50,12 @@ interface DatabaseInfo {
   version: string;
   connections: string;
   maxConnections: string;
+  ip: string;
 }
 
 const getDatabaseInfo = async (): Promise<DatabaseInfo> => {
+  const ipResult =
+    headers().get('x-real-ip') || headers().get('x-forwarded-for');
   // Execute the database queries
   const dbVersionResult: any[] = await prisma.$queryRaw`SELECT version();`;
   const currentConnectionsResult: any[] =
@@ -64,11 +68,13 @@ const getDatabaseInfo = async (): Promise<DatabaseInfo> => {
   const connections = String(currentConnectionsResult[0]?.count) || '0';
   const maxConnections =
     String(maxConnectionsResult[0]?.max_connections) || '0';
+  const ip = String(ipResult);
 
   return {
     version,
     connections,
     maxConnections,
+    ip,
   };
 };
 

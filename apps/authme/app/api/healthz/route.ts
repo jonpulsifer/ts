@@ -12,13 +12,13 @@ type PrismaRawResults = {
 // writeEncodedCertsFromEnv();
 
 export async function GET(): Promise<NextResponse> {
+  const ip = headers().get('x-real-ip') || headers().get('x-forwarded-for');
+
   // Execute the database queries
   const currentConnectionsResult: PrismaRawResults =
     await prisma.$queryRaw`SELECT COUNT(1) FROM pg_stat_activity;`;
   const maxConnectionsResult: PrismaRawResults =
     await prisma.$queryRaw`SHOW max_connections;`;
-
-  const ip = headers().get('x-real-ip') || headers().get('x-forwarded-for');
 
   // Extract and type assert the results
   const currentConnections = String(currentConnectionsResult[0]?.count) || '0';
