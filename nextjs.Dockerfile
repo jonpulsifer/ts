@@ -21,18 +21,15 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-* ./
-RUN pnpm install --frozen-lockfile --filter=${APP}...
+RUN pnpm install --prod --frozen-lockfile --filter=${APP}...
 
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out ./out
 COPY .prettierrc.json .
 #COPY turbo.json turbo.json
 
-# Uncomment and use build args to enable remote caching
-ARG TURBO_TEAM
-ENV TURBO_TEAM=$TURBO_TEAM
-ARG TURBO_TOKEN
-ENV TURBO_TOKEN=$TURBO_TOKEN
+# Prepare .env for the build
+RUN cp /app/apps/${APP}/.env.development /app/apps/${APP}/.env
 
 # Build the project
 RUN turbo run build --filter=${APP}
