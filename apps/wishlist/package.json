@@ -37,7 +37,7 @@
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/forms": "0.5.7",
     "@types/node": "20.11.20",
-    "@types/react": "18.2.58",
+    "@types/react": "18.2.59",
     "@types/react-dom": "18.2.19",
     "autoprefixer": "10.4.17",
     "postcss": "8.4.35",
