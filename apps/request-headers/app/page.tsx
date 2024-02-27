@@ -2,6 +2,8 @@ import { Card } from '@repo/ui/card';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 
+import ClientComponentWithEnvironmentVariables from './components/client';
+
 const { NODE_NAME, NODE_IP, POD_NAME, POD_IP, POD_CHANGE_ME } = process.env;
 const isInKubernetes = Boolean(process.env.POD_NAME);
 
@@ -128,6 +130,7 @@ const Home = () => {
       </h1>
       <div className="flex flex-col gap-4 max-w-full sm:max-w-2xl">
         {KubernetesCard}
+        <ClientComponentWithEnvironmentVariables />
         <Card
           subtitle="All environment variables visible on the server"
           title="Environment Variables"
