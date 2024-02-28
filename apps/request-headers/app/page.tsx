@@ -132,16 +132,16 @@ const Home = () => {
         {KubernetesCard}
         <ClientComponentWithEnvironmentVariables />
         <Card
-          subtitle="All environment variables visible on the server"
-          title="Environment Variables"
-        >
-          <EnvironmentTable />
-        </Card>
-        <Card
-          subtitle="HTTP headers received by the server"
           title="Request Headers"
+          subtitle="HTTP headers received by the server"
         >
           <HeadersTable />
+        </Card>
+        <Card
+          title="Server Environment"
+          subtitle="All environment variables visible on the server"
+        >
+          <EnvironmentTable />
         </Card>
       </div>
     </div>
