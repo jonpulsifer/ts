@@ -4,7 +4,7 @@ export default function ClientComponentWithEnvironmentVariables() {
   return (
     <Card
       title="Client Component"
-      subtitle="Client environment variables are not available in the browser and are substituted at build."
+      subtitle="Client environment variables are not available in the browser and are substituted at build?"
     >
       <table className="min-w-full table-auto">
         <thead>
