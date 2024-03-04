@@ -11,6 +11,7 @@ export const ipToName = async () => {
     case lowerCaseName.includes('screenpi4'):
     case lowerCaseName.includes('atomic'):
     case lowerCaseName.includes('caldigit-ts4'):
+    case lowerCaseName.includes('10-2-0-28'):
       return 'Laboratory';
     case lowerCaseName.includes('homepi4'):
     case lowerCaseName.includes('caldigit'):
