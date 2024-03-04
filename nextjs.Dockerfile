@@ -14,7 +14,7 @@ FROM base AS installer
 ARG APP
 ENV IS_DOCKER=1
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV TURBO_TELEMETRY_DISABLED=1
+ENV TURBO_TELEMETRY_DISABLED 1
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
