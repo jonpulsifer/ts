@@ -133,7 +133,7 @@ jobs:
         with:
           build-args: |
             APP=${{ matrix.app }}
-          secret-envs: |
+          secrets: |
             TURBO_TEAM=${{ secrets.VERCEL_ID }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
             DATABASE_URL=postgresql://postgres:postgres@localhost:5432/${{ matrix.app }}
