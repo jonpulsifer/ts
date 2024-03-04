@@ -25,9 +25,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <body
         className={`h-full w-full bg-zinc-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
       >
-        <main className="grid grid-cols-2 p-2 gap-2 h-full w-full">
-          {children}
-        </main>
+        <main className="p-2 gap-2 h-full w-full">{children}</main>
       </body>
     </html>
   );

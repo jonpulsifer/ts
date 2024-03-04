@@ -2,27 +2,60 @@
 import { Card, Switch } from '@repo/ui';
 import { useState } from 'react';
 
-const Status = () => {
-  const [checked, setChecked] = useState(true);
+interface Props {
+  statuses: Record<string, string>;
+  name: string;
+  updateStatus: (status: string) => Promise<string>;
+}
 
-  // red text in meeting
-  // green text not in meeting
-  // switch to toggle
+const Status = ({
+  statuses: statusesFromRedis,
+  updateStatus,
+  name: nameFromRedis,
+}: Props) => {
+  const statusFromName = statusesFromRedis[nameFromRedis];
+  const [checked, setChecked] = useState(statusFromName === 'In Meeting');
+  const [statuses, setStatuses] = useState(statusesFromRedis);
 
-  const status = checked ? 'In Meeting' : 'Free';
+  const handleToggleChange = async (checked: boolean) => {
+    const newStatus = checked ? 'Free' : 'In Meeting';
+    const name = await updateStatus(newStatus);
+    setChecked(!checked);
+    const newStatuses = { ...statuses, [name]: newStatus };
+    setStatuses(newStatuses);
+  };
+
+  const bg = checked ? 'bg-red-500/20' : '';
 
   return (
-    <Card title="Meeting Status">
-      <div className="flex flex-col justify-center items-center">
-        <p className="text-2xl font-bold mb-10">{status}</p>
-
-        <Switch
-          color="red"
-          checked={checked}
-          onChange={setChecked}
-          className=""
-          style={{ transform: 'scale(4)' }}
-        />
+    <Card>
+      <div
+        className={`${bg} flex flex-col justify-center items-center mb-10 rounded-md shadow shadow-inner`}
+      >
+        <p className="text-2xl font-bold mt-2">{nameFromRedis}</p>
+        <div className="pb-10">
+          <Switch
+            color="red"
+            checked={checked}
+            onChange={() => handleToggleChange(checked)}
+            className="scale-150 mt-10"
+          />
+        </div>
+      </div>
+      <div className="rounded-md p-2 shadow border border-black/10 divide-y">
+        {Object.entries(statuses).map(([name, currentStatus]) => (
+          <div
+            key={name}
+            className={`${bg} p-2 flex justify-between items-center rounded-md`}
+          >
+            <p>{name}</p>
+            <Switch
+              color="red"
+              checked={currentStatus === 'In Meeting'}
+              onChange={() => handleToggleChange(checked)}
+            />
+          </div>
+        ))}
       </div>
     </Card>
   );

@@ -49,7 +49,7 @@
     },
     "hub#build": {
       "dependsOn": ["^build"],
-      "env": [],
+      "env": ["REDIS_URL"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "rosie#build": {
