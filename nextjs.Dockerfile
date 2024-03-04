@@ -49,6 +49,7 @@ COPY --from=installer /app/apps/${APP}/package.json .
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/standalone ./
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/public ./apps/${APP}/public
+RUN mkdir -p ./apps/${APP}/.next/cache
 
 WORKDIR /app/apps/${APP}
 CMD ["server.js"]
