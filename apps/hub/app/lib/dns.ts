@@ -15,6 +15,7 @@ export const ipToName = async () => {
       return 'Laboratory';
     case lowerCaseName.includes('homepi4'):
     case lowerCaseName.includes('caldigit'):
+    case lowerCaseName.includes('10-2-0-23'):
       return 'Studio';
     case undefined:
       return 'Unknown Host: ' + ip;
