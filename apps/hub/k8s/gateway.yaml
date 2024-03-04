@@ -5,7 +5,7 @@ metadata:
 spec:
   listeners:
     - name: tls-gateway
-      hostname: &hostname request-headers.lolwtf.ca
+      hostname: &hostname hub.lolwtf.ca
       port: 443
       protocol: HTTPS
       tls:
