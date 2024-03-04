@@ -19,7 +19,7 @@ const getRandomUser = async (): Promise<User | null> => {
   return user;
 };
 
-const getUserById = (id: string): Promise<User> => {
+const getUserById = async (id: string): Promise<User> => {
   try {
     const user = prisma.user.findUniqueOrThrow({
       where: {
