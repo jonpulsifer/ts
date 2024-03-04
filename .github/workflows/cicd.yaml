@@ -82,6 +82,8 @@ jobs:
             stack: nextjs
           - app: authme
             stack: nextjs
+          - app: hub
+            stack: nextjs
           - app: nested
             stack: nestjs
           - app: rosie
@@ -138,7 +140,7 @@ jobs:
   deploy:
     strategy:
       matrix:
-        app: [request-headers, rosie, nested]
+        app: [request-headers, rosie, nested, hub]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [build, containerize]
     runs-on: ts

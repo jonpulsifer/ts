@@ -47,6 +47,11 @@
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
+    "hub#build": {
+      "dependsOn": ["^build"],
+      "env": [],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
     "rosie#build": {
       "dependsOn": ["^build"],
       "env": [
