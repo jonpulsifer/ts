@@ -133,8 +133,11 @@ jobs:
         with:
           build-args: |
             APP=${{ matrix.app }}
+          secret-envs: |
             TURBO_TEAM=${{ secrets.VERCEL_ID }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/${{ matrix.app }}
+            REDIS_URL=redis://redis:6739
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

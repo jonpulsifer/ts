@@ -13,10 +13,6 @@ RUN turbo prune --scope=${APP} --docker
 FROM base AS installer
 ARG APP
 # Uncomment and use build args to enable remote caching
-ARG TURBO_TEAM
-ENV TURBO_TEAM=$TURBO_TEAM
-ARG TURBO_TOKEN
-ENV TURBO_TOKEN=$TURBO_TOKEN
 ENV TURBO_TELEMETRY_DISABLED=1
 
 WORKDIR /app
@@ -30,7 +26,16 @@ RUN pnpm install --frozen-lockfile --filter=${APP}
 # Build the project
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out ./out
-RUN turbo run build --filter=${APP}...
+RUN \
+  --mount=type=env,id=TURBO_TOKEN \
+  --mount=type=env,id=TURBO_TEAM \
+  --mount=type=env,id=DATABASE_URL \
+  --mount=type=env,id=REDIS_URL \
+  TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN) \
+  TURBO_TEAM=$(cat /run/secrets/TURBO_TEAM) \
+  DATABASE_URL=$(cat /run/secrets/DATABASE_URL) \
+  REDIS_URL=$(cat /run/secrets/REDIS_URL) \
+  turbo run build --filter=${APP}...
 
 FROM cgr.dev/chainguard/node:20@sha256:f30d39c6980f0a50119f2aa269498307a80c2654928d8e23bb25431b9cbbdc4f AS runner
 ARG APP

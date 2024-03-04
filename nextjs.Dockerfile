@@ -3,9 +3,8 @@ FROM node:20-alpine@sha256:f4c96a28c0b2d8981664e03f461c2677152cd9a756012ffa8e2c6
 RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo
 
 FROM base AS builder
-ARG APP
 ENV TURBO_TELEMETRY_DISABLED=1
-# Set working directory
+ARG APP
 WORKDIR /app
 COPY . .
 RUN turbo prune --scope=${APP} --docker
@@ -27,10 +26,18 @@ RUN pnpm install --frozen-lockfile --filter=${APP}...
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out ./out
 COPY .prettierrc.json .
-#COPY turbo.json turbo.json
 
 # Build the project
-RUN turbo run build --filter=${APP}
+RUN \
+  --mount=type=secret,id=TURBO_TOKEN \
+  --mount=type=secret,id=TURBO_TEAM \
+  --mount=type=secret,id=DATABASE_URL \
+  --mount=type=secret,id=REDIS_URL \
+  TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN) \
+  TURBO_TEAM=$(cat /run/secrets/TURBO_TEAM) \
+  DATABASE_URL=$(cat /run/secrets/DATABASE_URL) \
+  REDIS_URL=$(cat /run/secrets/REDIS_URL) \
+  turbo run build --filter=${APP}...
 
 FROM cgr.dev/chainguard/node:20@sha256:f30d39c6980f0a50119f2aa269498307a80c2654928d8e23bb25431b9cbbdc4f AS runner
 ARG APP
