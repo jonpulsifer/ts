@@ -83,6 +83,27 @@ jobs:
   containerize:
     name: containerize
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16@sha256:f58300ac8d393b2e3b09d36ea12d7d24ee9440440e421472a300e929ddb63460
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6739:6739
     strategy:
       matrix:
         include:
@@ -96,15 +117,23 @@ jobs:
             stack: nestjs
           - app: rosie
             stack: generic
+          - app: wishlist
+            stack: nextjs
     steps:
       - name: Check out code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           fetch-depth: 2
 
-      - name: Prepare env files (authme)
-        if: ${{ matrix.app == 'authme' }}
-        run: find . -type f -name '.env.development' -execdir cp -v {} .env \;
+      - name: Prepare db & env files
+        env:
+          PGPASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_MULTIPLE_DATABASES: authme,wishlist
+        run: |
+          ./.github/scripts/create-multiple-postgresql-databases.sh
+          find . -type f -name '.env.development' -execdir cp -v {} .env \;
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3
