@@ -31,7 +31,7 @@ jobs:
         ports:
           - 5432:5432
       redis:
-        image: redis:alpine
+        image: redis:alpine@sha256:1b503bb77079ba644371969e06e1a6a1670bb34c2251107c0fc3a21ef9fdaeca
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
@@ -96,7 +96,7 @@ jobs:
         ports:
           - 5432:5432
       redis:
-        image: redis:alpine
+        image: redis:alpine@sha256:1b503bb77079ba644371969e06e1a6a1670bb34c2251107c0fc3a21ef9fdaeca
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
