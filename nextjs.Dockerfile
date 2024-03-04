@@ -51,5 +51,9 @@ COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/$
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/public ./apps/${APP}/public
 RUN mkdir -p ./apps/${APP}/.next/cache/fetch-cache
 
+USER root
+RUN chown -R 65532:65532 ./apps/${APP}/.next/cache/fetch-cache
+USER 65532:65532
+
 WORKDIR /app/apps/${APP}
 CMD ["server.js"]
