@@ -20,7 +20,7 @@ resources:
 
 replicas:
   - name: app
-    count: 2
+    count: 1
 
 patches:
   - path: env.yaml
