@@ -188,7 +188,7 @@ jobs:
       matrix:
         app: [request-headers, rosie, nested, hub]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs: [build, containerize]
+    needs: [containerize]
     runs-on: ts
     environment:
       name: ${{ matrix.app }}
