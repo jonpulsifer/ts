@@ -12,7 +12,6 @@ RUN turbo prune --scope=${APP} --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 ARG APP
-# Uncomment and use build args to enable remote caching
 ENV TURBO_TELEMETRY_DISABLED=1
 
 WORKDIR /app
@@ -27,10 +26,10 @@ RUN pnpm install --frozen-lockfile --filter=${APP}
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out ./out
 RUN \
-  --mount=type=env,id=TURBO_TOKEN \
-  --mount=type=env,id=TURBO_TEAM \
-  --mount=type=env,id=DATABASE_URL \
-  --mount=type=env,id=REDIS_URL \
+  --mount=type=secret,id=TURBO_TOKEN \
+  --mount=type=secret,id=TURBO_TEAM \
+  --mount=type=secret,id=DATABASE_URL \
+  --mount=type=secret,id=REDIS_URL \
   TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN) \
   TURBO_TEAM=$(cat /run/secrets/TURBO_TEAM) \
   DATABASE_URL=$(cat /run/secrets/DATABASE_URL) \
