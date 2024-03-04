@@ -117,8 +117,8 @@ jobs:
             stack: nestjs
           - app: rosie
             stack: generic
-          - app: wishlist
-            stack: nextjs
+          # - app: wishlist
+          #   stack: nextjs
     steps:
       - name: Check out code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -126,6 +126,7 @@ jobs:
           fetch-depth: 2
 
       - name: Prepare db & env files
+        if: ${{ matrix.app == 'authme' || matrix.app == 'wishlist' }}
         env:
           PGPASSWORD: postgres
           POSTGRES_USER: postgres
@@ -166,7 +167,7 @@ jobs:
             TURBO_TEAM=${{ secrets.VERCEL_ID }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
             DATABASE_URL=postgresql://postgres:postgres@postgres:5432/${{ matrix.app }}
-            REDIS_URL=redis://localhost:6739
+            REDIS_URL=redis://redis:6739
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
