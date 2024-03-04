@@ -4,4 +4,4 @@ metadata:
   name: app
 spec:
   hostnames:
-    - request-headers.lolwtf.ca
+    - hub.lolwtf.ca
