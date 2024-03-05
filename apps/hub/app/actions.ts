@@ -18,10 +18,10 @@ export const getInitialProps = async () => {
   return { statuses, name };
 };
 
-export const updateStatus = async (busy: string) => {
+export const updateStatus = async (status: string) => {
   const name = await ipToName();
-  await redis.hset('statuses', name, busy);
-  console.log(`Updated busy status for ${name} to ${busy}`);
+  await redis.hset('statuses', name, status);
+  console.log(`Updated status for ${name} to ${status}`);
   revalidatePath(`/`, 'layout');
   return name;
 };

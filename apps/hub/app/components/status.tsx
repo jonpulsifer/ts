@@ -42,20 +42,23 @@ const Status = ({
           />
         </div>
       </div>
-      <div className="rounded-md p-2 shadow border border-black/10 divide-y">
-        {Object.entries(statuses).map(([name, currentStatus]) => (
-          <div
-            key={name}
-            className={`${bg} p-2 flex justify-between items-center rounded-md`}
-          >
-            <p>{name}</p>
-            <Switch
-              color="red"
-              checked={currentStatus === 'In Meeting'}
-              onChange={() => handleToggleChange(checked)}
-            />
-          </div>
-        ))}
+      <div className="rounded-md p-2">
+        {Object.entries(statuses).map(([name, currentStatus]) => {
+          const entryBg = checked ? 'bg-red-500/20' : '';
+          return (
+            <div
+              key={name}
+              className={`${entryBg} p-2 flex justify-between items-center rounded-md`}
+            >
+              <p>{name}</p>
+              <Switch
+                color="red"
+                checked={currentStatus === 'In Meeting'}
+                onChange={() => handleToggleChange(checked)}
+              />
+            </div>
+          );
+        })}
       </div>
     </Card>
   );
