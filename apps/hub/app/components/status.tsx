@@ -44,7 +44,7 @@ const Status = ({
           />
         </div>
       </div>
-      <div className="rounded-md gap-2">
+      <div className="rounded-md space-y-2">
         {Object.entries(statuses).map(([name, currentStatus]) => (
           <div
             key={name}
