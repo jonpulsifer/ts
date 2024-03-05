@@ -7,7 +7,7 @@ namePrefix: authme-
 
 images:
   - name: jonpulsifer/does-not-exist
-    newName: jonpulsifer/authme
+    newName: ghcr.io/jonpulsifer/authme
     newTag: latest
 
 commonLabels:

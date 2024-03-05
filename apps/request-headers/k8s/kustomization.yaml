@@ -7,7 +7,7 @@ namePrefix: request-headers-
 
 images:
   - name: jonpulsifer/does-not-exist
-    newName: jonpulsifer/request-headers
+    newName: ghcr.io/jonpulsifer/request-headers
     newTag: latest
 
 commonLabels:

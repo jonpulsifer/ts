@@ -7,7 +7,7 @@ namePrefix: nested-
 
 images:
   - name: jonpulsifer/does-not-exist
-    newName: jonpulsifer/nested
+    newName: ghcr.io/jonpulsifer/nested
     newTag: latest
 
 commonLabels:

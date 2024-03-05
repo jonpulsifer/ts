@@ -7,7 +7,7 @@ namePrefix: hub-
 
 images:
   - name: jonpulsifer/does-not-exist
-    newName: jonpulsifer/hub
+    newName: gchr.io/jonpulsifer/hub
     newTag: latest
 
 commonLabels:
