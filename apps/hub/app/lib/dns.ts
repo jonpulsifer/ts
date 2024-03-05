@@ -5,6 +5,9 @@ export const ipToName = async () => {
   const ip = getIpFromHeaders();
   const name = await resolveIpToName(ip);
 
+  if (name === ip || !name) {
+    return ip;
+  }
   const lowerCaseName = name.toLowerCase();
 
   switch (true) {
@@ -33,22 +36,12 @@ export const getIpFromHeaders = () => {
 
 export const resolveIpToName = async (ip: string) => {
   try {
-    if (isPrivateIp(ip)) {
-      // Handle private IP addresses differently if needed
-      const hostnames = await dns.reverse(ip);
-      return hostnames[0]; // Assuming the first hostname is the desired one
-    }
-    throw new Error('Not a private IP');
+    dns.setServers(['1.1.1.1']); // Use Cloudflare DNS for resolution
+    // Handle private IP addresses differently if needed
+    const hostnames = await dns.reverse(ip);
+    return hostnames[0]; // Assuming the first hostname is the desired one
   } catch (error) {
     console.error('DNS resolution error:', error);
     return ip;
   }
-};
-
-const isPrivateIp = (ip: string) => {
-  if (ip.startsWith('::1')) return true;
-  if (ip.startsWith('127')) return true;
-  if (ip.startsWith('100.64')) return true;
-  if (ip.startsWith('10')) return true;
-  return false;
 };

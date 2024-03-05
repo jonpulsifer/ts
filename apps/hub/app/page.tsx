@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 import { getInitialProps, updateStatus } from './actions';
 import Chat from './components/chat';
@@ -14,7 +15,9 @@ const Home = async () => {
   return (
     <div className="flex flex-col sm:flex-row w-full h-full gap-2">
       <div className="w-full">
-        <Status statuses={statuses} name={name} updateStatus={updateStatus} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Status statuses={statuses} name={name} updateStatus={updateStatus} />
+        </Suspense>
       </div>
       <div className="w-full">
         <Chat />
