@@ -13,7 +13,8 @@
     "ioredis": "^5.3.2",
     "next": "14.1.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -22,6 +23,7 @@
     "@types/node": "20.11.24",
     "@types/react": "18.2.63",
     "@types/react-dom": "18.2.20",
+    "@types/uuid": "^9.0.8",
     "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
   }

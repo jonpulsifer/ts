@@ -114,6 +114,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -133,6 +136,9 @@ importers:
       '@types/react-dom':
         specifier: 18.2.20
         version: 18.2.20
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       tailwindcss:
         specifier: 3.4.1
         version: 3.4.1(ts-node@10.9.2)
@@ -3012,6 +3018,10 @@ packages:
   /@types/tsscmp@1.0.1:
     resolution: {integrity: sha512-aZ2LXADMDCW+W2DGUC3YD4aIf0jziSvnrvIKWXTgxEqkNGP8yoMs84yu+G+WRLsA9D7ld+hNEvjPtWBuQwFv+w==}
     dev: false
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+    dev: true
 
   /@types/ws@7.4.7:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
@@ -9885,6 +9895,11 @@ packages:
 
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
     dev: false
 

@@ -4,21 +4,22 @@ import { headers as requestHeaders } from 'next/headers';
 export const ipToName = async () => {
   const ip = getIpFromHeaders();
   const name = await resolveIpToName(ip);
-
-  if (name === ip || !name) {
-    return ip;
-  }
   const lowerCaseName = name.toLowerCase();
+
+  if (process.env.NODE_ENV === 'development') {
+    return 'Development';
+  }
 
   switch (true) {
     case lowerCaseName.includes('screenpi4'):
     case lowerCaseName.includes('atomic'):
-    case lowerCaseName.includes('caldigit-ts4'):
-    case lowerCaseName.includes('10-2-0-28'):
+    case lowerCaseName.includes('ts4'):
+    case lowerCaseName.includes('tinytower'):
+    case lowerCaseName === '10.2.0.28':
       return 'Laboratory';
     case lowerCaseName.includes('homepi4'):
-    case lowerCaseName.includes('caldigit'):
-    case lowerCaseName.includes('10-2-0-23'):
+    case lowerCaseName.includes('10.2.0.23'):
+    case lowerCaseName === 'caldigit':
       return 'Studio';
     case undefined:
       return 'Unknown Host: ' + ip;
@@ -29,9 +30,7 @@ export const ipToName = async () => {
 
 export const getIpFromHeaders = () => {
   const headers = requestHeaders();
-  return (
-    headers.get('x-real-ip') || headers.get('x-forwarded-for') || 'unknown'
-  );
+  return headers.get('x-real-ip') || headers.get('x-forwarded-for') || '';
 };
 
 export const resolveIpToName = async (ip: string) => {

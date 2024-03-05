@@ -2,11 +2,10 @@
 import { Badge, Button, Card, Field, Input, Strong, Text } from '@repo/ui';
 import { useEffect, useRef, useState } from 'react';
 
-const getTimeAgo = (timestamp: string) => {
-  const messageDate = new Date(timestamp);
+const getTimeAgo = (timestamp: number) => {
   const now = new Date();
   const differenceInMinutes = Math.floor(
-    (now.valueOf() - messageDate.valueOf()) / (1000 * 60),
+    (now.valueOf() - timestamp.valueOf()) / (1000 * 60),
   );
 
   if (differenceInMinutes < 1) {
@@ -15,98 +14,33 @@ const getTimeAgo = (timestamp: string) => {
     return '1 minute ago';
   } else if (differenceInMinutes < 60) {
     return `${differenceInMinutes} minutes ago`;
+  } else if (differenceInMinutes >= 60 && differenceInMinutes < 120) {
+    return '1 hour ago';
+  } else if (differenceInMinutes < 1440) {
+    return `${Math.floor(differenceInMinutes / 60)} hours ago`;
+  } else if (differenceInMinutes < 2880) {
+    return '1 day ago';
   } else {
-    // For messages over 59 minutes, you could return the exact time or a different message.
+    // For messages over 1 day, you could return the exact time or a different message.
     // Adjust this return statement as needed.
-    return 'over an hour ago';
+    return 'over 1 day ago 💀';
   }
 };
 
-interface Message {
-  id: number;
-  text: string;
+export interface Message {
+  id: string;
+  timestamp: number;
   sender: string;
-  timestamp: string;
+  content: string;
 }
 
-const Chat = () => {
-  const [messages, setMessages] = useState<Message[]>(
-    [
-      {
-        id: 1,
-        text: 'Hello bean! 🫘',
-        sender: 'Bonnicus',
-        timestamp: '2024-03-05T02:44:00Z',
-      },
-      {
-        id: 2,
-        text: 'I love you!',
-        sender: 'Bean',
-        timestamp: '2024-03-04T12:01:00Z',
-      },
-      {
-        id: 3,
-        text: 'I love you more!',
-        sender: 'Bonnicus',
-        timestamp: '2024-03-04T12:02:00Z',
-      },
-      {
-        id: 4,
-        text: 'I love you most!',
-        sender: 'Bean',
-        timestamp: '2024-03-04T12:03:00Z',
-      },
-      {
-        id: 5,
-        text: 'I love you mostest!',
-        sender: 'Bonnicus',
-        timestamp: '2024-03-04T12:04:00Z',
-      },
-      {
-        id: 6,
-        text: 'I love you mostestest!',
-        sender: 'Bean',
-        timestamp: '2024-03-04T12:05:00Z',
-      },
-      {
-        id: 7,
-        text: 'I love you mostestestest!',
-        sender: 'Bonnicus',
-        timestamp: '2024-03-04T12:06:00Z',
-      },
-      {
-        id: 8,
-        text: 'I love you mostestestestest!',
-        sender: 'Bean',
-        timestamp: '2024-03-04T12:07:00Z',
-      },
-      {
-        id: 9,
-        text: 'I love you mostestestestestest!',
-        sender: 'Bonnicus',
-        timestamp: '2024-03-04T12:08:00Z',
-      },
-      {
-        id: 10,
-        text: 'I love you mostestestestestestest!',
-        sender: 'Bean',
-        timestamp: '2024-03-04T12:09:00Z',
-      },
-      {
-        id: 11,
-        text: 'I love you mostestestestestestestest!',
-        sender: 'Bonnicus',
-        timestamp: '2024-03-04T12:10:00Z',
-      },
-      {
-        id: 12,
-        text: 'I love you mostestestestestestestestest!',
-        sender: 'Bean',
-        timestamp: '2024-03-04T12:11:00Z',
-      },
-    ].reverse(),
-  );
+interface Props {
+  messages: Message[];
+  sendMessage: (sender: string, content: string) => void;
+}
 
+const Chat = ({ messages: messagesFromRedis, sendMessage }: Props) => {
+  const [messages, setMessages] = useState<Message[]>(messagesFromRedis);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -115,16 +49,36 @@ const Chat = () => {
 
   // clicking on a badge will post a message to the chat
   const badgeClick = (message: string) => {
+    sendMessage('system', message);
     setMessages([
       ...messages,
       {
-        id: messages.length + 1,
-        text: message,
+        id: 'system',
+        timestamp: Date.now(),
         sender: 'You',
-        timestamp: new Date().toISOString(),
+        content: message,
       },
     ]);
     scrollToBottom();
+  };
+
+  // clicking on the send button will post a message to the chat
+  const buttonClick = () => {
+    const input = document.querySelector('input');
+    if (input) {
+      sendMessage('You', input.value);
+      setMessages([
+        ...messages,
+        {
+          id: 'You',
+          timestamp: Date.now(),
+          sender: 'You',
+          content: input.value,
+        },
+      ]);
+      input.value = '';
+      scrollToBottom();
+    }
   };
 
   useEffect(() => {
@@ -152,13 +106,13 @@ const Chat = () => {
           <Badge color="amber" onClick={() => badgeClick('🫘 Beans')}>
             🫘 Beans
           </Badge>
-          <Badge color="red" onClick={() => badgeClick('🛑 Meet')}>
-            🛑 Meet
+          <Badge color="fuchsia" onClick={() => badgeClick('❤️ Love You')}>
+            ❤️ Love You
           </Badge>
         </div>
         <Field className="flex flex-row gap-2">
           <Input type="text" placeholder="Send a message..." />
-          <Button>Send</Button>
+          <Button onClick={() => buttonClick()}>Send</Button>
         </Field>
       </div>
     </Card>
@@ -174,7 +128,7 @@ const Message = ({ message }: { message: Message }) => {
           {getTimeAgo(message.timestamp)}
         </span>
       </Text>
-      <Text>{message.text}</Text>
+      <Text>{message.content}</Text>
     </div>
   );
 };
