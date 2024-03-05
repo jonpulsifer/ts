@@ -30,7 +30,7 @@ const Status = ({
   return (
     <Card>
       <div
-        className={`${bg} flex flex-col justify-center items-center mb-10 rounded-md shadow shadow-inner`}
+        className={`${bg} flex flex-col justify-center items-center mb-10 rounded-md`}
       >
         <p className="text-2xl font-bold mt-2">{nameFromRedis}</p>
         <div className="pb-10">
@@ -38,13 +38,14 @@ const Status = ({
             color="red"
             checked={checked}
             onChange={() => handleToggleChange(checked)}
-            className="scale-150 mt-10"
+            className="scale-400 mt-10"
           />
         </div>
       </div>
-      <div className="rounded-md p-2">
+      <div className="rounded-md gap-2">
         {Object.entries(statuses).map(([name, currentStatus]) => {
-          const entryBg = checked ? 'bg-red-500/20' : '';
+          const isBusy = currentStatus === 'In Meeting';
+          const entryBg = isBusy ? 'bg-red-500/20' : '';
           return (
             <div
               key={name}
