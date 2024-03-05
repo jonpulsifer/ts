@@ -36,7 +36,7 @@ export const getIpFromHeaders = () => {
 
 export const resolveIpToName = async (ip: string) => {
   try {
-    dns.setServers(['1.1.1.1']); // Use Cloudflare DNS for resolution
+    dns.setServers(['10.2.0.1']); // Use Cloudflare DNS for resolution
     // Handle private IP addresses differently if needed
     const hostnames = await dns.reverse(ip);
     return hostnames[0]; // Assuming the first hostname is the desired one
