@@ -6,7 +6,7 @@ import redis from './lib/redis';
 
 export const getStatusesFromRedis = async () => {
   const statuses = await redis.hgetall('statuses');
-  revalidatePath(`/`, 'layout');
+  revalidatePath('/');
   return statuses;
 };
 
@@ -19,6 +19,6 @@ export const getInitialProps = async () => {
 export const updateStatus = async (status: string) => {
   const name = await ipToName();
   await redis.hset('statuses', name, status);
-  revalidatePath(`/`, 'layout');
+  revalidatePath('/');
   return name;
 };
