@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import {
   fetchNameAndStatuses,
   fetchRecentMessages,
-  fetchRecentMessagesSWR,
   flushRedis,
   sendMessage,
   updateStatus,
@@ -18,25 +17,27 @@ export const metadata: Metadata = {
   description: 'A little application that helps us live in modern times.',
 };
 
+const onlyShowAdminModeInDevelopment = process.env.NODE_ENV !== 'development';
+
 const Home = async () => {
   const { statuses, name } = await fetchNameAndStatuses();
   const messages = await fetchRecentMessages();
   return (
-    <div className="flex flex-col sm:flex-row w-full h-full gap-2">
-      <div className="w-full space-y-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+      <div className="space-y-2">
         <Suspense fallback={<div>Loading...</div>}>
           <Status statuses={statuses} name={name} updateStatus={updateStatus} />
         </Suspense>
-        <AdminButtons
-          flushRedis={flushRedis}
-          fetchRecentMessages={fetchRecentMessages}
-        />
+        {onlyShowAdminModeInDevelopment ?? (
+          <AdminButtons flushRedis={flushRedis} />
+        )}
       </div>
-      <div className="w-full">
+      <div className="">
         <Chat
+          name={name}
           messages={messages}
           sendMessage={sendMessage}
-          fetchMessages={fetchRecentMessagesSWR}
+          fetchMessages={fetchRecentMessages}
         />
       </div>
     </div>

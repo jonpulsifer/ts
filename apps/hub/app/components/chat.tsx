@@ -1,5 +1,5 @@
 'use client';
-import { Badge, Button, Card, Field, Input, Strong, Text } from '@repo/ui';
+import { Button, Card, Strong, Text } from '@repo/ui';
 import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
@@ -36,12 +36,14 @@ export interface Message {
 }
 
 interface Props {
+  name: string;
   messages: Message[];
-  sendMessage: (sender: string, content: string) => void;
+  sendMessage: (content: string, sender?: string) => void;
   fetchMessages: () => Promise<Message[]>;
 }
 
 const Chat = ({
+  name,
   messages: messagesFromRedis,
   sendMessage,
   fetchMessages,
@@ -54,87 +56,89 @@ const Chat = ({
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
   };
 
   // clicking on a badge will post a message to the chat
-  const badgeClick = (message: string) => {
-    sendMessage('system', message);
+  const buttonClick = async (message: string) => {
+    const now = Date.now();
     setMessages([
       ...messages,
       {
-        id: 'system',
-        timestamp: Date.now(),
-        sender: 'You (sending)',
+        id: now.toString(),
+        timestamp: now,
+        sender: 'You',
         content: message,
       },
     ]);
     scrollToBottom();
-  };
-
-  // clicking on the send button will post a message to the chat
-  const buttonClick = () => {
-    const input = document.querySelector('input');
-    if (input) {
-      sendMessage('You', input.value);
-      setMessages([
-        ...messages,
-        {
-          id: 'You',
-          timestamp: Date.now(),
-          sender: 'You',
-          content: input.value,
-        },
-      ]);
-      input.value = '';
-      scrollToBottom();
-    }
+    sendMessage(message, name);
   };
 
   useEffect(() => {
-    if (data) setMessages(data);
     scrollToBottom();
-  }, [data]);
+  }, [messages]);
+
+  useEffect(() => {
+    scrollToBottom();
+    if (data) setMessages(data);
+  }, [data, messagesFromRedis]);
 
   return (
     <Card>
-      <div className="flex flex-col max-h-80 overflow-y-scroll">
+      <div className="overflow-y-scroll h-[calc(75dvh)]">
         <div className="space-y-2">
           {messages.map((message) => (
-            <Message key={message.id} message={message} />
+            <Message key={message.id} message={message} user={name} />
           ))}
           <div ref={messagesEndRef} />
         </div>
       </div>
-      <div className="flex flex-col mt-5 space-y-2">
-        <div className="flex flex-row gap-2">
-          <Badge color="blue" onClick={() => badgeClick('🔁 Loop')}>
+      <div className="grid">
+        <div className="grid grid-cols-4 gap-1">
+          <Button color="blue" onClick={() => buttonClick('🔁 Loop')}>
             🔁 Loop
-          </Badge>
-          <Badge color="green" onClick={() => badgeClick('🥡 Food')}>
-            🥡 Food
-          </Badge>
-          <Badge color="amber" onClick={() => badgeClick('🫘 Bean')}>
+          </Button>
+          <Button color="amber" onClick={() => buttonClick('🫘 Bean')}>
             🫘 Bean
-          </Badge>
-          <Badge color="fuchsia" onClick={() => badgeClick('❤️ Love You')}>
-            ❤️ Love You
-          </Badge>
+          </Button>
+          <Button color="orange" onClick={() => buttonClick('🥡 food pls')}>
+            🥡 Food
+          </Button>
+          <Button color="fuchsia" onClick={() => buttonClick('❤️ I love you!')}>
+            ❤️ Love
+          </Button>
+          <Button color="green" onClick={() => buttonClick('👍 Yes')}>
+            👍 Yes
+          </Button>
+          <Button color="red" onClick={() => buttonClick('👎 No')}>
+            👎 No
+          </Button>
+          <Button color="slate" onClick={() => buttonClick('⏲️ Please wait')}>
+            ⏲️ Wait
+          </Button>
+          <Button
+            color="dark/slate"
+            onClick={() => buttonClick('💀 Go on without me')}
+          >
+            💀 Dead
+          </Button>
         </div>
-        <Field className="flex flex-row gap-2">
-          <Input type="text" placeholder="Send a message..." />
-          <Button onClick={() => buttonClick()}>Send</Button>
-        </Field>
       </div>
     </Card>
   );
 };
 
-const Message = ({ message }: { message: Message }) => {
+const Message = ({ message, user }: { message: Message; user: string }) => {
+  const isUser = message.sender === user;
+  const sender = isUser ? 'You' : message.sender;
   return (
     <div key={message.id} className="flex flex-col">
       <Text>
-        <Strong>{message.sender}</Strong>
+        <Strong>{sender}</Strong>
         <span className="text-[10px] ml-1">
           {getTimeAgo(message.timestamp)}
         </span>

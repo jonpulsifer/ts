@@ -21,11 +21,11 @@ const inter = Inter({
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html className="h-full w-full" lang="en">
+    <html lang="en">
       <body
-        className={`h-full w-full bg-zinc-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
+        className={`bg-zinc-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
       >
-        <main className="p-2 gap-2 h-full w-full">{children}</main>
+        <main className="p-1">{children}</main>
       </body>
     </html>
   );

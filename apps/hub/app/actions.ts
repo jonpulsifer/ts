@@ -47,7 +47,7 @@ export const updateStatus = async (status: string) => {
 };
 
 // chat actions
-export const sendMessage = async (sender: string, content: string) => {
+export const sendMessage = async (content: string, sender?: string) => {
   const senderFromIp = await ipToName();
   const message = JSON.stringify({
     id: uuidv4(),
@@ -55,8 +55,6 @@ export const sendMessage = async (sender: string, content: string) => {
     content,
     timestamp: Date.now(),
   });
-
-  // log an object with the message and the sender, include every detail
   console.log(Date.now(), { message, sender });
 
   // Using the timestamp as the score for sorted ordering.
@@ -74,9 +72,4 @@ export const fetchRecentMessages = async () => {
   // Fetch the last 15 messages based on score (timestamp).
   const rawMessages = await redis.zrange('messages', -15, -1);
   return rawMessages.map((msg) => JSON.parse(msg));
-};
-
-export const fetchRecentMessagesSWR = async () => {
-  console.log(Date.now(), 'fetchRecentMessagesSWR');
-  return fetchRecentMessages();
 };
