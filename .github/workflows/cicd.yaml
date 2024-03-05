@@ -85,6 +85,9 @@ jobs:
   containerize:
     name: containerize
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     services:
       postgres:
         image: postgres:16@sha256:f58300ac8d393b2e3b09d36ea12d7d24ee9440440e421472a300e929ddb63460
@@ -150,14 +153,15 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Docker Meta
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5
         id: meta
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.app }}
+          images: ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}
           tags: |
             type=sha,enable=true,priority=100,prefix=,suffix=,format=long
           flavor: |
@@ -206,7 +210,7 @@ jobs:
           echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
       - name: Update application revision and image to ${{ github.sha }}
         run: |
-          argocd app set ${{ matrix.app }} --revision=${{ github.sha }} --kustomize-image=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.app }}:${{ github.sha }}
+          argocd app set ${{ matrix.app }} --revision=${{ github.sha }} --kustomize-image=ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}:${{ github.sha }}
       - name: Sync and wait for application to be healthy
         run: |
           argocd app sync ${{ matrix.app }} --prune
