@@ -103,8 +103,8 @@ const Chat = ({ messages: messagesFromRedis, sendMessage }: Props) => {
           <Badge color="green" onClick={() => badgeClick('🥡 Food')}>
             🥡 Food
           </Badge>
-          <Badge color="amber" onClick={() => badgeClick('🫘 Beans')}>
-            🫘 Beans
+          <Badge color="amber" onClick={() => badgeClick('🫘 Bean')}>
+            🫘 Bean
           </Badge>
           <Badge color="fuchsia" onClick={() => badgeClick('❤️ Love You')}>
             ❤️ Love You
