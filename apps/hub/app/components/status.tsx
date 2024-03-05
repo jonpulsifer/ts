@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 interface Props {
   statuses: Record<string, string>;
   name: string;
-  updateStatus: (status: string) => Promise<string>;
+  updateStatus: (status: string) => Promise<void>;
 }
 
 const Status = ({

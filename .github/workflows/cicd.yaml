@@ -150,7 +150,7 @@ jobs:
           driver-opts: |
             network=host
 
-      - name: Login to DockerHub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3
         with:
           registry: ghcr.io

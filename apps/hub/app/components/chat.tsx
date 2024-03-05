@@ -1,6 +1,7 @@
 'use client';
 import { Badge, Button, Card, Field, Input, Strong, Text } from '@repo/ui';
 import { useEffect, useRef, useState } from 'react';
+import useSWR from 'swr';
 
 const getTimeAgo = (timestamp: number) => {
   const now = new Date();
@@ -37,10 +38,19 @@ export interface Message {
 interface Props {
   messages: Message[];
   sendMessage: (sender: string, content: string) => void;
+  fetchMessages: () => Promise<Message[]>;
 }
 
-const Chat = ({ messages: messagesFromRedis, sendMessage }: Props) => {
+const Chat = ({
+  messages: messagesFromRedis,
+  sendMessage,
+  fetchMessages,
+}: Props) => {
   const [messages, setMessages] = useState<Message[]>(messagesFromRedis);
+  const { data } = useSWR('/not-used', fetchMessages, {
+    refreshInterval: 1000,
+  });
+
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -55,7 +65,7 @@ const Chat = ({ messages: messagesFromRedis, sendMessage }: Props) => {
       {
         id: 'system',
         timestamp: Date.now(),
-        sender: 'You',
+        sender: 'You (sending)',
         content: message,
       },
     ]);
@@ -82,8 +92,9 @@ const Chat = ({ messages: messagesFromRedis, sendMessage }: Props) => {
   };
 
   useEffect(() => {
+    if (data) setMessages(data);
     scrollToBottom();
-  }, [messages]);
+  }, [data]);
 
   return (
     <Card>

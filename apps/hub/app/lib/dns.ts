@@ -6,6 +6,7 @@ export const ipToName = async () => {
   const name = await resolveIpToName(ip);
   const lowerCaseName = name.toLowerCase();
 
+  console.log(Date.now(), { name, ip });
   if (process.env.NODE_ENV === 'development') {
     return 'Development';
   }
@@ -38,9 +39,10 @@ export const resolveIpToName = async (ip: string) => {
     dns.setServers(['10.2.0.1']); // Use Cloudflare DNS for resolution
     // Handle private IP addresses differently if needed
     const hostnames = await dns.reverse(ip);
+    console.log(Date.now(), { hostnames });
     return hostnames[0]; // Assuming the first hostname is the desired one
   } catch (error) {
-    console.error('DNS resolution error:', error);
+    console.error(Date.now(), 'DNS resolution error:', error);
     return ip;
   }
 };
