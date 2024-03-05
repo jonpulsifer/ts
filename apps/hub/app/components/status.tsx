@@ -1,6 +1,6 @@
 'use client';
 import { Card, Switch } from '@repo/ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   statuses: Record<string, string>;
@@ -13,19 +13,21 @@ const Status = ({
   updateStatus,
   name: nameFromRedis,
 }: Props) => {
-  const statusFromName = statusesFromRedis[nameFromRedis];
-  const [checked, setChecked] = useState(statusFromName === 'In Meeting');
   const [statuses, setStatuses] = useState(statusesFromRedis);
 
-  const handleToggleChange = async (checked: boolean) => {
-    const newStatus = checked ? 'Free' : 'In Meeting';
-    const name = await updateStatus(newStatus);
-    setChecked(!checked);
-    const newStatuses = { ...statuses, [name]: newStatus };
-    setStatuses(newStatuses);
+  useEffect(() => {
+    setStatuses(statusesFromRedis);
+  }, [statusesFromRedis]);
+
+  const handleToggleChange = async (name: string) => {
+    const currentStatus = statuses[name];
+    const newStatus = currentStatus === 'In Meeting' ? 'Free' : 'In Meeting';
+    await updateStatus(newStatus);
+    setStatuses((prev) => ({ ...prev, [name]: newStatus }));
   };
 
-  const bg = checked ? 'bg-red-500/20' : '';
+  const unavailable = statuses[nameFromRedis] === 'In Meeting';
+  const bg = unavailable ? 'bg-red-500/20' : '';
 
   return (
     <Card>
@@ -36,30 +38,28 @@ const Status = ({
         <div className="pb-10">
           <Switch
             color="red"
-            checked={checked}
-            onChange={() => handleToggleChange(checked)}
+            checked={unavailable}
+            onChange={() => handleToggleChange(nameFromRedis)}
             className="scale-400 mt-10"
           />
         </div>
       </div>
       <div className="rounded-md gap-2">
-        {Object.entries(statuses).map(([name, currentStatus]) => {
-          const isBusy = currentStatus === 'In Meeting';
-          const entryBg = isBusy ? 'bg-red-500/20' : '';
-          return (
-            <div
-              key={name}
-              className={`${entryBg} p-2 flex justify-between items-center rounded-md`}
-            >
-              <p>{name}</p>
-              <Switch
-                color="red"
-                checked={currentStatus === 'In Meeting'}
-                onChange={() => handleToggleChange(checked)}
-              />
-            </div>
-          );
-        })}
+        {Object.entries(statuses).map(([name, currentStatus]) => (
+          <div
+            key={name}
+            className={`${
+              currentStatus === 'In Meeting' ? 'bg-red-500/20' : ''
+            } p-2 flex justify-between items-center rounded-md`}
+          >
+            <p>{name}</p>
+            <Switch
+              color="red"
+              checked={currentStatus === 'In Meeting'}
+              onChange={() => handleToggleChange(name)}
+            />
+          </div>
+        ))}
       </div>
     </Card>
   );

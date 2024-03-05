@@ -41,7 +41,7 @@ export const resolveIpToName = async (ip: string) => {
     throw new Error('Not a private IP');
   } catch (error) {
     console.error('DNS resolution error:', error);
-    return 'Unknown Host';
+    return ip;
   }
 };
 
