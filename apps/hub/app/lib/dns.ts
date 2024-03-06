@@ -1,4 +1,3 @@
-import dns from 'dns/promises';
 import { headers as requestHeaders } from 'next/headers';
 
 export const ipToName = async () => {
@@ -12,7 +11,6 @@ export const ipToName = async () => {
     case ip === '10.1.0.5':
     case ip === '10.1.0.127':
 		case ip === '10.2.0.28':
-		case 
       return 'Jonathan';
     case ip === '10.2.0.23':
       return 'Constance';
