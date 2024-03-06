@@ -37,7 +37,6 @@ export const updateStatus = async (status: string) => {
   try {
     console.log(Date.now(), 'updateStatus', status);
     const name = await ipToName();
-    // Ensure correct field-value pair syntax for hset
     await redis.hset('statuses', name, status);
     revalidatePath('/'); // Adjust if specific paths need revalidation
   } catch (error) {
@@ -64,7 +63,7 @@ export const sendMessage = async (content: string, sender?: string) => {
   // so we manage message expiry using a separate cleanup mechanism or using keys with TTL for each message.
 
   // Publish the message for real-time update.
-  await redis.publish('chat', message);
+  // await redis.publish('chat', message);
 };
 
 export const fetchRecentMessages = async () => {

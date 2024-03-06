@@ -1,6 +1,7 @@
 import type { FormEvent, MouseEvent } from 'react';
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
+import { clsx } from 'clsx';
 import type { ButtonProps } from './button';
 import { Button } from './button';
 
@@ -20,6 +21,7 @@ export interface CardProps {
   badges?: React.ReactNode;
   children?: React.ReactNode;
   action?: CardAction | CardAction[];
+  className?: string;
 }
 
 export function Card({
@@ -28,6 +30,7 @@ export function Card({
   action,
   badges,
   children,
+  className,
 }: CardProps): JSX.Element {
   const headerContent = (
     <div className="flex flex-row">
@@ -82,7 +85,12 @@ export function Card({
   const headerMarkup = title ? header : null;
   const footerMarkup = actions.length ? footer : null;
   return (
-    <div className="divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent">
+    <div
+      className={clsx(
+        className,
+        'divide-y dark:divide-slate-800 divide-gray-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent',
+      )}
+    >
       {headerMarkup}
       <div className="px-4 py-4 sm:px-6 h-full">{children}</div>
       {footerMarkup}

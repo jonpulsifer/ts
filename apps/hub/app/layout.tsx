@@ -30,9 +30,9 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`max-h-screen bg-zinc-200 dark:bg-slate-950 ${inter.variable} ${inter.className} ${creepster.variable} text-black dark:text-white`}
+        className={`bg-zinc-200 dark:bg-slate-950 ${inter.className} ${creepster.variable} text-black dark:text-white`}
       >
-        <main className="p-1">{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );

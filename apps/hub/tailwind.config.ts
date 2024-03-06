@@ -7,7 +7,6 @@ const config: Pick<Config, 'content' | 'presets' | 'theme'> = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)'],
         creepster: ['var(--font-creepster)'],
       },
     },

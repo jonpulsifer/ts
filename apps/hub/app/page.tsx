@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: 'A little application that helps us live in modern times.',
 };
 
-const onlyShowAdminModeInDevelopment = process.env.NODE_ENV !== 'development';
+const showAdminMode = process.env.NODE_ENV === 'development';
 
 const Home = async () => {
   const { statuses, name } = await fetchNameAndStatuses();
@@ -28,9 +28,7 @@ const Home = async () => {
         <Suspense fallback={<div>Loading...</div>}>
           <Status statuses={statuses} name={name} updateStatus={updateStatus} />
         </Suspense>
-        {onlyShowAdminModeInDevelopment ?? (
-          <AdminButtons flushRedis={flushRedis} />
-        )}
+        {showAdminMode ? <AdminButtons flushRedis={flushRedis} /> : null}
       </div>
       <div className="">
         <Chat
