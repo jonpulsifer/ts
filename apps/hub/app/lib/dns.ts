@@ -4,12 +4,13 @@ import { headers as requestHeaders } from 'next/headers';
 export const ipToName = async () => {
   const ip = getIpFromHeaders();
   const name = await resolveIpToName(ip);
-  const lowerCaseName = name.toLowerCase();
 
   console.log(Date.now(), { name, ip });
   if (process.env.NODE_ENV === 'development') {
     return 'Development';
   }
+  if (!name) return 'localhost';
+  const lowerCaseName = name.toLowerCase();
 
   switch (true) {
     case lowerCaseName.includes('screenpi4'):

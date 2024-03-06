@@ -2,7 +2,19 @@ import './globals.css';
 import '@repo/ui/styles.css';
 
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Creepster, Inter } from 'next/font/google';
+
+export const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+export const creepster = Creepster({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-creepster',
+});
 
 export const metadata: Metadata = {
   title: 'Headerz',
@@ -14,16 +26,11 @@ export const metadata: Metadata = {
   icons: 'favicon.ico',
 };
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-});
-
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`bg-zinc-200 dark:bg-slate-950 ${inter.className} text-black dark:text-white`}
+        className={`max-h-screen bg-zinc-200 dark:bg-slate-950 ${inter.variable} ${inter.className} ${creepster.variable} text-black dark:text-white`}
       >
         <main className="p-1">{children}</main>
       </body>

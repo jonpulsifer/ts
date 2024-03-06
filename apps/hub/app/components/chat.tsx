@@ -1,5 +1,5 @@
 'use client';
-import { Button, Card, Strong, Text } from '@repo/ui';
+import { Button, Card } from '@repo/ui';
 import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
@@ -53,12 +53,11 @@ const Chat = ({
     refreshInterval: 1000,
   });
 
-  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+  const bottomOfChat = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
+    bottomOfChat.current?.scrollIntoView({
       behavior: 'smooth',
-      block: 'end',
     });
   };
 
@@ -94,37 +93,28 @@ const Chat = ({
           {messages.map((message) => (
             <Message key={message.id} message={message} user={name} />
           ))}
-          <div ref={messagesEndRef} />
         </div>
+        <div ref={bottomOfChat} />
       </div>
-      <div className="grid">
-        <div className="grid grid-cols-4 gap-1">
-          <Button color="blue" onClick={() => buttonClick('🔁 Loop')}>
-            🔁 Loop
+      <div className="grid mt-2">
+        <div className="grid grid-cols-8 h-12 gap-1">
+          <Button color="light" onClick={() => buttonClick('🫘 Bean')}>
+            🫘
           </Button>
-          <Button color="amber" onClick={() => buttonClick('🫘 Bean')}>
-            🫘 Bean
-          </Button>
-          <Button color="orange" onClick={() => buttonClick('🥡 food pls')}>
-            🥡 Food
-          </Button>
-          <Button color="fuchsia" onClick={() => buttonClick('❤️ I love you!')}>
-            ❤️ Love
-          </Button>
-          <Button color="green" onClick={() => buttonClick('👍 Yes')}>
-            👍 Yes
-          </Button>
-          <Button color="red" onClick={() => buttonClick('👎 No')}>
-            👎 No
-          </Button>
-          <Button color="slate" onClick={() => buttonClick('⏲️ Please wait')}>
-            ⏲️ Wait
+          <Button color="light" onClick={() => buttonClick('❤️ I love you!')}>
+            ❤️
           </Button>
           <Button
-            color="dark/slate"
+            color="light"
+            onClick={() => buttonClick('👍 Without a shadow of a doubt')}
+          >
+            👍
+          </Button>
+          <Button
+            color="light"
             onClick={() => buttonClick('💀 Go on without me')}
           >
-            💀 Dead
+            💀
           </Button>
         </div>
       </div>
@@ -135,15 +125,27 @@ const Chat = ({
 const Message = ({ message, user }: { message: Message; user: string }) => {
   const isUser = message.sender === user;
   const sender = isUser ? 'You' : message.sender;
+  const isDead = message.content.includes('💀');
+  const messageBg = isUser
+    ? 'bg-cyan-700 text-white'
+    : 'bg-cyan-600 text-white';
+
+  const textAlignClass = isUser ? 'items-end' : 'items-start';
+  const textBaseStyle = 'px-4 py-2 rounded-lg shadow';
+
+  const textContentStyle = `text-xl mt-1 ${isDead ? 'font-creepster' : ''}`;
+
   return (
-    <div key={message.id} className="flex flex-col">
-      <Text>
-        <Strong>{sender}</Strong>
-        <span className="text-[10px] ml-1">
+    <div key={message.id} className={`flex ${textAlignClass} mb-4`}>
+      <div
+        className={`${messageBg} ${textBaseStyle} max-w-xs md:max-w-md my-1`}
+      >
+        <p className="text-xs font-bold">{sender}</p>
+        <p className={textContentStyle}>{message.content}</p>
+        <p className="text-xs text-right text-gray-300">
           {getTimeAgo(message.timestamp)}
-        </span>
-      </Text>
-      <Text>{message.content}</Text>
+        </p>
+      </div>
     </div>
   );
 };
