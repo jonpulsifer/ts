@@ -87,7 +87,7 @@ const Chat = ({
   }, [data, messagesFromRedis]);
 
   return (
-    <Card slim className="max-h-screen">
+    <Card className="max-h-screen">
       <div className="overflow-y-scroll max-h-screen">
         <div className="space-y-2">
           {messages.map((message) => (
