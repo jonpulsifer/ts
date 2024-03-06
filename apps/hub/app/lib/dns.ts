@@ -10,7 +10,7 @@ export const ipToName = async () => {
   switch (true) {
     case ip === '10.1.0.5':
     case ip === '10.1.0.127':
-		case ip === '10.2.0.28':
+    case ip === '10.2.0.28':
       return 'Jonathan';
     case ip === '10.2.0.23':
       return 'Constance';
