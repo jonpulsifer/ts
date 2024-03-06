@@ -23,14 +23,14 @@ const Home = async () => {
   const { statuses, name } = await fetchNameAndStatuses();
   const messages = await fetchRecentMessages();
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-full">
       <div className="space-y-2">
         <Suspense fallback={<div>Loading...</div>}>
           <Status statuses={statuses} name={name} updateStatus={updateStatus} />
         </Suspense>
         {showAdminMode ? <AdminButtons flushRedis={flushRedis} /> : null}
       </div>
-      <div className="">
+      <div className="flex flex-col">
         <Chat
           name={name}
           messages={messages}

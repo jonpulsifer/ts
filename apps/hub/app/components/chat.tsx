@@ -42,80 +42,87 @@ interface Props {
   fetchMessages: () => Promise<Message[]>;
 }
 
-const Chat = ({
-  name,
-  messages: messagesFromRedis,
-  sendMessage,
-  fetchMessages,
-}: Props) => {
-  const [messages, setMessages] = useState<Message[]>(messagesFromRedis);
+const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
+  const [messages, setMessages] = useState<Message[]>([]);
   const { data } = useSWR('/not-used', fetchMessages, {
     refreshInterval: 1000,
   });
 
-  const bottomOfChat = useRef<null | HTMLDivElement>(null);
-
+  // Inside Chat component
   const scrollToBottom = () => {
     bottomOfChat.current?.scrollIntoView({
       behavior: 'smooth',
     });
   };
 
+  useEffect(() => {
+    if (data) {
+      setMessages(data);
+      scrollToBottom();
+    }
+  }, [data]);
+
+  const bottomOfChat = useRef<null | HTMLDivElement>(null);
+
   // clicking on a badge will post a message to the chat
   const buttonClick = async (message: string) => {
     const now = Date.now();
-    setMessages([
-      ...messages,
-      {
-        id: now.toString(),
-        timestamp: now,
-        sender: name,
-        content: message,
-      },
-    ]);
+    // ButtonClick update
+    const newMessage = {
+      id: now.toString(),
+      timestamp: now,
+      sender: name,
+      content: message,
+    };
+    setMessages((messages) => [...messages, newMessage]);
     scrollToBottom();
     sendMessage(message, name);
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
-    scrollToBottom();
-    if (data) setMessages(data);
-  }, [data, messagesFromRedis]);
-
   return (
-    <Card className="max-h-screen">
-      <div className="overflow-y-scroll max-h-screen">
-        <div className="space-y-2">
-          {messages.map((message) => (
-            <Message key={message.id} message={message} user={name} />
-          ))}
+    <Card className="flex flex-col">
+      <div className="">
+        <div className=" flex-grow overflow-y-auto max-h-80">
+          <div>
+            {messages.map((message) => (
+              <Message key={message.id} message={message} user={name} />
+            ))}
+          </div>
+          <div ref={bottomOfChat} />
         </div>
-        <div ref={bottomOfChat} />
-      </div>
-      <div className="grid mt-2">
-        <div className="grid grid-cols-4 gap-2 h-12">
-          <Button color="light" onClick={() => buttonClick('🫘 Bean')}>
-            <p className="text-2xl">🫘</p>
-          </Button>
-          <Button color="light" onClick={() => buttonClick('❤️ I love you!')}>
-            <p className="text-2xl">❤️</p>
-          </Button>
-          <Button
-            color="light"
-            onClick={() => buttonClick('👍 Without a shadow of a doubt')}
-          >
-            <p className="text-2xl">👍</p>
-          </Button>
-          <Button
-            color="light"
-            onClick={() => buttonClick('💀 Go on without me')}
-          >
-            <p className="text-2xl">💀</p>
-          </Button>
+        <div className="mt-2">
+          <div className="grid grid-cols-4 gap-2">
+            <Button color="light" onClick={() => buttonClick('🫘 Bean')}>
+              <p className="text-2xl">🫘</p>
+            </Button>
+            <Button color="light" onClick={() => buttonClick('❤️ I love you!')}>
+              <p className="text-2xl">❤️</p>
+            </Button>
+            <Button
+              color="light"
+              onClick={() => buttonClick('👍 Without a shadow of a doubt')}
+            >
+              <p className="text-2xl">👍</p>
+            </Button>
+            <Button
+              color="light"
+              onClick={() => buttonClick('💀 Go on without me')}
+            >
+              <p className="text-2xl">💀</p>
+            </Button>
+            <Button color="light" onClick={() => buttonClick('👀 doin?')}>
+              <p className="text-2xl">👀</p>
+            </Button>
+            <Button color="light" onClick={() => buttonClick('🍔 food pls')}>
+              <p className="text-2xl">🍔</p>
+            </Button>
+            <Button color="light" onClick={() => buttonClick('🔁 Loop?')}>
+              <p className="text-2xl">🔁</p>
+            </Button>
+            <Button color="light" onClick={() => buttonClick('⏲️ Wait')}>
+              <p className="text-2xl">⏲️</p>
+            </Button>
+          </div>
         </div>
       </div>
     </Card>
@@ -124,23 +131,21 @@ const Chat = ({
 
 const Message = ({ message, user }: { message: Message; user: string }) => {
   const isUser = message.sender === user;
-  const sender = isUser ? 'You' : message.sender;
-  const isDead = message.content.includes('💀');
-  const messageBg = isUser ? 'bg-blue-600 text-white' : 'bg-sky-500 text-white';
-
-  const textAlignClass = isUser ? 'flex-row' : 'flex-row-reverse';
-  const textBaseStyle = 'px-4 py-2 rounded-lg shadow';
-
-  const textContentStyle = `text-xl mt-1 ${isDead ? 'font-creepster' : 'font-bold'}`;
-
   return (
-    <div key={message.id} className={`flex ${textAlignClass} mb-4`}>
+    <div
+      key={message.id}
+      className={`flex ${isUser ? 'flex-row-reverse' : 'flex-row'} mb-4`}
+    >
       <div className="flex flex-col">
         <div
-          className={`${messageBg} ${textBaseStyle} max-w-xs md:max-w-md my-1`}
+          className={`${isUser ? 'bg-blue-600 text-white' : 'bg-sky-500 text-white'} px-4 py-2 rounded-lg shadow max-w-xs md:max-w-md my-1`}
         >
-          <p className="text-xs font-bold">{sender}</p>
-          <p className={textContentStyle}>{message.content}</p>
+          <p className="text-xs font-bold">{isUser ? 'You' : message.sender}</p>
+          <p
+            className={`text-xl mt-1 ${message.content.includes('💀') ? 'font-creepster' : 'font-bold'}`}
+          >
+            {message.content}
+          </p>
         </div>
         <p className="text-xs text-right mr-2 text-gray-300">
           {getTimeAgo(message.timestamp)}

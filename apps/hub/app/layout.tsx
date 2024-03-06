@@ -32,7 +32,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <body
         className={`bg-zinc-200 dark:bg-slate-950 ${inter.className} ${creepster.variable} text-black dark:text-white`}
       >
-        <main>{children}</main>
+        <main className="h-screen">{children}</main>
       </body>
     </html>
   );
