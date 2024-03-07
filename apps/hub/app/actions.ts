@@ -7,8 +7,8 @@ import redis from './lib/redis';
 
 // redis actions
 export const flushRedis = async () => {
+  console.debug(Date.now(), 'flushRedis');
   try {
-    console.log(Date.now(), 'flushRedis');
     await redis.flushall();
     revalidatePath('/');
   } catch (error) {
@@ -20,22 +20,33 @@ export const flushRedis = async () => {
 
 // status actions
 export const fetchStatusesFromRedis = async () => {
-  console.log(Date.now(), 'fetchStatusesFromRedis');
-  const statuses = await redis.hgetall('statuses');
-  revalidatePath('/');
-  return statuses;
+  console.debug(Date.now(), 'fetchStatusesFromRedis');
+  try {
+    const statuses = await redis.hgetall('statuses');
+    revalidatePath('/');
+    return statuses;
+  } catch (error) {
+    console.error('Failed to fetch statuses:', error);
+    // Consider appropriate error handling, such as retry logic or responding with an error message.
+    return {};
+  }
 };
 
 export const fetchNameAndStatuses = async () => {
-  console.log(Date.now(), 'fetchNameAndStatuses');
-  const name = await ipToName();
-  const statuses = await fetchStatusesFromRedis();
-  return { statuses, name };
+  console.debug(Date.now(), 'fetchNameAndStatuses');
+  try {
+    const name = await ipToName();
+    const statuses = await fetchStatusesFromRedis();
+    return { statuses, name };
+  } catch (error) {
+    console.error('Failed to fetch name and statuses:', error);
+    return { statuses: {}, name: '' };
+  }
 };
 
 export const updateStatus = async (status: string) => {
+  console.debug(Date.now(), 'updateStatus', status);
   try {
-    console.log(Date.now(), 'updateStatus', status);
     const name = await ipToName();
     await redis.hset('statuses', name, status);
     revalidatePath('/'); // Adjust if specific paths need revalidation
@@ -67,8 +78,13 @@ export const sendMessage = async (content: string, sender?: string) => {
 };
 
 export const fetchRecentMessages = async () => {
-  console.log(Date.now(), 'fetchRecentMessages');
+  console.debug(Date.now(), 'fetchRecentMessages');
   // Fetch the last 15 messages based on score (timestamp).
-  const rawMessages = await redis.zrange('messages', -15, -1);
-  return rawMessages.map((msg) => JSON.parse(msg));
+  try {
+    const rawMessages = await redis.zrange('messages', -15, -1);
+    return rawMessages.map((msg) => JSON.parse(msg));
+  } catch (error) {
+    console.error('Failed to fetch recent messages:', error);
+    return [];
+  }
 };

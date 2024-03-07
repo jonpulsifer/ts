@@ -48,21 +48,24 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
     refreshInterval: 1000,
   });
 
-  // Inside Chat component
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
   const scrollToBottom = () => {
-    bottomOfChat.current?.scrollIntoView({
-      behavior: 'smooth',
-    });
+    chatContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
+    console.log('refreshing messages from redis');
     if (data) {
       setMessages(data);
       scrollToBottom();
     }
   }, [data]);
 
-  const bottomOfChat = useRef<null | HTMLDivElement>(null);
+  useEffect(() => {
+    console.log('local messages updated');
+    scrollToBottom();
+  }, [messages]);
 
   // clicking on a badge will post a message to the chat
   const buttonClick = async (message: string) => {
@@ -75,22 +78,20 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
       content: message,
     };
     setMessages((messages) => [...messages, newMessage]);
-    scrollToBottom();
     sendMessage(message, name);
   };
 
   return (
-    <Card className="flex flex-col">
-      <div className="">
-        <div className=" flex-grow overflow-y-auto max-h-80">
-          <div className="mb-24">
-            {messages.map((message) => (
-              <Message key={message.id} message={message} user={name} />
-            ))}
-          </div>
-          <div ref={bottomOfChat} />
+    <Card className="h-full">
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto">
+          {messages.map((message) => (
+            <Message key={message.id} message={message} user={name} />
+          ))}
+          <div ref={chatContainerRef} />
         </div>
-        <div className="mt-2">
+
+        <div className="flex-none">
           <div className="grid grid-cols-4 gap-2">
             <Button color="light" onClick={() => buttonClick('🫘 Bean')}>
               <p className="text-2xl">🫘</p>
@@ -119,7 +120,7 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
             <Button color="light" onClick={() => buttonClick('🔁 Loop?')}>
               <p className="text-2xl">🔁</p>
             </Button>
-            <Button color="light" onClick={() => buttonClick('🔫 cs')}>
+            <Button color="light" onClick={() => buttonClick('🔫 pew pew')}>
               <p className="text-2xl">🔫</p>
             </Button>
           </div>

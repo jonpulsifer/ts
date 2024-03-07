@@ -24,17 +24,30 @@ const Home = async () => {
   const { statuses, name } = await fetchNameAndStatuses();
   const messages = await fetchRecentMessages();
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-full">
-      <div className="space-y-2">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Status statuses={statuses} name={name} updateStatus={updateStatus} />
-        </Suspense>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Clock />
-        </Suspense>
+    <div className="flex flex-col sm:flex-row w-full gap-1 overflow-y-scroll">
+      <div className="flex flex-col w-full gap-1">
+        {/* Left column - Clock and Status */}
+        <div className="flex-none">
+          {/* Status component */}
+          <Suspense fallback={<div>Loading status...</div>}>
+            <Status
+              statuses={statuses}
+              name={name}
+              updateStatus={updateStatus}
+            />
+          </Suspense>
+        </div>
+        <div className="flex-none">
+          {' '}
+          {/* Clock component */}
+          <Suspense fallback={<div>Loading clock...</div>}>
+            <Clock />
+          </Suspense>
+        </div>
         {showAdminMode ? <AdminButtons flushRedis={flushRedis} /> : null}
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
+        {/* Right column - Chat */}
         <Chat
           name={name}
           messages={messages}

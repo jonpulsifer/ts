@@ -20,7 +20,7 @@ const Clock = () => {
 
   return (
     <Card>
-      <div className="text-4xl font-bold text-white dark:text-black text-center">
+      <div className="text-4xl font-bold text-black dark:text-white text-center">
         {time}
       </div>
     </Card>
