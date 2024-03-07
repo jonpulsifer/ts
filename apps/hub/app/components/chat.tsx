@@ -83,7 +83,7 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
     <Card className="flex flex-col">
       <div className="">
         <div className=" flex-grow overflow-y-auto max-h-80">
-          <div>
+          <div className="mb-24">
             {messages.map((message) => (
               <Message key={message.id} message={message} user={name} />
             ))}
@@ -95,19 +95,19 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
             <Button color="light" onClick={() => buttonClick('🫘 Bean')}>
               <p className="text-2xl">🫘</p>
             </Button>
-            <Button color="light" onClick={() => buttonClick('❤️ I love you!')}>
+            <Button
+              color="light"
+              onClick={() => buttonClick(getILoveYouMessage())}
+            >
               <p className="text-2xl">❤️</p>
             </Button>
             <Button
               color="light"
-              onClick={() => buttonClick('👍 Without a shadow of a doubt')}
+              onClick={() => buttonClick(getThumbsUpMessage())}
             >
               <p className="text-2xl">👍</p>
             </Button>
-            <Button
-              color="light"
-              onClick={() => buttonClick('💀 Go on without me')}
-            >
+            <Button color="light" onClick={() => buttonClick(getDeadMessage())}>
               <p className="text-2xl">💀</p>
             </Button>
             <Button color="light" onClick={() => buttonClick('👀 doin?')}>
@@ -119,8 +119,8 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
             <Button color="light" onClick={() => buttonClick('🔁 Loop?')}>
               <p className="text-2xl">🔁</p>
             </Button>
-            <Button color="light" onClick={() => buttonClick('⏲️ Wait')}>
-              <p className="text-2xl">⏲️</p>
+            <Button color="light" onClick={() => buttonClick('🔫 cs')}>
+              <p className="text-2xl">🔫</p>
             </Button>
           </div>
         </div>
@@ -138,7 +138,7 @@ const Message = ({ message, user }: { message: Message; user: string }) => {
     >
       <div className="flex flex-col">
         <div
-          className={`${isUser ? 'bg-blue-600 text-white' : 'bg-sky-500 text-white'} px-4 py-2 rounded-lg shadow max-w-xs md:max-w-md my-1`}
+          className={`${isUser ? 'bg-blue-600 text-white' : 'bg-slate-400 text-black dark:text-white dark:bg-slate-700'} px-4 py-2 rounded-lg shadow max-w-xs md:max-w-md my-1`}
         >
           <p className="text-xs font-bold">{isUser ? 'You' : message.sender}</p>
           <p
@@ -153,6 +153,85 @@ const Message = ({ message, user }: { message: Message; user: string }) => {
       </div>
     </div>
   );
+};
+
+const getThumbsUpMessage = () => {
+  const thumbsUpSayings = [
+    '👍 Without a shadow of a doubt',
+    '👍 Yes',
+    '👍 It is certain',
+    '👍 It is decidedly so',
+    '👍 As I see it, yes',
+    '👍 Most likely',
+    '👍 Outlook good',
+    '👍 Yes, definitely',
+    '👍 You may rely on it',
+    '👍 Signs point to yes',
+  ];
+  const randomIndex = Math.floor(Math.random() * thumbsUpSayings.length);
+  return thumbsUpSayings[randomIndex];
+};
+
+// the skull emoji represents a "go on without me, do not wait message"
+const getDeadMessage = () => {
+  const deadSayings = [
+    '💀 Go on without me',
+    '💀 brb never',
+    "💀 I am withering away, don't wait for me",
+    '💀 I am forever lost',
+    '💀 Vanishing into the void',
+    '💀 Lost to the shadows',
+    '💀 Dissolving into mist',
+    '💀 Eclipsed by the abyss',
+    '💀 Swept into the silence',
+    '💀 Fading from this realm',
+    '💀 Whisked away by phantoms',
+    '💀 Severing the digital tether',
+    '💀 Absorbed by the ether',
+    '💀 Swallowed by the darkness',
+    '💀 Adrift in the nether',
+  ];
+  const randomIndex = Math.floor(Math.random() * deadSayings.length);
+  return deadSayings[randomIndex];
+};
+
+const getILoveYouMessage = () => {
+  const loveSayings = [
+    '❤️ I love you!',
+    '❤️ You are loved!',
+    '❤️ You are appreciated!',
+    '❤️ You are valued!',
+    '❤️ You are important!',
+    '❤️ You are cherished!',
+    '❤️ You are adored!',
+    '❤️ You are treasured!',
+    '❤️ You are respected!',
+    '❤️ You are admired!',
+    '❤️ You are cared for!',
+    '❤️ You are celebrated!',
+    '❤️ You are supported!',
+    '❤️ You are understood!',
+    '❤️ You are accepted!',
+    '❤️ You are believed in!',
+    '❤️ You are trusted!',
+    '❤️ You are encouraged!',
+    '❤️ You are uplifted!',
+    '❤️ You are empowered!',
+    '❤️ You are inspired!',
+    '❤️ You are seen!',
+    '❤️ You are heard!',
+    '❤️ You are known!',
+    '❤️ You are understood!',
+    '❤️ You are appreciated!',
+    '❤️ You are valued!',
+    '❤️ You are respected!',
+    '❤️ You are cherished!',
+    '❤️ You are adored!',
+    '❤️ You are treasured!',
+    '❤️ You are loved!',
+  ];
+  const randomIndex = Math.floor(Math.random() * loveSayings.length);
+  return loveSayings[randomIndex];
 };
 
 export default Chat;

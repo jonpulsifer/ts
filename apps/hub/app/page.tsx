@@ -10,6 +10,7 @@ import {
 } from './actions';
 import AdminButtons from './components/admin-buttons';
 import Chat from './components/chat';
+import Clock from './components/clock';
 import Status from './components/status';
 
 export const metadata: Metadata = {
@@ -27,6 +28,9 @@ const Home = async () => {
       <div className="space-y-2">
         <Suspense fallback={<div>Loading...</div>}>
           <Status statuses={statuses} name={name} updateStatus={updateStatus} />
+        </Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Clock />
         </Suspense>
         {showAdminMode ? <AdminButtons flushRedis={flushRedis} /> : null}
       </div>
