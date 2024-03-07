@@ -18,18 +18,14 @@ export const metadata: Metadata = {
   description: 'A little application that helps us live in modern times.',
 };
 
-const showAdminMode = process.env.NODE_ENV === 'development';
-
 const Home = async () => {
   const { statuses, name } = await fetchNameAndStatuses();
-  const messages = await fetchRecentMessages();
+  const messages = (await fetchRecentMessages()) || [];
   return (
     <div className="flex flex-col sm:flex-row w-full gap-1 overflow-y-scroll">
       <div className="flex flex-col w-full gap-1">
-        {/* Left column - Clock and Status */}
         <div className="flex-none">
-          {/* Status component */}
-          <Suspense fallback={<div>Loading status...</div>}>
+          <Suspense>
             <Status
               statuses={statuses}
               name={name}
@@ -38,16 +34,13 @@ const Home = async () => {
           </Suspense>
         </div>
         <div className="flex-none">
-          {' '}
-          {/* Clock component */}
-          <Suspense fallback={<div>Loading clock...</div>}>
+          <Suspense>
             <Clock />
           </Suspense>
         </div>
-        {showAdminMode ? <AdminButtons flushRedis={flushRedis} /> : null}
+        <AdminButtons flushRedis={flushRedis} />
       </div>
       <div className="flex flex-col w-full">
-        {/* Right column - Chat */}
         <Chat
           name={name}
           messages={messages}

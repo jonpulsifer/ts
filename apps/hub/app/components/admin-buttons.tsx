@@ -9,12 +9,18 @@ const AdminButtons = ({ flushRedis }: Props) => {
   return (
     <div className="flex justify-center gap-2">
       <Button
-        color="red"
         onClick={async () => {
           await flushRedis();
         }}
       >
-        Flush Redis
+        ☢️ Nuke Chat
+      </Button>
+      <Button
+        onClick={() => {
+          window.location.reload();
+        }}
+      >
+        🔄 Refresh
       </Button>
     </div>
   );

@@ -2,12 +2,12 @@
 import { revalidatePath } from 'next/cache';
 import { v4 as uuidv4 } from 'uuid';
 
+import type { Message } from './components/chat';
 import { ipToName } from './lib/dns';
 import redis from './lib/redis';
 
 // redis actions
 export const flushRedis = async () => {
-  console.debug(Date.now(), 'flushRedis');
   try {
     await redis.flushall();
     revalidatePath('/');
@@ -57,24 +57,33 @@ export const updateStatus = async (status: string) => {
 };
 
 // chat actions
-export const sendMessage = async (content: string, sender?: string) => {
+export const sendMessage = async (formData: FormData) => {
   const senderFromIp = await ipToName();
-  const message = JSON.stringify({
-    id: uuidv4(),
-    sender: senderFromIp,
-    content,
-    timestamp: Date.now(),
-  });
-  console.log(Date.now(), { message, sender });
+  try {
+    const content = formData.get('messageButton' as string);
+    if (!content) {
+      throw new Error('Message content is required');
+    }
+    const message = {
+      id: uuidv4(),
+      sender: senderFromIp,
+      content: content,
+      timestamp: Date.now(),
+    };
+    // Using the timestamp as the score for sorted ordering.
+    await redis.zadd('messages', Date.now(), JSON.stringify(message));
 
-  // Using the timestamp as the score for sorted ordering.
-  await redis.zadd('messages', Date.now(), message);
+    // Set message expiry for 24 hours. Note: Redis does not support per-item TTL in sorted sets,
+    // so we manage message expiry using a separate cleanup mechanism or using keys with TTL for each message.
 
-  // Set message expiry for 24 hours. Note: Redis does not support per-item TTL in sorted sets,
-  // so we manage message expiry using a separate cleanup mechanism or using keys with TTL for each message.
-
-  // Publish the message for real-time update.
-  // await redis.publish('chat', message);
+    // Publish the message for real-time update.
+    // await redis.publish('chat', message);
+  } catch (error) {
+    console.error('Failed to send message:', error);
+    return { error: 'Failed to send message' };
+  } finally {
+    revalidatePath('/');
+  }
 };
 
 export const fetchRecentMessages = async () => {
@@ -82,7 +91,10 @@ export const fetchRecentMessages = async () => {
   // Fetch the last 15 messages based on score (timestamp).
   try {
     const rawMessages = await redis.zrange('messages', -15, -1);
-    return rawMessages.map((msg) => JSON.parse(msg));
+    const messagesFromJSON = rawMessages.map((msg) =>
+      JSON.parse(msg),
+    ) as Message[];
+    return messagesFromJSON;
   } catch (error) {
     console.error('Failed to fetch recent messages:', error);
     return [];

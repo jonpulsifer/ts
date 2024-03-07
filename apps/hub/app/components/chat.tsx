@@ -1,32 +1,13 @@
 'use client';
 import { Button, Card } from '@repo/ui';
-import { useEffect, useRef, useState } from 'react';
-import useSWR from 'swr';
+import { useEffect, useOptimistic, useRef } from 'react';
 
-const getTimeAgo = (timestamp: number) => {
-  const now = new Date();
-  const differenceInMinutes = Math.floor(
-    (now.valueOf() - timestamp.valueOf()) / (1000 * 60),
-  );
-
-  if (differenceInMinutes < 1) {
-    return 'Just now';
-  } else if (differenceInMinutes === 1) {
-    return '1 minute ago';
-  } else if (differenceInMinutes < 60) {
-    return `${differenceInMinutes} minutes ago`;
-  } else if (differenceInMinutes >= 60 && differenceInMinutes < 120) {
-    return '1 hour ago';
-  } else if (differenceInMinutes < 1440) {
-    return `${Math.floor(differenceInMinutes / 60)} hours ago`;
-  } else if (differenceInMinutes < 2880) {
-    return '1 day ago';
-  } else {
-    // For messages over 1 day, you could return the exact time or a different message.
-    // Adjust this return statement as needed.
-    return 'over 1 day ago 💀';
-  }
-};
+import {
+  deadSayings,
+  loveSayings,
+  thumbsUpSayings,
+} from '../lib/chat-messages';
+import { howLongAgo } from '../lib/time';
 
 export interface Message {
   id: string;
@@ -38,15 +19,19 @@ export interface Message {
 interface Props {
   name: string;
   messages: Message[];
-  sendMessage: (content: string, sender?: string) => void;
+  sendMessage: (formData: FormData) => void;
   fetchMessages: () => Promise<Message[]>;
 }
 
-const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const { data } = useSWR('/not-used', fetchMessages, {
-    refreshInterval: 1000,
-  });
+const Chat = ({ name, sendMessage, messages }: Props) => {
+  // check if the form is being submitted
+  const [optimisticMessages, addOptimisticMessage] = useOptimistic(
+    messages,
+    // updateFn aka merge and return new state with optimistic value
+    (state, message: Message) => {
+      return [...state, message];
+    },
+  );
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -55,75 +40,61 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
   };
 
   useEffect(() => {
-    console.log('refreshing messages from redis');
-    if (data) {
-      setMessages(data);
-      scrollToBottom();
-    }
-  }, [data]);
-
-  useEffect(() => {
-    console.log('local messages updated');
     scrollToBottom();
-  }, [messages]);
+  }, [optimisticMessages, messages]);
 
-  // clicking on a badge will post a message to the chat
-  const buttonClick = async (message: string) => {
-    const now = Date.now();
-    // ButtonClick update
-    const newMessage = {
-      id: now.toString(),
-      timestamp: now,
+  // clicking on a badge will submit the form
+  const send = async (formData: FormData) => {
+    addOptimisticMessage({
+      id: 'optimistic-' + Math.random(),
+      timestamp: new Date().valueOf(),
       sender: name,
-      content: message,
-    };
-    setMessages((messages) => [...messages, newMessage]);
-    sendMessage(message, name);
+      content: formData.get('messageButton') as string,
+    });
+    sendMessage(formData);
   };
 
+  const emojiButtons = [
+    { icon: '🫘', value: 'Bean' },
+    { icon: '❤️', value: loveSayings },
+    { icon: '👍', value: thumbsUpSayings },
+    { icon: '💀', value: deadSayings },
+    { icon: '👀', value: '👀 doin?' },
+    { icon: '🍔', value: '🍔 food pls' },
+    { icon: '🔁', value: '🔁 Loop?' },
+    { icon: '🔫', value: '🔫 pew pew' },
+  ];
+
   return (
-    <Card className="h-full">
+    <Card className="h-full dark:bg-black">
       <div className="flex flex-col h-full">
         <div className="flex-1 overflow-y-auto">
-          {messages.map((message) => (
+          {optimisticMessages.map((message) => (
             <Message key={message.id} message={message} user={name} />
           ))}
           <div ref={chatContainerRef} />
         </div>
 
         <div className="flex-none">
-          <div className="grid grid-cols-4 gap-2">
-            <Button color="light" onClick={() => buttonClick('🫘 Bean')}>
-              <p className="text-2xl">🫘</p>
-            </Button>
-            <Button
-              color="light"
-              onClick={() => buttonClick(getILoveYouMessage())}
-            >
-              <p className="text-2xl">❤️</p>
-            </Button>
-            <Button
-              color="light"
-              onClick={() => buttonClick(getThumbsUpMessage())}
-            >
-              <p className="text-2xl">👍</p>
-            </Button>
-            <Button color="light" onClick={() => buttonClick(getDeadMessage())}>
-              <p className="text-2xl">💀</p>
-            </Button>
-            <Button color="light" onClick={() => buttonClick('👀 doin?')}>
-              <p className="text-2xl">👀</p>
-            </Button>
-            <Button color="light" onClick={() => buttonClick('🍔 food pls')}>
-              <p className="text-2xl">🍔</p>
-            </Button>
-            <Button color="light" onClick={() => buttonClick('🔁 Loop?')}>
-              <p className="text-2xl">🔁</p>
-            </Button>
-            <Button color="light" onClick={() => buttonClick('🔫 pew pew')}>
-              <p className="text-2xl">🔫</p>
-            </Button>
-          </div>
+          <form action={send} className="flex flex-col h-full">
+            <div className="grid grid-cols-4 gap-2">
+              {emojiButtons.map((emoji) => (
+                <Button
+                  key={emoji.value as string}
+                  name="messageButton"
+                  value={
+                    typeof emoji.value === 'function'
+                      ? emoji.value()
+                      : emoji.value
+                  }
+                  color="light"
+                  type="submit"
+                >
+                  <span className="text-2xl">{emoji.icon}</span>
+                </Button>
+              ))}
+            </div>
+          </form>
         </div>
       </div>
     </Card>
@@ -132,14 +103,15 @@ const Chat = ({ name, sendMessage, fetchMessages }: Props) => {
 
 const Message = ({ message, user }: { message: Message; user: string }) => {
   const isUser = message.sender === user;
+
   return (
     <div
       key={message.id}
-      className={`flex ${isUser ? 'flex-row-reverse' : 'flex-row'} mb-4`}
+      className={`flex ${isUser ? 'flex-row-reverse ' : 'flex-row'} mb-4`}
     >
       <div className="flex flex-col">
         <div
-          className={`${isUser ? 'bg-blue-600 text-white' : 'bg-slate-400 text-black dark:text-white dark:bg-slate-700'} px-4 py-2 rounded-lg shadow max-w-xs md:max-w-md my-1`}
+          className={`${isUser ? 'bg-blue-600 dark:bg-sky-500 text-white' : 'dark:bg-zinc-700 bg-zinc-200 dark:text-white text-black'}   px-4 py-2 rounded-lg shadow max-w-xs md:max-w-md my-1`}
         >
           <p className="text-xs font-bold">{isUser ? 'You' : message.sender}</p>
           <p
@@ -148,91 +120,12 @@ const Message = ({ message, user }: { message: Message; user: string }) => {
             {message.content}
           </p>
         </div>
-        <p className="text-xs text-right mr-2 text-gray-300">
-          {getTimeAgo(message.timestamp)}
+        <p className="text-xs text-right mr-2 text-gray-500">
+          {howLongAgo(message.timestamp)}
         </p>
       </div>
     </div>
   );
-};
-
-const getThumbsUpMessage = () => {
-  const thumbsUpSayings = [
-    '👍 Without a shadow of a doubt',
-    '👍 Yes',
-    '👍 It is certain',
-    '👍 It is decidedly so',
-    '👍 As I see it, yes',
-    '👍 Most likely',
-    '👍 Outlook good',
-    '👍 Yes, definitely',
-    '👍 You may rely on it',
-    '👍 Signs point to yes',
-  ];
-  const randomIndex = Math.floor(Math.random() * thumbsUpSayings.length);
-  return thumbsUpSayings[randomIndex];
-};
-
-// the skull emoji represents a "go on without me, do not wait message"
-const getDeadMessage = () => {
-  const deadSayings = [
-    '💀 Go on without me',
-    '💀 brb never',
-    "💀 I am withering away, don't wait for me",
-    '💀 I am forever lost',
-    '💀 Vanishing into the void',
-    '💀 Lost to the shadows',
-    '💀 Dissolving into mist',
-    '💀 Eclipsed by the abyss',
-    '💀 Swept into the silence',
-    '💀 Fading from this realm',
-    '💀 Whisked away by phantoms',
-    '💀 Severing the digital tether',
-    '💀 Absorbed by the ether',
-    '💀 Swallowed by the darkness',
-    '💀 Adrift in the nether',
-  ];
-  const randomIndex = Math.floor(Math.random() * deadSayings.length);
-  return deadSayings[randomIndex];
-};
-
-const getILoveYouMessage = () => {
-  const loveSayings = [
-    '❤️ I love you!',
-    '❤️ You are loved!',
-    '❤️ You are appreciated!',
-    '❤️ You are valued!',
-    '❤️ You are important!',
-    '❤️ You are cherished!',
-    '❤️ You are adored!',
-    '❤️ You are treasured!',
-    '❤️ You are respected!',
-    '❤️ You are admired!',
-    '❤️ You are cared for!',
-    '❤️ You are celebrated!',
-    '❤️ You are supported!',
-    '❤️ You are understood!',
-    '❤️ You are accepted!',
-    '❤️ You are believed in!',
-    '❤️ You are trusted!',
-    '❤️ You are encouraged!',
-    '❤️ You are uplifted!',
-    '❤️ You are empowered!',
-    '❤️ You are inspired!',
-    '❤️ You are seen!',
-    '❤️ You are heard!',
-    '❤️ You are known!',
-    '❤️ You are understood!',
-    '❤️ You are appreciated!',
-    '❤️ You are valued!',
-    '❤️ You are respected!',
-    '❤️ You are cherished!',
-    '❤️ You are adored!',
-    '❤️ You are treasured!',
-    '❤️ You are loved!',
-  ];
-  const randomIndex = Math.floor(Math.random() * loveSayings.length);
-  return loveSayings[randomIndex];
 };
 
 export default Chat;
