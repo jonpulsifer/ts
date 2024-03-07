@@ -19,7 +19,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/prettier-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "turbo": "1.12.4"
+    "turbo": "1.12.5"
   },
   "engines": {
     "node": ">=18.*.*",
