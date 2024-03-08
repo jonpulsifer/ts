@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useOptimistic, useRef } from 'react';
 
 import {
-  burgerSayings,
   deadSayings,
+  foodSayings,
   loveSayings,
   thumbsUpSayings,
 } from '../lib/chat-messages';
@@ -70,7 +70,7 @@ const Chat = ({ name, sendMessage, messages }: Props) => {
     { emoji: '👍', content: thumbsUpSayings },
     { emoji: '💀', content: deadSayings },
     { emoji: '👀', content: '👀 doin?' },
-    { emoji: '🍔', content: burgerSayings },
+    { emoji: '🍔', content: foodSayings },
     { emoji: '🔁', content: '🔁 Loop?' },
     { emoji: '🔫', content: '🔫 the bomb has been planted' },
   ];

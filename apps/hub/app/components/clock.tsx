@@ -2,14 +2,24 @@
 import { Card } from '@repo/ui';
 import { useEffect, useState } from 'react';
 
+const now = () =>
+  new Date()
+    .toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    })
+    .replace(/ ?(?:AM|PM)$/i, '');
+
 const Clock = () => {
-  const [time, setTime] = useState('00:00 PM' as string); // Start with null, will not be rendered server-side
+  const [time, setTime] = useState('⏰');
   useEffect(() => {
-    const now = new Date().toLocaleTimeString([], { timeStyle: 'short' });
-    setTime(now);
+    const updateClock = () => setTime(now()); // Function to update time
+
+    updateClock(); // Update immediately on mount
 
     const interval = setInterval(() => {
-      setTime(now);
+      updateClock(); // Update every minute
     }, 60_000);
 
     return () => clearInterval(interval);
@@ -17,7 +27,7 @@ const Clock = () => {
 
   return (
     <Card>
-      <div className="text-7xl leading-none text-center font-bold">{time}</div>
+      <div className="text-9xl leading-none text-center font-bold">{time}</div>
     </Card>
   );
 };

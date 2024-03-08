@@ -1,9 +1,8 @@
 import { headers as requestHeaders } from 'next/headers';
 
 export const ipToName = async () => {
-  const ip = getIpFromHeaders();
-
-  console.log(Date.now(), { ip });
+  const headers = requestHeaders();
+  const ip = headers.get('x-real-ip') || headers.get('x-forwarded-for') || '';
   if (process.env.NODE_ENV === 'development') {
     return 'Development';
   }
@@ -17,9 +16,4 @@ export const ipToName = async () => {
     default:
       return ip;
   }
-};
-
-export const getIpFromHeaders = () => {
-  const headers = requestHeaders();
-  return headers.get('x-real-ip') || headers.get('x-forwarded-for') || '';
 };

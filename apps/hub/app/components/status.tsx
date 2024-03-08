@@ -51,7 +51,7 @@ const Status = ({ statuses, updateStatus, name }: Props) => {
   const bg = busy ? 'bg-red-400/20' : '';
 
   return (
-    <Card>
+    <Card className="h-full">
       <form action={update} ref={form}>
         <div
           className={`${bg} flex flex-col justify-center items-center rounded-md`}
@@ -69,17 +69,21 @@ const Status = ({ statuses, updateStatus, name }: Props) => {
           </div>
         </div>
         <div className="rounded-md space-y-2 mt-4">
-          {optimisticStatuses.map(({ name, status }, index) => (
-            <div
-              key={name + index}
-              className={`${bg} p-2 flex justify-between items-center rounded-md`}
-            >
-              <p className="font-semibold text-lg">{name}</p>
-              <Badge color={status === 'Busy' ? 'red' : 'green'}>
-                <p className="text-lg">{status}</p>
-              </Badge>
-            </div>
-          ))}
+          {optimisticStatuses.map(({ name, status }, index) => {
+            const isBusy = status === AvialableStatuses.Busy;
+            const bg = isBusy ? 'bg-red-400/20' : '';
+            return (
+              <div
+                key={name + index}
+                className={`${bg} p-2 flex justify-between items-center rounded-md`}
+              >
+                <p className="font-semibold text-lg">{name}</p>
+                <Badge color={isBusy ? 'red' : 'green'}>
+                  <p className="text-lg">{status}</p>
+                </Badge>
+              </div>
+            );
+          })}
         </div>
       </form>
     </Card>

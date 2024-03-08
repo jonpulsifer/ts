@@ -18,13 +18,20 @@ export const metadata: Metadata = {
   description: 'A little application that helps us live in modern times.',
 };
 
+const isAdminMode = process.env.NODE_ENV === 'development';
+
 const Home = async () => {
   const { statuses, name } = await fetchNameAndStatuses();
-  const messages = (await fetchRecentMessages()) || [];
+  const messages = await fetchRecentMessages();
   return (
     <div className="flex flex-col sm:flex-row w-full gap-1 overflow-y-scroll">
       <div className="flex flex-col w-full gap-1">
         <div className="flex-none">
+          <Suspense>
+            <Clock />
+          </Suspense>
+        </div>
+        <div className="flex-grow">
           <Suspense>
             <Status
               statuses={statuses}
@@ -33,12 +40,7 @@ const Home = async () => {
             />
           </Suspense>
         </div>
-        <div className="flex-none">
-          <Suspense>
-            <Clock />
-          </Suspense>
-        </div>
-        <AdminButtons flushRedis={flushRedis} />
+        {isAdminMode && <AdminButtons flushRedis={flushRedis} />}
       </div>
       <div className="flex flex-col w-full">
         <Suspense>

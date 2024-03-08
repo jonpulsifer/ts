@@ -67,16 +67,16 @@ export const updateStatus = async (status: string) => {
 
 // chat actions
 export const sendMessage = async (formData: FormData) => {
-  const senderFromIp = await ipToName();
   try {
+    const sender = await ipToName();
     const content = formData.get('messageButton' as string);
     if (!content) {
       throw new Error('Message content is required');
     }
     const message = {
       id: uuidv4(),
-      sender: senderFromIp,
-      content: content,
+      sender,
+      content,
       timestamp: Date.now(),
     };
     // Using the timestamp as the score for sorted ordering.
