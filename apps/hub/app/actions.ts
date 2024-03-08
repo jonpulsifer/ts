@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { Message } from './components/chat';
+import type { Status } from './components/status';
 import { ipToName } from './lib/dns';
 import redis from './lib/redis';
 
@@ -23,12 +24,16 @@ export const fetchStatusesFromRedis = async () => {
   console.debug(Date.now(), 'fetchStatusesFromRedis');
   try {
     const statuses = await redis.hgetall('statuses');
-    revalidatePath('/');
-    return statuses;
+    // turn the object into an array of objects
+    return Object.entries(statuses).map(([name, status]) => ({
+      name,
+      status,
+    })) as Status[];
+    // return Object.values(statuses).map((status) => JSON.parse(status));
   } catch (error) {
     console.error('Failed to fetch statuses:', error);
     // Consider appropriate error handling, such as retry logic or responding with an error message.
-    return {};
+    return [];
   }
 };
 
@@ -40,19 +45,23 @@ export const fetchNameAndStatuses = async () => {
     return { statuses, name };
   } catch (error) {
     console.error('Failed to fetch name and statuses:', error);
-    return { statuses: {}, name: '' };
+    return { statuses: [], name: '' };
   }
 };
 
 export const updateStatus = async (status: string) => {
+  if (!status) {
+    throw new Error('Status is required');
+  }
   console.debug(Date.now(), 'updateStatus', status);
   try {
     const name = await ipToName();
     await redis.hset('statuses', name, status);
-    revalidatePath('/'); // Adjust if specific paths need revalidation
   } catch (error) {
     console.error('Failed to update status:', error);
     // Consider appropriate error handling, such as retry logic or responding with an error message.
+  } finally {
+    revalidatePath('/');
   }
 };
 
@@ -87,8 +96,6 @@ export const sendMessage = async (formData: FormData) => {
 };
 
 export const fetchRecentMessages = async () => {
-  console.debug(Date.now(), 'fetchRecentMessages');
-  // Fetch the last 15 messages based on score (timestamp).
   try {
     const rawMessages = await redis.zrange('messages', -15, -1);
     const messagesFromJSON = rawMessages.map((msg) =>

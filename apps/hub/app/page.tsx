@@ -41,12 +41,14 @@ const Home = async () => {
         <AdminButtons flushRedis={flushRedis} />
       </div>
       <div className="flex flex-col w-full">
-        <Chat
-          name={name}
-          messages={messages}
-          sendMessage={sendMessage}
-          fetchMessages={fetchRecentMessages}
-        />
+        <Suspense>
+          <Chat
+            name={name}
+            messages={messages}
+            sendMessage={sendMessage}
+            fetchMessages={fetchRecentMessages}
+          />
+        </Suspense>
       </div>
     </div>
   );

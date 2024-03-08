@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDotEnv": ["**/.env.*local"],
-  "globalEnv": ["NODE_ENV"],
+  "globalEnv": ["NODE_ENV", "IS_DOCKER"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -27,15 +27,13 @@
         "DATABASE_URL",
         "DIRECT_URL",
         "CLIENT_IDENTITY_PKCS12",
-        "SERVER_CA",
-        "IS_DOCKER"
+        "SERVER_CA"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "request-headers#build": {
       "dependsOn": ["^build"],
       "env": [
-        "IS_DOCKER",
         "NODE_IP",
         "NODE_NAME",
         "POD_IP",

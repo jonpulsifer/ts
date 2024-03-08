@@ -8,6 +8,7 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+  preload: true,
 });
 
 const creepster = Creepster({
@@ -30,7 +31,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`bg-zinc-200 dark:bg-black ${inter.className} ${creepster.variable} text-black dark:text-white transition-colors duration-300`}
+        className={`${inter.className} ${creepster.variable} bg-zinc-200 dark:bg-zinc-950 text-black dark:text-white transition-colors duration-300`}
       >
         <main className="flex flex-col sm:flex-row h-screen gap-1 p-1 overflow-hidden">
           {children}

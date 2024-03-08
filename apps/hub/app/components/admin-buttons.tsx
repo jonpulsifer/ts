@@ -13,14 +13,14 @@ const AdminButtons = ({ flushRedis }: Props) => {
           await flushRedis();
         }}
       >
-        ☢️ Nuke Chat
+        ☢️ Nuke Data
       </Button>
       <Button
         onClick={() => {
           window.location.reload();
         }}
       >
-        🔄 Refresh
+        🔄 Refresh Page
       </Button>
     </div>
   );

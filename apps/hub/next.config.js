@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@repo/ui'],
-  output: 'standalone',
+  output: process.env.IS_DOCKER === '1' ? 'standalone' : undefined,
   logging: {
     fetches: {
       fullUrl: true,

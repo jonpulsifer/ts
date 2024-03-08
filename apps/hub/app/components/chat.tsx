@@ -1,8 +1,10 @@
 'use client';
 import { Button, Card } from '@repo/ui';
+import { useRouter } from 'next/navigation';
 import { useEffect, useOptimistic, useRef } from 'react';
 
 import {
+  burgerSayings,
   deadSayings,
   loveSayings,
   thumbsUpSayings,
@@ -24,7 +26,7 @@ interface Props {
 }
 
 const Chat = ({ name, sendMessage, messages }: Props) => {
-  // check if the form is being submitted
+  const router = useRouter();
   const [optimisticMessages, addOptimisticMessage] = useOptimistic(
     messages,
     // updateFn aka merge and return new state with optimistic value
@@ -38,6 +40,14 @@ const Chat = ({ name, sendMessage, messages }: Props) => {
   const scrollToBottom = () => {
     chatContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // refresh the chat every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.refresh();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [router]);
 
   useEffect(() => {
     scrollToBottom();
@@ -54,15 +64,15 @@ const Chat = ({ name, sendMessage, messages }: Props) => {
     sendMessage(formData);
   };
 
-  const emojiButtons = [
-    { icon: '🫘', value: 'Bean' },
-    { icon: '❤️', value: loveSayings },
-    { icon: '👍', value: thumbsUpSayings },
-    { icon: '💀', value: deadSayings },
-    { icon: '👀', value: '👀 doin?' },
-    { icon: '🍔', value: '🍔 food pls' },
-    { icon: '🔁', value: '🔁 Loop?' },
-    { icon: '🔫', value: '🔫 pew pew' },
+  const chatButtons = [
+    { emoji: '🫘', content: '🫘 Bean' },
+    { emoji: '❤️', content: loveSayings },
+    { emoji: '👍', content: thumbsUpSayings },
+    { emoji: '💀', content: deadSayings },
+    { emoji: '👀', content: '👀 doin?' },
+    { emoji: '🍔', content: burgerSayings },
+    { emoji: '🔁', content: '🔁 Loop?' },
+    { emoji: '🔫', content: '🔫 the bomb has been planted' },
   ];
 
   return (
@@ -78,19 +88,15 @@ const Chat = ({ name, sendMessage, messages }: Props) => {
         <div className="flex-none">
           <form action={send} className="flex flex-col h-full">
             <div className="grid grid-cols-4 gap-2">
-              {emojiButtons.map((emoji) => (
+              {chatButtons.map(({ emoji, content }, index) => (
                 <Button
-                  key={emoji.value as string}
+                  key={emoji + index}
                   name="messageButton"
-                  value={
-                    typeof emoji.value === 'function'
-                      ? emoji.value()
-                      : emoji.value
-                  }
+                  value={typeof content === 'function' ? content() : content}
                   color="light"
                   type="submit"
                 >
-                  <span className="text-2xl">{emoji.icon}</span>
+                  <span className="text-4xl">{emoji}</span>
                 </Button>
               ))}
             </div>
@@ -111,16 +117,16 @@ const Message = ({ message, user }: { message: Message; user: string }) => {
     >
       <div className="flex flex-col">
         <div
-          className={`${isUser ? 'bg-blue-600 dark:bg-sky-500 text-white' : 'dark:bg-zinc-700 bg-zinc-200 dark:text-white text-black'}   px-4 py-2 rounded-lg shadow max-w-xs md:max-w-md my-1`}
+          className={`${isUser ? 'bg-blue-600 dark:bg-sky-500 text-white' : 'dark:bg-zinc-700 bg-zinc-200 dark:text-white text-black'} p-2 rounded-lg shadow max-w-xs md:max-w-md my-1`}
         >
           <p className="text-xs font-bold">{isUser ? 'You' : message.sender}</p>
           <p
-            className={`text-xl mt-1 ${message.content.includes('💀') ? 'font-creepster' : 'font-bold'}`}
+            className={`text-lg ${message.content.includes('💀') ? 'font-creepster' : 'font-medium'}`}
           >
             {message.content}
           </p>
         </div>
-        <p className="text-xs text-right mr-2 text-gray-500">
+        <p className="text-xs text-right mr-2">
           {howLongAgo(message.timestamp)}
         </p>
       </div>

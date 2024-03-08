@@ -79,8 +79,8 @@ export function Card({
       })
     : null;
 
-  const footer = <div className="p-2 sm:p-4">{actionsMarkup}</div>;
-  const header = <div className="p-2 sm:p-4">{headerContent}</div>;
+  const footer = <div className="p-2">{actionsMarkup}</div>;
+  const header = <div className="p-2">{headerContent}</div>;
 
   const headerMarkup = title ? header : null;
   const footerMarkup = actions.length ? footer : null;
@@ -92,7 +92,7 @@ export function Card({
       )}
     >
       {headerMarkup}
-      <div className="p-2 sm:px-4 h-full">{children}</div>
+      <div className="p-2 h-full">{children}</div>
       {footerMarkup}
     </div>
   );
