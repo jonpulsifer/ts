@@ -67,6 +67,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "remixed#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["api/index.js", "api/build/**", "public/build/**"]
+    },
     "lint": {},
     "test": {
       "dependsOn": ["build"],

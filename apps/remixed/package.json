@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "name": "remixed",
+  "scripts": {
+    "build": "remix build",
+    "dev": "remix dev --manual",
+    "start": "remix-serve build",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@remix-run/node": "2.8.1",
+    "@remix-run/react": "2.8.1",
+    "@remix-run/serve": "2.8.1",
+    "@repo/ui": "workspace:*",
+    "isbot": "5.1.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "2.8.1",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "18.2.64",
+    "@types/react-dom": "18.2.21",
+    "tailwindcss": "3.4.1",
+    "typescript": "5.4.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
