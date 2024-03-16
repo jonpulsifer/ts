@@ -2,7 +2,7 @@
 
 services:
   redis:
-    image: redis:alpine@sha256:1b503bb77079ba644371969e06e1a6a1670bb34c2251107c0fc3a21ef9fdaeca
+    image: redis:alpine@sha256:b5e85f592406b89b869b852850355e7d2b3adc0f044fc8da667ebc38cdc8c3ca
     ports:
       - 6379:6379
   # postgres:
