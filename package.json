@@ -25,7 +25,7 @@
     "node": ">=18.*.*",
     "npm": ">=9.*.*"
   },
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@8.15.5",
   "cspell": {
     "version": "0.2",
     "ignorePaths": [],
