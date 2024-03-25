@@ -539,8 +539,8 @@ importers:
         specifier: workspace*
         version: link:../typescript-config
       '@types/k6':
-        specifier: 0.49.3
-        version: 0.49.3
+        specifier: 0.50.0
+        version: 0.50.0
       '@types/node':
         specifier: 20.11.30
         version: 20.11.30
@@ -3894,8 +3894,8 @@ packages:
       '@types/node': 20.11.30
     dev: false
 
-  /@types/k6@0.49.3:
-    resolution: {integrity: sha512-QjRmi2cHt6E5b33pfY6J3QeynuH98bpaV1NVA7qlDXKpKWoFt7mK3n8mw9DjM28125YoKwXbySAQGpOJUTa7Kg==}
+  /@types/k6@0.50.0:
+    resolution: {integrity: sha512-+KpsLr549oFSpr80Zk9lf9wsEgESYTYzGeBIlS6NnH4PBiqJuRk+xv3KSFfDOCD0ZHbhUsXMV7mEVhWLOzfzmw==}
     dev: true
 
   /@types/mdast@3.0.15:
