@@ -85,8 +85,8 @@ importers:
   apps/cf-worker:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: 4.20240404.0
-        version: 4.20240404.0
+        specifier: 4.20240405.0
+        version: 4.20240405.0
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -1489,8 +1489,8 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@cloudflare/workers-types@4.20240404.0:
-    resolution: {integrity: sha512-lfnYnjX4/65MrVeMF/k3C7BzaLoU1fEIdzCs04ofrx7J6rH7LK3DHRNcnuchoSxKuzG2xVf940MKZ1XieGRCLQ==}
+  /@cloudflare/workers-types@4.20240405.0:
+    resolution: {integrity: sha512-sEVOhyOgXUwfLkgHqbLZa/sfkSYrh7/zLmI6EZNibPaVPvAnAcItbNNl3SAlLyLKuwf8m4wAIAgu9meKWCvXjg==}
     dev: true
 
   /@colors/colors@1.5.0:
