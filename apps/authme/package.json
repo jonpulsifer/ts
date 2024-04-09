@@ -29,7 +29,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "20.12.6",
+    "@types/node": "20.12.7",
     "@types/react-dom": "18.2.24",
     "@types/react": "18.2.75",
     "prisma": "5.12.1",
