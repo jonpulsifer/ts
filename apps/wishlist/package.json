@@ -45,7 +45,7 @@
     "prisma": "5.12.1",
     "tailwindcss": "3.4.3",
     "ts-node": "10.9.2",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
