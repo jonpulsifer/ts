@@ -363,8 +363,8 @@ importers:
         specifier: 1.6.0
         version: 1.6.0(@prisma/client@5.12.1)
       '@headlessui/react-1':
-        specifier: npm:@headlessui/react@1.7.18
-        version: /@headlessui/react@1.7.18(react-dom@18.2.0)(react@18.2.0)
+        specifier: npm:@headlessui/react@1.7.19
+        version: /@headlessui/react@1.7.19(react-dom@18.2.0)(react@18.2.0)
       '@prisma/client':
         specifier: 5.12.1
         version: 5.12.1(prisma@5.12.1)
@@ -2029,8 +2029,8 @@ packages:
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
     dev: false
 
-  /@headlessui/react@1.7.18(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-4i5DOrzwN4qSgNsL4Si61VMkUcWbcSKueUV7sFhpHzQcSShdlHENE5+QBntMSRvHt8NyoFO2AGG8si9lq+w4zQ==}
+  /@headlessui/react@1.7.19(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Ll+8q3OlMJfJbAKM/+/Y2q6PPYbryqNTXDbryx7SXLIDamkF6iQFbriYHga0dY44PvDhvvBWCx1Xj4U5+G4hOw==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16 || ^17 || ^18
