@@ -2,7 +2,7 @@
 
 services:
   postgres:
-    image: postgres:15-alpine@sha256:90f25fbf7ea2cf70d6a6a2f9c475c5a297c2b41e15eddaa5d9d8fafc9146072c
+    image: postgres:15-alpine@sha256:62d05cdb75f98a24928131a9d1d2f0164ffc1401a5db5be288afd1adcff3641c
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
