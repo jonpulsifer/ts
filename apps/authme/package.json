@@ -16,7 +16,7 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "1.6.0",
+    "@auth/prisma-adapter": "2.0.0",
     "@prisma/client": "5.12.1",
     "@repo/ui": "workspace:*",
     "next-auth": "4.24.7",
