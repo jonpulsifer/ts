@@ -20,7 +20,7 @@
     "@repo/ui": "workspace:*",
     "@vercel/analytics": "1.2.2",
     "@vercel/speed-insights": "1.0.10",
-    "next": "14.2.1",
+    "next": "14.2.2",
     "next-auth": "4.24.7",
     "nookies": "2.5.2",
     "prettier": "3.2.5",
