@@ -22,10 +22,10 @@
     "turbo": "1.13.2"
   },
   "engines": {
-    "node": ">=18.*.*",
-    "npm": ">=9.*.*"
+    "node": ">=20.*.*",
+    "npm": ">=10.*.*"
   },
-  "packageManager": "pnpm@8.15.7",
+  "packageManager": "pnpm@9.0.3",
   "cspell": {
     "version": "0.2",
     "ignorePaths": [],
