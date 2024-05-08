@@ -14,7 +14,7 @@
     "test": "turbo test"
   },
   "devDependencies": {
-    "eslint": "9.0.0",
+    "eslint": "9.2.0",
     "prettier": "3.2.5",
     "@repo/eslint-config": "workspace:*",
     "@repo/prettier-config": "workspace:*",
