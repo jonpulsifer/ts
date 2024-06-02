@@ -144,13 +144,14 @@ app.event('app_mention', async ({ event, say }) => {
       await say(generateHelpForCommand(command));
     }
   } else {
+    const user = event.user ? `<@${event.user}> ` : null;
     await say(
-      `<@${event.user}> Sorry, I don't understand that command. Try \`help\` for more information.`,
+      `${user}Sorry, I don't understand that command. Try \`help\` for more information.`,
     );
   }
 });
 
 (async () => {
   // Start the app
-  await app.start(process.env.PORT || 3000);
+  await app.start(process.env.PORT ?? 3000);
 })();

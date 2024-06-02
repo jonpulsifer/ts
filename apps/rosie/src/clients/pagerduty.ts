@@ -65,7 +65,7 @@ export class PagerDuty {
             },
             body: {
               type: 'incident_body',
-              details: description || 'No description provided',
+              details: description ?? 'No description provided',
             },
             urgency: 'high',
             incident_key: `${Date.now().toString()}-rosie-slack`,

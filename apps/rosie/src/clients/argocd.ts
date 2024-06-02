@@ -30,9 +30,10 @@ export class ArgoCD {
     path: string,
     method: 'GET' | 'POST' | 'PUT' | 'PATCH',
     body?: object,
-     
+
   ): Promise<any> {
     await this.login();
+    if (!this.token) throw new Error('No token found');
     const url = `${this.server}/api/v1/${path}`;
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.token}`,
