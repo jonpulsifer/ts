@@ -87,7 +87,7 @@ export function Card({
   return (
     <div
       className={clsx(
-        'divide-y dark:divide-slate-800 divide-gray-200 xs:rounded-lg bg-white dark:bg-slate-900 dark:text-gray-400 shadow shadow-md border-transparent',
+        'divide-y dark:divide-zinc-800 divide-gray-200 xs:rounded-lg bg-white dark:bg-zinc-900 dark:text-gray-400 shadow shadow-md border-transparent',
         className,
       )}
     >

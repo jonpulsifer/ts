@@ -1,3 +1,11 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@repo/ui';
 import { Card } from '@repo/ui/card';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -9,63 +17,60 @@ const isInKubernetes = Boolean(process.env.POD_NAME);
 
 function KubernetesTable(): JSX.Element {
   return (
-    <table className="min-w-full table-auto">
-      <thead>
-        <tr>
-          <th className="text-left px-4 py-2">Item</th>
-          <th className="text-left px-4 py-2">Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="border-b dark:border-slate-800 border-zinc-200">
-          <td className="px-4 py-2">Node</td>
-          <td className="px-4 py-2">{NODE_NAME}</td>
-        </tr>
-        <tr className="border-b dark:border-slate-800 border-zinc-200">
-          <td className="px-4 py-2">Node IP</td>
-          <td className="px-4 py-2">{NODE_IP}</td>
-        </tr>
-        <tr className="border-b dark:border-slate-800 border-zinc-200">
-          <td className="px-4 py-2">Pod</td>
-          <td className="px-4 py-2">{POD_NAME}</td>
-        </tr>
-        <tr className="border-b dark:border-slate-800 border-zinc-200">
-          <td className="px-4 py-2">Pod IP</td>
-          <td className="px-4 py-2">{POD_IP}</td>
-        </tr>
-        <tr className="border-b dark:border-slate-800 border-zinc-200">
-          <td className="px-4 py-2">Pod Change Me</td>
-          <td className="px-4 py-2">{POD_CHANGE_ME}</td>
-        </tr>
-      </tbody>
-    </table>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableHeader>Item</TableHeader>
+          <TableHeader>Value</TableHeader>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell>Node</TableCell>
+          <TableCell>{NODE_NAME}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Node IP</TableCell>
+          <TableCell>{NODE_IP}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Pod</TableCell>
+          <TableCell>{POD_NAME}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Pod IP</TableCell>
+          <TableCell>{POD_IP}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Pod Change Me</TableCell>
+          <TableCell>{POD_CHANGE_ME}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
   );
 }
 
 function EnvironmentTable() {
   return (
-    <table className="min-w-full table-auto">
-      <thead>
-        <tr>
-          <th className="text-left px-4 py-2">Item</th>
-          <th className="text-left px-4 py-2">Value</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableHeader>Item</TableHeader>
+          <TableHeader>Value</TableHeader>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {Object.entries(process.env).map(([key, value]) => {
           if (!value) return;
           return (
-            <tr
-              className="border-b dark:border-slate-800 border-zinc-200"
-              key={key}
-            >
-              <td className="px-4 py-2">{key}</td>
-              <td className="px-4 py-2 break-all">{value}</td>
-            </tr>
+            <TableRow key={key}>
+              <TableCell>{key}</TableCell>
+              <TableCell>{value}</TableCell>
+            </TableRow>
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }
 
@@ -77,28 +82,25 @@ function HeadersTable() {
     obj[key] = value;
   }
   return (
-    <table className="min-w-full table-auto">
-      <thead>
-        <tr>
-          <th className="text-left px-4 py-2">Item</th>
-          <th className="text-left px-4 py-2">Value</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableHeader>Item</TableHeader>
+          <TableHeader>Value</TableHeader>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {Object.entries(obj).map(([key, value]) => {
           if (!value) return;
           return (
-            <tr
-              className="border-b dark:border-slate-800 border-zinc-200"
-              key={key}
-            >
-              <td className="px-4 py-2 whitespace-nowrap">{key}</td>
-              <td className="px-4 py-2 break-all">{value}</td>
-            </tr>
+            <TableRow key={key}>
+              <TableCell>{key}</TableCell>
+              <TableCell>{value}</TableCell>
+            </TableRow>
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }
 
