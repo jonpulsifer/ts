@@ -20,7 +20,7 @@
     "@slack/web-api": "6.12.0"
   },
   "devDependencies": {
-    "@types/node": "20.12.7",
+    "@types/node": "20.14.0",
     "@types/node-fetch": "2.6.11",
     "@repo/eslint-config": "workspace:*",
     "ts-node": "10.9.2",
