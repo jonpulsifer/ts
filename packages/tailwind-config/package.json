@@ -5,6 +5,10 @@
   "exports": {
     ".": "./tailwind.config.ts"
   },
+  "peerDependencies": {
+    "@types/node": "*",
+    "typescript": ">=2.7"
+  },
   "devDependencies": {
     "@headlessui/tailwindcss": "0.2.0",
     "@repo/typescript-config": "workspace:*",

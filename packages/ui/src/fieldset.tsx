@@ -1,24 +1,13 @@
-import {
-  Description as HeadlessDescription,
-  type DescriptionProps as HeadlessDescriptionProps,
-  Field as HeadlessField,
-  type FieldProps as HeadlessFieldProps,
-  Fieldset as HeadlessFieldset,
-  type FieldsetProps as HeadlessFieldsetProps,
-  Label as HeadlessLabel,
-  type LabelProps as HeadlessLabelProps,
-  Legend as HeadlessLegend,
-  type LegendProps as HeadlessLegendProps,
-} from '@headlessui/react';
+import * as Headless from '@headlessui/react';
 import clsx from 'clsx';
-import React from 'react';
+import type React from 'react';
 
 export function Fieldset({
   className,
   ...props
-}: { disabled?: boolean } & HeadlessFieldsetProps) {
+}: { className?: string } & Omit<Headless.FieldsetProps, 'className'>) {
   return (
-    <HeadlessFieldset
+    <Headless.Fieldset
       {...props}
       className={clsx(
         className,
@@ -28,15 +17,18 @@ export function Fieldset({
   );
 }
 
-export function Legend({ ...props }: HeadlessLegendProps) {
+export function Legend({
+  className,
+  ...props
+}: { className?: string } & Omit<Headless.LegendProps, 'className'>) {
   return (
-    <HeadlessLegend
+    <Headless.Legend
+      data-slot="legend"
       {...props}
       className={clsx(
-        props.className,
-        'text-base/6 font-semibold text-slate-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white',
+        className,
+        'text-base/6 font-semibold text-zinc-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white',
       )}
-      data-slot="legend"
     />
   );
 }
@@ -47,16 +39,20 @@ export function FieldGroup({
 }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
+      data-slot="control"
       {...props}
       className={clsx(className, 'space-y-8')}
-      data-slot="control"
     />
   );
 }
 
-export function Field({ className, ...props }: HeadlessFieldProps) {
+export function Field({
+  className,
+  ...props
+}: { className?: string } & Omit<Headless.FieldProps, 'className'>) {
   return (
-    <HeadlessField
+    <Headless.Field
+      {...props}
       className={clsx(
         className,
         '[&>[data-slot=label]+[data-slot=control]]:mt-3',
@@ -66,7 +62,6 @@ export function Field({ className, ...props }: HeadlessFieldProps) {
         '[&>[data-slot=control]+[data-slot=error]]:mt-3',
         '[&>[data-slot=label]]:font-medium',
       )}
-      {...props}
     />
   );
 }
@@ -74,51 +69,47 @@ export function Field({ className, ...props }: HeadlessFieldProps) {
 export function Label({
   className,
   ...props
-}: { className?: string } & HeadlessLabelProps) {
+}: { className?: string } & Omit<Headless.LabelProps, 'className'>) {
   return (
-    <HeadlessLabel
+    <Headless.Label
+      data-slot="label"
       {...props}
       className={clsx(
         className,
-        'select-none text-base/6 text-slate-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white',
+        'select-none text-base/6 text-zinc-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white',
       )}
-      data-slot="label"
     />
   );
 }
 
 export function Description({
   className,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  disabled,
   ...props
-}: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
+}: { className?: string } & Omit<Headless.DescriptionProps, 'className'>) {
   return (
-    <HeadlessDescription
+    <Headless.Description
+      data-slot="description"
       {...props}
       className={clsx(
         className,
-        'text-base/6 text-slate-500 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-slate-400',
+        'text-base/6 text-zinc-500 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-zinc-400',
       )}
-      data-slot="description"
     />
   );
 }
 
 export function ErrorMessage({
   className,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  disabled,
   ...props
-}: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
+}: { className?: string } & Omit<Headless.DescriptionProps, 'className'>) {
   return (
-    <HeadlessDescription
+    <Headless.Description
+      data-slot="error"
       {...props}
       className={clsx(
         className,
         'text-base/6 text-red-600 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-red-500',
       )}
-      data-slot="error"
     />
   );
 }
