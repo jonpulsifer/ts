@@ -5,7 +5,7 @@
   "repository": "https://github.com/jonpulsifer/ts/tree/main/packages/k6-scripts",
   "private": true,
   "devDependencies": {
-    "@types/k6": "0.50.0",
+    "@types/k6": "0.51.0",
     "@types/node": "20.12.7",
     "@repo/eslint-config": "workspace:*",
     "ts-node": "10.9.2",
