@@ -1,4 +1,4 @@
-import { Card, Strong, Text } from '@repo/ui';
+import { Card, Divider, Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
 import Page from 'components/Page';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
@@ -32,18 +32,15 @@ const ProfilePage = async ({ params }: Props) => {
     <Page title="View Profile">
       <Card title={title}>
         <UserProfile currentUserId={user.id} user={profile} />
-        <div className="mt-4 sm:mt-8">
-          <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-zinc-200">
-            {isUserProfile ? 'Your' : `${nameOrEmailOrDefault}'s`} gifts
-          </h3>
-          {gifts.length ? (
-            <GiftTable currentUserId={user.id} gifts={gifts} />
-          ) : (
-            <Text>
-              No gifts found. <Strong>Add more gifts</Strong> to this wishlist!
-            </Text>
-          )}
-        </div>
+        <Divider className="my-4" />
+        <Heading level={2}>Gifts</Heading>
+        {gifts.length ? (
+          <GiftTable currentUserId={user.id} gifts={gifts} />
+        ) : (
+          <Text>
+            No gifts found. <Strong>Add more gifts</Strong> to this wishlist!
+          </Text>
+        )}
       </Card>
     </Page>
   );

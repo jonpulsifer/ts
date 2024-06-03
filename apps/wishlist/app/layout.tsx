@@ -1,5 +1,5 @@
-import '@repo/ui/styles.css';
 import './globals.css';
+import '@repo/ui/styles.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';

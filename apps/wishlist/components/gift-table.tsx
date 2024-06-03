@@ -24,7 +24,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
     return (
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
         <TableCell className="overflow-hidden">
-          <Text className="max-w-40 truncate">
+          <Text className="truncate">
             <Strong>{gift.name}</Strong>
           </Text>
           {showGiftOwner && gift.owner && (

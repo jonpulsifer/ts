@@ -1,6 +1,6 @@
 'use client';
 
-import { Transition } from '@headlessui/react-1';
+import { Transition } from '@headlessui/react';
 import { DoorClosed, Lightbulb } from 'lucide-react';
 import React from 'react';
 import { resolveValue, toast, Toaster, ToastIcon } from 'react-hot-toast';
@@ -11,19 +11,20 @@ export function Toast() {
       {(t) => (
         <Transition
           appear
-          className="flex transform p-4 rounded shadow-lg bg-white font-bold dark:bg-zinc-900 dark:text-zinc-200"
           enter="transition-all duration-150"
           enterFrom="opacity-0 scale-50"
           enterTo="opacity-100 scale-100"
           leave="transition-all duration-150"
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-75"
-          onClick={() => {
-            toast.dismiss(t.id);
-          }}
           show={t.visible}
         >
-          <div className="flex items-center">
+          <div
+            className="flex transform p-4 rounded shadow-lg bg-white font-bold dark:bg-zinc-900 dark:text-zinc-200"
+            onClick={() => {
+              toast.dismiss(t.id);
+            }}
+          >
             <ToastIcon toast={t} />
             <p className="px-2">{resolveValue(t.message, t)}</p>
           </div>

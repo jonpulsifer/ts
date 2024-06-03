@@ -1,5 +1,5 @@
 'use client';
-import { Disclosure, Transition } from '@headlessui/react-1';
+import { Disclosure, Transition } from '@headlessui/react';
 import { Avatar, AvatarProps } from '@repo/ui';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import React, { Suspense } from 'react';

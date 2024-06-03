@@ -18,12 +18,12 @@ function LoginPage() {
   const [showLoading, setShowLoading] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
-  const name = session?.user.name || session?.user.email;
 
   // if the user is already logged in, redirect them to the people page
   useEffect(() => {
     if (session?.user && status === 'authenticated') {
       router.push('/people');
+      const name = session?.user.name ?? session?.user.email;
       welcome(name);
     }
 
@@ -34,7 +34,7 @@ function LoginPage() {
     if (status === 'loading') {
       setShowLoading(true);
     }
-  }, [session, status, name, router]);
+  }, [session, status, router]);
 
   if (showLoading) {
     return <Spinner />;

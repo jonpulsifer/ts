@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo --port 3000",
+    "dev": "next dev --port 3000",
     "build": "prisma generate && prisma db push && next build",
     "start": "next start",
     "lint": "next lint --fix",
@@ -14,14 +14,14 @@
     "lucide-react": "0.383.0"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "2.0.0",
+    "@auth/prisma-adapter": "2.2.0",
     "@headlessui/react": "2.0.4",
     "@prisma/client": "5.12.1",
     "@repo/ui": "workspace:*",
     "@vercel/analytics": "1.2.2",
     "@vercel/speed-insights": "1.0.11",
     "next": "14.2.3",
-    "next-auth": "4.24.7",
+    "next-auth": "5.0.0-beta.19",
     "nookies": "2.5.2",
     "prettier": "3.2.5",
     "react": "18.3.1",

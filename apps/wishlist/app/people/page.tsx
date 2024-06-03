@@ -1,6 +1,5 @@
-import { Button } from '@repo/ui';
-import { Accordion } from 'components/accordion';
-import { GiftTable } from 'components/gift-table';
+import { Avatar, Heading, Link, Subheading } from '@repo/ui';
+import { Card } from '@repo/ui/card';
 import Page from 'components/Page';
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { Gift, ListChecks } from 'lucide-react';
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 const PeoplePage = async () => {
-  const { gifts, user } = await getVisibleGiftsForUser();
+  const { gifts } = await getVisibleGiftsForUser();
   const giftsByOwnerId = gifts.reduce<Record<string, GiftWithOwner[]>>(
     (acc, gift) => {
       const ownerId = gift.ownerId;
@@ -50,25 +49,30 @@ const PeoplePage = async () => {
         </div>
       </div>
     );
-    const button = (
-      <Button plain href={`/user/${ownerId}`}>
-        Profile
-      </Button>
-    );
+
     const avatar = {
       src: image,
       initials: name ? name[0].toUpperCase() : email[0].toUpperCase(),
     };
+
     return (
-      <Accordion
-        title={title}
-        subtitle={subtitleMarkup}
-        button={button}
-        avatar={avatar}
-        key={ownerId}
-      >
-        <GiftTable gifts={gifts} currentUserId={user.id} />
-      </Accordion>
+      <Card key={ownerId}>
+        <Link href={`/user/${ownerId}`}>
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row items-center gap-2">
+              <Avatar
+                src={avatar.src}
+                initials={avatar.initials}
+                className="size-12 bg-zinc-200/80 dark:bg-zinc-950 dark:text-indigo-500"
+              />
+              <div className="flex flex-col">
+                <Heading>{title}</Heading>
+                <Subheading>{subtitleMarkup}</Subheading>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </Card>
     );
   });
 

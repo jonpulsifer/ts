@@ -1,14 +1,13 @@
 /* eslint-disable no-console -- because we like to log */
 import { Prisma } from '@prisma/client';
+import { auth } from 'app/auth';
 import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth/next';
 
 import type {
   UserWithGifts,
   UserWithGiftsAndWishlists,
   UserWithGiftsWithOwners,
 } from '../types/prisma';
-import { authOptions } from './auth';
 import { prisma } from './prisma';
 
 const getMe = async () => {
@@ -175,7 +174,7 @@ const getVisibleGiftsForUserById = async (id: string) => {
 };
 
 const isAuthenticated = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session?.user) {
     console.error('could not get user from session, redirecting to login');
     return redirect('/login');
