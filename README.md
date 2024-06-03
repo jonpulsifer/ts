@@ -15,7 +15,7 @@ This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes th
 - `ui`: a stub React component library shared by both `web` and `docs` applications
 - `wishlist` a [Next.js](https://nextjs.org) app that uses firebase to store my family's christmas wishlist. It is deployed at [https://wishin.app](https://wishin.app)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+E
 
 ### Utilities
 
