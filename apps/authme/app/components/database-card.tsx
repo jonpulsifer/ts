@@ -1,6 +1,13 @@
 'use client';
 import { Card } from '@repo/ui/card';
-import { Strong, Text } from '@repo/ui/text';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@repo/ui/table';
 
 interface CardProps {
   version: string;
@@ -14,14 +21,23 @@ export function DatabaseCard({
   maxConnections,
 }: CardProps): JSX.Element {
   return (
-    <Card subtitle={version} title="CloudSQL">
-      <Text>
-        <Strong>This is the database.</Strong>
-      </Text>
-      <Text>Connections</Text>
-      <Text className="text-xs">{connections}</Text>
-      <Text>Max Connections</Text>
-      <Text className="text-xs">{maxConnections}</Text>
+    <Card subtitle={version} title="Database">
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableHeader>Current</TableHeader>
+            <TableHeader>Max</TableHeader>
+            <TableHeader>Version</TableHeader>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>{connections}</TableCell>
+            <TableCell>{maxConnections}</TableCell>
+            <TableCell>{version}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </Card>
   );
 }

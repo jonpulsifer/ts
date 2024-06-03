@@ -39,7 +39,7 @@ export function Login(): JSX.Element {
 
   const googleButton = (
     <button
-      className="flex w-full h-10 justify-center font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-slate-800 text-center inline-flex items-center bg-white text-black dark:bg-slate-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
+      className="flex w-full h-10 justify-center font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-zinc-800 text-center inline-flex items-center bg-white text-black dark:bg-zinc-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
       onClick={(e) => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- dunno wat do
         handleSignIn(e).catch(() => {});
@@ -78,7 +78,7 @@ export function Login(): JSX.Element {
 
   const button = (
     <button
-      className="flex w-full h-10 justify-center font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-slate-800 text-center inline-flex items-center bg-white text-black dark:bg-slate-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
+      className="flex w-full h-10 justify-center font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-zinc-800 text-center inline-flex items-center bg-white text-black dark:bg-zinc-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
       disabled={loading}
       onClick={(e) => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function -- dunno wat do

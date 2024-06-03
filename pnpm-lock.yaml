@@ -586,8 +586,11 @@ importers:
         specifier: 0.383.0
         version: 0.383.0(react@18.2.0)
       next:
-        specifier: 14.2.2
-        version: 14.2.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.*.*
+        version: 14.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react:
+        specifier: 18.*.*
+        version: 18.2.0
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -607,9 +610,6 @@ importers:
       postcss:
         specifier: 8.4.38
         version: 8.4.38
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
       tailwindcss:
         specifier: 3.4.3
         version: 3.4.3(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))

@@ -1,5 +1,5 @@
-import './globals.css';
 import '@repo/ui/styles.css';
+import './globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -26,7 +26,7 @@ function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <SessionProvider>
         <body
-          className={`bg-zinc-200 dark:bg-slate-950 dark:text-zinc-200 ${inter.className}`}
+          className={`bg-zinc-200 dark:bg-zinc-950 dark:text-zinc-200 ${inter.className}`}
         >
           <main className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</main>
         </body>

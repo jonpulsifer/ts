@@ -1,5 +1,5 @@
-import './globals.css';
 import '@repo/ui/styles.css';
+import './globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -23,7 +23,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html className="h-full w-full" lang="en">
       <body
-        className={`h-full w-full bg-zinc-200 dark:bg-zinc-950 ${inter.className} text-black dark:text-white`}
+        className={`h-full w-full dark:bg-zinc-950 bg-zinc-200 ${inter.className} text-black dark:text-white`}
       >
         <main className="flex flex-col h-full w-full">{children}</main>
       </body>

@@ -2,7 +2,14 @@
 import type { User } from '@prisma/client';
 import { Button } from '@repo/ui/button';
 import { Card } from '@repo/ui/card';
-import { Strong, Text } from '@repo/ui/text';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@repo/ui/table';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
@@ -26,13 +33,18 @@ export function UserCard({ user }: UserCardProps): JSX.Element | null {
   const { email, name, id } = currentUser;
   return (
     <Card subtitle={email} title={name}>
-      <div className="">
-        <Text>
-          <Strong>This is you.</Strong>
-        </Text>
-        <p className="text-sm text-gray-500">ID</p>
-        <pre className="text-xs">{id}</pre>
-      </div>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableHeader>ID</TableHeader>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>{id}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
       <Button onClick={() => signOut({ redirect: false })}>Logout</Button>
     </Card>
   );
