@@ -10,7 +10,7 @@
     "typescript": ">=2.7"
   },
   "devDependencies": {
-    "@headlessui/tailwindcss": "0.2.0",
+    "@headlessui/tailwindcss": "0.2.1",
     "@repo/typescript-config": "workspace:*",
     "tailwindcss": "3.4.3"
   }
