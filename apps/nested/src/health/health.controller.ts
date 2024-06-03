@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import {
   HealthCheck,
-  type HealthCheckService,
-  type HttpHealthIndicator,
+  HealthCheckService,
+  HttpHealthIndicator,
 } from '@nestjs/terminus';
 
 @Controller('health')

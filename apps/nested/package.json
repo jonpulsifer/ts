@@ -53,7 +53,7 @@
       "json",
       "ts"
     ],
-    "rootDir": ".",
+    "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.ts$": "ts-jest"
@@ -61,13 +61,7 @@
     "collectCoverageFrom": [
       "**/*.ts"
     ],
-    "testEnvironment": "node",
-    "coverageDirectory": "./coverage",
-    "roots": [
-      "<rootDir>/src/"
-    ],
-    "moduleNameMapper": {
-      "^@app/wat(|/.*)$": "<rootDir>/libs/wat/src/$1"
-    }
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }
