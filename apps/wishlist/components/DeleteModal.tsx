@@ -42,25 +42,25 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              enterFrom="opacity-0 tranzinc-y-4 sm:tranzinc-y-0 sm:scale-95"
+              enterTo="opacity-100 tranzinc-y-0 sm:scale-100"
               leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              leaveFrom="opacity-100 tranzinc-y-0 sm:scale-100"
+              leaveTo="opacity-0 tranzinc-y-4 sm:tranzinc-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-zinc-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <form action={action}>
                   <input name="id" type="hidden" value={gift.id} />
 
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
+                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-zinc-800 sm:mx-0 sm:h-10 sm:w-10">
                         <Trash />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title
                           as="h3"
-                          className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200"
+                          className="text-base font-semibold leading-6 text-gray-900 dark:text-zinc-200"
                         >
                           Delete {gift.name}?
                         </Dialog.Title>
@@ -76,7 +76,7 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                     <button
                       className="bg-red-600 hover:bg-red-500 dark:hover:bg-red-900 inline-flex w-full justify-center rounded-md px-3 py-2 font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                       type="submit"
@@ -84,7 +84,7 @@ export default function Modal({ isOpen, setIsOpen, gift, action }: Props) {
                       Delete
                     </button>
                     <button
-                      className="font-semibold text-gray-900 mt-3 dark:text-slate-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-slate-900 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                      className="font-semibold text-gray-900 mt-3 dark:text-zinc-400 inline-flex w-full justify-center rounded-md bg-white dark:bg-zinc-900 px-3 py-2 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={() => {
                         setIsOpen(false);
                       }}

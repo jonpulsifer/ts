@@ -1,5 +1,5 @@
-import './globals.css';
 import '@repo/ui/styles.css';
+import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -23,7 +23,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html className="h-full w-full" lang="en">
       <body
-        className={`h-full w-full bg-zinc-200 dark:bg-slate-950 ${inter.className} text-black dark:text-zinc-100`}
+        className={`h-full w-full bg-zinc-200 dark:bg-zinc-950 ${inter.className} text-black dark:text-zinc-100`}
       >
         <ErrorBoundary>
           <SessionProvider>

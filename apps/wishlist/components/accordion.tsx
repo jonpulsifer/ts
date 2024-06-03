@@ -27,13 +27,13 @@ export const Accordion = ({
         square
         src={avatar.src}
         initials={avatar.initials}
-        className="size-12 bg-zinc-200/80 dark:bg-slate-950 dark:text-indigo-500"
+        className="size-12 bg-zinc-200/80 dark:bg-zinc-950 dark:text-indigo-500"
       />
     </div>
   ) : null;
 
   return (
-    <div className="divide-y dark:divide-slate-800 divide-zinc-200 overflow-hidden xs:rounded-lg bg-white dark:bg-slate-900 dark:text-zinc-400 shadow shadow-sm border-transparent">
+    <div className="divide-y dark:divide-zinc-800 divide-zinc-200 overflow-hidden xs:rounded-lg bg-white dark:bg-zinc-900 dark:text-zinc-400 shadow shadow-sm border-transparent">
       <Disclosure defaultOpen={isOpen}>
         {({ open }) => (
           <>
@@ -55,7 +55,7 @@ export const Accordion = ({
                   </>
                   {avatarMarkup}
                   <div className="text-left">
-                    <h1 className="text-xl font-semibold leading-6 text-zinc-900 dark:text-slate-200">
+                    <h1 className="text-xl font-semibold leading-6 text-zinc-900 dark:text-zinc-200">
                       {title}
                     </h1>
                     <div>{subtitle}</div>
@@ -66,11 +66,11 @@ export const Accordion = ({
             </div>
             <Transition
               enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              enterFrom="opacity-0 tranzinc-y-4 sm:tranzinc-y-0 sm:scale-95"
+              enterTo="opacity-100 tranzinc-y-0 sm:scale-100"
               leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              leaveFrom="opacity-100 tranzinc-y-0 sm:scale-100"
+              leaveTo="opacity-0 tranzinc-y-4 sm:tranzinc-y-0 sm:scale-95"
             >
               <Suspense>
                 <Transition.Child

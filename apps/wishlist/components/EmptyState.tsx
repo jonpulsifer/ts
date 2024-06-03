@@ -39,14 +39,14 @@ export function EmptyState({ children, title, subtitle, action }: Props) {
       />
       <div className="flex flex-col items-center h-full justify-center">
         <div className="flex flex-col items-center gap-4">
-          <h1 className="text-2xl font-bold text-black dark:text-slate-200">
+          <h1 className="text-2xl font-bold text-black dark:text-zinc-200">
             {title}
           </h1>
-          <p className="text-black-400 dark:text-slate-200 font-semibold">
+          <p className="text-black-400 dark:text-zinc-200 font-semibold">
             {subtitle}
           </p>
         </div>
-        <div className="text-gray-600 dark:text-slate-400 text-sm">
+        <div className="text-gray-600 dark:text-zinc-400 text-sm">
           {children}
         </div>
         {action ? (

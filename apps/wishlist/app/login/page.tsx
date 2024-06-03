@@ -61,7 +61,7 @@ function LoginPage() {
       </div>
 
       <div className="mt-10 w-full max-w-sm space-y-4">
-        <h1 className="dark:text-slate-200 font-semibold text-center items-center text-xl">
+        <h1 className="dark:text-zinc-200 font-semibold text-center items-center text-xl">
           Sign in to continue
         </h1>
         <form
@@ -73,7 +73,7 @@ function LoginPage() {
           {/* <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium leading-6 text-gray-900 dark:text-slate-200"
+              className="block text-sm font-medium leading-6 text-gray-900 dark:text-zinc-200"
             >
               Email address
             </label>
@@ -85,7 +85,7 @@ function LoginPage() {
                 autoComplete="email"
                 placeholder="santa@example.com"
                 required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-zinc-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-zinc-900 dark:focus:bg-zinc-800 dark:placeholder-zinc-700"
               />
             </div>
           </div>
@@ -94,7 +94,7 @@ function LoginPage() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900 dark:text-slate-200"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-zinc-200"
               >
                 Password
               </label>
@@ -114,7 +114,7 @@ function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-zinc-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-zinc-900 dark:focus:bg-zinc-800 dark:placeholder-zinc-700"
               />
             </div>
           </div>
@@ -127,14 +127,14 @@ function LoginPage() {
               {register ? 'Create Account' : 'Sign in'}
             </button>
           </div>
-          <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 dark:before:border-slate-400 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300 dark:after:border-slate-400">
-            <p className="mx-4 mb-0 text-center font-semibold dark:text-slate-400">
+          <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 dark:before:border-zinc-400 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300 dark:after:border-zinc-400">
+            <p className="mx-4 mb-0 text-center font-semibold dark:text-zinc-400">
               OR
             </p>
           </div> */}
           <div className="flex flex-row items-center justify-center">
             <button
-              className="flex justify-center font-semibold w-full h-10 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-slate-800 text-center inline-flex items-center bg-white text-black dark:bg-slate-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
+              className="flex justify-center font-semibold w-full h-10 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-zinc-800 text-center inline-flex items-center bg-white text-black dark:bg-zinc-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
               onClick={(e) => {
                 handleGoogle(e);
               }}

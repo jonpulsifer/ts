@@ -33,7 +33,7 @@ const ProfilePage = async ({ params }: Props) => {
       <Card title={title}>
         <UserProfile currentUserId={user.id} user={profile} />
         <div className="mt-4 sm:mt-8">
-          <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-slate-200">
+          <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-zinc-200">
             {isUserProfile ? 'Your' : `${nameOrEmailOrDefault}'s`} gifts
           </h3>
           {gifts.length ? (

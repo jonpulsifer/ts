@@ -34,7 +34,7 @@ const ClaimedPage = async () => {
     >
       <div className="p-4">
         <p>
-          <span className="font-semibold dark:text-slate-200 text-black dark:text-slate-200">
+          <span className="font-semibold dark:text-zinc-200 text-black dark:text-zinc-200">
             Claim a gift
           </span>{' '}
           before they&apos;re all gone.

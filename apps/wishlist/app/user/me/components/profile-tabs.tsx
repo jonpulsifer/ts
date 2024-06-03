@@ -36,7 +36,7 @@ const ProfileTabs = ({ user, gifts }: Props) => {
   ];
 
   const tabClass =
-    'px-4 py-2 dark:text-white ui-selected:font-bold font-semibold ui-selected:border-b-2 border-b border-gray-200 dark:border-slate-800 dark:ui-selected:border-indigo-500 ui-selected:text-indigo-600 ui-selected:border-indigo-600 dark:hover:bg-slate-950 hover:bg-slate-950/[0.05]';
+    'px-4 py-2 dark:text-white ui-selected:font-bold font-semibold ui-selected:border-b-2 border-b border-gray-200 dark:border-zinc-800 dark:ui-selected:border-indigo-500 ui-selected:text-indigo-600 ui-selected:border-indigo-600 dark:hover:bg-zinc-950 hover:bg-zinc-950/[0.05]';
   return (
     <Card>
       <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>

@@ -23,14 +23,14 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
               square
               src={user.image}
               initials={!user.image ? initials : undefined}
-              className="size-10 sm:size-12 bg-zinc-200 dark:bg-slate-950 dark:text-indigo-500"
+              className="size-10 sm:size-12 bg-zinc-200 dark:bg-zinc-950 dark:text-indigo-500"
             />
             <div>
               <Text>
                 <Strong>{displayName}</Strong>
               </Text>
-              {/* <div className="text-slate-500">
-                <a href="#" className="hover:text-slate-700">
+              {/* <div className="text-zinc-500">
+                <a href="#" className="hover:text-zinc-700">
                   {user.email}
                 </a>
               </div> */}
@@ -38,7 +38,7 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
           </div>
         </TableCell>
         <TableCell>
-          <Badge color="slate">Offline</Badge>
+          <Badge color="zinc">Offline</Badge>
         </TableCell>
       </TableRow>
     );

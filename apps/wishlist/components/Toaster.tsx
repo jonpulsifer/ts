@@ -11,7 +11,7 @@ export function Toast() {
       {(t) => (
         <Transition
           appear
-          className="flex transform p-4 rounded shadow-lg bg-white font-bold dark:bg-slate-900 dark:text-slate-200"
+          className="flex transform p-4 rounded shadow-lg bg-white font-bold dark:bg-zinc-900 dark:text-zinc-200"
           enter="transition-all duration-150"
           enterFrom="opacity-0 scale-50"
           enterTo="opacity-100 scale-100"
@@ -45,7 +45,7 @@ export const dismissable = (content: string | JSX.Element) => {
         }}
       >
         <button
-          className="fixed top-1 right-2 text-slate-200 hover:text-slate-600 dark:hover:text-indigo-400 dark:text-indigo-600 pl-4"
+          className="fixed top-1 right-2 text-zinc-200 hover:text-zinc-600 dark:hover:text-indigo-400 dark:text-indigo-600 pl-4"
           onClick={() => {
             toast.dismiss(t.id);
           }}

@@ -28,7 +28,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
             <Strong>{gift.name}</Strong>
           </Text>
           {showGiftOwner && gift.owner && (
-            <span className="text-xs text-slate-400">{gift.owner.name}</span>
+            <span className="text-xs text-zinc-400">{gift.owner.name}</span>
           )}
         </TableCell>
         <TableCell className="text-right">

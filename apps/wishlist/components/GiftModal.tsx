@@ -81,17 +81,17 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              enterFrom="opacity-0 tranzinc-y-4 sm:tranzinc-y-0 sm:scale-95"
+              enterTo="opacity-100 tranzinc-y-0 sm:scale-100"
               leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              leaveFrom="opacity-100 tranzinc-y-0 sm:scale-100"
+              leaveTo="opacity-0 tranzinc-y-4 sm:tranzinc-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 w-full sm:w-full sm:max-w-lg border border-gray-50 dark:border-indigo-950">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white dark:bg-zinc-900 text-left shadow-xl transition-all sm:my-8 w-full sm:w-full sm:max-w-lg border border-gray-50 dark:border-indigo-950">
                 <form action={handleAddGift} ref={formRef}>
                   <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
-                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-slate-800 sm:mx-0 sm:h-10 sm:w-10">
+                      <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-zinc-800 sm:mx-0 sm:h-10 sm:w-10">
                         <div
                           aria-hidden="true"
                           className="h-6 w-6 text-indigo-600 dark:text-indigo-400"
@@ -102,7 +102,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title
                           as="h3"
-                          className="text-base font-semibold leading-6 text-gray-900 dark:text-slate-200"
+                          className="text-base font-semibold leading-6 text-gray-900 dark:text-zinc-200"
                         >
                           Add a new gift!
                         </Dialog.Title>
@@ -119,7 +119,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                             </label>
                             <input
                               autoComplete="name"
-                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-zinc-900 dark:focus:bg-zinc-800 dark:placeholder-zinc-700"
                               name="name"
                               placeholder="Red Mittens"
                               type="text"
@@ -134,7 +134,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                             </label>
                             <input
                               autoComplete="url"
-                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-zinc-900 dark:focus:bg-zinc-800 dark:placeholder-zinc-700"
                               inputMode="url"
                               name="url"
                               placeholder="https://amazon.ca/ur-favourite-slippers"
@@ -148,7 +148,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                             </label>
                             <textarea
                               autoComplete="description"
-                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-slate-900 dark:focus:bg-slate-800 dark:placeholder-slate-700"
+                              className="form-control block w-full px-4 py-2 text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-zinc-900 dark:focus:bg-zinc-800 dark:placeholder-zinc-700"
                               name="description"
                               placeholder="..."
                             />
@@ -157,7 +157,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-slate-900 px-4 py-3 sm:px-6 flex flex-row-reverse gap-4">
+                  <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 sm:px-6 flex flex-row-reverse gap-4">
                     <Submit />
                     <Button
                       plain
