@@ -1,4 +1,5 @@
 import type { User } from '@prisma/client';
+import { Fieldset, Label, Text } from '@repo/ui';
 
 interface UserProfileProps {
   user: User;
@@ -16,57 +17,45 @@ export function UserProfile({ user }: UserProfileProps) {
   } = user;
 
   const nameMarkup = name ? (
-    <div>
-      <div className="text-xs">Name</div>
-      <div className="text-sm font-bold dark:text-gray-200 col-span-1">
-        {name || 'n/a'}
-      </div>
-    </div>
+    <Fieldset>
+      <Label>Name</Label>
+      <Text className="col-span-1">{name || 'n/a'}</Text>
+    </Fieldset>
   ) : null;
 
   const emailMarkup = email ? (
-    <div>
-      <div className="text-xs">Email</div>
-      <div className="text-sm font-bold dark:text-gray-200 col-span-1">
-        {email}
-      </div>
-    </div>
+    <Fieldset>
+      <Label>Email</Label>
+      <Text className="col-span-1">{email}</Text>
+    </Fieldset>
   ) : null;
 
   const addressMarkup = address ? (
-    <div className="sm:col-span-3">
-      <div className="text-xs">Address</div>
-      <div className="text-sm font-bold dark:text-gray-200 col-span-2">
-        {address || 'n/a'}
-      </div>
-    </div>
+    <Fieldset className="sm:col-span-3">
+      <Label>Address</Label>
+      <Text className="col-span-2">{address || 'n/a'}</Text>
+    </Fieldset>
   ) : null;
 
   const shirtSizeMarkup = shirtSize ? (
-    <div className="sm:col-span-1">
-      <div className="text-xs">Shirt Size</div>
-      <div className="text-sm font-bold dark:text-gray-200">
-        {shirtSize || 'n/a'}
-      </div>
-    </div>
+    <Fieldset className="sm:col-span-1">
+      <Label>Shirt Size</Label>
+      <Text>{shirtSize || 'n/a'}</Text>
+    </Fieldset>
   ) : null;
 
   const shoeSizeMarkup = shoeSize ? (
-    <div className="sm:col-span-1">
-      <div className="text-xs">Shoe Size</div>
-      <div className="text-sm font-bold dark:text-gray-200">
-        {shoeSize || 'n/a'}
-      </div>
-    </div>
+    <Fieldset className="sm:col-span-1">
+      <Label>Shoe Size</Label>
+      <Text>{shoeSize || 'n/a'}</Text>
+    </Fieldset>
   ) : null;
 
   const pantSizeMarkup = pantSize ? (
-    <div className="sm:col-span-1">
-      <div className="text-xs">Pant Size</div>
-      <div className="text-sm font-bold dark:text-gray-200">
-        {pantSize || 'n/a'}
-      </div>
-    </div>
+    <Fieldset className="sm:col-span-1">
+      <Label>Pant Size</Label>
+      <Text>{pantSize || 'n/a'}</Text>
+    </Fieldset>
   ) : null;
 
   const sizesMarkup =

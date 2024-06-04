@@ -1,6 +1,5 @@
 import { Avatar, Heading, Link, Subheading } from '@repo/ui';
 import { Card } from '@repo/ui/card';
-import Page from 'components/Page';
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { Gift, ListChecks } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -76,11 +75,7 @@ const PeoplePage = async () => {
     );
   });
 
-  return (
-    <Page title="People">
-      <div className="grid gap-4 sm:gap-8">{ownerCards}</div>
-    </Page>
-  );
+  return <div className="grid gap-4 sm:gap-8">{ownerCards}</div>;
 };
 
 export default PeoplePage;

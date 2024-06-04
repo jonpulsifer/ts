@@ -1,7 +1,19 @@
 'use client';
 
 import type { Prisma } from '@prisma/client';
-import { Card } from '@repo/ui/card';
+import {
+  Button,
+  Divider,
+  Field,
+  Heading,
+  Input,
+  Strong,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Text,
+} from '@repo/ui';
 import { joinWishlist, leaveWishlist } from 'app/actions';
 import { DoorOpen, HeartHandshake } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -21,14 +33,13 @@ interface Props {
   user: UserWithWishlists;
 }
 
-function FamilyList({ wishlists, user }: Props) {
+function Wishlists({ wishlists, user }: Props) {
   const handleLeaveWishlist = async (wishlist: WishlistsWithoutPasswords) => {
-    console.log('leave', wishlist);
     const result = await leaveWishlist({
       userId: user.id,
       wishlistId: wishlist.id,
     });
-    if (result.error) {
+    if (result?.error) {
       toast.error(result.error);
       toast.error('Something went wrong. Please try again.');
     } else {
@@ -46,9 +57,8 @@ function FamilyList({ wishlists, user }: Props) {
       wishlistId: wishlist.id,
       password: password as string,
     });
-    if (result.error) {
-      toast.error(result.error);
-      toast.error('Something went wrong. Please try again.');
+    if (result?.error) {
+      toast.error(result.error || 'Something went wrong.');
     } else {
       toast.success(`Joined ${wishlist.name}!`);
     }
@@ -62,51 +72,41 @@ function FamilyList({ wishlists, user }: Props) {
           className="flex flex-row items-center"
           name={wishlist.id}
         >
-          <input
-            autoComplete="off"
-            className="form-control block w-24 sm:w-48 px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 dark:border-dark-800 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-indigo-600 focus:outline-none dark:border-gray-800 dark:text-gray-400 dark:focus:text-gray-200 dark:bg-gray-900 dark:focus:bg-gray-800 dark:placeholder-gray-700"
-            inputMode="numeric"
-            name="password"
-            pattern="\d{1,4}"
-            placeholder="Pin"
-            type="number"
-          />
-          <button
-            className="inline-flex ml-4 w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto "
-            type="submit"
-          >
-            <div className="flex">
-              <HeartHandshake />
-            </div>
+          <Field>
+            <Input
+              autoComplete="off"
+              inputMode="numeric"
+              name="password"
+              pattern="\d{1,4}"
+              placeholder="Pin"
+              type="number"
+            />
+          </Field>
+
+          <Button className="ml-4 w-24" type="submit">
+            <HeartHandshake />
             Join
-          </button>
+          </Button>
         </form>
       );
 
       const inWishlist = user.wishlists.find((w) => w.id === wishlist.id);
       const actionMarkup = inWishlist ? (
-        <button
-          className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 w-auto"
+        <Button
           onClick={() => handleLeaveWishlist(inWishlist)}
+          className="ml-4 w-24"
           type="submit"
         >
-          <div className="flex items-center">
-            <div className="flex">
-              <DoorOpen />
-            </div>
-            Leave
-          </div>
-        </button>
+          <DoorOpen />
+          Leave
+        </Button>
       ) : (
         form
       );
 
       return (
-        <tr
-          className="border-t hover:bg-gray-100 dark:hover:bg-gray-950 transition dark:border-gray-800 ease-in-out duration-300"
-          key={`${wishlist.name}-${wishlist.id}`}
-        >
-          <td className="w-full py-2">
+        <TableRow key={`${wishlist.name}-${wishlist.id}`}>
+          <TableCell>
             <div className="flex items-center p-2 px-4">
               <div className="mr-4 sm:flex inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-gray-800">
                 <span className="font-medium text-violet-600 dark:text-violet-500">
@@ -120,23 +120,24 @@ function FamilyList({ wishlists, user }: Props) {
                 {actionMarkup}
               </div>
             </div>
-          </td>
-        </tr>
+          </TableCell>
+        </TableRow>
       );
     });
   };
 
   return wishlists.length ? (
-    <Card
-      subtitle="Find your family and join their wishlist by entering a matching pin"
-      title="Family Wishlists"
-    >
-      <div className="flex flex-row overflow-x-auto select-none">
-        <table className="table-auto w-full rounded-lg">
-          <tbody className="rounded rounded-xl">{familyList(wishlists)}</tbody>
-        </table>
-      </div>
-    </Card>
+    <>
+      <Heading>Available Wishlists</Heading>
+      <Divider soft className="my-4" />
+      <Text className="my-4">
+        <Strong>Join a wishlist</Strong> to see what your family wants for the
+        holidays.
+      </Text>
+      <Table>
+        <TableBody>{familyList(wishlists)}</TableBody>
+      </Table>
+    </>
   ) : (
     <EmptyState
       subtitle="Something is broken, talk to the webmaster"
@@ -147,4 +148,4 @@ function FamilyList({ wishlists, user }: Props) {
   );
 }
 
-export default FamilyList;
+export default Wishlists;

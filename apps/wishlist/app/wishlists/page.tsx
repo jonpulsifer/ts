@@ -1,5 +1,4 @@
-import FamilyList from 'components/FamilyList';
-import Page from 'components/Page';
+import Wishlists from 'components/wishlists';
 import { getWishlists } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 
@@ -10,11 +9,7 @@ export const metadata: Metadata = {
 
 const WishlistsPage = async () => {
   const { wishlists, user } = await getWishlists();
-  return (
-    <Page title="Wishlists">
-      <FamilyList user={user} wishlists={wishlists} />
-    </Page>
-  );
+  return <Wishlists user={user} wishlists={wishlists} />;
 };
 
 export default WishlistsPage;

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
-import LoginPage from './login/page';
+import { auth } from './auth';
 
 export const metadata: Metadata = {
   title: 'Login | wishin.app',
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  return <LoginPage />;
+  const session = await auth();
+  if (session?.user) {
+    redirect('/people');
+  }
+  redirect('/login');
 };
 
 export default Home;

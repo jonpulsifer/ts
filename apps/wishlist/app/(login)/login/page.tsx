@@ -6,8 +6,8 @@ import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-import Spinner from '../../components/Spinner';
-import santa from '../../public/santaicon.png';
+import Spinner from '../../../components/Spinner';
+import santa from '../../../public/santaicon.png';
 
 const welcome = (name?: string | null) => {
   const text = name ? `Welcome ${name}!` : 'Welcome!';
@@ -22,9 +22,9 @@ function LoginPage() {
   // if the user is already logged in, redirect them to the people page
   useEffect(() => {
     if (session?.user && status === 'authenticated') {
-      router.push('/people');
       const name = session?.user.name ?? session?.user.email;
       welcome(name);
+      router.push('/people');
     }
 
     if (status === 'unauthenticated') {
@@ -55,13 +55,13 @@ function LoginPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
         <Image priority alt="Santa" height={100} src={santa} width={100} />
 
-        <h1 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight text-black dark:text-white">
+        <h1 className="mt-4 text-center text-4xl font-bold leading-9 tracking-tight">
           wishin.app
         </h1>
       </div>
 
       <div className="mt-10 w-full max-w-sm space-y-4">
-        <h1 className="dark:text-zinc-200 font-semibold text-center items-center text-xl">
+        <h1 className="font-semibold text-center items-center text-xl">
           Sign in to continue
         </h1>
         <form

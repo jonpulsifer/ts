@@ -41,11 +41,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   });
 
   return (
-    <Table
-      bleed
-      dense
-      className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]"
-    >
+    <Table dense>
       <TableBody>{tableRows}</TableBody>
     </Table>
   );

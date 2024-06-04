@@ -1,6 +1,5 @@
-import { Card, Divider, Heading, Strong, Text } from '@repo/ui';
+import { Divider, Heading, Strong, Subheading, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
-import Page from 'components/Page';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 
@@ -29,20 +28,20 @@ const ProfilePage = async ({ params }: Props) => {
     ? `Your Profile`
     : `${nameOrEmailOrDefault}'s Profile`;
   return (
-    <Page title="View Profile">
-      <Card title={title}>
-        <UserProfile currentUserId={user.id} user={profile} />
-        <Divider className="my-4" />
-        <Heading level={2}>Gifts</Heading>
-        {gifts.length ? (
-          <GiftTable currentUserId={user.id} gifts={gifts} />
-        ) : (
-          <Text>
-            No gifts found. <Strong>Add more gifts</Strong> to this wishlist!
-          </Text>
-        )}
-      </Card>
-    </Page>
+    <>
+      <Heading>{title}</Heading>
+      <Divider soft className="my-4" />
+      <UserProfile currentUserId={user.id} user={profile} />
+      <Divider soft className="my-4" />
+      <Subheading level={2}>Gifts</Subheading>
+      {gifts.length ? (
+        <GiftTable currentUserId={user.id} gifts={gifts} />
+      ) : (
+        <Text>
+          No gifts found. <Strong>Add more gifts</Strong> to this wishlist!
+        </Text>
+      )}
+    </>
   );
 };
 

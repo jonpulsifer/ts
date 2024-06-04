@@ -1,4 +1,3 @@
-import Page from 'components/Page';
 import { getGiftsWithOwnerByUserId, getMe } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 
@@ -12,11 +11,7 @@ export const metadata: Metadata = {
 const MePage = async () => {
   const user = await getMe();
   const gifts = await getGiftsWithOwnerByUserId(user.id);
-  return (
-    <Page title="My Profile">
-      <ProfileTabs user={user} gifts={gifts} />
-    </Page>
-  );
+  return <ProfileTabs user={user} gifts={gifts} />;
 };
 
 export default MePage;

@@ -1,15 +1,14 @@
-import './globals.css';
+import '../globals.css';
 import '@repo/ui/styles.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import ErrorBoundary from 'components/ErrorBoundary';
-import { Nav } from 'components/layout-with-nav';
-import Toast from 'components/Toaster';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import { SessionProvider } from './providers';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import Toast from '../../components/Toaster';
+import { SessionProvider } from '../providers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,10 +25,10 @@ function Layout({ children }: { children: React.ReactNode }) {
       <body className={`h-full w-full ${inter.className}`}>
         <ErrorBoundary>
           <SessionProvider>
-            <Nav>
+            <main className="flex flex-col h-full w-full bg-zinc-200 dark:text-zinc-100 dark:bg-zinc-900">
               {children}
               <Toast />
-            </Nav>
+            </main>
           </SessionProvider>
         </ErrorBoundary>
         <SpeedInsights />

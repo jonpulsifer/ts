@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 
 import EmptyState from '../../../../components/EmptyState';
 import GiftForm from '../../../../components/GiftForm';
-import Page from '../../../../components/Page';
 import { getGiftById } from '../../../../lib/prisma-ssr';
 
 interface PageProps {
@@ -26,11 +25,9 @@ const EditGiftPage = async ({ params }: PageProps) => {
     return EmptyState({ title: 'Gift not found' });
   }
   return (
-    <Page title={`Edit ${gift.name}`}>
-      <Card>
-        <GiftForm gift={gift} />
-      </Card>
-    </Page>
+    <Card>
+      <GiftForm gift={gift} />
+    </Card>
   );
 };
 

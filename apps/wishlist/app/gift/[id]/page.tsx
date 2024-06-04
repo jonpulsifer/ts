@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { GiftCard } from '../../../components/Gift';
-import Page from '../../../components/Page';
 import { getGiftById, getUserWithGiftsById } from '../../../lib/prisma-ssr';
 
 interface PageProps {
@@ -25,11 +24,7 @@ const GiftPage = async ({ params }: PageProps) => {
     notFound();
   }
   const user = await getUserWithGiftsById(gift.ownerId);
-  return (
-    <Page title={gift.name}>
-      <GiftCard gift={gift} user={user} />
-    </Page>
-  );
+  return <GiftCard gift={gift} user={user} />;
 };
 
 export default GiftPage;
