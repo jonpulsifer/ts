@@ -48,14 +48,17 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   });
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableHeader>Claimed Gifts</TableHeader>
-          <TableHeader className="text-right my-4">Actions</TableHeader>
-        </TableRow>
-      </TableHead>
-      <TableBody>{tableRows}</TableBody>
-    </Table>
+    <>
+      <Text>Here is a list of all your gifts.</Text>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableHeader>Gifts</TableHeader>
+            <TableHeader className="text-right my-4">Actions</TableHeader>
+          </TableRow>
+        </TableHead>
+        <TableBody>{tableRows}</TableBody>
+      </Table>
+    </>
   );
 }

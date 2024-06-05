@@ -131,7 +131,7 @@ export async function NavBar({ user }: NavProps) {
               <UserIcon size={16} />
               <DropdownLabel>My profile</DropdownLabel>
             </DropdownItem>
-            <DropdownItem href="/user/me">
+            <DropdownItem href="/user/settings">
               <CogIcon size={16} />
               <DropdownLabel>Settings</DropdownLabel>
             </DropdownItem>

@@ -21,12 +21,12 @@ const description = 'A wishlist app for not everyone';
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html className="h-full w-full" lang="en">
-      <body className={`h-full w-full ${inter.className}`}>
+      <body
+        className={`h-full w-full ${inter.className} bg-zinc-200 dark:text-zinc-100 dark:bg-zinc-900`}
+      >
         <ErrorBoundary>
           <SessionProvider>
-            <main className="flex flex-col h-full w-full bg-zinc-200 dark:text-zinc-100 dark:bg-zinc-900">
-              {children}
-            </main>
+            <main className="flex flex-col h-full w-full">{children}</main>
           </SessionProvider>
         </ErrorBoundary>
         <SpeedInsights />
