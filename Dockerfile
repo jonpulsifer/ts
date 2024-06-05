@@ -1,6 +1,6 @@
 FROM node:20-alpine@sha256:389ae25ab30b4739d863c6116a686901ae99e9ccaaed524a0db9481531266f82 AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo
+RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo@2
 
 FROM base AS builder
 ENV TURBO_TELEMETRY_DISABLED=1
