@@ -1,5 +1,14 @@
-import { Avatar, Heading, Link, Subheading } from '@repo/ui';
-import { Card } from '@repo/ui/card';
+import {
+  Avatar,
+  Divider,
+  Heading,
+  Strong,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Text,
+} from '@repo/ui';
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { Gift, ListChecks } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -25,7 +34,7 @@ const PeoplePage = async () => {
     {},
   );
 
-  const ownerCards = Object.keys(giftsByOwnerId).map((ownerId) => {
+  const tableRows = Object.keys(giftsByOwnerId).map((ownerId) => {
     const gifts = giftsByOwnerId[ownerId];
     const title = gifts[0].owner.name || gifts[0].owner.email;
     const claimedGifts = gifts.filter((gift) => gift.claimedById);
@@ -36,7 +45,7 @@ const PeoplePage = async () => {
     const subtitleMarkup = (
       <div
         key={ownerId}
-        className="flex flex-row gap-4 text-xs text-zinc-500 dark:text-zinc-400"
+        className="flex flex-row gap-4 text-sm text-zinc-500 dark:text-zinc-400"
       >
         <div className="flex flex-row items-center">
           <Gift width={16} className="mr-1" />
@@ -55,27 +64,38 @@ const PeoplePage = async () => {
     };
 
     return (
-      <Card key={ownerId}>
-        <Link href={`/user/${ownerId}`}>
-          <div className="flex flex-row justify-between">
-            <div className="flex flex-row items-center gap-2">
-              <Avatar
-                src={avatar.src}
-                initials={avatar.initials}
-                className="size-12 bg-zinc-200/80 dark:bg-zinc-950 dark:text-indigo-500"
-              />
-              <div className="flex flex-col">
-                <Heading>{title}</Heading>
-                <Subheading>{subtitleMarkup}</Subheading>
-              </div>
+      <TableRow key={ownerId} href={`/user/${ownerId}`}>
+        <TableCell>
+          <div className="flex items-center gap-4 text-red-600">
+            <Avatar
+              src={avatar.src}
+              initials={avatar.initials}
+              className="size-12"
+            />
+            <div className="flex flex-col">
+              <Heading>{title}</Heading>
+              {subtitleMarkup}
             </div>
           </div>
-        </Link>
-      </Card>
+        </TableCell>
+      </TableRow>
     );
   });
 
-  return <div className="grid gap-4 sm:gap-8">{ownerCards}</div>;
+  return (
+    <>
+      <Heading>👨‍👩‍👧‍👦 People</Heading>
+      <Divider soft className="my-4" />
+      <Text>
+        These are all of the people <Strong>in your wishlists</Strong> and their
+        gifts. You can <Strong>view someone&apos;s profile by clicking</Strong>{' '}
+        on their name.
+      </Text>
+      <Table bleed striped>
+        <TableBody>{tableRows}</TableBody>
+      </Table>
+    </>
+  );
 };
 
 export default PeoplePage;

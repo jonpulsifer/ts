@@ -1,10 +1,9 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
+import EmptyState from 'components/EmptyState';
 import { GiftTable } from 'components/gift-table';
+import { getClaimedGiftsForMe } from 'lib/prisma-ssr';
 import { Gift } from 'lucide-react';
 import type { Metadata } from 'next';
-
-import EmptyState from '../../components/EmptyState';
-import { getClaimedGiftsForMe } from '../../lib/prisma-ssr';
 
 export const metadata: Metadata = {
   title: 'Claimed Gifts',

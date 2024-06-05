@@ -1,5 +1,12 @@
 'use client';
-import { Table, TableBody, TableCell, TableRow } from '@repo/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@repo/ui/table';
 import { Strong, Text } from '@repo/ui/text';
 import { ClaimButton } from 'components/claim-button';
 import { DeleteButton } from 'components/delete-button';
@@ -23,7 +30,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   const tableRows = gifts.map((gift) => {
     return (
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
-        <TableCell className="overflow-hidden">
+        <TableCell className="overflow-hidden font-medium">
           <Text className="truncate">
             <Strong>{gift.name}</Strong>
           </Text>
@@ -41,7 +48,13 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   });
 
   return (
-    <Table dense>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableHeader>Claimed Gifts</TableHeader>
+          <TableHeader className="text-right my-4">Actions</TableHeader>
+        </TableRow>
+      </TableHead>
       <TableBody>{tableRows}</TableBody>
     </Table>
   );

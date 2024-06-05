@@ -1,8 +1,7 @@
+import { GiftCard } from 'components/Gift';
+import { getGiftById, getUserWithGiftsById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-
-import { GiftCard } from '../../../components/Gift';
-import { getGiftById, getUserWithGiftsById } from '../../../lib/prisma-ssr';
 
 interface PageProps {
   params: { [K in string]: string };

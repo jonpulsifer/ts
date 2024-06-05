@@ -1,4 +1,3 @@
-'use client';
 import {
   Avatar,
   Badge,
@@ -25,64 +24,40 @@ import {
   SidebarSection,
   StackedLayout,
 } from '@repo/ui';
+import { isAuthenticated } from 'lib/prisma-ssr';
 import {
   CalendarIcon,
-  ChevronDownIcon,
   ChevronRight,
   CogIcon,
-  GiftIcon,
   HomeIcon,
-  LogOutIcon,
-  PlusIcon,
+  ListChecks,
   UserIcon,
   UsersIcon,
 } from 'lucide-react';
-import { signOut } from 'next-auth/react';
+import { User } from 'next-auth';
+
+import { Logo } from './logo';
+import { LogoutDropDownItem } from './logout';
 
 type Props = {
   children: React.ReactNode;
 };
 
-export function Nav({ children }: Props) {
+export async function Nav({ children }: Props) {
+  const session = await isAuthenticated();
   return (
-    <StackedLayout navbar={<NavBar />} sidebar={<SidebarMarkup />}>
+    <StackedLayout
+      navbar={<NavBar user={session.user} />}
+      sidebar={<SidebarMarkup user={session.user} />}
+    >
       {children}
     </StackedLayout>
   );
 }
 
-function TeamDropdownMenu() {
-  return (
-    <DropdownMenu className="min-w-80 lg:min-w-64" anchor="bottom start">
-      <DropdownItem href="/wishlists">
-        <CogIcon size={16} />
-        <DropdownLabel>Settings</DropdownLabel>
-      </DropdownItem>
-      <DropdownDivider />
-      <DropdownItem href="/wishlists">
-        <Avatar slot="icon" src="/santaicon.png" />
-        <DropdownLabel>Christmas Wishlist</DropdownLabel>
-      </DropdownItem>
-      <DropdownItem href="/wishlists">
-        <Avatar
-          slot="icon"
-          initials="WC"
-          className="bg-purple-500 text-white"
-        />
-        <DropdownLabel>Birthday Wishlist</DropdownLabel>
-      </DropdownItem>
-      <DropdownDivider />
-      <DropdownItem href="/wishlists">
-        <PlusIcon size={16} />
-        <DropdownLabel>New wishlist&hellip;</DropdownLabel>
-      </DropdownItem>
-    </DropdownMenu>
-  );
-}
-
 const navItems = [
   { label: 'Home', url: '/', icon: <HomeIcon size={16} /> },
-  { label: 'Claimed', url: '/claimed', icon: <GiftIcon size={16} /> },
+  { label: 'Claimed', url: '/claimed', icon: <ListChecks size={16} /> },
   { label: 'People', url: '/people', icon: <UsersIcon size={16} /> },
   { label: 'Wishlists', url: '/wishlists', icon: <CalendarIcon size={16} /> },
 ];
@@ -114,17 +89,17 @@ const DaysUntilChristmasBadge = () => {
   );
 };
 
-export function NavBar() {
+type NavProps = {
+  user: User;
+};
+
+export async function NavBar({ user }: NavProps) {
+  const initials = user.name
+    ? user.name[0].toUpperCase()
+    : user.email![0].toUpperCase();
   return (
     <Navbar>
-      <Dropdown>
-        <DropdownButton as={NavbarItem} className="max-lg:hidden">
-          <Avatar slot="icon" src="/santaicon.png" />
-          <NavbarLabel>wishin.app</NavbarLabel>
-          <ChevronDownIcon size={16} />
-        </DropdownButton>
-        <TeamDropdownMenu />
-      </Dropdown>
+      <Logo />
       <NavbarDivider className="max-lg:hidden" />
       <NavbarSection className="max-lg:hidden">
         {navItems.map(({ label, url }) => (
@@ -140,24 +115,28 @@ export function NavBar() {
       <NavbarSection>
         <Dropdown>
           <DropdownButton as={NavbarItem}>
-            <Avatar src="/santaicon.png" square />
+            <Avatar
+              src={user.image}
+              initials={user.image ? undefined : initials}
+              square
+            />
           </DropdownButton>
           <DropdownMenu className="min-w-64" anchor="bottom end">
+            <DropdownItem>
+              <UserIcon size={16} />
+              <DropdownLabel>{user.email}</DropdownLabel>
+            </DropdownItem>
+            <DropdownDivider />
             <DropdownItem href="/user/me">
               <UserIcon size={16} />
               <DropdownLabel>My profile</DropdownLabel>
             </DropdownItem>
-            <DropdownItem href="/settings">
+            <DropdownItem href="/user/me">
               <CogIcon size={16} />
               <DropdownLabel>Settings</DropdownLabel>
             </DropdownItem>
             <DropdownDivider />
-            <DropdownItem
-              onClick={() => signOut({ redirect: true, callbackUrl: '/login' })}
-            >
-              <LogOutIcon size={16} className="mr-2" />
-              <DropdownLabel>Sign out</DropdownLabel>
-            </DropdownItem>
+            <LogoutDropDownItem />
           </DropdownMenu>
         </Dropdown>
       </NavbarSection>
@@ -165,28 +144,13 @@ export function NavBar() {
   );
 }
 
-export function SidebarMarkup() {
-  const user = {
-    name: 'Tailwind Labs',
-    image: undefined,
-  };
-  const initials = 'TL';
+export function SidebarMarkup({ user }: NavProps) {
+  const name = user.name || user.email;
+  const initials = name ? name[0].toUpperCase() : user.email![0].toUpperCase();
+
   return (
     <Sidebar>
       <SidebarHeader>
-        <Dropdown>
-          <DropdownButton as={SidebarItem} className="lg:mb-2.5">
-            <Avatar
-              square
-              src={user.image}
-              initials={!user.image ? initials : undefined}
-              className="size-10 sm:size-12 bg-zinc-200 dark:bg-zinc-950 dark:text-indigo-500"
-            />{' '}
-            <SidebarLabel>Tailwind Labs</SidebarLabel>
-            <ChevronDownIcon />
-          </DropdownButton>
-          <TeamDropdownMenu />
-        </Dropdown>
         <DaysUntilChristmasBadge />
       </SidebarHeader>
       <SidebarBody>
@@ -206,8 +170,11 @@ export function SidebarMarkup() {
 
           <Link href="/user/me">
             <SidebarItem>
-              <Avatar src="/santaicon.png" />
-              <SidebarLabel>Bobby Tables</SidebarLabel>
+              <Avatar
+                src={user.image}
+                initials={user.image ? undefined : initials}
+              />
+              <SidebarLabel>{name}</SidebarLabel>
               <ChevronRight size={16} />
             </SidebarItem>
           </Link>

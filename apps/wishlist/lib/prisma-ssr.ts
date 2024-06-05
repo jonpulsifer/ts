@@ -175,8 +175,10 @@ const getVisibleGiftsForUserById = async (id: string) => {
 
 const isAuthenticated = async () => {
   const session = await auth();
-  if (!session?.user) {
-    console.error('could not get user from session, redirecting to login');
+  if (!session || !session?.user) {
+    console.error(
+      'could not get session or user from session, redirecting to login',
+    );
     return redirect('/login');
   }
   return session;
