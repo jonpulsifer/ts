@@ -20,7 +20,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html className="h-full w-full" lang="en">
       <body
-        className={`h-full w-full ${inter.className} bg-zinc-200 dark:text-zinc-100 dark:bg-zinc-900`}
+        className={`h-full w-full ${inter.className} dark:text-zinc-100 dark:bg-zinc-900`}
       >
         <ErrorBoundary>
           <main className="flex flex-col h-full w-full">{children}</main>
