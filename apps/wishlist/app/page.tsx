@@ -6,8 +6,8 @@ import PeoplePage from './(authenticated)/people/page';
 import { auth } from './auth';
 
 export const metadata: Metadata = {
-  title: 'Login | wishin.app',
-  description: 'Login to to the wishlist',
+  title: 'wishin.app',
+  description: 'A wishlist app for friends and family',
 };
 
 const Home = async () => {
