@@ -1,9 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { signIn, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import Spinner from '../../../components/Spinner';
@@ -16,25 +15,6 @@ const welcome = (name?: string | null) => {
 
 function LoginPage() {
   const [showLoading, setShowLoading] = useState(false);
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  // if the user is already logged in, redirect them to the people page
-  useEffect(() => {
-    if (session?.user && status === 'authenticated') {
-      const name = session?.user.name ?? session?.user.email;
-      welcome(name);
-      router.push('/people');
-    }
-
-    if (status === 'unauthenticated') {
-      setShowLoading(false);
-    }
-
-    if (status === 'loading') {
-      setShowLoading(true);
-    }
-  }, [session, status, router]);
 
   if (showLoading) {
     return <Spinner />;

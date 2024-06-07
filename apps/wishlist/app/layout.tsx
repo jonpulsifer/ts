@@ -7,8 +7,6 @@ import ErrorBoundary from 'components/ErrorBoundary';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import { SessionProvider } from './providers';
-
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -25,9 +23,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         className={`h-full w-full ${inter.className} bg-zinc-200 dark:text-zinc-100 dark:bg-zinc-900`}
       >
         <ErrorBoundary>
-          <SessionProvider>
-            <main className="flex flex-col h-full w-full">{children}</main>
-          </SessionProvider>
+          <main className="flex flex-col h-full w-full">{children}</main>
         </ErrorBoundary>
         <SpeedInsights />
         <Analytics />

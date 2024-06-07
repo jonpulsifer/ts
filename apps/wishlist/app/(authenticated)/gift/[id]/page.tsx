@@ -1,3 +1,4 @@
+import { auth } from 'app/auth';
 import { GiftCard } from 'components/Gift';
 import { getGiftById, getUserWithGiftsById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
@@ -18,12 +19,13 @@ export async function generateMetadata({
 }
 
 const GiftPage = async ({ params }: PageProps) => {
+  const session = await auth();
   const gift = await getGiftById(params.id);
-  if (!gift) {
+  if (!gift || !session?.user) {
     notFound();
   }
   const user = await getUserWithGiftsById(gift.ownerId);
-  return <GiftCard gift={gift} user={user} />;
+  return <GiftCard gift={gift} user={user} currentUserId={session.user.id} />;
 };
 
 export default GiftPage;

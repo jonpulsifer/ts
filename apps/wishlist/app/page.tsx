@@ -1,6 +1,8 @@
+import { Nav } from 'components/layout-with-nav';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
+import PeoplePage from './(authenticated)/people/page';
 import { auth } from './auth';
 
 export const metadata: Metadata = {
@@ -11,7 +13,11 @@ export const metadata: Metadata = {
 const Home = async () => {
   const session = await auth();
   if (session?.user) {
-    redirect('/people');
+    return (
+      <Nav>
+        <PeoplePage />
+      </Nav>
+    );
   }
   redirect('/login');
 };

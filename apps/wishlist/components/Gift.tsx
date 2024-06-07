@@ -13,24 +13,21 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import type { GiftWithOwner } from 'types/prisma';
 
 interface Props {
   gift: Gift | GiftWithOwner;
   user: User;
+  currentUserId: string;
 }
 
-export function GiftCard({ gift, user }: Props) {
+export function GiftCard({ gift, user, currentUserId }: Props) {
   const { name, description, url } = gift;
   const router = useRouter();
   const giftDescription = description
     ? description
     : `${user.name} hasn't added a description for this gift.`;
-
-  const { data: session } = useSession();
-  const currentUser = session?.user as User;
 
   function ToastMarkup({ gift }: { gift: Gift }) {
     return (
@@ -93,8 +90,8 @@ export function GiftCard({ gift, user }: Props) {
   };
 
   const giftAction = () => {
-    if (!currentUser) return undefined;
-    if (gift.ownerId === currentUser.id)
+    if (!currentUserId) return undefined;
+    if (gift.ownerId === currentUserId)
       return [
         {
           href: `/gift/${gift.id}/edit`,
@@ -110,9 +107,9 @@ export function GiftCard({ gift, user }: Props) {
           color: 'red',
         },
       ] satisfies CardAction[];
-    if (gift.claimedById && gift.claimedById !== currentUser.id)
+    if (gift.claimedById && gift.claimedById !== currentUserId)
       return undefined;
-    if (gift.claimedById === currentUser.id) {
+    if (gift.claimedById === currentUserId) {
       return {
         onClick: () => handleUnclaim(gift),
         icon: MinusSquare,

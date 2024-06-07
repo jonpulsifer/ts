@@ -66,8 +66,9 @@ const PeoplePage = async () => {
     return (
       <TableRow key={ownerId} href={`/user/${ownerId}`}>
         <TableCell>
-          <div className="flex items-center gap-4 text-red-600">
+          <div className="flex items-center gap-4">
             <Avatar
+              square
               src={avatar.src}
               initials={avatar.initials}
               className="size-12"
@@ -91,7 +92,7 @@ const PeoplePage = async () => {
         gifts. You can <Strong>view someone&apos;s profile by clicking</Strong>{' '}
         on their name.
       </Text>
-      <Table bleed striped>
+      <Table bleed>
         <TableBody>{tableRows}</TableBody>
       </Table>
     </>
