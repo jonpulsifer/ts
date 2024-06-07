@@ -26,6 +26,7 @@ function LoginPage() {
     signIn('google', { callbackUrl: '/people', redirect: false }).finally(
       () => {
         setShowLoading(false);
+        welcome();
       },
     );
   };
