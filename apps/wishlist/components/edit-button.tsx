@@ -12,9 +12,5 @@ export const EditButton = ({
     return null;
   }
 
-  return (
-    <Button plain href={`/gift/${gift.id}/edit`}>
-      <div className="text-indigo-500">Edit</div>
-    </Button>
-  );
+  return <Button href={`/gift/${gift.id}/edit`}>Edit</Button>;
 };

@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@repo/ui/button';
 import { claimGift, unclaimGift } from 'app/actions';
 import toast from 'react-hot-toast';
@@ -17,7 +18,7 @@ export const ClaimButton = ({
   if (gift.claimedById === currentUserId) {
     return (
       <Button
-        plain
+        color="red"
         onClick={() => {
           toast.promise(unclaimGift(gift.id), {
             loading: 'Unclaiming...',
@@ -29,14 +30,14 @@ export const ClaimButton = ({
           });
         }}
       >
-        <div className="text-red-500">Unclaim</div>
+        Unclaim
       </Button>
     );
   }
 
   return (
     <Button
-      plain
+      color="blue"
       onClick={() => {
         toast.promise(claimGift(gift.id), {
           loading: 'Claiming...',
@@ -48,7 +49,7 @@ export const ClaimButton = ({
         });
       }}
     >
-      <div className="text-indigo-500">Claim</div>
+      Claim
     </Button>
   );
 };

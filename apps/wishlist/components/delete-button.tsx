@@ -16,7 +16,7 @@ export const DeleteButton = ({
 
   return (
     <Button
-      plain
+      outline
       onClick={() => {
         toast.promise(deleteGift(gift.id), {
           loading: 'Deleting...',

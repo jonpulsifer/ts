@@ -1,4 +1,3 @@
-'use client';
 import {
   Table,
   TableBody,
@@ -48,8 +47,8 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   });
 
   return (
-    <>
-      <Text>Here is a list of all your gifts.</Text>
+    <div className="space-y-4">
+      <Text>Here is a list of gifts.</Text>
       <Table>
         <TableHead>
           <TableRow>
@@ -59,6 +58,6 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
         </TableHead>
         <TableBody>{tableRows}</TableBody>
       </Table>
-    </>
+    </div>
   );
 }
