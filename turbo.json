@@ -2,26 +2,18 @@
   "$schema": "https://turbo.build/schema.json",
   "globalEnv": [
     "NODE_ENV",
-    "IS_DOCKER"
+    "IS_DOCKER",
+    "npm_package_version",
+    "npm_package_name"
   ],
-  "globalDependencies": [
-    "**/.env.*local"
-  ],
+  "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "wishlist#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "AUTH_GOOGLE_ID",
         "AUTH_GOOGLE_SECRET",
@@ -29,16 +21,10 @@
         "DATABASE_URL",
         "DIRECT_URL"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "authme#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "AUTH_GOOGLE_ID",
         "AUTH_GOOGLE_SECRET",
@@ -48,16 +34,10 @@
         "CLIENT_IDENTITY_PKCS12",
         "SERVER_CA"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "request-headers#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "NODE_IP",
         "NODE_NAME",
@@ -68,29 +48,20 @@
         "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA",
         "NEXT_PUBLIC_VERCEL_ENV"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "galaxy#build": {
+      "dependsOn": ["^build"],
+      "env": [],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "hub#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "env": [
-        "REDIS_URL"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "dependsOn": ["^build"],
+      "env": ["REDIS_URL"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "rosie#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "ARGOCD_USERNAME",
         "ARGOCD_PASSWORD",
@@ -100,49 +71,28 @@
         "SLACK_CLIENT_SIGNING_SECRET",
         "SLACK_APP_TOKEN"
       ],
-      "outputs": [
-        "dist/**"
-      ]
+      "outputs": ["dist/**"]
     },
     "nested#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
     "remixed#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "api/index.js",
-        "api/build/**",
-        "public/build/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["api/index.js", "api/build/**", "public/build/**"]
     },
     "lint": {
-      "outputs": [
-        "dist/**",
-        "build/**"
-      ]
+      "outputs": ["dist/**", "build/**"]
     },
     "test": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "inputs": [
         "src/**/*.tsx",
         "src/**/*.ts",
         "test/**/*.ts",
         "test/**/*.tsx"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {
       "cache": false,

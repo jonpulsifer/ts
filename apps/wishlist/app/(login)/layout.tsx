@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <main className="flex flex-col h-full w-full">
       {children}
       <Toast />
-    </>
+    </main>
   );
 }
 export default Layout;
