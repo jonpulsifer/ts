@@ -54,7 +54,7 @@
   "dependencies": {
     "@headlessui/react": "2.0.4",
     "clsx": "2.1.1",
-    "lucide-react": "0.394.0",
+    "lucide-react": "0.395.0",
     "framer-motion": "11.2.10"
   }
 }
