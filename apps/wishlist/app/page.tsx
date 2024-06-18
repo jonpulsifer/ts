@@ -1,4 +1,5 @@
 import { Nav } from 'components/layout-with-nav';
+import Toast from 'components/Toaster';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
@@ -16,6 +17,7 @@ const Home = async () => {
     return (
       <Nav>
         <PeoplePage />
+        <Toast />
       </Nav>
     );
   }

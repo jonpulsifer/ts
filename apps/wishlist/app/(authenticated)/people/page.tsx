@@ -92,7 +92,7 @@ const PeoplePage = async () => {
         gifts. You can <Strong>view someone&apos;s profile by clicking</Strong>{' '}
         on their name.
       </Text>
-      <Table bleed>
+      <Table bleed dense>
         <TableBody>{tableRows}</TableBody>
       </Table>
     </>

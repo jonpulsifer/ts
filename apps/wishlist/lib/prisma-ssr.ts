@@ -228,6 +228,48 @@ const getVisibleGiftsForUser = async () => {
   redirect('/login');
 };
 
+const getSortedVisibleGiftsForUser = async (sortDirection: string) => {
+  const session = await isAuthenticated();
+  const { id } = session.user;
+  const user = await getUserById(id, true, true);
+  if (!user.wishlists.length) return { gifts: [], user: session.user };
+
+  try {
+    const direction = sortDirection === 'asc' ? 'asc' : 'desc';
+    const wishlistIds = user.wishlists.map((w) => w.id);
+    const gifts = await prisma.gift.findMany({
+      where: {
+        ownerId: { not: id },
+        wishlists: { some: { id: { in: wishlistIds } } },
+        AND: {
+          OR: [
+            { claimed: false },
+            {
+              claimed: true,
+              claimedBy: {
+                id,
+              },
+            },
+          ],
+        },
+      },
+      include: {
+        owner: true,
+        claimedBy: true,
+      },
+      orderBy: [
+        {
+          name: direction,
+        },
+      ],
+    });
+    return { gifts, user: session.user };
+  } catch (e) {
+    console.log(JSON.stringify(e));
+  }
+  redirect('/login');
+};
+
 const getWishlists = async () => {
   const session = await isAuthenticated();
   const { id } = session.user;
@@ -301,6 +343,7 @@ export {
   getMeWithGifts,
   getMeWithGiftsAndWishlists,
   getPeopleForUser,
+  getSortedVisibleGiftsForUser,
   getUserById,
   getUserWithGifts,
   getUserWithGiftsById,

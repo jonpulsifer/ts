@@ -5,8 +5,8 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-import Spinner from '../../../components/Spinner';
-import santa from '../../../public/santaicon.png';
+import Spinner from '../../components/Spinner';
+import santa from '../../public/santaicon.png';
 
 const welcome = (name?: string | null) => {
   const text = name ? `Welcome ${name}!` : 'Welcome!';
