@@ -1,4 +1,4 @@
-import { Card } from '@repo/ui/card';
+import { Divider, Heading } from '@repo/ui';
 import type { Metadata } from 'next';
 
 import EmptyState from '../../../../../components/EmptyState';
@@ -25,9 +25,11 @@ const EditGiftPage = async ({ params }: PageProps) => {
     return EmptyState({ title: 'Gift not found' });
   }
   return (
-    <Card>
+    <>
+      <Heading>Edit Gift</Heading>
+      <Divider soft className="my-4" />
       <GiftForm gift={gift} />
-    </Card>
+    </>
   );
 };
 

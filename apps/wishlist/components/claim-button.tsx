@@ -37,7 +37,7 @@ export const ClaimButton = ({
 
   return (
     <Button
-      color="blue"
+      color="green"
       onClick={() => {
         toast.promise(claimGift(gift.id), {
           loading: 'Claiming...',

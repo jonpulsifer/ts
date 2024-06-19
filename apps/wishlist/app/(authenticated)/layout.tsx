@@ -1,13 +1,6 @@
 import { Nav } from 'components/layout-with-nav';
 
-import Toast from '../../components/Toaster';
-
-function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <Nav>
-      {children}
-      <Toast />
-    </Nav>
-  );
+async function Layout({ children }: { children: React.ReactNode }) {
+  return <Nav>{children}</Nav>;
 }
 export default Layout;

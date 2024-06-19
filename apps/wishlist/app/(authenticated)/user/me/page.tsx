@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 const MePage = async () => {
+  console.log('MePage');
   const user = await getMe();
   const gifts = await getGiftsWithOwnerByUserId(user.id);
   return (
@@ -24,7 +25,6 @@ const MePage = async () => {
         </div>
       </div>
       <Divider soft className="my-4" />
-
       <GiftTable gifts={gifts} currentUserId={user.id} />
     </>
   );

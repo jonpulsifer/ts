@@ -53,7 +53,7 @@ const GiftPage = async ({ params }: PageProps) => {
         <DescriptionTerm>Description</DescriptionTerm>
         <DescriptionDetails>{gift.description}</DescriptionDetails>
       </DescriptionList>
-      <div className="gap-4">
+      <div className="flex gap-4">
         <EditButton gift={gift} currentUserId={session.user.id} />
         <ClaimButton gift={gift} currentUserId={session.user.id} />
         <DeleteButton gift={gift} currentUserId={session.user.id} />

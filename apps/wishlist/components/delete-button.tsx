@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@repo/ui/button';
 import { deleteGift } from 'app/actions';
 import toast from 'react-hot-toast';
@@ -16,7 +17,7 @@ export const DeleteButton = ({
 
   return (
     <Button
-      outline
+      color="red"
       onClick={() => {
         toast.promise(deleteGift(gift.id), {
           loading: 'Deleting...',
@@ -28,7 +29,7 @@ export const DeleteButton = ({
         });
       }}
     >
-      <div className="text-red-500">Delete</div>
+      Delete
     </Button>
   );
 };

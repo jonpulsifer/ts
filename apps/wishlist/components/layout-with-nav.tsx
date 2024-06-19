@@ -1,5 +1,5 @@
 import { StackedLayout } from '@repo/ui';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import { getPeopleForUser } from 'lib/prisma-ssr';
 import {
   GiftIcon,
   GroupIcon,
@@ -23,11 +23,11 @@ type Props = {
 };
 
 export async function Nav({ children }: Props) {
-  const session = await isAuthenticated();
+  const { user, users } = await getPeopleForUser();
   return (
     <StackedLayout
-      navbar={<NavBar user={session.user} items={navItems} />}
-      sidebar={<SidebarMarkup user={session.user} items={navItems} />}
+      navbar={<NavBar user={user} users={users} items={navItems} />}
+      sidebar={<SidebarMarkup user={user} users={users} items={navItems} />}
     >
       {children}
     </StackedLayout>

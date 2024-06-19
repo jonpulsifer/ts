@@ -1,5 +1,6 @@
 'use client';
 
+import { User } from '@prisma/client';
 import {
   Avatar,
   Dropdown,
@@ -17,6 +18,7 @@ import {
   NavbarSpacer,
   Sidebar,
   SidebarBody,
+  SidebarDivider,
   SidebarFooter,
   SidebarHeader,
   SidebarHeading,
@@ -24,11 +26,12 @@ import {
   SidebarLabel,
   SidebarSection,
 } from '@repo/ui';
-import { ChevronRight, CogIcon, UserIcon } from 'lucide-react';
+import { ChevronRight, CogIcon, PlusSquareIcon, UserIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { User } from 'next-auth';
+import { useState } from 'react';
 
 import { DaysUntilChristmasBadge } from './days-until-christmas-badge';
+import GiftDialog from './gift-dialog';
 import { Logo } from './logo';
 import { LogoutDropDownItem } from './logout';
 
@@ -40,7 +43,14 @@ type NavItem = {
 
 const isCurrentPath = (current: string, path: string) => current === path;
 
-export function NavBar({ user, items }: { user: User; items: NavItem[] }) {
+type NavProps = {
+  user: User;
+  users: User[];
+  items: NavItem[];
+};
+
+export function NavBar({ user, users, items }: NavProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const initials = user.name
     ? user.name[0].toUpperCase()
     : user.email![0].toUpperCase();
@@ -62,11 +72,17 @@ export function NavBar({ user, items }: { user: User; items: NavItem[] }) {
           );
         })}
       </NavbarSection>
+      <NavbarItem onClick={() => setIsOpen(true)}>
+        <PlusSquareIcon size={16} />
+        <NavbarLabel>Add new gift</NavbarLabel>
+      </NavbarItem>
       <NavbarSpacer />
-      <NavbarSection className="max-lg:hidden">
-        <DaysUntilChristmasBadge />
-      </NavbarSection>
+
       <NavbarSection>
+        <NavbarSection className="max-lg:hidden">
+          <DaysUntilChristmasBadge />
+        </NavbarSection>
+
         <Dropdown>
           <DropdownButton as={NavbarItem}>
             <Avatar
@@ -81,6 +97,10 @@ export function NavBar({ user, items }: { user: User; items: NavItem[] }) {
               <DropdownLabel>{user.email}</DropdownLabel>
             </DropdownItem>
             <DropdownDivider />
+            <DropdownItem onClick={() => setIsOpen(true)}>
+              <PlusSquareIcon size={16} />
+              <DropdownLabel>Add new gift</DropdownLabel>
+            </DropdownItem>
             <DropdownItem href="/user/me">
               <UserIcon size={16} />
               <DropdownLabel>My profile</DropdownLabel>
@@ -94,17 +114,19 @@ export function NavBar({ user, items }: { user: User; items: NavItem[] }) {
           </DropdownMenu>
         </Dropdown>
       </NavbarSection>
+      <GiftDialog
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        currentUser={user}
+        users={users}
+      />
     </Navbar>
   );
 }
 
-export function SidebarMarkup({
-  user,
-  items,
-}: {
-  user: User;
-  items: NavItem[];
-}) {
+export function SidebarMarkup({ user, users, items }: NavProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const name = user.name || user.email;
   const initials = name ? name[0].toUpperCase() : user.email![0].toUpperCase();
   const currentPath = usePathname();
@@ -126,6 +148,11 @@ export function SidebarMarkup({
         <SidebarSection>
           <SidebarHeading>Navigation</SidebarHeading>
           {itemsMarkup}
+          <SidebarDivider />
+          <SidebarItem onClick={() => setIsOpen(true)}>
+            <PlusSquareIcon size={16} />
+            Add new gift
+          </SidebarItem>
         </SidebarSection>
       </SidebarBody>
       <SidebarFooter>
@@ -144,6 +171,12 @@ export function SidebarMarkup({
           </Link>
         </SidebarSection>
       </SidebarFooter>
+      <GiftDialog
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        currentUser={user}
+        users={users}
+      />
     </Sidebar>
   );
 }

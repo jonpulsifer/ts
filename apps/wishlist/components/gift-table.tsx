@@ -1,3 +1,4 @@
+'use client';
 import {
   Table,
   TableBody,
@@ -38,9 +39,11 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
           )}
         </TableCell>
         <TableCell className="text-right">
-          <EditButton gift={gift} currentUserId={currentUserId} />
-          <DeleteButton gift={gift} currentUserId={currentUserId} />
-          <ClaimButton gift={gift} currentUserId={currentUserId} />
+          <div className="space-x-4">
+            <EditButton gift={gift} currentUserId={currentUserId} />
+            <DeleteButton gift={gift} currentUserId={currentUserId} />
+            <ClaimButton gift={gift} currentUserId={currentUserId} />
+          </div>
         </TableCell>
       </TableRow>
     );
@@ -49,7 +52,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   return (
     <div className="space-y-4">
       <Text>Here is a list of gifts.</Text>
-      <Table>
+      <Table dense>
         <TableHead>
           <TableRow>
             <TableHeader>Gifts</TableHeader>
