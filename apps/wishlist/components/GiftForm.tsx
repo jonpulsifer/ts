@@ -33,6 +33,7 @@ function GiftForm({ gift }: Props) {
           name: name as string,
           url: url as string,
           description: description as string,
+          recipient: '',
         });
 
     const result = await operation;
