@@ -22,7 +22,7 @@ export const DaysUntilChristmasBadge = () => {
           : 'indigo';
   return (
     <Badge color={color} className="justify-center">
-      🎅 {count} day{count > 1 || count === 0 ? 's' : ''} to Christmas
+      🎅 {count} day{count > 1 || count === 0 ? 's' : ''} until Christmas
     </Badge>
   );
 };

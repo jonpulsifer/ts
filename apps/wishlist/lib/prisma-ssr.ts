@@ -28,6 +28,7 @@ const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
         gifts: {
           include: {
             owner: true,
+            createdBy: true,
           },
         },
       },
@@ -159,12 +160,14 @@ const getVisibleGiftsForUserById = async (id: string) => {
               id: currentUserId,
             },
           },
+          { createdBy: { id: currentUserId } },
         ],
       },
     },
     include: {
       owner: true,
       claimedBy: true,
+      createdBy: true,
     },
     orderBy: {
       name: 'asc',
@@ -205,12 +208,14 @@ const getVisibleGiftsForUser = async () => {
                 id,
               },
             },
+            { createdBy: { id } },
           ],
         },
       },
       include: {
         owner: true,
         claimedBy: true,
+        createdBy: true,
       },
       orderBy: [
         {
@@ -250,12 +255,14 @@ const getSortedVisibleGiftsForUser = async (sortDirection: string) => {
                 id,
               },
             },
+            { createdBy: { id } },
           ],
         },
       },
       include: {
         owner: true,
         claimedBy: true,
+        createdBy: true,
       },
       orderBy: [
         {
@@ -321,6 +328,7 @@ const getPeopleForUser = async () => {
                     id,
                   },
                 },
+                { createdBy: { id } },
               ],
             },
           },

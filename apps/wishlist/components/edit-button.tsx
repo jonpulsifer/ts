@@ -8,7 +8,7 @@ export const EditButton = ({
   gift: GiftWithOwner;
   currentUserId: string;
 }) => {
-  if (gift.ownerId !== currentUserId) {
+  if (gift.ownerId !== currentUserId && gift.createdById !== currentUserId) {
     return null;
   }
 

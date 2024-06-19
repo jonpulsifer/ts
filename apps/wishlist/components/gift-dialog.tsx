@@ -1,7 +1,6 @@
 'use client';
 import { User } from '@prisma/client';
 import {
-  Avatar,
   Button,
   Description,
   Dialog,
@@ -12,7 +11,9 @@ import {
   Field,
   Input,
   Label,
-  Select,
+  Listbox,
+  ListboxLabel,
+  ListboxOption,
   Textarea,
 } from '@repo/ui';
 import { addGift } from 'app/actions';
@@ -27,7 +28,12 @@ type Props = {
   users: User[];
 };
 
-export default function GiftDialog({ isOpen, setIsOpen, users }: Props) {
+export default function GiftDialog({
+  isOpen,
+  setIsOpen,
+  users,
+  currentUser,
+}: Props) {
   const cancelButtonRef = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -40,6 +46,7 @@ export default function GiftDialog({ isOpen, setIsOpen, users }: Props) {
     const name = formData.get('name');
     const url = formData.get('url');
     const description = formData.get('description');
+    const recipient = formData.get('recipient');
     if (!name) {
       toast.error('Please fill out a name');
       return;
@@ -49,6 +56,7 @@ export default function GiftDialog({ isOpen, setIsOpen, users }: Props) {
       name: name as string,
       url: url as string,
       description: description as string,
+      recipient: recipient as string,
     });
 
     if (result?.error) {
@@ -59,17 +67,22 @@ export default function GiftDialog({ isOpen, setIsOpen, users }: Props) {
     }
   };
 
-  const usersOptions = users.map((user) => (
-    <option key={user.id} value={user.id}>
-      {user.name || user.email}
-      <Avatar src={user.image} />
-    </option>
-  ));
+  const usersOptions = users.map((user) => {
+    const isCurrentUser = user.id === currentUser.id;
+    const name = isCurrentUser
+      ? `You (${user.name || user.email})`
+      : user.name || user.email;
+    return (
+      <ListboxOption key={user.id} value={user.id}>
+        <ListboxLabel>{name}</ListboxLabel>
+      </ListboxOption>
+    );
+  });
 
   function Submit() {
     const status = useFormStatus();
     return (
-      <Button type="submit" color="indigo" disabled={status.pending}>
+      <Button type="submit" color="green" disabled={status.pending}>
         {status.pending ? 'Adding...' : 'Add to wishlist'}
       </Button>
     );
@@ -84,11 +97,11 @@ export default function GiftDialog({ isOpen, setIsOpen, users }: Props) {
         </DialogDescription>
         <DialogBody className="space-y-4">
           <Field>
-            <Label>Project status</Label>
-            <Description>
-              This will be visible to clients on the project.
-            </Description>
-            <Select name="status">{usersOptions}</Select>
+            <Label>Recipient</Label>
+            <Description>Who is this gift for?</Description>
+            <Listbox name="recipient" defaultValue={currentUser.id}>
+              {usersOptions}
+            </Listbox>
           </Field>
           <Field>
             <Label>Gift Name</Label>
@@ -124,7 +137,6 @@ export default function GiftDialog({ isOpen, setIsOpen, users }: Props) {
         </DialogBody>
 
         <DialogActions>
-          <Submit />
           <Button
             plain
             onClick={() => {
@@ -135,6 +147,7 @@ export default function GiftDialog({ isOpen, setIsOpen, users }: Props) {
           >
             Close
           </Button>
+          <Submit />
         </DialogActions>
       </form>
     </Dialog>

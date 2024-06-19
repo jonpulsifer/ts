@@ -9,7 +9,7 @@ import {
   DropdownItem,
   DropdownLabel,
   DropdownMenu,
-  Link,
+  Heading,
   Navbar,
   NavbarDivider,
   NavbarItem,
@@ -18,15 +18,13 @@ import {
   NavbarSpacer,
   Sidebar,
   SidebarBody,
-  SidebarDivider,
   SidebarFooter,
   SidebarHeader,
   SidebarHeading,
   SidebarItem,
-  SidebarLabel,
   SidebarSection,
 } from '@repo/ui';
-import { ChevronRight, CogIcon, PlusSquareIcon, UserIcon } from 'lucide-react';
+import { CogIcon, PlusSquareIcon, UserIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -72,12 +70,7 @@ export function NavBar({ user, users, items }: NavProps) {
           );
         })}
       </NavbarSection>
-      <NavbarItem onClick={() => setIsOpen(true)}>
-        <PlusSquareIcon size={16} />
-        <NavbarLabel>Add new gift</NavbarLabel>
-      </NavbarItem>
       <NavbarSpacer />
-
       <NavbarSection>
         <NavbarSection className="max-lg:hidden">
           <DaysUntilChristmasBadge />
@@ -127,8 +120,6 @@ export function NavBar({ user, users, items }: NavProps) {
 export function SidebarMarkup({ user, users, items }: NavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const name = user.name || user.email;
-  const initials = name ? name[0].toUpperCase() : user.email![0].toUpperCase();
   const currentPath = usePathname();
   const itemsMarkup = items.map(({ label, icon, url }) => {
     const current = isCurrentPath(currentPath, url);
@@ -142,34 +133,23 @@ export function SidebarMarkup({ user, users, items }: NavProps) {
   return (
     <Sidebar>
       <SidebarHeader>
-        <DaysUntilChristmasBadge />
+        <div className="flex flex-row gap-2">
+          <Logo />
+          <Heading>wishin.app</Heading>
+        </div>
       </SidebarHeader>
       <SidebarBody>
         <SidebarSection>
           <SidebarHeading>Navigation</SidebarHeading>
           {itemsMarkup}
-          <SidebarDivider />
-          <SidebarItem onClick={() => setIsOpen(true)}>
-            <PlusSquareIcon size={16} />
-            Add new gift
-          </SidebarItem>
         </SidebarSection>
       </SidebarBody>
-      <SidebarFooter>
-        <SidebarSection>
-          <SidebarHeading>Your Profile</SidebarHeading>
-
-          <Link href="/user/me">
-            <SidebarItem>
-              <Avatar
-                src={user.image}
-                initials={user.image ? undefined : initials}
-              />
-              <SidebarLabel>{name}</SidebarLabel>
-              <ChevronRight size={16} />
-            </SidebarItem>
-          </Link>
-        </SidebarSection>
+      <SidebarFooter className="space-y-2">
+        <SidebarItem onClick={() => setIsOpen(true)}>
+          <PlusSquareIcon size={16} />
+          Add new gift
+        </SidebarItem>
+        <DaysUntilChristmasBadge />
       </SidebarFooter>
       <GiftDialog
         isOpen={isOpen}

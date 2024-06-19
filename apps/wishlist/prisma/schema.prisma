@@ -52,6 +52,7 @@ model User {
   shoe_size     String?
   gifts         Gift[]
   claimed       Gift[]     @relation("ClaimedByUser")
+  createdGifts  Gift[]     @relation("CreatedByUser")
   wishlists     Wishlist[]
   accounts      Account[]
   sessions      Session[]
@@ -79,6 +80,8 @@ model Gift {
   claimed     Boolean    @default(false)
   claimedBy   User?      @relation("ClaimedByUser", fields: [claimedById], references: [id])
   claimedById String?    @db.Uuid
+  createdBy   User?      @relation("CreatedByUser", fields: [createdById], references: [id])
+  createdById String?    @db.Uuid
   wishlists   Wishlist[]
 }
 

@@ -111,10 +111,12 @@ export const addGift = async ({
   name,
   description,
   url,
+  recipient,
 }: {
   name: string;
   description: string;
   url: string;
+  recipient: string;
 }) => {
   try {
     const { user } = await isAuthenticated();
@@ -138,6 +140,11 @@ export const addGift = async ({
         url,
         description,
         owner: {
+          connect: {
+            id: recipient,
+          },
+        },
+        createdBy: {
           connect: {
             id: user.id,
           },
@@ -164,12 +171,14 @@ export const deleteGift = async (id: string) => {
         id,
       },
       select: {
-        owner: true,
+        ownerId: true,
+        createdById: true,
       },
     });
-    const isOwner = gift?.owner.id === user.id;
-    if (!isOwner) {
-      throw new Error('You are not the owner of this gift');
+    const isOwner = gift?.ownerId === user.id;
+    const isCreator = gift?.createdById === user.id;
+    if (!isOwner && !isCreator) {
+      throw new Error('You are not the owner or creator of this gift');
     }
     await prisma.gift.delete({
       where: {
@@ -203,12 +212,14 @@ export const updateGift = async ({
         id,
       },
       select: {
-        owner: true,
+        ownerId: true,
+        createdById: true,
       },
     });
-    const isOwner = gift?.owner.id === user.id;
-    if (!isOwner) {
-      throw new Error('You are not the owner of this gift');
+    const isOwner = gift?.ownerId === user.id;
+    const isCreator = gift?.createdById === user.id;
+    if (!isOwner || !isCreator) {
+      throw new Error('You are not the owner or creator of this gift');
     }
     await prisma.gift.update({
       where: {
