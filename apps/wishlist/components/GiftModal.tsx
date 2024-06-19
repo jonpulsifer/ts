@@ -41,6 +41,7 @@ export default function Modal({ isOpen, setIsOpen }: Props) {
       name: name as string,
       url: url as string,
       description: description as string,
+      recipient: '',
     });
 
     if (result?.error) {
