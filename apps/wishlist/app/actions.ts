@@ -218,19 +218,20 @@ export const updateGift = async ({
     });
     const isOwner = gift?.ownerId === user.id;
     const isCreator = gift?.createdById === user.id;
-    if (!isOwner || !isCreator) {
+    if (isOwner || isCreator) {
+      await prisma.gift.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+          url,
+          description,
+        },
+      });
+    } else {
       throw new Error('You are not the owner or creator of this gift');
     }
-    await prisma.gift.update({
-      where: {
-        id,
-      },
-      data: {
-        name,
-        url,
-        description,
-      },
-    });
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };

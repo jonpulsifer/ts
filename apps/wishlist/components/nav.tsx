@@ -18,7 +18,6 @@ import {
   NavbarSpacer,
   Sidebar,
   SidebarBody,
-  SidebarFooter,
   SidebarHeader,
   SidebarHeading,
   SidebarItem,
@@ -132,25 +131,26 @@ export function SidebarMarkup({ user, users, items }: NavProps) {
   });
   return (
     <Sidebar>
-      <SidebarHeader>
-        <div className="flex flex-row gap-2">
+      <SidebarHeader className="space-y-4">
+        <div className="flex flex-row items-center justify-center gap-2">
           <Logo />
           <Heading>wishin.app</Heading>
         </div>
+        <DaysUntilChristmasBadge />
       </SidebarHeader>
       <SidebarBody>
+        <SidebarSection>
+          <SidebarItem onClick={() => setIsOpen(true)}>
+            <PlusSquareIcon size={16} />
+            Add new gift
+          </SidebarItem>
+        </SidebarSection>
         <SidebarSection>
           <SidebarHeading>Navigation</SidebarHeading>
           {itemsMarkup}
         </SidebarSection>
       </SidebarBody>
-      <SidebarFooter className="space-y-2">
-        <SidebarItem onClick={() => setIsOpen(true)}>
-          <PlusSquareIcon size={16} />
-          Add new gift
-        </SidebarItem>
-        <DaysUntilChristmasBadge />
-      </SidebarFooter>
+
       <GiftDialog
         isOpen={isOpen}
         setIsOpen={setIsOpen}

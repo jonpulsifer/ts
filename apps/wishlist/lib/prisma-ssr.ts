@@ -77,14 +77,19 @@ const getMeWithGiftsAndWishlists =
     return getUserById(id, true, true);
   };
 
-const getUserById = async (id: string, gifts = false, wishlists = false) => {
+const getUserById = async (
+  id: string,
+  gifts = false,
+  wishlists = false,
+  createdBy = false,
+) => {
   try {
     const user = prisma.user.findUniqueOrThrow({
       where: {
         id,
       },
       include: {
-        gifts,
+        gifts: gifts ? { include: { createdBy } } : undefined,
         wishlists,
       },
     });
@@ -100,7 +105,12 @@ const getUserById = async (id: string, gifts = false, wishlists = false) => {
   return redirect('/login');
 };
 
-const getGiftById = async (id: string, owner = false, claimedBy = false) => {
+const getGiftById = async (
+  id: string,
+  owner = false,
+  claimedBy = false,
+  createdBy = false,
+) => {
   try {
     const gift = await prisma.gift.findUniqueOrThrow({
       where: {
@@ -109,6 +119,7 @@ const getGiftById = async (id: string, owner = false, claimedBy = false) => {
       include: {
         owner,
         claimedBy,
+        createdBy,
       },
     });
     return gift;
@@ -285,6 +296,12 @@ const getWishlists = async () => {
       select: {
         id: true,
         name: true,
+        _count: {
+          select: {
+            members: true,
+            gifts: true,
+          },
+        },
       },
     });
     const user = await getUserById(id, false, true);

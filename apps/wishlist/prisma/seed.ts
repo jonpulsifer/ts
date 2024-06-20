@@ -1,9 +1,15 @@
 import { faker } from '@faker-js/faker';
+import { User, Wishlist } from '@prisma/client';
 
 import { prisma } from '../lib/prisma';
 
-const createRandomGift = async (userId: string, wishlistId: string) => {
-  console.log('creating gift for', userId, wishlistId);
+const createRandomGift = async (
+  user: User,
+  wishlist: Wishlist,
+  recipient?: User,
+) => {
+  console.log('creating gift for', user, wishlist);
+  const sender = recipient ? recipient : user;
   return prisma.gift.upsert({
     where: { id: faker.string.uuid() },
     update: {},
@@ -11,16 +17,9 @@ const createRandomGift = async (userId: string, wishlistId: string) => {
       name: faker.commerce.productName(),
       description: `${faker.commerce.productName()} - ${faker.commerce.productDescription()}`,
       url: faker.internet.url(),
-      owner: {
-        connect: {
-          id: userId,
-        },
-      },
-      wishlists: {
-        connect: {
-          id: wishlistId,
-        },
-      },
+      owner: { connect: user },
+      createdBy: { connect: sender },
+      wishlists: { connect: wishlist },
     },
   });
 };
@@ -58,7 +57,7 @@ async function main() {
     update: {},
     create: {
       email: 'alice@example.com',
-      name: faker.person.fullName(),
+      name: `Alice ${faker.person.fullName()}`,
       wishlists: {
         connect: christmasWishlist,
       },
@@ -70,7 +69,7 @@ async function main() {
     update: {},
     create: {
       email: 'bob@example.com',
-      name: faker.person.fullName(),
+      name: `Bob ${faker.person.fullName()}`,
       wishlists: {
         connect: christmasWishlist,
       },
@@ -82,7 +81,7 @@ async function main() {
     update: {},
     create: {
       email: 'carol@example.com',
-      name: faker.person.fullName(),
+      name: `Carol ${faker.person.fullName()}`,
     },
   });
 
@@ -100,36 +99,54 @@ async function main() {
     update: {},
     create: {
       email: 'emily@example.com',
-      name: faker.person.fullName(),
+      name: `Emily ${faker.person.fullName()}`,
       wishlists: { connect: [christmasWishlist, birthdayWishlist] },
     },
   });
 
+  const jonathan = await prisma.user.upsert({
+    where: { email: 'jonathan@pulsifer.ca' },
+    update: {},
+    create: {
+      email: 'jonathan@pulsifer.ca',
+      name: 'Jonathan Seedifer',
+      wishlists: { connect: [christmasWishlist] },
+    },
+  });
+
   await Promise.all([
-    createRandomGift(alice.id, christmasWishlist.id),
-    createRandomGift(alice.id, christmasWishlist.id),
-    createRandomGift(alice.id, christmasWishlist.id),
-    createRandomGift(alice.id, christmasWishlist.id),
-    createRandomGift(alice.id, christmasWishlist.id),
+    createRandomGift(alice, christmasWishlist),
+    createRandomGift(alice, christmasWishlist),
+    createRandomGift(alice, christmasWishlist),
+    createRandomGift(alice, christmasWishlist),
+    createRandomGift(alice, christmasWishlist),
     // bob
-    createRandomGift(bob.id, christmasWishlist.id),
-    createRandomGift(bob.id, christmasWishlist.id),
-    createRandomGift(bob.id, christmasWishlist.id),
-    createRandomGift(bob.id, christmasWishlist.id),
+    createRandomGift(bob, christmasWishlist),
+    createRandomGift(bob, christmasWishlist),
+    createRandomGift(bob, christmasWishlist),
+    createRandomGift(bob, christmasWishlist),
     // carol
-    createRandomGift(carol.id, christmasWishlist.id),
-    createRandomGift(carol.id, christmasWishlist.id),
-    createRandomGift(carol.id, christmasWishlist.id),
-    createRandomGift(carol.id, christmasWishlist.id),
+    createRandomGift(carol, christmasWishlist),
+    createRandomGift(carol, christmasWishlist),
+    createRandomGift(carol, christmasWishlist),
+    createRandomGift(carol, christmasWishlist),
     // dave
-    createRandomGift(dave.id, christmasWishlist.id),
-    createRandomGift(dave.id, christmasWishlist.id),
+    createRandomGift(dave, christmasWishlist),
+    createRandomGift(dave, christmasWishlist),
     // emily
-    createRandomGift(emily.id, birthdayWishlist.id),
-    createRandomGift(emily.id, birthdayWishlist.id),
-    createRandomGift(emily.id, birthdayWishlist.id),
+    createRandomGift(emily, birthdayWishlist),
+    createRandomGift(emily, birthdayWishlist),
+    createRandomGift(emily, birthdayWishlist),
+    // jonathan
+    createRandomGift(jonathan, christmasWishlist),
+    createRandomGift(jonathan, christmasWishlist),
+    createRandomGift(jonathan, christmasWishlist),
+    createRandomGift(jonathan, christmasWishlist),
+    createRandomGift(alice, christmasWishlist, jonathan),
+    createRandomGift(alice, christmasWishlist, jonathan),
+    createRandomGift(bob, christmasWishlist, jonathan),
   ]);
-  console.log({ alice, bob, carol, dave, emily });
+  console.log({ alice, bob, carol, dave, emily, jonathan });
 }
 main()
   .then(async () => {

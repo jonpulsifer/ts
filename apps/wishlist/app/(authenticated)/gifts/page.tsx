@@ -12,6 +12,9 @@ import {
   TableRow,
   Text,
 } from '@repo/ui';
+import { ClaimButton } from 'components/claim-button';
+import { DeleteButton } from 'components/delete-button';
+import { EditButton } from 'components/edit-button';
 import { getSortedVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from 'lucide-react';
 import React from 'react';
@@ -44,23 +47,25 @@ export default async function Gifts({
     </Link>
   );
 
-  const { gifts } = await getSortedVisibleGiftsForUser(direction);
+  const { gifts, user } = await getSortedVisibleGiftsForUser(direction);
 
   const giftRows = gifts.map((gift) => (
     <TableRow key={gift.id} href={`/gift/${gift.id}`}>
       <TableCell>{gift.name}</TableCell>
       <TableCell>{gift.owner.name}</TableCell>
-      <TableCell>
-        <Button>Claim</Button>
+      <TableCell className="flex gap-2 text-right">
+        <ClaimButton gift={gift} currentUserId={user.id} />
+        <EditButton gift={gift} currentUserId={user.id} />
+        <DeleteButton gift={gift} currentUserId={user.id} />
       </TableCell>
     </TableRow>
   ));
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex items-center justify-between">
         <Heading>Gifts</Heading>
         <div className="flex gap-4">
-          <Button>
+          <Button color="green">
             <PlusIcon size={16} />
             Add Gift
           </Button>

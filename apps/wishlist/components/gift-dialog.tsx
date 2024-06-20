@@ -138,7 +138,7 @@ export default function GiftDialog({
 
         <DialogActions>
           <Button
-            plain
+            outline
             onClick={() => {
               closeAndReset();
             }}

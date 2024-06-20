@@ -11,7 +11,7 @@ export const ClaimButton = ({
   gift: GiftWithOwner;
   currentUserId: string;
 }) => {
-  if (gift.ownerId === currentUserId) {
+  if (gift.ownerId === currentUserId || gift.createdById === currentUserId) {
     return null;
   }
 

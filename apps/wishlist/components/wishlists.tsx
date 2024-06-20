@@ -1,7 +1,8 @@
 'use client';
 
-import type { Prisma } from '@prisma/client';
+import type { Prisma, Wishlist } from '@prisma/client';
 import {
+  Avatar,
   Button,
   Divider,
   Field,
@@ -11,11 +12,13 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
   TableRow,
   Text,
 } from '@repo/ui';
 import { joinWishlist, leaveWishlist } from 'app/actions';
-import { DoorOpen, HeartHandshake } from 'lucide-react';
+import { DoorOpen, HeartHandshake, Users2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 import EmptyState from './EmptyState';
@@ -25,7 +28,16 @@ type UserWithWishlists = Prisma.UserGetPayload<{
 }>;
 
 type WishlistsWithoutPasswords = Prisma.WishlistGetPayload<{
-  select: { id: true; name: true };
+  select: {
+    id: true;
+    name: true;
+    _count: {
+      select: {
+        members: true;
+        gifts: true;
+      };
+    };
+  };
 }>;
 
 interface Props {
@@ -34,7 +46,7 @@ interface Props {
 }
 
 function Wishlists({ wishlists, user }: Props) {
-  const handleLeaveWishlist = async (wishlist: WishlistsWithoutPasswords) => {
+  const handleLeaveWishlist = async (wishlist: Wishlist) => {
     const result = await leaveWishlist({
       userId: user.id,
       wishlistId: wishlist.id,
@@ -69,7 +81,7 @@ function Wishlists({ wishlists, user }: Props) {
       const form = (
         <form
           action={(formData) => handleJoinWishlist(formData, wishlist)}
-          className="flex flex-row items-center"
+          className="justify-end flex gap-4 items-center"
           name={wishlist.id}
         >
           <Field>
@@ -83,21 +95,17 @@ function Wishlists({ wishlists, user }: Props) {
             />
           </Field>
 
-          <Button className="ml-4 w-24" type="submit">
-            <HeartHandshake />
+          <Button type="submit">
+            <HeartHandshake size={16} />
             Join
           </Button>
         </form>
       );
 
-      const inWishlist = user.wishlists.find((w) => w.id === wishlist.id);
-      const actionMarkup = inWishlist ? (
-        <Button
-          onClick={() => handleLeaveWishlist(inWishlist)}
-          className="ml-4 w-24"
-          type="submit"
-        >
-          <DoorOpen />
+      const membership = user.wishlists.find((w) => w.id === wishlist.id);
+      const actionMarkup = membership ? (
+        <Button onClick={() => handleLeaveWishlist(membership)} type="submit">
+          <DoorOpen size={16} />
           Leave
         </Button>
       ) : (
@@ -105,22 +113,26 @@ function Wishlists({ wishlists, user }: Props) {
       );
 
       return (
-        <TableRow key={`${wishlist.name}-${wishlist.id}`}>
+        <TableRow key={wishlist.id}>
           <TableCell>
-            <div className="flex items-center p-2 px-4">
-              <div className="mr-4 sm:flex inline-flex overflow-hidden relative justify-center items-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-gray-800">
-                <span className="font-medium text-violet-600 dark:text-violet-500">
-                  {wishlist.name[0].toUpperCase()}
-                </span>
-              </div>
+            <div className="flex items-center gap-4">
+              <Avatar
+                className="size-12"
+                square
+                initials={wishlist.name[0].toUpperCase()}
+              />
               <div>
-                <div className="font-semibold text-xl">{wishlist.name}</div>
-              </div>
-              <div className="flex flex-grow text-right justify-end">
-                {actionMarkup}
+                <Strong>{wishlist.name}</Strong>
+                <div className="flex flex-row gap-4 text-xs text-zinc-500 dark:text-zinc-400">
+                  <div className="gap-1 flex items-center">
+                    <Users2 size={12} />
+                    {wishlist._count.members} members
+                  </div>
+                </div>
               </div>
             </div>
           </TableCell>
+          <TableCell className="text-right">{actionMarkup}</TableCell>
         </TableRow>
       );
     });
@@ -131,11 +143,20 @@ function Wishlists({ wishlists, user }: Props) {
       <Heading>Available Wishlists</Heading>
       <Divider soft className="my-4" />
       <Text className="my-4">
-        <Strong>Join a wishlist</Strong> to see what your family wants for the
-        holidays.
+        <Strong>A wishlist is a group of people</Strong> who share gift ideas
+        with each other.
       </Text>
-      <Table>
+      <Text className="my-4">
+        <Strong>Join a wishlist</Strong> to view people&apos;s gift ideas.
+      </Text>
+      <Table bleed>
         <TableBody>{familyList(wishlists)}</TableBody>
+        <TableHead>
+          <TableRow>
+            <TableHeader>Wishlist</TableHeader>
+            <TableHeader className="text-right">Action</TableHeader>
+          </TableRow>
+        </TableHead>
       </Table>
     </>
   ) : (

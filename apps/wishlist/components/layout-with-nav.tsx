@@ -8,7 +8,7 @@ import {
   UsersIcon,
 } from 'lucide-react';
 
-import { NavBar, SidebarMarkup } from './sidebar';
+import { NavBar, SidebarMarkup } from './nav';
 
 const navItems = [
   { label: 'Home', url: '/', icon: <HomeIcon size={16} /> },
