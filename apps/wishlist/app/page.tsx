@@ -1,9 +1,6 @@
-import { Nav } from 'components/layout-with-nav';
-import Toast from 'components/Toaster';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import HomePage from './(authenticated)/page';
 import { auth } from './auth';
 
 export const metadata: Metadata = {
@@ -14,12 +11,7 @@ export const metadata: Metadata = {
 const Home = async () => {
   const session = await auth();
   if (session?.user) {
-    return (
-      <Nav>
-        <HomePage />
-        <Toast />
-      </Nav>
-    );
+    redirect('/home');
   }
   redirect('/login');
 };
