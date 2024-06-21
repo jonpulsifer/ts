@@ -3,7 +3,7 @@ import Toast from 'components/Toaster';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import PeoplePage from './(authenticated)/people/page';
+import HomePage from './(authenticated)/page';
 import { auth } from './auth';
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ const Home = async () => {
   if (session?.user) {
     return (
       <Nav>
-        <PeoplePage />
+        <HomePage />
         <Toast />
       </Nav>
     );

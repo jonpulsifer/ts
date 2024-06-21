@@ -187,6 +187,38 @@ const getVisibleGiftsForUserById = async (id: string) => {
   return { gifts, user: session.user };
 };
 
+const getLatestVisibleGiftsForUserById = async (id: string) => {
+  const session = await isAuthenticated();
+  const currentUserId = session.user.id;
+  const gifts = await prisma.gift.findMany({
+    where: {
+      ownerId: id,
+      AND: {
+        OR: [
+          { claimed: false },
+          {
+            claimed: true,
+            claimedBy: {
+              id: currentUserId,
+            },
+          },
+          { createdBy: { id: currentUserId } },
+        ],
+      },
+    },
+    include: {
+      owner: true,
+      claimedBy: true,
+      createdBy: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 10,
+  });
+  return { gifts, user: session.user };
+};
+
 const isAuthenticated = async () => {
   const session = await auth();
   if (!session || !session?.user) {
@@ -244,14 +276,21 @@ const getVisibleGiftsForUser = async () => {
   redirect('/login');
 };
 
-const getSortedVisibleGiftsForUser = async (sortDirection: string) => {
+const getSortedVisibleGiftsForUser = async ({
+  column = 'name',
+  direction = 'asc',
+}: {
+  direction?: 'asc' | 'desc';
+  column?: 'name' | 'owner';
+}) => {
   const session = await isAuthenticated();
   const { id } = session.user;
   const user = await getUserById(id, true, true);
   if (!user.wishlists.length) return { gifts: [], user: session.user };
 
+  const orderBy =
+    column === 'owner' ? { owner: { name: direction } } : { name: direction };
   try {
-    const direction = sortDirection === 'asc' ? 'asc' : 'desc';
     const wishlistIds = user.wishlists.map((w) => w.id);
     const gifts = await prisma.gift.findMany({
       where: {
@@ -275,11 +314,7 @@ const getSortedVisibleGiftsForUser = async (sortDirection: string) => {
         claimedBy: true,
         createdBy: true,
       },
-      orderBy: [
-        {
-          name: direction,
-        },
-      ],
+      orderBy: [orderBy],
     });
     return { gifts, user: session.user };
   } catch (e) {
@@ -364,6 +399,7 @@ export {
   getClaimedGiftsForMe,
   getGiftById,
   getGiftsWithOwnerByUserId,
+  getLatestVisibleGiftsForUserById,
   getMe,
   getMeWithGifts,
   getMeWithGiftsAndWishlists,

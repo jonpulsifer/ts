@@ -1,5 +1,4 @@
 import {
-  Button,
   Divider,
   Heading,
   Link,
@@ -16,7 +15,7 @@ import { ClaimButton } from 'components/claim-button';
 import { DeleteButton } from 'components/delete-button';
 import { EditButton } from 'components/edit-button';
 import { getSortedVisibleGiftsForUser } from 'lib/prisma-ssr';
-import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import React from 'react';
 import { UrlObject } from 'url';
 
@@ -25,8 +24,20 @@ export default async function Gifts({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { orderBy = 'asc' } = searchParams;
-  const direction = Array.isArray(orderBy) ? orderBy[0] : orderBy;
+  const {
+    direction: directionFromParams = 'asc',
+    column: columnFromParams = 'name',
+  } = searchParams;
+
+  const firstDirectionFromParams = Array.isArray(directionFromParams)
+    ? directionFromParams[0]
+    : directionFromParams;
+  const direction = firstDirectionFromParams === 'asc' ? 'asc' : 'desc';
+
+  const firstColumnFromParams = Array.isArray(columnFromParams)
+    ? columnFromParams[0]
+    : columnFromParams;
+  const column = firstColumnFromParams === 'owner' ? 'owner' : 'name';
 
   const sortIcon =
     direction === 'asc' ? (
@@ -39,20 +50,25 @@ export default async function Gifts({
   // for sorting the gifts in the opposite direction
   const href: UrlObject = {
     pathname: '/gifts',
-    query: { orderBy: direction === 'asc' ? 'desc' : 'asc' },
+    query: { column: 'name', direction: direction === 'asc' ? 'desc' : 'asc' },
   };
-  const sortButton = (
-    <Link href={href as unknown as string}>
-      <Button plain>{sortIcon}</Button>
-    </Link>
-  );
 
-  const { gifts, user } = await getSortedVisibleGiftsForUser(direction);
+  // Button with an href to add the query parameter to the URL
+  // for sorting the gifts by owner
+  const hrefOwner: UrlObject = {
+    pathname: '/gifts',
+    query: { column: 'owner', direction: direction === 'asc' ? 'desc' : 'asc' },
+  };
+
+  const { gifts, user } = await getSortedVisibleGiftsForUser({
+    direction,
+    column,
+  });
 
   const giftRows = gifts.map((gift) => (
     <TableRow key={gift.id} href={`/gift/${gift.id}`}>
       <TableCell>{gift.name}</TableCell>
-      <TableCell>{gift.owner.name}</TableCell>
+      <TableCell>{gift.owner.name || gift.owner.email}</TableCell>
       <TableCell className="flex gap-2 text-right">
         <ClaimButton gift={gift} currentUserId={user.id} />
         <EditButton gift={gift} currentUserId={user.id} />
@@ -64,27 +80,35 @@ export default async function Gifts({
     <>
       <div className="flex items-center justify-between">
         <Heading>Gifts</Heading>
-        <div className="flex gap-4">
-          <Button color="green">
-            <PlusIcon size={16} />
-            Add Gift
-          </Button>
-        </div>
+        <div className="flex gap-4"></div>
       </div>
       <Divider className="my-4" soft />
       <Text>
-        Below are all of the <Strong>claimable</Strong> gifts that people have
-        added to their wishlists.
+        Below are all of the gifts that you can see. The gifts in the list are
+        <Strong> claimable gifts</Strong>,
+        <Strong> gifts that you have created</Strong>, or
+        <Strong> gifts that you have already claimed</Strong>. Any gifts that
+        you have created or claimed will not have the option to claim them.
       </Text>
-      <Divider className="my-4" soft />
-      <Table dense>
+      <Table bleed dense>
         <TableHead>
           <TableRow>
-            <TableHeader className="flex items-center gap-2">
-              Gift
-              {sortButton}
+            <TableHeader>
+              <Link
+                className="flex items-center gap-2"
+                href={href as unknown as string}
+              >
+                Name {sortIcon}
+              </Link>
             </TableHeader>
-            <TableHeader>Owner</TableHeader>
+            <TableHeader>
+              <Link
+                className="flex items-center gap-2"
+                href={hrefOwner as unknown as string}
+              >
+                Recipient {sortIcon}
+              </Link>
+            </TableHeader>
             <TableHeader>Actions</TableHeader>
           </TableRow>
         </TableHead>
