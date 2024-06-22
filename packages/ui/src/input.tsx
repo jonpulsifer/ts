@@ -1,10 +1,8 @@
-import * as Headless from '@headlessui/react';
-import { clsx } from 'clsx';
-import { forwardRef } from 'react';
+import * as Headless from '@headlessui/react'
+import clsx from 'clsx'
+import React, { forwardRef } from 'react'
 
-export function InputGroup({
-  children,
-}: React.ComponentPropsWithoutRef<'span'>) {
+export function InputGroup({ children }: React.ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       data-slot="control"
@@ -13,34 +11,26 @@ export function InputGroup({
         '[&_input]:has-[[data-slot=icon]:first-child]:pl-10 [&_input]:has-[[data-slot=icon]:last-child]:pr-10 sm:[&_input]:has-[[data-slot=icon]:first-child]:pl-8 sm:[&_input]:has-[[data-slot=icon]:last-child]:pr-8',
         '[&>[data-slot=icon]]:pointer-events-none [&>[data-slot=icon]]:absolute [&>[data-slot=icon]]:top-3 [&>[data-slot=icon]]:z-10 [&>[data-slot=icon]]:size-5 sm:[&>[data-slot=icon]]:top-2.5 sm:[&>[data-slot=icon]]:size-4',
         '[&>[data-slot=icon]:first-child]:left-3 sm:[&>[data-slot=icon]:first-child]:left-2.5 [&>[data-slot=icon]:last-child]:right-3 sm:[&>[data-slot=icon]:last-child]:right-2.5',
-        '[&>[data-slot=icon]]:text-zinc-500 dark:[&>[data-slot=icon]]:text-zinc-400',
+        '[&>[data-slot=icon]]:text-zinc-500 dark:[&>[data-slot=icon]]:text-zinc-400'
       )}
     >
       {children}
     </span>
-  );
+  )
 }
 
-const dateTypes = ['date', 'datetime-local', 'month', 'time', 'week'];
-type DateType = (typeof dateTypes)[number];
+const dateTypes = ['date', 'datetime-local', 'month', 'time', 'week']
+type DateType = (typeof dateTypes)[number]
 
 export const Input = forwardRef(function Input(
   {
     className,
     ...props
   }: {
-    className?: string;
-    type?:
-      | 'email'
-      | 'number'
-      | 'password'
-      | 'search'
-      | 'tel'
-      | 'text'
-      | 'url'
-      | DateType;
+    className?: string
+    type?: 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url' | DateType
   } & Omit<Headless.InputProps, 'className'>,
-  ref: React.ForwardedRef<HTMLInputElement>,
+  ref: React.ForwardedRef<HTMLInputElement>
 ) {
   return (
     <span
@@ -95,8 +85,10 @@ export const Input = forwardRef(function Input(
           'data-[invalid]:border-red-500 data-[invalid]:data-[hover]:border-red-500 data-[invalid]:dark:border-red-500 data-[invalid]:data-[hover]:dark:border-red-500',
           // Disabled state
           'data-[disabled]:border-zinc-950/20 dark:data-[hover]:data-[disabled]:border-white/15 data-[disabled]:dark:border-white/15 data-[disabled]:dark:bg-white/[2.5%]',
+          // System icons
+          'dark:[color-scheme:dark]',
         ])}
       />
     </span>
-  );
-});
+  )
+})

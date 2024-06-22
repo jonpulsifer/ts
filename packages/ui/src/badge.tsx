@@ -1,8 +1,8 @@
-import * as Headless from '@headlessui/react';
-import clsx from 'clsx';
-import React from 'react';
-import { TouchTarget } from './button';
-import { Link } from './link';
+import * as Headless from '@headlessui/react'
+import clsx from 'clsx'
+import React, { forwardRef } from 'react'
+import { TouchTarget } from './button'
+import { Link } from './link'
 
 const colors = {
   red: 'bg-red-500/15 text-red-700 group-data-[hover]:bg-red-500/25 dark:bg-red-500/10 dark:text-red-400 dark:group-data-[hover]:bg-red-500/20',
@@ -32,30 +32,24 @@ const colors = {
   pink: 'bg-pink-400/15 text-pink-700 group-data-[hover]:bg-pink-400/25 dark:bg-pink-400/10 dark:text-pink-400 dark:group-data-[hover]:bg-pink-400/20',
   rose: 'bg-rose-400/15 text-rose-700 group-data-[hover]:bg-rose-400/25 dark:bg-rose-400/10 dark:text-rose-400 dark:group-data-[hover]:bg-rose-400/20',
   zinc: 'bg-zinc-600/10 text-zinc-700 group-data-[hover]:bg-zinc-600/20 dark:bg-white/5 dark:text-zinc-400 dark:group-data-[hover]:bg-white/10',
-};
-
-interface BadgeProps {
-  color?: keyof typeof colors;
 }
 
-export function Badge({
-  color = 'zinc',
-  className,
-  ...props
-}: BadgeProps & React.ComponentPropsWithoutRef<'span'>) {
+interface BadgeProps { color?: keyof typeof colors }
+
+export function Badge({ color = 'zinc', className, ...props }: BadgeProps & React.ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       {...props}
       className={clsx(
         className,
         'inline-flex items-center gap-x-1.5 rounded-md px-1.5 py-0.5 text-sm/5 font-medium sm:text-xs/5 forced-colors:outline',
-        colors[color],
+        colors[color]
       )}
     />
-  );
+  )
 }
 
-export const BadgeButton = React.forwardRef(function BadgeButton(
+export const BadgeButton = forwardRef(function BadgeButton(
   {
     color = 'zinc',
     className,
@@ -65,19 +59,15 @@ export const BadgeButton = React.forwardRef(function BadgeButton(
       | Omit<Headless.ButtonProps, 'className'>
       | Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>
     ),
-  ref: React.ForwardedRef<HTMLElement>,
+  ref: React.ForwardedRef<HTMLElement>
 ) {
   const classes = clsx(
     className,
-    'group relative inline-flex rounded-md focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500',
-  );
+    'group relative inline-flex rounded-md focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500'
+  )
 
   return 'href' in props ? (
-    <Link
-      {...props}
-      className={classes}
-      ref={ref as React.ForwardedRef<HTMLAnchorElement>}
-    >
+    <Link {...props} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
       <TouchTarget>
         <Badge color={color}>{children}</Badge>
       </TouchTarget>
@@ -88,5 +78,5 @@ export const BadgeButton = React.forwardRef(function BadgeButton(
         <Badge color={color}>{children}</Badge>
       </TouchTarget>
     </Headless.Button>
-  );
-});
+  )
+})

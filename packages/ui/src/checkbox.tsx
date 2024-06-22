@@ -1,11 +1,8 @@
-import * as Headless from '@headlessui/react';
-import { clsx } from 'clsx';
-import type React from 'react';
+import * as Headless from '@headlessui/react'
+import clsx from 'clsx'
+import type React from 'react'
 
-export function CheckboxGroup({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+export function CheckboxGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
       data-slot="control"
@@ -15,10 +12,10 @@ export function CheckboxGroup({
         // Basic groups
         'space-y-3',
         // With descriptions
-        'has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium',
+        'has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium'
       )}
     />
-  );
+  )
 }
 
 export function CheckboxField({
@@ -40,10 +37,10 @@ export function CheckboxField({
         // Description layout
         '[&>[data-slot=description]]:col-start-2 [&>[data-slot=description]]:row-start-2',
         // With description
-        '[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium',
+        '[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium'
       )}
     />
-  );
+  )
 }
 
 const base = [
@@ -72,7 +69,7 @@ const base = [
   // Forced colors mode
   'forced-colors:[--checkbox-check:HighlightText] forced-colors:[--checkbox-checked-bg:Highlight] forced-colors:group-data-[disabled]:[--checkbox-check:Highlight]',
   'dark:forced-colors:[--checkbox-check:HighlightText] dark:forced-colors:[--checkbox-checked-bg:Highlight] dark:forced-colors:group-data-[disabled]:[--checkbox-check:Highlight]',
-];
+]
 
 const colors = {
   'dark/zinc': [
@@ -113,17 +110,17 @@ const colors = {
     '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.fuchsia.500)] [--checkbox-checked-border:theme(colors.fuchsia.600/90%)]',
   pink: '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.pink.500)] [--checkbox-checked-border:theme(colors.pink.600/90%)]',
   rose: '[--checkbox-check:theme(colors.white)] [--checkbox-checked-bg:theme(colors.rose.500)] [--checkbox-checked-border:theme(colors.rose.600/90%)]',
-};
+}
 
-type Color = keyof typeof colors;
+type Color = keyof typeof colors
 
 export function Checkbox({
   color = 'dark/zinc',
   className,
   ...props
 }: {
-  color?: Color;
-  className?: string;
+  color?: Color
+  className?: string
 } & Omit<Headless.CheckboxProps, 'className'>) {
   return (
     <Headless.Checkbox
@@ -156,5 +153,5 @@ export function Checkbox({
         </svg>
       </span>
     </Headless.Checkbox>
-  );
+  )
 }

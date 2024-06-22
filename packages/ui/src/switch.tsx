@@ -1,11 +1,8 @@
-import * as Headless from '@headlessui/react';
-import { clsx } from 'clsx';
-import type React from 'react';
+import * as Headless from '@headlessui/react'
+import clsx from 'clsx'
+import type React from 'react'
 
-export function SwitchGroup({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+export function SwitchGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
       data-slot="control"
@@ -15,16 +12,13 @@ export function SwitchGroup({
         // Basic groups
         'space-y-3 [&_[data-slot=label]]:font-normal',
         // With descriptions
-        'has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium',
+        'has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium'
       )}
     />
-  );
+  )
 }
 
-export function SwitchField({
-  className,
-  ...props
-}: { className?: string } & Omit<Headless.FieldProps, 'className'>) {
+export function SwitchField({ className, ...props }: { className?: string } & Omit<Headless.FieldProps, 'className'>) {
   return (
     <Headless.Field
       data-slot="field"
@@ -40,10 +34,10 @@ export function SwitchField({
         // Description layout
         '[&>[data-slot=description]]:col-start-1 [&>[data-slot=description]]:row-start-2',
         // With description
-        '[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium',
+        '[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium'
       )}
     />
-  );
+  )
 }
 
 const colors = {
@@ -135,17 +129,17 @@ const colors = {
     '[--switch-bg-ring:theme(colors.rose.600/90%)] [--switch-bg:theme(colors.rose.500)] dark:[--switch-bg-ring:transparent]',
     '[--switch:white] [--switch-ring:theme(colors.rose.600/90%)] [--switch-shadow:theme(colors.rose.900/20%)]',
   ],
-};
+}
 
-type Color = keyof typeof colors;
+type Color = keyof typeof colors
 
 export function Switch({
   color = 'dark/zinc',
   className,
   ...props
 }: {
-  color?: Color;
-  className?: string;
+  color?: Color
+  className?: string
 } & Omit<Headless.SwitchProps, 'className' | 'children'>) {
   return (
     <Headless.Switch
@@ -172,7 +166,7 @@ export function Switch({
         'data-[disabled]:bg-zinc-200 data-[disabled]:data-[checked]:bg-zinc-200 data-[disabled]:opacity-50 data-[disabled]:data-[checked]:ring-black/5',
         'dark:data-[disabled]:bg-white/15 dark:data-[disabled]:data-[checked]:bg-white/15 dark:data-[disabled]:data-[checked]:ring-white/15',
         // Color specific styles
-        colors[color],
+        colors[color]
       )}
     >
       <span
@@ -190,9 +184,9 @@ export function Switch({
           'group-data-[checked]:bg-[--switch] group-data-[checked]:shadow-[--switch-shadow] group-data-[checked]:ring-[--switch-ring]',
           'group-data-[checked]:translate-x-4 sm:group-data-[checked]:translate-x-3',
           // Disabled
-          'group-data-[disabled]:group-data-[checked]:bg-white group-data-[disabled]:group-data-[checked]:shadow group-data-[disabled]:group-data-[checked]:ring-black/5',
+          'group-data-[disabled]:group-data-[checked]:bg-white group-data-[disabled]:group-data-[checked]:shadow group-data-[disabled]:group-data-[checked]:ring-black/5'
         )}
       />
     </Headless.Switch>
-  );
+  )
 }
