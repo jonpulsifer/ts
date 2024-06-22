@@ -10,7 +10,7 @@
     "@repo/eslint-config": "workspace:*",
     "ts-node": "10.9.2",
     "@repo/typescript-config": "workspace*",
-    "typescript": "5.4.5"
+    "typescript": "5.5.2"
   },
   "scripts": {
     "lint": "eslint --fix",
