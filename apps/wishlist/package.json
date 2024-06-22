@@ -14,7 +14,7 @@
     "lucide-react": "0.395.0"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "2.2.0",
+    "@auth/prisma-adapter": "2.4.1",
     "@headlessui/react": "2.0.4",
     "@prisma/client": "5.15.1",
     "@repo/ui": "workspace:*",
