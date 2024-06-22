@@ -25,11 +25,13 @@ type Props = {
 export async function Nav({ children }: Props) {
   const { user, users } = await getPeopleForUser();
   return (
-    <StackedLayout
-      navbar={<NavBar user={user} users={users} items={navItems} />}
-      sidebar={<SidebarMarkup user={user} users={users} items={navItems} />}
-    >
-      {children}
-    </StackedLayout>
+    <>
+      <StackedLayout
+        navbar={<NavBar user={user} users={users} items={navItems} />}
+        sidebar={<SidebarMarkup user={user} users={users} items={navItems} />}
+      >
+        {children}
+      </StackedLayout>
+    </>
   );
 }

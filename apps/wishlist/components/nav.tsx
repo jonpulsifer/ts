@@ -56,69 +56,74 @@ export function NavBar({ user, users, items }: NavProps) {
   const currentPath = usePathname();
 
   return (
-    <Navbar>
-      <Logo />
-      <NavbarDivider className="max-lg:hidden" />
-      <NavbarSection className="max-lg:hidden">
-        {items.map(({ label, url }) => {
-          const current = isCurrentPath(currentPath, url);
-          return (
-            <NavbarItem key={label} href={url} current={current}>
-              <NavbarLabel>{label}</NavbarLabel>
-            </NavbarItem>
-          );
-        })}
-      </NavbarSection>
-      <NavbarSpacer />
-      <NavbarSection>
+    <>
+      <Navbar>
+        <Logo />
+        <NavbarDivider className="max-lg:hidden" />
         <NavbarSection className="max-lg:hidden">
-          <DaysUntilChristmasBadge />
+          {items.map(({ label, url }) => {
+            const current = isCurrentPath(currentPath, url);
+            return (
+              <NavbarItem key={label} href={url} current={current}>
+                <NavbarLabel>{label}</NavbarLabel>
+              </NavbarItem>
+            );
+          })}
         </NavbarSection>
+        <NavbarSpacer />
+        <NavbarSection>
+          <NavbarSection className="max-lg:hidden">
+            <DaysUntilChristmasBadge />
+          </NavbarSection>
 
-        <Dropdown>
-          <DropdownButton as={NavbarItem}>
-            <Avatar
-              src={user.image}
-              initials={user.image ? undefined : initials}
-              square
-            />
-          </DropdownButton>
-          <DropdownMenu className="min-w-64" anchor="bottom end">
-            <DropdownItem>
-              <UserIcon size={16} />
-              <DropdownLabel>{user.email}</DropdownLabel>
-            </DropdownItem>
-            <DropdownDivider />
-            <DropdownItem onClick={() => setIsOpen(true)}>
-              <PlusSquareIcon size={16} />
-              <DropdownLabel>Add new gift</DropdownLabel>
-            </DropdownItem>
-            <DropdownItem href="/user/me">
-              <UserIcon size={16} />
-              <DropdownLabel>My profile</DropdownLabel>
-            </DropdownItem>
-            <DropdownItem href="/user/settings">
-              <CogIcon size={16} />
-              <DropdownLabel>Settings</DropdownLabel>
-            </DropdownItem>
-            <DropdownDivider />
-            <LogoutDropDownItem />
-          </DropdownMenu>
-        </Dropdown>
-      </NavbarSection>
+          <NavbarItem onClick={() => setIsOpen(true)}>
+            <PlusSquareIcon size={16} />
+            Add New Gift
+          </NavbarItem>
+
+          <Dropdown>
+            <DropdownButton as={NavbarItem}>
+              <Avatar
+                src={user.image}
+                initials={user.image ? undefined : initials}
+                square
+              />
+            </DropdownButton>
+            <DropdownMenu className="min-w-64" anchor="bottom end">
+              <DropdownItem>
+                <UserIcon size={16} />
+                <DropdownLabel>{user.email}</DropdownLabel>
+              </DropdownItem>
+              <DropdownDivider />
+              <DropdownItem onClick={() => setIsOpen(true)}>
+                <PlusSquareIcon size={16} />
+                <DropdownLabel>Add new gift</DropdownLabel>
+              </DropdownItem>
+              <DropdownItem href="/user/me">
+                <UserIcon size={16} />
+                <DropdownLabel>My profile</DropdownLabel>
+              </DropdownItem>
+              <DropdownItem href="/user/settings">
+                <CogIcon size={16} />
+                <DropdownLabel>Settings</DropdownLabel>
+              </DropdownItem>
+              <DropdownDivider />
+              <LogoutDropDownItem />
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarSection>
+      </Navbar>
       <GiftDialog
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         currentUser={user}
         users={users}
       />
-    </Navbar>
+    </>
   );
 }
 
-export function SidebarMarkup({ user, users, items }: NavProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
+export function SidebarMarkup({ items }: NavProps) {
   const currentPath = usePathname();
   const itemsMarkup = items.map(({ label, icon, url }) => {
     const current = isCurrentPath(currentPath, url);
@@ -140,23 +145,10 @@ export function SidebarMarkup({ user, users, items }: NavProps) {
       </SidebarHeader>
       <SidebarBody>
         <SidebarSection>
-          <SidebarItem onClick={() => setIsOpen(true)}>
-            <PlusSquareIcon size={16} />
-            Add new gift
-          </SidebarItem>
-        </SidebarSection>
-        <SidebarSection>
           <SidebarHeading>Navigation</SidebarHeading>
           {itemsMarkup}
         </SidebarSection>
       </SidebarBody>
-
-      <GiftDialog
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        currentUser={user}
-        users={users}
-      />
     </Sidebar>
   );
 }

@@ -32,7 +32,7 @@ export async function generateMetadata({
 const GiftPage = async ({ params }: PageProps) => {
   const session = await auth();
   const gift = await getGiftById(params.id, true, true, true);
-  if (!gift || !session?.user) {
+  if (!gift || !session) {
     notFound();
   }
   const user = await getUserWithGiftsById(gift.ownerId);

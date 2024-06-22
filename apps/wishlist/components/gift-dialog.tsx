@@ -36,6 +36,7 @@ export default function GiftDialog({
 }: Props) {
   const cancelButtonRef = useRef(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const closeAndReset = () => {
     setIsOpen(false);
@@ -64,6 +65,7 @@ export default function GiftDialog({
     } else {
       toast.success(`Added ${name} to your wishlist!`);
       formRef.current?.reset();
+      inputRef.current?.focus();
     }
   };
 
@@ -106,10 +108,12 @@ export default function GiftDialog({
           <Field>
             <Label>Gift Name</Label>
             <Input
+              autoFocus
               autoComplete="name"
               name="name"
               placeholder="Red Mittens"
               type="text"
+              ref={inputRef}
             />
           </Field>
           <Field>
