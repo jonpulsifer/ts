@@ -192,7 +192,7 @@ const getLatestVisibleGiftsForUserById = async (id: string) => {
   const currentUserId = session.user.id;
   const gifts = await prisma.gift.findMany({
     where: {
-      ownerId: id,
+      ownerId: { not: id },
       AND: {
         OR: [
           { claimed: false },
