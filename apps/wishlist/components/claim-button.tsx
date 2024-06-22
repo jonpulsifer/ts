@@ -19,7 +19,7 @@ export const ClaimButton = ({
     return (
       <Button
         color="red"
-        className="h-8"
+        className="h-10"
         onClick={() => {
           toast.promise(unclaimGift(gift.id), {
             loading: 'Unclaiming...',
@@ -39,7 +39,7 @@ export const ClaimButton = ({
   return (
     <Button
       color="green"
-      className="h-8"
+      className="h-10"
       onClick={() => {
         toast.promise(claimGift(gift.id), {
           loading: 'Claiming...',

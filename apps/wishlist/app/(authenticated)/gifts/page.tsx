@@ -67,9 +67,13 @@ export default async function Gifts({
 
   const giftRows = gifts.map((gift) => (
     <TableRow key={gift.id} href={`/gift/${gift.id}`}>
-      <TableCell>{gift.name}</TableCell>
-      <TableCell>{gift.owner.name || gift.owner.email}</TableCell>
-      <TableCell className="flex gap-2 text-right">
+      <TableCell>
+        <Text>{gift.name}</Text>
+      </TableCell>
+      <TableCell>
+        <Text>{gift.owner.name || gift.owner.email}</Text>
+      </TableCell>
+      <TableCell className="justify-end text-right space-x-1 sm:space-x-2">
         <ClaimButton gift={gift} currentUserId={user.id} />
         <EditButton gift={gift} currentUserId={user.id} />
         <DeleteButton gift={gift} currentUserId={user.id} />
@@ -84,13 +88,13 @@ export default async function Gifts({
       </div>
       <Divider className="my-4" soft />
       <Text>
-        Below are all of the gifts that you can see. The gifts in the list are
+        The gifts in the list are
         <Strong> claimable gifts</Strong>,
         <Strong> gifts that you have created</Strong>, or
         <Strong> gifts that you have already claimed</Strong>. Any gifts that
         you have created or claimed will not have the option to claim them.
       </Text>
-      <Table bleed dense>
+      <Table striped dense>
         <TableHead>
           <TableRow>
             <TableHeader>
@@ -109,7 +113,7 @@ export default async function Gifts({
                 Recipient {sortIcon}
               </Link>
             </TableHeader>
-            <TableHeader>Actions</TableHeader>
+            <TableHeader className="text-right">Actions</TableHeader>
           </TableRow>
         </TableHead>
         <TableBody>{giftRows}</TableBody>

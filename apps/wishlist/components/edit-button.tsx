@@ -13,7 +13,7 @@ export const EditButton = ({
   }
 
   return (
-    <Button className="h-8" href={`/gift/${gift.id}/edit`}>
+    <Button className="h-10" href={`/gift/${gift.id}/edit`}>
       Edit
     </Button>
   );

@@ -202,7 +202,6 @@ const getLatestVisibleGiftsForUserById = async (id: string) => {
               id: currentUserId,
             },
           },
-          { createdBy: { id: currentUserId } },
         ],
       },
     },

@@ -34,7 +34,7 @@ const PulsingText = () => {
 
 function Spinner({ Icon = Snowflake }: Props) {
   return (
-    <div className="max-h-full">
+    <div className="h-full">
       <div className="flex flex-col gap-2 justify-center items-center  h-full">
         <div className="animate-spin-slow h-full items-center justify-center text-indigo-600 dark:text-indigo-500">
           <Icon className="w-16 h-16" />

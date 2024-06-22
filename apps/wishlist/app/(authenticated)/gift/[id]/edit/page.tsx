@@ -2,8 +2,8 @@ import { Divider, Heading } from '@repo/ui';
 import type { Metadata } from 'next';
 
 import EmptyState from '../../../../../components/EmptyState';
-import GiftForm from '../../../../../components/GiftForm';
 import { getGiftById } from '../../../../../lib/prisma-ssr';
+import GiftForm from './components/gift-form';
 
 interface PageProps {
   params: { [K in string]: string };

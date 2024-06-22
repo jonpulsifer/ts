@@ -17,7 +17,7 @@ export const DeleteButton = ({
 
   return (
     <Button
-      className="h-8"
+      className="h-10"
       color="red"
       onClick={() => {
         toast.promise(deleteGift(gift.id), {
