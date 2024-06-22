@@ -30,8 +30,8 @@ importers:
   apps/authme:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: 2.2.0
-        version: 2.2.0(@prisma/client@5.15.1(prisma@5.15.1))
+        specifier: 2.4.1
+        version: 2.4.1(@prisma/client@5.15.1(prisma@5.15.1))
       '@prisma/client':
         specifier: 5.15.1
         version: 5.15.1(prisma@5.15.1)
@@ -400,8 +400,8 @@ importers:
   apps/wishlist:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: 2.2.0
-        version: 2.2.0(@prisma/client@5.15.1(prisma@5.15.1))
+        specifier: 2.4.1
+        version: 2.4.1(@prisma/client@5.15.1(prisma@5.15.1))
       '@headlessui/react':
         specifier: 2.0.4
         version: 2.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -716,8 +716,22 @@ packages:
       nodemailer:
         optional: true
 
-  '@auth/prisma-adapter@2.2.0':
-    resolution: {integrity: sha512-DiXgyJfqBb/6TPhNJ5IcRw3klxcFD+qaa7qvOYopV6rYinSUvsQkJ30m+so2SRlEsuDA6PqMu+Mf5Sd+zr3g+Q==}
+  '@auth/core@0.34.1':
+    resolution: {integrity: sha512-tuYU2VIbI8rFbkSwP710LmybB2FXJsPN7j3sjRVfN9SXVQBK2ej6LdewQaofpBGp4Mk+cC2UeiGNH0or4tgaeA==}
+    peerDependencies:
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
+      nodemailer:
+        optional: true
+
+  '@auth/prisma-adapter@2.4.1':
+    resolution: {integrity: sha512-VF5IOTHEWHX6WHUxIbsbc12m34cp5T82fzJfi7DmzwBZb89UsoROejV8l0B1dCTZ+pDIS0d4zN9dSa2gIKywNQ==}
     peerDependencies:
       '@prisma/client': '>=2.26.0 || >=3 || >=4 || >=5'
 
@@ -7259,9 +7273,19 @@ snapshots:
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
-  '@auth/prisma-adapter@2.2.0(@prisma/client@5.15.1(prisma@5.15.1))':
+  '@auth/core@0.34.1':
     dependencies:
-      '@auth/core': 0.32.0
+      '@panva/hkdf': 1.1.1
+      '@types/cookie': 0.6.0
+      cookie: 0.6.0
+      jose: 5.1.3
+      oauth4webapi: 2.10.4
+      preact: 10.11.3
+      preact-render-to-string: 5.2.3(preact@10.11.3)
+
+  '@auth/prisma-adapter@2.4.1(@prisma/client@5.15.1(prisma@5.15.1))':
+    dependencies:
+      '@auth/core': 0.34.1
       '@prisma/client': 5.15.1(prisma@5.15.1)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
