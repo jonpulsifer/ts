@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { User, Wishlist } from '@prisma/client';
 
-import { prisma } from '../lib/prisma';
+import prisma from '../lib/prisma';
 
 const createRandomGift = async (
   user: User,

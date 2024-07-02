@@ -48,7 +48,6 @@ interface Props {
 function Wishlists({ wishlists, user }: Props) {
   const handleLeaveWishlist = async (wishlist: Wishlist) => {
     const result = await leaveWishlist({
-      userId: user.id,
       wishlistId: wishlist.id,
     });
     if (result?.error) {
@@ -65,7 +64,6 @@ function Wishlists({ wishlists, user }: Props) {
   ) => {
     const password = formData.get('password');
     const result = await joinWishlist({
-      userId: user.id,
       wishlistId: wishlist.id,
       password: password as string,
     });

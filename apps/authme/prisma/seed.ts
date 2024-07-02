@@ -1,11 +1,7 @@
-import { faker } from '@faker-js/faker';
-
 import { prisma } from '../lib/prisma';
 
 async function drop() {
-  return Promise.all([
-    prisma.user.deleteMany(),
-  ]);
+  return Promise.all([prisma.user.deleteMany()]);
 }
 
 async function main() {

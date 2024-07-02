@@ -1,3 +1,4 @@
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import {
   Divider,
   Heading,
@@ -15,7 +16,11 @@ import { auth } from 'app/auth';
 import { ClaimButton } from 'components/claim-button';
 import { DeleteButton } from 'components/delete-button';
 import { EditButton } from 'components/edit-button';
-import { getLatestVisibleGiftsForUserById } from 'lib/prisma-ssr';
+import { GiftTable } from 'components/gift-table';
+import {
+  getGiftsWithOwnerByUserId,
+  getLatestVisibleGiftsForUserById,
+} from 'lib/prisma-ssr';
 import { timeAgo } from 'lib/utils';
 
 export default async function HomePage() {
@@ -25,18 +30,20 @@ export default async function HomePage() {
   }
 
   const { gifts } = await getLatestVisibleGiftsForUserById(session.user.id);
+  const userGifts = await getGiftsWithOwnerByUserId(session.user.id);
+
   const giftRows = gifts.map((gift) => {
     const createdAtHumanReadable = timeAgo(gift.createdAt);
     return (
-      <TableRow>
+      <TableRow href={`/gift/${gift.id}`}>
         <TableCell>
           <div className="flex flex-col">
             <Text>
               <Strong>{gift.name}</Strong>
             </Text>
-            <span className="text-xs text-zinc-400">
+            <span className="text-xs text-zinc-500">
               <span className="font-semibold">
-                {gift.owner.name || gift.owner.email}
+                <Strong>{gift.owner.name || gift.owner.email}</Strong>
               </span>{' '}
               created {createdAtHumanReadable}
             </span>
@@ -52,6 +59,26 @@ export default async function HomePage() {
       </TableRow>
     );
   });
+
+  const yourGifts = (
+    <GiftTable gifts={userGifts} currentUserId={session.user.id} />
+  );
+
+  const latestGifts = (
+    <div>
+      <Text>Below are the latest 10 gifts that you can see!</Text>
+      <Table dense>
+        <TableHead>
+          <TableRow>
+            <TableHeader>Name</TableHeader>
+            <TableHeader className="text-right">Actions</TableHeader>
+          </TableRow>
+        </TableHead>
+        <TableBody>{giftRows}</TableBody>
+      </Table>
+    </div>
+  );
+
   return (
     <div className="space-y-4 sm:gap-y-2">
       <div>
@@ -59,19 +86,21 @@ export default async function HomePage() {
         <Subheading>A wishlist app for friends and family</Subheading>
       </div>
       <Divider className="my-4" soft />
-      <div>
-        <Subheading>Latest Gifts</Subheading>
-        <Text>Below are the latest 10 gifts that you can see!</Text>
-        <Table dense>
-          <TableHead>
-            <TableRow>
-              <TableHeader>Name</TableHeader>
-              <TableHeader className="text-right">Actions</TableHeader>
-            </TableRow>
-          </TableHead>
-          <TableBody>{giftRows}</TableBody>
-        </Table>
-      </div>
+
+      <TabGroup className="flex flex-col gap-4">
+        <TabList className="flex gap-4 font-semibold">
+          <Tab className="flex items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-zinc-950 sm:py-2 sm:text-sm/5 data-[slot=icon]:*:size-6 data-[slot=icon]:*:shrink-0 data-[slot=icon]:*:fill-zinc-500 sm:data-[slot=icon]:*:size-5 data-[slot=icon]:last:*:ml-auto data-[slot=icon]:last:*:size-5 sm:data-[slot=icon]:last:*:size-4 data-[slot=avatar]:*:-m-0.5 data-[slot=avatar]:*:size-7 data-[slot=avatar]:*:[--ring-opacity:10%] sm:data-[slot=avatar]:*:size-6 data-[hover]:bg-zinc-950/5 data-[slot=icon]:*:data-[hover]:fill-zinc-950 data-[active]:bg-zinc-950/5 data-[selected]:bg-zinc-500/15 data-[slot=icon]:*:data-[active]:fill-zinc-950 data-[slot=icon]:*:data-[current]:fill-zinc-950 dark:text-white dark:data-[slot=icon]:*:fill-zinc-400 dark:data-[hover]:bg-white/5 dark:data-[slot=icon]:*:data-[hover]:fill-white dark:data-[active]:bg-white/5 dark:data-[slot=icon]:*:data-[active]:fill-white dark:data-[slot=icon]:*:data-[current]:fill-white">
+            Latest Gifts
+          </Tab>
+          <Tab className="flex items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-zinc-950 sm:py-2 sm:text-sm/5 data-[slot=icon]:*:size-6 data-[slot=icon]:*:shrink-0 data-[slot=icon]:*:fill-zinc-500 sm:data-[slot=icon]:*:size-5 data-[slot=icon]:last:*:ml-auto data-[slot=icon]:last:*:size-5 sm:data-[slot=icon]:last:*:size-4 data-[slot=avatar]:*:-m-0.5 data-[slot=avatar]:*:size-7 data-[slot=avatar]:*:[--ring-opacity:10%] sm:data-[slot=avatar]:*:size-6 data-[hover]:bg-zinc-950/5 data-[slot=icon]:*:data-[hover]:fill-zinc-950 data-[active]:bg-zinc-950/5 data-[selected]:bg-zinc-500/15 data-[slot=icon]:*:data-[active]:fill-zinc-950 data-[slot=icon]:*:data-[current]:fill-zinc-950 dark:text-white dark:data-[slot=icon]:*:fill-zinc-400 dark:data-[hover]:bg-white/5 dark:data-[slot=icon]:*:data-[hover]:fill-white dark:data-[active]:bg-white/5 dark:data-[slot=icon]:*:data-[active]:fill-white dark:data-[slot=icon]:*:data-[current]:fill-white">
+            Your Gifts
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>{latestGifts}</TabPanel>
+          <TabPanel>{yourGifts}</TabPanel>
+        </TabPanels>
+      </TabGroup>
     </div>
   );
 }

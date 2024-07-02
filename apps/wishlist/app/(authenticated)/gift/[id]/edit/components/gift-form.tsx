@@ -88,7 +88,7 @@ function GiftForm({ gift }: Props) {
           placeholder="..."
         />
       </Field>
-      <Button type="submit" form="upsertGift">
+      <Button color="green" type="submit" form="upsertGift">
         <Save size={16} />
         {gift ? 'Save changes' : 'Add to wishlist'}
       </Button>

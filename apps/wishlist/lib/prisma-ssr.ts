@@ -8,7 +8,7 @@ import type {
   UserWithGiftsAndWishlists,
   UserWithGiftsWithOwners,
 } from '../types/prisma';
-import { prisma } from './prisma';
+import prisma from './prisma';
 
 const getMe = async () => {
   const session = await isAuthenticated();
@@ -111,6 +111,7 @@ const getGiftById = async (
   claimedBy = false,
   createdBy = false,
 ) => {
+  await isAuthenticated();
   try {
     const gift = await prisma.gift.findUniqueOrThrow({
       where: {

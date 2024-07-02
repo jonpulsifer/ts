@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from 'lib/prisma';
+import prisma from 'lib/prisma';
 import { isAuthenticated } from 'lib/prisma-ssr';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -35,17 +35,12 @@ export const updateUser = async (_state: unknown, formData: FormData) => {
   }
 };
 
-export const leaveWishlist = async ({
-  userId,
-  wishlistId,
-}: {
-  userId: string;
-  wishlistId: string;
-}) => {
+export const leaveWishlist = async ({ wishlistId }: { wishlistId: string }) => {
+  const { user } = await isAuthenticated();
   try {
     await prisma.user.update({
       where: {
-        id: userId,
+        id: user.id,
       },
       data: {
         wishlists: {
@@ -66,14 +61,13 @@ export const leaveWishlist = async ({
 };
 
 export const joinWishlist = async ({
-  userId,
   wishlistId,
   password,
 }: {
-  userId: string;
   wishlistId: string;
   password: string;
 }) => {
+  const { user } = await isAuthenticated();
   try {
     const wishlist = await prisma.wishlist.findUniqueOrThrow({
       where: {
@@ -87,7 +81,7 @@ export const joinWishlist = async ({
 
     await prisma.user.update({
       where: {
-        id: userId,
+        id: user.id,
       },
       data: {
         wishlists: {

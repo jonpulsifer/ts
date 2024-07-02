@@ -50,17 +50,14 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   });
 
   return (
-    <div className="space-y-4">
-      <Text>Here is a list of gifts.</Text>
-      <Table dense>
-        <TableHead>
-          <TableRow>
-            <TableHeader>Gifts</TableHeader>
-            <TableHeader className="text-right my-4">Actions</TableHeader>
-          </TableRow>
-        </TableHead>
-        <TableBody>{tableRows}</TableBody>
-      </Table>
-    </div>
+    <Table dense>
+      <TableHead>
+        <TableRow>
+          <TableHeader>Gifts</TableHeader>
+          <TableHeader className="text-right my-4">Actions</TableHeader>
+        </TableRow>
+      </TableHead>
+      <TableBody>{tableRows}</TableBody>
+    </Table>
   );
 }
