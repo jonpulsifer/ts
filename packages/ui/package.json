@@ -52,7 +52,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@headlessui/react": "2.1.1",
+    "@headlessui/react": "2.1.2",
     "clsx": "2.1.1",
     "lucide-react": "0.400.0",
     "framer-motion": "11.2.12"
