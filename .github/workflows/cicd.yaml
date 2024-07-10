@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build and Test
     timeout-minutes: 10
-    runs-on: ubuntu-latest
+    runs-on: arc-ts
     env:
       NODE_ENV: test
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -193,7 +193,7 @@ jobs:
         app: [request-headers, rosie, nested, hub]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: [containerize]
-    runs-on: ts
+    runs-on: arc-ts
     environment:
       name: ${{ matrix.app }}
       url: https://${{matrix.app}}.lolwtf.ca
