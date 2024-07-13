@@ -1,7 +1,10 @@
 'use client';
 
 import { Transition } from '@headlessui/react';
-import { DoorClosed, Lightbulb } from 'lucide-react';
+import {
+  ArrowRightStartOnRectangleIcon,
+  LightBulbIcon,
+} from '@heroicons/react/16/solid';
 import React from 'react';
 import { resolveValue, toast, Toaster, ToastIcon } from 'react-hot-toast';
 
@@ -37,7 +40,7 @@ export function Toast() {
 export const dismissable = (content: string | JSX.Element) => {
   toast((t) => {
     t.duration = Infinity;
-    t.icon = <Lightbulb />;
+    t.icon = <LightBulbIcon />;
     return (
       <div
         className="flex items-center"
@@ -51,7 +54,7 @@ export const dismissable = (content: string | JSX.Element) => {
             toast.dismiss(t.id);
           }}
         >
-          <DoorClosed />
+          <ArrowRightStartOnRectangleIcon />
         </button>
         <p className="font-bold">{content}</p>
       </div>

@@ -1,3 +1,4 @@
+import { DocumentCheckIcon, GiftIcon } from '@heroicons/react/16/solid';
 import {
   Avatar,
   Divider,
@@ -10,7 +11,6 @@ import {
   Text,
 } from '@repo/ui';
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
-import { Gift, ListChecks } from 'lucide-react';
 import type { Metadata } from 'next';
 import React from 'react';
 import { GiftWithOwner } from 'types/prisma';
@@ -48,11 +48,11 @@ const PeoplePage = async () => {
         className="flex flex-row gap-4 text-sm text-zinc-500 dark:text-zinc-400"
       >
         <div className="flex flex-row items-center">
-          <Gift width={16} className="mr-1" />
+          <GiftIcon width={16} className="mr-1" />
           {gifts.length} gift{gifts.length > 1 ? 's' : ''}
         </div>
         <div className="flex flex-row items-center">
-          <ListChecks width={16} className="mr-1" />
+          <DocumentCheckIcon width={16} className="mr-1" />
           {`${claimedGifts.length} claimed`}
         </div>
       </div>

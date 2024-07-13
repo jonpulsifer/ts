@@ -1,8 +1,8 @@
+import { CubeTransparentIcon } from '@heroicons/react/16/solid';
 import Spinner from 'components/Spinner';
-import { Snowflake } from 'lucide-react';
 
 function Loading() {
-  return <Spinner Icon={Snowflake} />;
+  return <Spinner Icon={CubeTransparentIcon} />;
 }
 
 export default Loading;

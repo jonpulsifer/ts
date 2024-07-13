@@ -1,8 +1,8 @@
+import { GiftIcon } from '@heroicons/react/16/solid';
 import { Divider, Heading, Strong, Text } from '@repo/ui';
 import EmptyState from 'components/EmptyState';
 import { GiftTable } from 'components/gift-table';
 import { getClaimedGiftsForMe } from 'lib/prisma-ssr';
-import { Gift } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ const ClaimedPage = async () => {
       action={{
         title: 'View gifts',
         link: '/gifts',
-        icon: Gift,
+        icon: GiftIcon,
       }}
       subtitle="You have not claimed any gifts"
       title="🛒 No Claimed Gifts"

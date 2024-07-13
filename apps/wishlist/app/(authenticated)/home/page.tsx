@@ -13,10 +13,8 @@ import {
   Text,
 } from '@repo/ui';
 import { auth } from 'app/auth';
-import { ClaimButton } from 'components/claim-button';
-import { DeleteButton } from 'components/delete-button';
-import { EditButton } from 'components/edit-button';
 import { GiftTable } from 'components/gift-table';
+import { TableActions } from 'components/table-actions';
 import {
   getGiftsWithOwnerByUserId,
   getLatestVisibleGiftsForUserById,
@@ -51,9 +49,7 @@ export default async function HomePage() {
         </TableCell>
         <TableCell className="">
           <div className="text-right space-x-4">
-            <ClaimButton gift={gift} currentUserId={session.user.id} />
-            <EditButton gift={gift} currentUserId={session.user.id} />
-            <DeleteButton gift={gift} currentUserId={session.user.id} />
+            <TableActions gift={gift} currentUserId={session.user.id} />
           </div>
         </TableCell>
       </TableRow>

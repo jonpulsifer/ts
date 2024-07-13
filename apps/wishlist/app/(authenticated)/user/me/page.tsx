@@ -1,7 +1,7 @@
+import { CogIcon } from '@heroicons/react/16/solid';
 import { Button, Divider, Heading } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
 import { getGiftsWithOwnerByUserId, getMe } from 'lib/prisma-ssr';
-import { Cog } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ const MePage = async () => {
         <Heading>My Profile</Heading>
         <div className="flex gap-4">
           <Button outline href={'/user/settings'}>
-            <Cog size={16} />
+            <CogIcon />
             Settings
           </Button>
         </div>

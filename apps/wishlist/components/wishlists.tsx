@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  UserMinusIcon,
+  UserPlusIcon,
+  UsersIcon,
+} from '@heroicons/react/16/solid';
 import type { Prisma, Wishlist } from '@prisma/client';
 import {
   Avatar,
@@ -18,7 +23,6 @@ import {
   Text,
 } from '@repo/ui';
 import { joinWishlist, leaveWishlist } from 'app/actions';
-import { DoorOpen, HeartHandshake, Users2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 import EmptyState from './EmptyState';
@@ -94,7 +98,7 @@ function Wishlists({ wishlists, user }: Props) {
           </Field>
 
           <Button type="submit">
-            <HeartHandshake size={16} />
+            <UserPlusIcon />
             Join
           </Button>
         </form>
@@ -103,7 +107,7 @@ function Wishlists({ wishlists, user }: Props) {
       const membership = user.wishlists.find((w) => w.id === wishlist.id);
       const actionMarkup = membership ? (
         <Button onClick={() => handleLeaveWishlist(membership)} type="submit">
-          <DoorOpen size={16} />
+          <UserMinusIcon />
           Leave
         </Button>
       ) : (
@@ -123,7 +127,7 @@ function Wishlists({ wishlists, user }: Props) {
                 <Strong>{wishlist.name}</Strong>
                 <div className="flex flex-row gap-4 text-xs text-zinc-500 dark:text-zinc-400">
                   <div className="gap-1 flex items-center">
-                    <Users2 size={12} />
+                    <UsersIcon height={16} />
                     {wishlist._count.members} members
                   </div>
                 </div>

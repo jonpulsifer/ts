@@ -1,9 +1,9 @@
 'use client';
 
+import { DocumentPlusIcon } from '@heroicons/react/16/solid';
 import type { Gift } from '@prisma/client';
 import { Button, Description, Field, Input, Label, Textarea } from '@repo/ui';
 import { addGift, updateGift } from 'app/actions';
-import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 
@@ -89,7 +89,7 @@ function GiftForm({ gift }: Props) {
         />
       </Field>
       <Button color="green" type="submit" form="upsertGift">
-        <Save size={16} />
+        <DocumentPlusIcon />
         {gift ? 'Save changes' : 'Add to wishlist'}
       </Button>
       <Button outline onClick={() => router.back()}>

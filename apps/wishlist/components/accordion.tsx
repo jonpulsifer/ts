@@ -1,7 +1,13 @@
 'use client';
-import { Disclosure, Transition } from '@headlessui/react';
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Transition,
+  TransitionChild,
+} from '@headlessui/react';
+import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/16/solid';
 import { Avatar, AvatarProps } from '@repo/ui';
-import { ChevronDown, ChevronRight } from 'lucide-react';
 import React, { Suspense } from 'react';
 
 interface Props {
@@ -38,16 +44,16 @@ export const Accordion = ({
         {({ open }) => (
           <>
             <div className="p-2 w-full flex justify-between">
-              <Disclosure.Button>
+              <DisclosureButton>
                 <div className="flex gap-2">
                   <>
                     {open ? (
-                      <ChevronDown
+                      <ChevronDownIcon
                         width={20}
                         className="hover:animate-pulse hover:text-indigo-600 -mr-1"
                       />
                     ) : (
-                      <ChevronRight
+                      <ChevronRightIcon
                         width={20}
                         className="hover:animate-pulse hover:text-indigo-600 -mr-1"
                       />
@@ -61,7 +67,7 @@ export const Accordion = ({
                     <div>{subtitle}</div>
                   </div>
                 </div>
-              </Disclosure.Button>
+              </DisclosureButton>
               <div className="flex-shrink-0">{button}</div>
             </div>
             <Transition
@@ -73,7 +79,7 @@ export const Accordion = ({
               leaveTo="opacity-0 tranzinc-y-4 sm:tranzinc-y-0 sm:scale-95"
             >
               <Suspense>
-                <Transition.Child
+                <TransitionChild
                   enter="transition duration-100 ease-out"
                   enterFrom="transform scale-95 opacity-0"
                   enterTo="transform scale-100 opacity-100"
@@ -81,10 +87,10 @@ export const Accordion = ({
                   leaveFrom="transform scale-100 opacity-100"
                   leaveTo="transform scale-95 opacity-0"
                 >
-                  <Disclosure.Panel className="text-zinc-500">
+                  <DisclosurePanel className="text-zinc-500">
                     <div className="px-2">{children}</div>
-                  </Disclosure.Panel>
-                </Transition.Child>
+                  </DisclosurePanel>
+                </TransitionChild>
               </Suspense>
             </Transition>
           </>

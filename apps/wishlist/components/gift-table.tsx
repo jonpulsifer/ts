@@ -8,10 +8,9 @@ import {
   TableRow,
 } from '@repo/ui/table';
 import { Strong, Text } from '@repo/ui/text';
-import { ClaimButton } from 'components/claim-button';
-import { DeleteButton } from 'components/delete-button';
-import { EditButton } from 'components/edit-button';
 import { GiftWithOwner, GiftWithOwnerAndWishlistIds } from 'types/prisma';
+
+import { TableActions } from './table-actions';
 
 interface Props {
   gifts: GiftWithOwner[] | GiftWithOwnerAndWishlistIds[];
@@ -40,9 +39,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
         </TableCell>
         <TableCell className="text-right">
           <div className="space-x-4">
-            <EditButton gift={gift} currentUserId={currentUserId} />
-            <DeleteButton gift={gift} currentUserId={currentUserId} />
-            <ClaimButton gift={gift} currentUserId={currentUserId} />
+            <TableActions gift={gift} currentUserId={currentUserId} />
           </div>
         </TableCell>
       </TableRow>

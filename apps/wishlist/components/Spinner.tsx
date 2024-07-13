@@ -1,8 +1,8 @@
-import { LucideIcon, Snowflake } from 'lucide-react';
+import { CubeTransparentIcon } from '@heroicons/react/16/solid';
 import React from 'react';
 
 interface Props {
-  Icon?: LucideIcon;
+  Icon?: typeof CubeTransparentIcon;
 }
 
 const LOADING_MESSAGES = [
@@ -32,11 +32,11 @@ const PulsingText = () => {
   );
 };
 
-function Spinner({ Icon = Snowflake }: Props) {
+function Spinner({ Icon = CubeTransparentIcon }: Props) {
   return (
     <div className="h-full">
       <div className="flex flex-col gap-2 justify-center items-center  h-full">
-        <div className="animate-spin-slow h-full items-center justify-center text-indigo-600 dark:text-indigo-500">
+        <div className="animate-pulse h-full items-center justify-center text-indigo-600 dark:text-indigo-500">
           <Icon className="w-16 h-16" />
         </div>
         <PulsingText />

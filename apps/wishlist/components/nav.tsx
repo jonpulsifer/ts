@@ -1,5 +1,15 @@
 'use client';
 
+import {
+  CogIcon,
+  GiftIcon,
+  HomeIcon,
+  NumberedListIcon,
+  PlusCircleIcon,
+  UserCircleIcon,
+  UserGroupIcon,
+  UsersIcon,
+} from '@heroicons/react/20/solid';
 import { User } from '@prisma/client';
 import {
   Avatar,
@@ -23,7 +33,6 @@ import {
   SidebarItem,
   SidebarSection,
 } from '@repo/ui';
-import { CogIcon, PlusSquareIcon, UserIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -43,10 +52,21 @@ const isCurrentPath = (current: string, path: string) => current === path;
 type NavProps = {
   user: User;
   users: User[];
-  items: NavItem[];
 };
 
-export function NavBar({ user, users, items }: NavProps) {
+const NAV_ITEMS: NavItem[] = [
+  { label: 'Home', url: '/', icon: <HomeIcon height={20} /> },
+  { label: 'People', url: '/people', icon: <UsersIcon height={20} /> },
+  { label: 'Gifts', url: '/gifts', icon: <GiftIcon height={20} /> },
+  { label: 'Claimed', url: '/claimed', icon: <NumberedListIcon height={20} /> },
+  {
+    label: 'Wishlists',
+    url: '/wishlists',
+    icon: <UserGroupIcon height={20} />,
+  },
+];
+
+export function NavBar({ user, users }: NavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const initials = user.name
     ? user.name[0].toUpperCase()
@@ -61,7 +81,7 @@ export function NavBar({ user, users, items }: NavProps) {
         <Logo />
         <NavbarDivider className="max-lg:hidden" />
         <NavbarSection className="max-lg:hidden">
-          {items.map(({ label, url }) => {
+          {NAV_ITEMS.map(({ label, url }) => {
             const current = isCurrentPath(currentPath, url);
             return (
               <NavbarItem key={label} href={url} current={current}>
@@ -77,7 +97,7 @@ export function NavBar({ user, users, items }: NavProps) {
           </NavbarSection>
 
           <NavbarItem onClick={() => setIsOpen(true)}>
-            <PlusSquareIcon size={16} />
+            <PlusCircleIcon />
             Add New Gift
           </NavbarItem>
 
@@ -90,21 +110,17 @@ export function NavBar({ user, users, items }: NavProps) {
               />
             </DropdownButton>
             <DropdownMenu className="min-w-64" anchor="bottom end">
-              <DropdownItem>
-                <UserIcon size={16} />
-                <DropdownLabel>{user.email}</DropdownLabel>
+              <DropdownItem href="/user/me">
+                <UserCircleIcon />
+                <DropdownLabel>{user.name || user.email}</DropdownLabel>
               </DropdownItem>
               <DropdownDivider />
               <DropdownItem onClick={() => setIsOpen(true)}>
-                <PlusSquareIcon size={16} />
+                <PlusCircleIcon />
                 <DropdownLabel>Add new gift</DropdownLabel>
               </DropdownItem>
-              <DropdownItem href="/user/me">
-                <UserIcon size={16} />
-                <DropdownLabel>My profile</DropdownLabel>
-              </DropdownItem>
               <DropdownItem href="/user/settings">
-                <CogIcon size={16} />
+                <CogIcon />
                 <DropdownLabel>Settings</DropdownLabel>
               </DropdownItem>
               <DropdownDivider />
@@ -123,14 +139,14 @@ export function NavBar({ user, users, items }: NavProps) {
   );
 }
 
-export function SidebarMarkup({ items }: NavProps) {
+export function SidebarMarkup() {
   const currentPath = usePathname();
-  const itemsMarkup = items.map(({ label, icon, url }) => {
+  const itemsMarkup = NAV_ITEMS.map(({ label, icon, url }) => {
     const current = isCurrentPath(currentPath, url);
     return (
-      <SidebarItem key={label} href={url} current={current}>
-        {icon}
+      <SidebarItem href={url} current={current}>
         {label}
+        {icon}
       </SidebarItem>
     );
   });
