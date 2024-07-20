@@ -19,7 +19,8 @@
         "AUTH_GOOGLE_SECRET",
         "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA",
         "DATABASE_URL",
-        "DIRECT_URL"
+        "DIRECT_URL",
+        "OPENAI_API_KEY"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
