@@ -8,20 +8,12 @@ interface UserProfileProps {
 
 export function UserProfile({ user }: UserProfileProps) {
   const {
-    name,
     email,
     address,
     shirt_size: shirtSize,
     shoe_size: shoeSize,
     pant_size: pantSize,
   } = user;
-
-  const nameMarkup = name ? (
-    <Fieldset>
-      <Label>Name</Label>
-      <Text className="col-span-1">{name || 'n/a'}</Text>
-    </Fieldset>
-  ) : null;
 
   const emailMarkup = email ? (
     <Fieldset>
@@ -70,7 +62,6 @@ export function UserProfile({ user }: UserProfileProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
-      {nameMarkup}
       {emailMarkup}
       {addressMarkup}
       {sizesMarkup}

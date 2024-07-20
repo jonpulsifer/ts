@@ -1,6 +1,6 @@
 'use client';
 
-import { Heading, Text } from '@repo/ui';
+import { Subheading, Text } from '@repo/ui';
 
 type GiftRecommendationsProps = {
   recommendations: string;
@@ -8,8 +8,8 @@ type GiftRecommendationsProps = {
 
 const GiftRecommendations = ({ recommendations }: GiftRecommendationsProps) => {
   return (
-    <div>
-      <Heading>AI-Generated Gift Recommendations</Heading>
+    <div className="my-4">
+      <Subheading>SantaBot Gift Recommendations</Subheading>
       {recommendations && (
         <div>
           <Text>{recommendations}</Text>

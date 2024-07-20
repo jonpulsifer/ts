@@ -2,6 +2,7 @@
 import { Prisma } from '@prisma/client';
 import { auth } from 'app/auth';
 import { redirect } from 'next/navigation';
+import OpenAI from 'openai';
 
 import type {
   UserWithGifts,
@@ -9,6 +10,10 @@ import type {
   UserWithGiftsWithOwners,
 } from '../types/prisma';
 import prisma from './prisma';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const getMe = async () => {
   const session = await isAuthenticated();
@@ -395,6 +400,27 @@ const getPeopleForUser = async () => {
   redirect('/login');
 };
 
+const getRecommendations = async (userId: string) => {
+  const gifts = await getGiftsWithOwnerByUserId(userId);
+  const preferences = gifts.map((gift) => gift.name).join(', ');
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: `Ho ho ho! I'm Santa Claus, here to help you pick the perfect Christmas gifts for someone special. Based on their wishlist items, I'll suggest delightful and magical presents that will bring joy and cheer this holiday season. Let's make this Christmas unforgettable! Format your output in plain text, no markdown. Do not recommend items that are part of the preferences. Respond playfully in only a few sentences.`,
+      },
+      {
+        role: 'user',
+        content: `The person I'm buying for likes the following items: ${preferences}. What would Santa recommend as great Christmas gifts for them?`,
+      },
+    ],
+    temperature: 0.2,
+  });
+
+  return completion.choices[0]?.message?.content;
+};
+
 export {
   getClaimedGiftsForMe,
   getGiftById,
@@ -404,6 +430,7 @@ export {
   getMeWithGifts,
   getMeWithGiftsAndWishlists,
   getPeopleForUser,
+  getRecommendations,
   getSortedVisibleGiftsForUser,
   getUserById,
   getUserWithGifts,

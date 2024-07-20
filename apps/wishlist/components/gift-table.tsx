@@ -50,7 +50,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
     <Table dense>
       <TableHead>
         <TableRow>
-          <TableHeader>Gifts</TableHeader>
+          <TableHeader>Wishlist</TableHeader>
           <TableHeader className="text-right my-4">Actions</TableHeader>
         </TableRow>
       </TableHead>
