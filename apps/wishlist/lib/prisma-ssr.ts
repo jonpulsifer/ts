@@ -403,16 +403,17 @@ const getPeopleForUser = async () => {
 const getRecommendations = async (userId: string) => {
   const gifts = await getGiftsWithOwnerByUserId(userId);
   const preferences = gifts.map((gift) => gift.name).join(', ');
+  const name = gifts[0]?.owner?.name?.split(' ')[0] || 'someone mysterious';
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
       {
         role: 'system',
-        content: `Ho ho ho! I'm Santa Claus, here to help you pick the perfect Christmas gifts for someone special. Based on their wishlist items, I'll suggest delightful and magical presents that will bring joy and cheer this holiday season. Let's make this Christmas unforgettable! Format your output in plain text, no markdown. Do not recommend items that are part of the preferences. Respond playfully in only a few sentences.`,
+        content: `Ho ho ho! I'm Santa Claus, here to help you pick the perfect Christmas gifts for someone special. Based on their wishlist items, suggest a wide variety of delightful and unique presents that will bring joy and cheer this holiday season. Format your output in plain text, no markdown. Do not recommend items that are part of the wishlist already. Respond playfully in only a few sentences. Begin your response with a fun summary about the recipient's gifts. Include your reasoning.`,
       },
       {
         role: 'user',
-        content: `The person I'm buying for likes the following items: ${preferences}. What would Santa recommend as great Christmas gifts for them?`,
+        content: `The person I'm buying for is named: ${name} and has these items on their Christmas wishlist: ${preferences}. What would Santa recommend as great Christmas gifts for them?`,
       },
     ],
     temperature: 0.2,

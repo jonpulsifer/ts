@@ -9,7 +9,7 @@ type GiftRecommendationsProps = {
 const GiftRecommendations = ({ recommendations }: GiftRecommendationsProps) => {
   return (
     <div className="my-4">
-      <Subheading>SantaBot Gift Recommendations</Subheading>
+      <Subheading>Santa's Gift Recommendations</Subheading>
       {recommendations && (
         <div>
           <Text>{recommendations}</Text>
