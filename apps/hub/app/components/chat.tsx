@@ -1,7 +1,6 @@
 'use client';
 import { Button, Card } from '@repo/ui';
-import { useRouter } from 'next/navigation';
-import { useEffect, useOptimistic, useRef } from 'react';
+import { useEffect, useOptimistic, useRef, useState } from 'react';
 
 import {
   deadSayings,
@@ -25,8 +24,13 @@ interface Props {
   fetchMessages: () => Promise<Message[]>;
 }
 
-const Chat = ({ name, sendMessage, messages }: Props) => {
-  const router = useRouter();
+const Chat = ({
+  name,
+  sendMessage,
+  fetchMessages,
+  messages: initialMessages,
+}: Props) => {
+  const [messages, setMessages] = useState(initialMessages);
   const [optimisticMessages, addOptimisticMessage] = useOptimistic(
     messages,
     // updateFn aka merge and return new state with optimistic value
@@ -43,24 +47,28 @@ const Chat = ({ name, sendMessage, messages }: Props) => {
 
   // refresh the chat every 5 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      router.refresh();
+    const interval = setInterval(async () => {
+      const newMessages = await fetchMessages();
+      setMessages(newMessages);
     }, 5000);
     return () => clearInterval(interval);
-  }, [router]);
+  }, [messages, setMessages, fetchMessages]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [optimisticMessages, messages]);
+  }, [optimisticMessages, initialMessages, messages]);
 
   // clicking on a badge will submit the form
   const send = async (formData: FormData) => {
-    addOptimisticMessage({
+    const message = {
       id: 'optimistic-' + Math.random(),
       timestamp: new Date().valueOf(),
       sender: name,
       content: formData.get('messageButton') as string,
-    });
+    };
+    addOptimisticMessage(message);
+    // also set messages
+    setMessages((messages) => [...messages, message]);
     sendMessage(formData);
   };
 
