@@ -1,12 +1,11 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
-import GiftRecommendations from 'components/gift-recommendations';
+import GiftRecommendations, {
+  GiftRecommendationsFallback,
+} from 'components/gift-recommendations';
 import { GiftTable } from 'components/gift-table';
-import {
-  getRecommendations,
-  getUserById,
-  getVisibleGiftsForUserById,
-} from 'lib/prisma-ssr';
+import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 import { UserProfile } from './components/user-profile';
 
@@ -30,17 +29,15 @@ const ProfilePage = async ({ params }: Props) => {
   const isUserProfile = user.id === profile.id;
   const nameOrEmailOrDefault = profile.name || profile.email || 'Anonymous';
   const title = isUserProfile ? `Your Profile` : nameOrEmailOrDefault;
-  const recommendations = await getRecommendations(profile.id);
-  const recommendationsMarkup = recommendations ? (
-    <GiftRecommendations recommendations={recommendations} />
-  ) : null;
   return (
     <>
       <Heading>{title}</Heading>
       <Divider soft className="my-4" />
       <UserProfile currentUserId={user.id} user={profile} />
       <Divider soft className="my-4" />
-      {recommendationsMarkup}
+      <Suspense fallback={GiftRecommendationsFallback}>
+        <GiftRecommendations userId={user.id} />
+      </Suspense>
       {gifts.length ? (
         <GiftTable currentUserId={user.id} gifts={gifts} />
       ) : (

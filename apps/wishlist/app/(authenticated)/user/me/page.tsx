@@ -1,13 +1,12 @@
 import { CogIcon } from '@heroicons/react/16/solid';
 import { Button, Divider, Heading } from '@repo/ui';
-import GiftRecommendations from 'components/gift-recommendations';
+import GiftRecommendations, {
+  GiftRecommendationsFallback,
+} from 'components/gift-recommendations';
 import { GiftTable } from 'components/gift-table';
-import {
-  getGiftsWithOwnerByUserId,
-  getMe,
-  getRecommendations,
-} from 'lib/prisma-ssr';
+import { getGiftsWithOwnerByUserId, getMe } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'My Profile',
@@ -17,10 +16,6 @@ export const metadata: Metadata = {
 const MePage = async () => {
   const user = await getMe();
   const gifts = await getGiftsWithOwnerByUserId(user.id);
-  const recommendations = await getRecommendations(user.id);
-  const recommendationsMarkup = recommendations ? (
-    <GiftRecommendations recommendations={recommendations} />
-  ) : null;
   return (
     <>
       <div className="flex w-full flex-wrap items-end justify-between">
@@ -33,7 +28,9 @@ const MePage = async () => {
         </div>
       </div>
       <Divider soft className="my-4" />
-      {recommendationsMarkup}
+      <Suspense fallback={GiftRecommendationsFallback}>
+        <GiftRecommendations userId={user.id} />
+      </Suspense>
       <GiftTable gifts={gifts} currentUserId={user.id} />
     </>
   );

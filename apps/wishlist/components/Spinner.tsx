@@ -1,8 +1,11 @@
-import { CubeTransparentIcon } from '@heroicons/react/16/solid';
+import { Cog6ToothIcon } from '@heroicons/react/20/solid';
+import { Heading, Subheading } from '@repo/ui';
 import React from 'react';
 
+import { Logo } from './logo';
+
 interface Props {
-  Icon?: typeof CubeTransparentIcon;
+  Icon?: typeof Cog6ToothIcon;
 }
 
 const LOADING_MESSAGES = [
@@ -10,7 +13,6 @@ const LOADING_MESSAGES = [
   'Oh no, the Grinch stole the gifts!',
   'Santa is on his way',
   'Making sure the reindeer are fed',
-  'No coal for you',
   'Checking the naughty list',
   'Checking the nice list',
   'Putting up the tree',
@@ -20,27 +22,17 @@ const LOADING_MESSAGES = [
   'Making cookies for Santa',
 ];
 
-const PulsingText = () => {
+function Spinner({ Icon = Cog6ToothIcon }: Props) {
   const loadingMessage =
     LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
   return (
-    <div className="flex flex-row items-center">
-      <h1 className="animate-pulse text-xl opacity-10 font-bold dark:text-indigo-500 text-indigo-600 tracking-tight">
-        {loadingMessage}
-      </h1>
-    </div>
-  );
-};
-
-function Spinner({ Icon = CubeTransparentIcon }: Props) {
-  return (
-    <div className="h-full">
-      <div className="flex flex-col gap-2 justify-center items-center  h-full">
-        <div className="animate-pulse h-full items-center justify-center text-indigo-600 dark:text-indigo-500">
-          <Icon className="w-16 h-16" />
-        </div>
-        <PulsingText />
+    <div className="min-h-48 animate-pulse flex flex-col gap-2 justify-center items-center">
+      <div className="relative animate-spin-slower w-20 h-20">
+        <Icon />
+        <Logo className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
       </div>
+      <Heading>{loadingMessage}</Heading>
+      <Subheading>One moment...</Subheading>
     </div>
   );
 }

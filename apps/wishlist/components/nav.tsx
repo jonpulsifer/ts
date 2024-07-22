@@ -55,7 +55,7 @@ type NavProps = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Home', url: '/', icon: <HomeIcon height={20} /> },
+  { label: 'Home', url: '/home', icon: <HomeIcon height={20} /> },
   { label: 'People', url: '/people', icon: <UsersIcon height={20} /> },
   { label: 'Gifts', url: '/gifts', icon: <GiftIcon height={20} /> },
   { label: 'Claimed', url: '/claimed', icon: <NumberedListIcon height={20} /> },

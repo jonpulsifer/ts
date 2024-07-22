@@ -5,19 +5,20 @@ import Image from 'next/image';
 
 type Props = {
   className?: string;
+  size?: number;
 };
 
-export function Logo({ className }: Props) {
+export function Logo({ className, size = 36 }: Props) {
   const classes = `ml-2 lg:ml-0 ${className}`;
   return (
     <div className={classes}>
-      <Link href="/">
+      <Link href="/home">
         <Image
           priority
-          width={36}
-          height={36}
+          width={size}
+          height={size}
           src="/santaicon.png"
-          alt="Logo"
+          alt="Santa Icon"
         />
       </Link>
     </div>
