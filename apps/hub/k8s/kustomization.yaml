@@ -8,7 +8,6 @@ namePrefix: hub-
 images:
   - name: jonpulsifer/does-not-exist
     newName: ghcr.io/jonpulsifer/hub
-    newTag: latest
 
 commonLabels:
   app.kubernetes.io/name: *app
