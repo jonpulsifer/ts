@@ -36,7 +36,7 @@ const ProfilePage = async ({ params }: Props) => {
       <UserProfile currentUserId={user.id} user={profile} />
       <Divider soft className="my-4" />
       <Suspense fallback={GiftRecommendationsFallback}>
-        <GiftRecommendations userId={user.id} />
+        <GiftRecommendations userId={profile.id} />
       </Suspense>
       {gifts.length ? (
         <GiftTable currentUserId={user.id} gifts={gifts} />
