@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: 'A little application that helps us live in modern times.',
 };
 
+export const dynamic = 'force-dynamic';
+
 const isAdminMode = process.env.NODE_ENV === 'development';
 
 const Home = async () => {
@@ -27,12 +29,12 @@ const Home = async () => {
     <div className="flex flex-col sm:flex-row w-full gap-1 overflow-y-scroll">
       <div className="flex flex-col w-full gap-1">
         <div className="flex-none">
-          <Suspense>
+          <Suspense fallback={'Loading...'}>
             <Clock />
           </Suspense>
         </div>
         <div className="flex-grow">
-          <Suspense>
+          <Suspense fallback={'Loading...'}>
             <Status
               statuses={statuses}
               name={name}
@@ -43,7 +45,7 @@ const Home = async () => {
         {isAdminMode && <AdminButtons flushRedis={flushRedis} />}
       </div>
       <div className="flex flex-col w-full">
-        <Suspense>
+        <Suspense fallback={'Loading...'}>
           <Chat
             name={name}
             messages={messages}

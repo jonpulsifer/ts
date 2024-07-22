@@ -1,5 +1,4 @@
 'use client';
-import { Card } from '@repo/ui';
 import { useEffect, useState } from 'react';
 
 const now = () =>
@@ -26,9 +25,7 @@ const Clock = () => {
   }, []);
 
   return (
-    <Card>
-      <div className="text-9xl leading-none text-center font-bold">{time}</div>
-    </Card>
+    <div className="text-9xl leading-none text-center font-bold">{time}</div>
   );
 };
 

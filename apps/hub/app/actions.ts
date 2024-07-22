@@ -7,7 +7,7 @@ import type { Status } from './components/status';
 import { ipToName } from './lib/dns';
 import redis from './lib/redis';
 
-// redis actions
+// admin actions
 export const flushRedis = async () => {
   try {
     await redis.flushall();

@@ -1,5 +1,5 @@
 'use client';
-import { Badge, Card, Switch } from '@repo/ui';
+import { Badge, Switch } from '@repo/ui';
 import { useOptimistic, useRef } from 'react';
 
 export enum AvialableStatuses {
@@ -51,20 +51,20 @@ const Status = ({ statuses, updateStatus, name }: Props) => {
   const bg = busy ? 'bg-red-400/20' : '';
 
   return (
-    <Card className="h-full">
+    <div>
       <form action={update} ref={form}>
         <div
           className={`${bg} flex flex-col justify-center items-center rounded-md`}
         >
           <p className="text-2xl font-bold mt-2">{name}</p>
-          <div className="pb-10">
+          <div className="my-5">
             <Switch
               color="red"
               name="status"
               checked={busy}
               onClick={(e) => click(e)}
               type="submit"
-              className="scale-400 mt-10"
+              className="scale-200"
             />
           </div>
         </div>
@@ -86,7 +86,7 @@ const Status = ({ statuses, updateStatus, name }: Props) => {
           })}
         </div>
       </form>
-    </Card>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
-import './globals.css';
 import '@repo/ui/styles.css';
+import './globals.css';
 
 import type { Metadata } from 'next';
 import { Creepster, Inter } from 'next/font/google';
@@ -18,8 +18,8 @@ const creepster = Creepster({
 });
 
 export const metadata: Metadata = {
-  title: 'Headerz',
-  description: 'A little app that returns headers and things',
+  title: 'Home Hub',
+  description: 'A little app that runs on raspberry pis in the house',
   // viewport: 'width=device-width, initial-scale=1',
   robots: {
     index: false,

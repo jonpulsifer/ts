@@ -1,5 +1,5 @@
 'use client';
-import { Button, Card } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { useEffect, useOptimistic, useRef, useState } from 'react';
 
 import {
@@ -84,7 +84,7 @@ const Chat = ({
   ];
 
   return (
-    <Card className="h-full dark:bg-black">
+    <>
       <div className="flex flex-col h-full">
         <div className="flex-1 overflow-y-auto">
           {optimisticMessages.map((message) => (
@@ -98,10 +98,10 @@ const Chat = ({
             <div className="grid grid-cols-4 gap-2">
               {chatButtons.map(({ emoji, content }, index) => (
                 <Button
+                  outline
                   key={emoji + index}
                   name="messageButton"
                   value={typeof content === 'function' ? content() : content}
-                  color="light"
                   type="submit"
                 >
                   <span className="text-4xl">{emoji}</span>
@@ -111,7 +111,7 @@ const Chat = ({
           </form>
         </div>
       </div>
-    </Card>
+    </>
   );
 };
 
