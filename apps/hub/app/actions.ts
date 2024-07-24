@@ -24,6 +24,7 @@ export const fetchStatusesFromRedis = async () => {
   console.debug(Date.now(), 'fetchStatusesFromRedis');
   try {
     const statuses = await redis.hgetall('statuses');
+    if (!statuses) throw new Error('No statuses found');
     // turn the object into an array of objects
     return Object.entries(statuses).map(([name, status]) => ({
       name,
@@ -103,7 +104,7 @@ export const fetchRecentMessages = async () => {
     ) as Message[];
     return messagesFromJSON;
   } catch (error) {
-    console.error('Failed to fetch recent messages:', error);
+    console.error('Failed to fetch recent messages');
     return [];
   }
 };

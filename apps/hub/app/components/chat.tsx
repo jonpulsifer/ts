@@ -87,9 +87,10 @@ const Chat = ({
     <>
       <div className="flex flex-col h-full">
         <div className="flex-1 overflow-y-auto">
-          {optimisticMessages.map((message) => (
-            <Message key={message.id} message={message} user={name} />
-          ))}
+          {optimisticMessages &&
+            optimisticMessages.map((message) => (
+              <Message key={message.id} message={message} user={name} />
+            ))}
           <div ref={chatContainerRef} />
         </div>
 

@@ -69,21 +69,22 @@ const Status = ({ statuses, updateStatus, name }: Props) => {
           </div>
         </div>
         <div className="rounded-md space-y-2 mt-4">
-          {optimisticStatuses.map(({ name, status }, index) => {
-            const isBusy = status === AvialableStatuses.Busy;
-            const bg = isBusy ? 'bg-red-400/20' : '';
-            return (
-              <div
-                key={name + index}
-                className={`${bg} p-2 flex justify-between items-center rounded-md`}
-              >
-                <p className="font-semibold text-lg">{name}</p>
-                <Badge color={isBusy ? 'red' : 'green'}>
-                  <p className="text-lg">{status}</p>
-                </Badge>
-              </div>
-            );
-          })}
+          {optimisticStatuses &&
+            optimisticStatuses.map(({ name, status }, index) => {
+              const isBusy = status === AvialableStatuses.Busy;
+              const bg = isBusy ? 'bg-red-400/20' : '';
+              return (
+                <div
+                  key={name + index}
+                  className={`${bg} p-2 flex justify-between items-center rounded-md`}
+                >
+                  <p className="font-semibold text-lg">{name}</p>
+                  <Badge color={isBusy ? 'red' : 'green'}>
+                    <p className="text-lg">{status}</p>
+                  </Badge>
+                </div>
+              );
+            })}
         </div>
       </form>
     </div>

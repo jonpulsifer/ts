@@ -20,7 +20,7 @@ const options: RedisOptions = {
 const redis = new Redis(url, options);
 
 redis.on('error', (error: unknown) => {
-  console.warn('[Redis] Error connecting', error);
+  console.warn('[Redis] Error connecting:', error);
   // Optionally, you could implement additional logic here to handle prolonged disconnection scenarios
 });
 
