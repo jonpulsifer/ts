@@ -433,8 +433,8 @@ importers:
         specifier: 2.5.2
         version: 2.5.2
       openai:
-        specifier: 4.55.1
-        version: 4.55.1
+        specifier: 4.55.3
+        version: 4.55.3
       prettier:
         specifier: 3.3.3
         version: 3.3.3
@@ -5566,8 +5566,8 @@ packages:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
 
-  openai@4.55.1:
-    resolution: {integrity: sha512-FziYJcWl+SAGbt5AcRIzVzNcnKohpEMQdtzVOmHFbBp/if7x2+ACqgxF2XUbyi2PcKONPcVpmtG5h9qoDAEXwQ==}
+  openai@4.55.3:
+    resolution: {integrity: sha512-/IUDdK5w3aB1Kd88Ml7w5F+EkVM5aXlrY+lSpWXdIPL18CmGkC7lV9HFJ7beR0OUSFLFT0qmWvMynqtbMF06/Q==}
     hasBin: true
     peerDependencies:
       zod: ^3.23.8
@@ -13126,7 +13126,7 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
-  openai@4.55.1:
+  openai@4.55.3:
     dependencies:
       '@types/node': 18.19.42
       '@types/node-fetch': 2.6.11
