@@ -5,9 +5,9 @@ namespace: &app hub
 
 namePrefix: hub-
 
-images:
-  - name: jonpulsifer/does-not-exist
-    newName: ghcr.io/jonpulsifer/hub
+# images:
+#   - name: jonpulsifer/does-not-exist
+#     newName: ghcr.io/jonpulsifer/hub
 
 commonLabels:
   app.kubernetes.io/name: *app
