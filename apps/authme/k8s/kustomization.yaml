@@ -5,10 +5,10 @@ namespace: &app authme
 
 namePrefix: authme-
 
-images:
-  - name: jonpulsifer/does-not-exist
-    newName: ghcr.io/jonpulsifer/authme
-    newTag: latest
+# images:
+#   - name: jonpulsifer/does-not-exist
+#     newName: ghcr.io/jonpulsifer/authme
+#     newTag: latest
 
 commonLabels:
   app.kubernetes.io/name: *app

@@ -5,10 +5,10 @@ namespace: &app request-headers
 
 namePrefix: request-headers-
 
-images:
-  - name: jonpulsifer/does-not-exist
-    newName: ghcr.io/jonpulsifer/request-headers
-    newTag: latest
+# images:
+#   - name: jonpulsifer/does-not-exist
+#     newName: ghcr.io/jonpulsifer/request-headers
+#     newTag: latest
 
 commonLabels:
   app.kubernetes.io/name: *app

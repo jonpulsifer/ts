@@ -5,10 +5,10 @@ namespace: &app nested
 
 namePrefix: nested-
 
-images:
-  - name: jonpulsifer/does-not-exist
-    newName: ghcr.io/jonpulsifer/nested
-    newTag: latest
+# images:
+#   - name: jonpulsifer/does-not-exist
+#     newName: ghcr.io/jonpulsifer/nested
+#     newTag: latest
 
 commonLabels:
   app.kubernetes.io/name: *app
