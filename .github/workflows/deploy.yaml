@@ -1,0 +1,133 @@
+name: Build and Deploy with ArgoCD
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'App to deploy'
+        required: true
+        type: choice
+        options:
+          - authme
+          - galaxy
+          - hub
+          - request-headers
+          - rosie
+          - nested
+          - remixed
+          - wishlist
+
+jobs:
+  containerize:
+    name: containerize
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    services:
+      postgres:
+        image: postgres:16@sha256:0cf02e45421b780449f0bab6b4af7e5ab2c37d3ca729e284fcec1a18f3fa9354
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:alpine@sha256:eaea8264f74a95ea9a0767c794da50788cbd9cf5223951674d491fa1b3f4f2d2
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    steps:
+      - name: Check out code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        with:
+          fetch-depth: 2
+
+      - name: Prepare db & env files
+        if: ${{ inputs.app == 'authme' || inputs.app == 'wishlist' }}
+        env:
+          PGPASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_MULTIPLE_DATABASES: authme,wishlist
+        run: |
+          ./.github/scripts/create-multiple-postgresql-databases.sh
+          find . -type f -name '.env.development' -execdir cp -v {} .env \;
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3
+        with:
+          driver-opts: |
+            network=host
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Docker Meta
+        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
+          tags: |
+            type=sha,enable=true,priority=100,prefix=,suffix=,format=long
+          flavor: |
+            latest=true
+
+      - name: Build and push
+        uses: docker/build-push-action@16ebe778df0e7752d2cfcbd924afdbbd89c1a755 # v6
+        with:
+          build-args: |
+            APP=${{ inputs.app }}
+          secrets: |
+            TURBO_TEAM=${{ secrets.VERCEL_ID }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/${{ inputs.app }}
+            REDIS_URL=redis://localhost:6379
+          push: ${{ github.event_name != 'pull_request' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: .
+          file: ${{ contains(fromJSON('["nested", "remixed", "rosie"]'), inputs.app) && 'Dockerfile' || 'nextjs.Dockerfile' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          sbom: true
+          provenance: true
+
+  deploy:
+    needs: [containerize]
+    runs-on: arc-ts
+    environment:
+      name: ${{ inputs.app }}
+      url: https://${{inputs.app}}.lolwtf.ca
+    env:
+      ARGOCD_URL: argo-argocd-server.argo
+    steps:
+      - name: Download ArgoCD CLI
+        run: |
+          curl -sSL -o /tmp/argocd http://${{ env.ARGOCD_URL }}/download/argocd-linux-amd64
+          chmod +x /tmp/argocd
+          sudo mv /tmp/argocd /usr/local/bin/argocd
+      - name: Login to ArgoCD
+        run: |
+          echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
+      - name: Update application revision and image to ${{ github.sha }}
+        run: |
+          argocd app set ${{ inputs.app }} --revision=${{ github.sha }} --kustomize-image=ghcr.io/jonpulsifer/does-not-exist=ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}:${{ github.sha }}
+      - name: Sync and wait for application to be healthy
+        run: |
+          argocd app sync ${{ inputs.app }} --prune
+          argocd app wait ${{ inputs.app }} --timeout 600
