@@ -363,8 +363,8 @@ importers:
         specifier: 2.2.4
         version: 2.2.4
       '@slack/bolt':
-        specifier: 3.21.0
-        version: 3.21.0
+        specifier: 3.21.1
+        version: 3.21.1
       '@slack/web-api':
         specifier: 6.12.1
         version: 6.12.1
@@ -2220,8 +2220,8 @@ packages:
     resolution: {integrity: sha512-OPwQlEdg40HAj5KNF8WW6q2KG4Z+cBCZb3m4ninfTZKaBmbIJodviQsDBoYMPHkOyJJMHnOJo5j2+LKDOhOACg==}
     deprecated: Use version 10.1.0. Version 10.2.0 has potential breaking issues
 
-  '@slack/bolt@3.21.0':
-    resolution: {integrity: sha512-hpE62YRD5SkcMuhSRZgCzHQTT6xyRKw+EDIvC6Dq/d0J1lL8I+OQPTDge55Jd32S8T+vjP/zSiTNJpsH4dGCrA==}
+  '@slack/bolt@3.21.1':
+    resolution: {integrity: sha512-cql+f8DypIE96mgFTREslP1DfsTUMyVR76whdepcQ1BpP2vXO1TZJxwJHnDKcnJ+NTg8KNGfPIjDfHZUMETCKw==}
     engines: {node: '>=12.13.0', npm: '>=6.12.0'}
 
   '@slack/logger@3.0.0':
@@ -2232,12 +2232,12 @@ packages:
     resolution: {integrity: sha512-Wz7QYfPAlG/DR+DfABddUZeNgoeY7d1J39OCR2jR+v7VBsB8ezulDK5szTnDDPDwLH5IWhLvXIHlCFZV7MSKgA==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
-  '@slack/oauth@2.6.2':
-    resolution: {integrity: sha512-2R3MyB/R63hTRXzk5J6wcui59TBxXzhk+Uh2/Xu3Wp3O4pXg/BNucQhP/DQbL/ScVhLvFtMXirLrKi0Yo5gIVw==}
+  '@slack/oauth@2.6.3':
+    resolution: {integrity: sha512-1amXs6xRkJpoH6zSgjVPgGEJXCibKNff9WNDijcejIuVy1HFAl1adh7lehaGNiHhTWfQkfKxBiF+BGn56kvoFw==}
     engines: {node: '>=12.13.0', npm: '>=6.12.0'}
 
-  '@slack/socket-mode@1.3.3':
-    resolution: {integrity: sha512-vN3zG4woRtf2Ut6rZgRW6G/Oe56uLMlnz39I08Q7DOvVfB+1MmDbNv0PNOiFgujdKXJR+bXF41/F/VvryXcqlw==}
+  '@slack/socket-mode@1.3.6':
+    resolution: {integrity: sha512-G+im7OP7jVqHhiNSdHgv2VVrnN5U7KY845/5EZimZkrD4ZmtV0P3BiWkgeJhPtdLuM7C7i6+M6h6Bh+S4OOalA==}
     engines: {node: '>=12.13.0', npm: '>=6.12.0'}
 
   '@slack/types@2.11.0':
@@ -2397,9 +2397,6 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
-
-  '@types/p-queue@2.3.2':
-    resolution: {integrity: sha512-eKAv5Ql6k78dh3ULCsSBxX6bFNuGjTmof5Q/T6PiECDq0Yf8IIn46jCyp3RJvCi8owaEmm3DZH1PEImjBMd/vQ==}
 
   '@types/promise.allsettled@1.0.5':
     resolution: {integrity: sha512-bSnYV8ScCZaUMNiiHE2O1IXmwtAjvtdywRzFvkVeKKU1U1SX0M75l68oLfyskq7jdyvPf/qplF9lMF0qw5xnPQ==}
@@ -3983,6 +3980,9 @@ packages:
   eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
 
+  eventemitter3@5.0.1:
+    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
@@ -5563,10 +5563,6 @@ packages:
   outdent@0.8.0:
     resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
 
-  p-cancelable@1.1.0:
-    resolution: {integrity: sha512-s73XxOZ4zpt1edZYZzvhqFa6uvQc1vwUa0K0BdtIZgQMAJj9IbebH+JkgKZc9h+B05PKHLOTl4ajG1BmNrVZlw==}
-    engines: {node: '>=6'}
-
   p-finally@1.0.0:
     resolution: {integrity: sha512-LICb2p9CB7FS+0eR1oqWnHhp0FljGLZCWBE9aix0Uye9W8LTQPwMTYVGWQWIw9RdQiDg4+epXQODwIYJtSJaow==}
     engines: {node: '>=4'}
@@ -5590,10 +5586,6 @@ packages:
   p-map@4.0.0:
     resolution: {integrity: sha512-/bjOqmgETBYB5BoEeGVea8dmvHb2m9GLy1E9W43yeyfP6QQCZGFNa+XRceJEuDB6zqr+gKpIAmlLebMpykw/MQ==}
     engines: {node: '>=10'}
-
-  p-queue@2.4.2:
-    resolution: {integrity: sha512-n8/y+yDJwBjoLQe1GSJbbaYQLTI7QHNZI2+rpmCDbe++WLf9HC3gf6iqj5yfPAV71W4UF3ql5W1+UBPXoXTxng==}
-    engines: {node: '>=4'}
 
   p-queue@6.6.2:
     resolution: {integrity: sha512-RwFpb72c/BhQLEXIZ5K2e+AhgNVmIejGlTgiB9MzZ0e93GRvqZ7uSi0dvRF7/XIXDeNkra2fNHBxTyPDGySpjQ==}
@@ -8745,11 +8737,11 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.0
 
-  '@slack/bolt@3.21.0':
+  '@slack/bolt@3.21.1':
     dependencies:
       '@slack/logger': 4.0.0
-      '@slack/oauth': 2.6.2
-      '@slack/socket-mode': 1.3.3
+      '@slack/oauth': 2.6.3
+      '@slack/socket-mode': 1.3.6
       '@slack/types': 2.11.0
       '@slack/web-api': 6.12.1
       '@types/express': 4.17.21
@@ -8776,7 +8768,7 @@ snapshots:
     dependencies:
       '@types/node': 20.14.15
 
-  '@slack/oauth@2.6.2':
+  '@slack/oauth@2.6.3':
     dependencies:
       '@slack/logger': 3.0.0
       '@slack/web-api': 6.12.1
@@ -8787,17 +8779,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@slack/socket-mode@1.3.3':
+  '@slack/socket-mode@1.3.6':
     dependencies:
       '@slack/logger': 3.0.0
       '@slack/web-api': 6.12.1
       '@types/node': 20.14.15
-      '@types/p-queue': 2.3.2
       '@types/ws': 7.4.7
-      eventemitter3: 3.1.2
+      eventemitter3: 5.0.1
       finity: 0.5.4
-      p-cancelable: 1.1.0
-      p-queue: 2.4.2
       ws: 7.5.9
     transitivePeerDependencies:
       - bufferutil
@@ -9000,8 +8989,6 @@ snapshots:
       undici-types: 5.26.5
 
   '@types/normalize-package-data@2.4.4': {}
-
-  '@types/p-queue@2.3.2': {}
 
   '@types/promise.allsettled@1.0.5': {}
 
@@ -11045,6 +11032,8 @@ snapshots:
 
   eventemitter3@4.0.7: {}
 
+  eventemitter3@5.0.1: {}
+
   events@3.3.0: {}
 
   execa@5.1.1:
@@ -13037,8 +13026,6 @@ snapshots:
 
   outdent@0.8.0: {}
 
-  p-cancelable@1.1.0: {}
-
   p-finally@1.0.0: {}
 
   p-limit@2.3.0:
@@ -13060,8 +13047,6 @@ snapshots:
   p-map@4.0.0:
     dependencies:
       aggregate-error: 3.1.0
-
-  p-queue@2.4.2: {}
 
   p-queue@6.6.2:
     dependencies:
