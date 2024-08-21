@@ -8,7 +8,7 @@
     "lint": "eslint . --ext .ts"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20240815.0",
+    "@cloudflare/workers-types": "4.20240821.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "typescript": "5.5.4"
