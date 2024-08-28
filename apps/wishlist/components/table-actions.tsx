@@ -64,38 +64,65 @@ export function TableActions({
     setOpen(false);
   };
 
-  return (
+  const renderActionButtons = () => (
     <>
-      <Dropdown>
-        <DropdownButton plain aria-label="More options">
-          <EllipsisVerticalIcon />
-        </DropdownButton>
-        <DropdownMenu>
-          {gift.ownerId !== currentUserId &&
-            gift.createdById !== currentUserId &&
-            !gift.claimed && (
-              <DropdownItem onClick={handleClaim}>
-                {' '}
-                <span className="font-medium text-green-600">Claim</span>
+      {gift.ownerId !== currentUserId &&
+        gift.createdById !== currentUserId &&
+        !gift.claimed && (
+          <Button onClick={handleClaim} color="green">
+            Claim
+          </Button>
+        )}
+      {gift.claimedById === currentUserId && (
+        <Button onClick={handleUnclaim} color="red">
+          Unclaim
+        </Button>
+      )}
+      {(gift.ownerId === currentUserId ||
+        gift.createdById === currentUserId) && (
+        <>
+          <Button href={`/gift/${gift.id}/edit`}>Edit</Button>
+          <Button onClick={() => setOpen(true)} color="red">
+            Delete
+          </Button>
+        </>
+      )}
+    </>
+  );
+
+  return (
+    <div className="flex justify-end">
+      <div className="hidden sm:flex space-x-2">{renderActionButtons()}</div>
+      <div className="sm:hidden">
+        <Dropdown>
+          <DropdownButton plain aria-label="More options">
+            <EllipsisVerticalIcon />
+          </DropdownButton>
+          <DropdownMenu className="right-0 origin-top-right">
+            {gift.ownerId !== currentUserId &&
+              gift.createdById !== currentUserId &&
+              !gift.claimed && (
+                <DropdownItem onClick={handleClaim}>
+                  <span className="font-medium text-green-600">Claim</span>
+                </DropdownItem>
+              )}
+            {gift.claimedById === currentUserId && (
+              <DropdownItem onClick={handleUnclaim}>
+                <span className="font-medium text-red-600">Unclaim</span>
               </DropdownItem>
             )}
-          {gift.claimedById === currentUserId && (
-            <DropdownItem onClick={handleUnclaim}>
-              {' '}
-              <span className="font-medium text-red-600">Unclaim</span>
-            </DropdownItem>
-          )}
-          {(gift.ownerId === currentUserId ||
-            gift.createdById === currentUserId) && (
-            <>
-              <DropdownItem href={`/gift/${gift.id}/edit`}>Edit</DropdownItem>
-              <DropdownItem onClick={() => setOpen(true)}>
-                <span className="font-medium text-red-600">Delete</span>
-              </DropdownItem>
-            </>
-          )}
-        </DropdownMenu>
-      </Dropdown>
+            {(gift.ownerId === currentUserId ||
+              gift.createdById === currentUserId) && (
+              <>
+                <DropdownItem href={`/gift/${gift.id}/edit`}>Edit</DropdownItem>
+                <DropdownItem onClick={() => setOpen(true)}>
+                  <span className="font-medium text-red-600">Delete</span>
+                </DropdownItem>
+              </>
+            )}
+          </DropdownMenu>
+        </Dropdown>
+      </div>
 
       <Alert open={open} onClose={() => setOpen(false)}>
         <form>
@@ -120,6 +147,6 @@ export function TableActions({
           </AlertActions>
         </form>
       </Alert>
-    </>
+    </div>
   );
 }
