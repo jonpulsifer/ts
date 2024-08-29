@@ -400,26 +400,66 @@ const getPeopleForUser = async () => {
   redirect('/login');
 };
 
-const getRecommendations = async (userId: string) => {
+type GiftRecommendation = {
+  name: string;
+  description: string;
+  estimatedPrice?: string;
+};
+
+const getRecommendationsForHomePage = async (
+  userId: string,
+): Promise<GiftRecommendation[]> => {
   const gifts = await getGiftsWithOwnerByUserId(userId);
   const preferences = gifts.map((gift) => gift.name).join(', ');
   const name = gifts[0]?.owner?.name?.split(' ')[0] || 'someone mysterious';
+
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
+    functions: [
+      {
+        name: 'get_gift_recommendations',
+        description: 'Get gift recommendations for the user',
+        parameters: {
+          type: 'object',
+          properties: {
+            recommendations: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  description: { type: 'string' },
+                  estimatedPrice: { type: 'string' },
+                },
+                required: ['name', 'description'],
+              },
+            },
+          },
+        },
+      },
+    ],
+    function_call: { name: 'get_gift_recommendations' },
     messages: [
       {
         role: 'system',
-        content: `Ho ho ho! I'm Santa Claus, here to help you pick the perfect Christmas gifts for someone special. Based on their wishlist items, suggest a wide variety of delightful and unique presents that will bring joy and cheer this holiday season. Format your output in plain text, no markdown. Do not recommend items that are part of the wishlist already. Respond playfully in only a few sentences. Begin your response with a fun summary about the recipient's gifts. Include your reasoning.`,
+        content: `You are a gift recommendation expert. Based on a user's wishlist, suggest 5 unique and thoughtful gift ideas. Each recommendation should include a name, description, and estimated price range. Be creative and consider the user's interests.`,
       },
       {
         role: 'user',
-        content: `The person I'm buying for is named: ${name} and has these items on their Christmas wishlist: ${preferences}. What would Santa recommend as great Christmas gifts for them?`,
+        content: `The person I'm buying for is named: ${name} and has these items on their Christmas wishlist: ${preferences}. What would you recommend as great gift ideas for them?`,
       },
     ],
-    temperature: 0.2,
+    temperature: 0.7,
   });
 
-  return completion.choices[0]?.message?.content;
+  const functionCall = completion.choices[0]?.message?.function_call;
+  if (functionCall && functionCall.name === 'get_gift_recommendations') {
+    const recommendations: { recommendations: GiftRecommendation[] } =
+      JSON.parse(functionCall.arguments || '{}');
+    return recommendations.recommendations;
+  }
+
+  return [];
 };
 
 const getUserOnboardingStatus = async (userId: string): Promise<boolean> => {
@@ -459,7 +499,7 @@ export {
   getMeWithGifts,
   getMeWithGiftsAndWishlists,
   getPeopleForUser,
-  getRecommendations,
+  getRecommendationsForHomePage,
   getSortedVisibleGiftsForUser,
   getUserById,
   getUserOnboardingStatus,
@@ -471,3 +511,5 @@ export {
   isAuthenticated,
   updateUserOnboardingStatus,
 };
+
+export type { GiftRecommendation };

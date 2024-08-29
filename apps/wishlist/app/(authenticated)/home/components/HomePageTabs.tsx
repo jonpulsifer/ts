@@ -1,10 +1,13 @@
 'use client';
 
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
-import { GiftIcon, UserIcon } from '@heroicons/react/24/outline';
+import { GiftIcon, LightBulbIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
+import { motion } from 'framer-motion';
 import { GiftWithOwner } from 'types/prisma';
+
+import { GiftRecommendations } from './GiftRecommendations';
 
 interface HomePageTabsProps {
   gifts: GiftWithOwner[];
@@ -22,7 +25,7 @@ export function HomePageTabs({
       <TabList className="flex gap-4 mb-6">
         <Tab className="flex-1 sm:flex-none outline-none">
           {({ selected }) => (
-            <button
+            <div
               className={`w-full flex flex-col items-center gap-1 p-3 rounded-lg text-left text-base/6 font-medium transition-all duration-200 ease-in-out ${
                 selected
                   ? 'bg-blue-100 text-blue-900 shadow-md dark:bg-blue-900 dark:text-blue-100'
@@ -40,12 +43,12 @@ export function HomePageTabs({
                   See what&apos;s new
                 </Text>
               </div>
-            </button>
+            </div>
           )}
         </Tab>
         <Tab className="flex-1 sm:flex-none outline-none">
           {({ selected }) => (
-            <button
+            <div
               className={`w-full flex flex-col items-center gap-1 p-3 rounded-lg text-left text-base/6 font-medium transition-all duration-200 ease-in-out ${
                 selected
                   ? 'bg-green-100 text-green-900 shadow-md dark:bg-green-900 dark:text-green-100'
@@ -63,7 +66,37 @@ export function HomePageTabs({
                   Manage your wishlist
                 </Text>
               </div>
-            </button>
+            </div>
+          )}
+        </Tab>
+        <Tab className="flex-1 sm:flex-none outline-none">
+          {({ selected }) => (
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`w-full flex flex-col items-center gap-1 p-3 rounded-lg text-left text-base/6 font-medium transition-all duration-200 ease-in-out ${
+                selected
+                  ? 'bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+              }`}
+            >
+              <motion.div
+                animate={{ rotate: selected ? 360 : 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <LightBulbIcon
+                  className={`h-5 w-5 ${selected ? 'text-yellow-300' : 'text-gray-500 dark:text-gray-400'} shrink-0`}
+                />
+              </motion.div>
+              <div className="text-center">
+                <Strong className="block text-sm">Gift Ideas</Strong>
+                <Text
+                  className={`text-xs ${selected ? 'text-yellow-200' : 'text-gray-600 dark:text-gray-400'}`}
+                >
+                  Discover recommendations
+                </Text>
+              </div>
+            </motion.div>
           )}
         </Tab>
       </TabList>
@@ -88,6 +121,14 @@ export function HomePageTabs({
             your desires change. Remember, sharing is caring!
           </Text>
           <GiftTable gifts={userGifts} currentUserId={currentUserId} />
+        </TabPanel>
+        <TabPanel>
+          <Heading className="text-2xl mb-4">Gift Recommendations</Heading>
+          <Text className="mb-4">
+            Explore personalized gift ideas based on your interests and
+            preferences. These recommendations are tailored just for you!
+          </Text>
+          <GiftRecommendations userId={currentUserId} />
         </TabPanel>
       </TabPanels>
     </TabGroup>

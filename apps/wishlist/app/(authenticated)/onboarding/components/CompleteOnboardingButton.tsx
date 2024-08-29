@@ -3,7 +3,7 @@
 import { Button } from '@repo/ui';
 import { useRouter } from 'next/navigation';
 
-import { updateUserOnboardingStatus } from '../../actions';
+import { updateUserOnboardingStatus } from '../../../actions';
 
 interface CompleteOnboardingButtonProps {
   userId: string;

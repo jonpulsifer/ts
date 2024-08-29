@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { updateUserOnboardingStatus } from '../../actions';
+import { updateUserOnboardingStatus } from '../../../actions';
 
 interface OnboardingCarouselProps {
   user: User;
@@ -18,6 +18,7 @@ interface OnboardingCarouselProps {
 export function OnboardingCarousel({ user, users }: OnboardingCarouselProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isGiftDialogOpen, setIsGiftDialogOpen] = useState(false);
+  const [isClaimed, setIsClaimed] = useState(false);
   const router = useRouter();
 
   const steps = [
@@ -51,10 +52,17 @@ export function OnboardingCarousel({ user, users }: OnboardingCarouselProps) {
         "See something you'd like to get for someone? You can claim gifts from others' wishlists. Click the 'Claim' button to try it out.",
       icon: <UserGroupIcon className="w-6 h-6 text-blue-500" />,
       action: () => (
-        <div className="flex gap-2">
-          <Button color="green">Claim</Button>
-          <Button color="red">Unclaim</Button>
-        </div>
+        <motion.div
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+        >
+          <Button
+            color={isClaimed ? 'red' : 'green'}
+            onClick={() => setIsClaimed(!isClaimed)}
+          >
+            {isClaimed ? 'Unclaim' : 'Claim'}
+          </Button>
+        </motion.div>
       ),
     },
   ];
@@ -79,7 +87,7 @@ export function OnboardingCarousel({ user, users }: OnboardingCarouselProps) {
   };
 
   return (
-    <div className="space-y-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg shadow-md p-4">
+    <div className="space-y-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg shadow-md p-4 max-w-md">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}

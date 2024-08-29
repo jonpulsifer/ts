@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from 'lib/prisma';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import { getRecommendationsForHomePage, isAuthenticated } from 'lib/prisma-ssr';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -335,6 +335,26 @@ export const updateUserOnboardingStatus = async (
       where: { id: userId },
       data: { hasCompletedOnboarding: status },
     });
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Something went wrong in the server action' };
+  }
+};
+
+export const generateGiftRecommendations = async (userId: string) => {
+  try {
+    // auth user
+    const { user } = await isAuthenticated();
+    if (user.id !== userId) {
+      throw new Error(
+        'You are not authorized to generate recommendations for this user',
+      );
+    }
+    // generate recommendations
+    const recommendations = await getRecommendationsForHomePage(userId);
+    return recommendations;
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };
