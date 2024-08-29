@@ -12,6 +12,7 @@ import {
 } from '@repo/ui';
 import { Input } from '@repo/ui';
 import { Strong, Text } from '@repo/ui/text';
+import { timeAgo } from 'lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import { GiftWithOwner, GiftWithOwnerAndWishlistIds } from 'types/prisma';
@@ -79,17 +80,19 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   }
 
   const tableRows = sortedGifts.map((gift) => {
+    const createdAtHumanReadable = timeAgo(gift.createdAt);
     return (
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
         <TableCell className="overflow-hidden font-medium">
           <Text className="truncate">
             <Strong>{gift.name}</Strong>
           </Text>
-          {showGiftOwner && gift.owner && (
-            <span className="text-xs text-zinc-400">
-              {gift.owner.name || gift.owner.email}
-            </span>
-          )}
+          <div className="flex justify-between text-xs text-zinc-400">
+            {showGiftOwner && gift.owner && (
+              <span>{gift.owner.name || gift.owner.email}</span>
+            )}
+            <span>Created {createdAtHumanReadable}</span>
+          </div>
         </TableCell>
         <TableCell className="text-right">
           <div className="space-x-4">
