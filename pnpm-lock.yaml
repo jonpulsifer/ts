@@ -433,8 +433,8 @@ importers:
         specifier: 2.5.2
         version: 2.5.2
       openai:
-        specifier: 4.56.2
-        version: 4.56.2
+        specifier: 4.57.0
+        version: 4.57.0
       prettier:
         specifier: 3.3.3
         version: 3.3.3
@@ -5528,8 +5528,8 @@ packages:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
 
-  openai@4.56.2:
-    resolution: {integrity: sha512-5VIG9ktyKm3WhJ24Qmp362DYQswZl7PLRF5CeJS95vCWp1Lm78AdlKUKOajCqNtAhXP+2XPRGmbcF4XAslWXDg==}
+  openai@4.57.0:
+    resolution: {integrity: sha512-JnwBSIYqiZ3jYjB5f2in8hQ0PRA092c6m+/6dYB0MzK0BEbn+0dioxZsPLBm5idJbg9xzLNOiGVm2OSuhZ+BdQ==}
     hasBin: true
     peerDependencies:
       zod: ^3.23.8
@@ -6296,9 +6296,6 @@ packages:
   shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
-
-  side-channel@1.0.4:
-    resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
 
   side-channel@1.0.6:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
@@ -12988,15 +12985,17 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
-  openai@4.56.2:
+  openai@4.57.0:
     dependencies:
       '@types/node': 18.19.42
       '@types/node-fetch': 2.6.11
+      '@types/qs': 6.9.7
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
+      qs: 6.11.0
     transitivePeerDependencies:
       - encoding
 
@@ -13382,7 +13381,7 @@ snapshots:
 
   qs@6.11.0:
     dependencies:
-      side-channel: 1.0.4
+      side-channel: 1.0.6
 
   queue-microtask@1.2.3: {}
 
@@ -13772,12 +13771,6 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
-
-  side-channel@1.0.4:
-    dependencies:
-      call-bind: 1.0.7
-      get-intrinsic: 1.2.4
-      object-inspect: 1.13.1
 
   side-channel@1.0.6:
     dependencies:
