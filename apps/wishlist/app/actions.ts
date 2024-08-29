@@ -321,3 +321,24 @@ export const unclaimGift = async (id: string) => {
   revalidatePath('/gift/[id]/page', 'page');
   revalidatePath('/gifts');
 };
+
+export const updateUserOnboardingStatus = async (
+  userId: string,
+  status: boolean,
+) => {
+  try {
+    const { user } = await isAuthenticated();
+    if (user.id !== userId) {
+      throw new Error('You are not authorized to update this user');
+    }
+    await prisma.user.update({
+      where: { id: userId },
+      data: { hasCompletedOnboarding: status },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: 'Something went wrong in the server action' };
+  }
+};

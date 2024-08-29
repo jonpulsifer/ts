@@ -3,13 +3,20 @@ import { auth } from 'app/auth';
 import {
   getGiftsWithOwnerByUserId,
   getLatestVisibleGiftsForUserById,
+  getUserOnboardingStatus,
 } from 'lib/prisma-ssr';
+import { redirect } from 'next/navigation';
 
 import { HomePageTabs } from './HomePageTabs';
 
 export default async function HomePage() {
   const session = await auth();
   if (!session?.user) return null;
+
+  const hasCompletedOnboarding = await getUserOnboardingStatus(session.user.id);
+  if (!hasCompletedOnboarding) {
+    redirect('/onboarding');
+  }
 
   const { gifts } = await getLatestVisibleGiftsForUserById(session.user.id);
   const userGifts = await getGiftsWithOwnerByUserId(session.user.id);

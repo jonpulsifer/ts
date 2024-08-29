@@ -39,23 +39,24 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(uuid()) @db.Uuid
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  name          String?
-  address       String?
-  email         String     @unique
-  emailVerified DateTime?
-  image         String?
-  pant_size     String?
-  shirt_size    String?
-  shoe_size     String?
-  gifts         Gift[]
-  claimed       Gift[]     @relation("ClaimedByUser")
-  createdGifts  Gift[]     @relation("CreatedByUser")
-  wishlists     Wishlist[]
-  accounts      Account[]
-  sessions      Session[]
+  id                    String     @id @default(uuid()) @db.Uuid
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  name                  String?
+  address               String?
+  email                 String     @unique
+  emailVerified         DateTime?
+  image                 String?
+  pant_size             String?
+  shirt_size            String?
+  shoe_size             String?
+  hasCompletedOnboarding Boolean   @default(false)
+  gifts                 Gift[]
+  claimed               Gift[]     @relation("ClaimedByUser")
+  createdGifts          Gift[]     @relation("CreatedByUser")
+  wishlists             Wishlist[]
+  accounts              Account[]
+  sessions              Session[]
 }
 
 model VerificationToken {

@@ -422,6 +422,34 @@ const getRecommendations = async (userId: string) => {
   return completion.choices[0]?.message?.content;
 };
 
+const getUserOnboardingStatus = async (userId: string): Promise<boolean> => {
+  try {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { hasCompletedOnboarding: true },
+    });
+    return user.hasCompletedOnboarding;
+  } catch (e) {
+    console.error('getUserOnboardingStatus error:', e);
+    return false; // Assume onboarding is not completed if there's an error
+  }
+};
+
+const updateUserOnboardingStatus = async (
+  userId: string,
+  status: boolean,
+): Promise<void> => {
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { hasCompletedOnboarding: status },
+    });
+  } catch (e) {
+    console.error('updateUserOnboardingStatus error:', e);
+    throw e;
+  }
+};
+
 export {
   getClaimedGiftsForMe,
   getGiftById,
@@ -434,10 +462,12 @@ export {
   getRecommendations,
   getSortedVisibleGiftsForUser,
   getUserById,
+  getUserOnboardingStatus,
   getUserWithGifts,
   getUserWithGiftsById,
   getVisibleGiftsForUser,
   getVisibleGiftsForUserById,
   getWishlists,
   isAuthenticated,
+  updateUserOnboardingStatus,
 };
