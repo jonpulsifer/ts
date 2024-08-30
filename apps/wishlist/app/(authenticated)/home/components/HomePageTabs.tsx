@@ -22,8 +22,8 @@ export function HomePageTabs({
 }: HomePageTabsProps) {
   return (
     <TabGroup>
-      <TabList className="flex gap-4 mb-6">
-        <Tab className="flex-1 sm:flex-none outline-none">
+      <TabList className="grid grid-cols-3 gap-2 mb-6">
+        <Tab className="outline-none">
           {({ selected }) => (
             <div
               className={`w-full flex flex-col items-center gap-1 p-3 rounded-lg text-left text-base/6 font-medium transition-all duration-200 ease-in-out ${
@@ -46,7 +46,7 @@ export function HomePageTabs({
             </div>
           )}
         </Tab>
-        <Tab className="flex-1 sm:flex-none outline-none">
+        <Tab className="outline-none">
           {({ selected }) => (
             <div
               className={`w-full flex flex-col items-center gap-1 p-3 rounded-lg text-left text-base/6 font-medium transition-all duration-200 ease-in-out ${
@@ -69,7 +69,7 @@ export function HomePageTabs({
             </div>
           )}
         </Tab>
-        <Tab className="flex-1 sm:flex-none outline-none">
+        <Tab className="outline-none">
           {({ selected }) => (
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -128,7 +128,7 @@ export function HomePageTabs({
             Explore personalized gift ideas based on your interests and
             preferences. These recommendations are tailored just for you!
           </Text>
-          <GiftRecommendations userId={currentUserId} />
+          <GiftRecommendations />
         </TabPanel>
       </TabPanels>
     </TabGroup>

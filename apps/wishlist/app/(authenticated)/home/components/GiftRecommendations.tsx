@@ -1,10 +1,9 @@
 import { Button, Strong, Text } from '@repo/ui';
-import { generateGiftRecommendations } from 'app/actions';
 import { AnimatePresence, motion } from 'framer-motion';
 import { GiftRecommendation } from 'lib/prisma-ssr';
 import { useState } from 'react';
 
-export function GiftRecommendations({ userId }: { userId: string }) {
+export function GiftRecommendations() {
   const [recommendations, setRecommendations] = useState<GiftRecommendation[]>(
     [],
   );
@@ -12,11 +11,17 @@ export function GiftRecommendations({ userId }: { userId: string }) {
 
   const handleGenerateRecommendations = async () => {
     setIsLoading(true);
-    const response = await generateGiftRecommendations(userId);
-    if (response && 'error' in response) {
-      console.error(response.error);
-    } else if (response) {
-      setRecommendations(response);
+    const response = await fetch('/api/recommendations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    if (data && 'error' in data) {
+      console.error(data.error);
+    } else if (data) {
+      setRecommendations(data.recommendations as GiftRecommendation[]);
     }
     setIsLoading(false);
   };
@@ -40,7 +45,7 @@ export function GiftRecommendations({ userId }: { userId: string }) {
           ) : (
             '✨'
           )}
-          {isLoading ? 'Generating Magic...' : 'Spark Gift Ideas!'}
+          {isLoading ? 'Asking the robot elves...' : 'Generate New Ideas!'}
         </Button>
       </motion.div>
 
