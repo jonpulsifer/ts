@@ -483,10 +483,10 @@ importers:
         version: 18.3.0
       autoprefixer:
         specifier: 10.4.20
-        version: 10.4.20(postcss@8.4.44)
+        version: 10.4.20(postcss@8.4.45)
       postcss:
-        specifier: 8.4.44
-        version: 8.4.44
+        specifier: 8.4.45
+        version: 8.4.45
       prettier-plugin-tailwindcss:
         specifier: 0.6.6
         version: 0.6.6(prettier@3.3.3)
@@ -655,10 +655,10 @@ importers:
         version: 18.3.5
       autoprefixer:
         specifier: 10.4.20
-        version: 10.4.20(postcss@8.4.44)
+        version: 10.4.20(postcss@8.4.45)
       postcss:
-        specifier: 8.4.44
-        version: 8.4.44
+        specifier: 8.4.45
+        version: 8.4.45
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -667,7 +667,7 @@ importers:
         version: 3.4.10(ts-node@10.9.2(@types/node@20.14.15)(typescript@5.5.4))
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@1.21.0)(postcss@8.4.44)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.0)(postcss@8.4.45)(typescript@5.5.4)
       typescript:
         specifier: ^5.3.3
         version: 5.5.4
@@ -5805,8 +5805,8 @@ packages:
     resolution: {integrity: sha512-TesUflQ0WKZqAvg52PWL6kHgLKP6xB6heTOdoYM0Wt2UHyxNa4K25EZZMgKns3BH1RLVbZCREPpLY0rhnNoHVQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postcss@8.4.44:
-    resolution: {integrity: sha512-Aweb9unOEpQ3ezu4Q00DPvvM2ZTUitJdNKeP/+uQgr1IBIqu574IaZoURId7BKtWMREwzKa9OgzPzezWGPWFQw==}
+  postcss@8.4.45:
+    resolution: {integrity: sha512-7KTLTdzdZZYscUc65XmjFiB73vBhBfbPztCYdUNvlaso9PrzjzcmjqBPR0lNGkcVlcO4BjiO5rK/qNz+XAen1Q==}
     engines: {node: ^10 || ^12 || >=14}
 
   preact-render-to-string@5.2.3:
@@ -9657,14 +9657,14 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  autoprefixer@10.4.20(postcss@8.4.44):
+  autoprefixer@10.4.20(postcss@8.4.45):
     dependencies:
       browserslist: 4.23.3
       caniuse-lite: 1.0.30001647
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.1
-      postcss: 8.4.44
+      postcss: 8.4.45
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:
@@ -13205,12 +13205,12 @@ snapshots:
       postcss: 8.4.41
       ts-node: 10.9.2(@types/node@20.16.4)(typescript@5.5.4)
 
-  postcss-load-config@6.0.1(jiti@1.21.0)(postcss@8.4.44):
+  postcss-load-config@6.0.1(jiti@1.21.0)(postcss@8.4.45):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
       jiti: 1.21.0
-      postcss: 8.4.44
+      postcss: 8.4.45
 
   postcss-modules-extract-imports@3.0.0(postcss@8.4.41):
     dependencies:
@@ -13269,7 +13269,7 @@ snapshots:
       picocolors: 1.0.1
       source-map-js: 1.2.0
 
-  postcss@8.4.44:
+  postcss@8.4.45:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.0.1
@@ -14318,7 +14318,7 @@ snapshots:
 
   tsscmp@1.0.6: {}
 
-  tsup@8.2.4(jiti@1.21.0)(postcss@8.4.44)(typescript@5.5.4):
+  tsup@8.2.4(jiti@1.21.0)(postcss@8.4.45)(typescript@5.5.4):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.0)
       cac: 6.7.14
@@ -14330,14 +14330,14 @@ snapshots:
       globby: 11.1.0
       joycon: 3.1.1
       picocolors: 1.0.1
-      postcss-load-config: 6.0.1(jiti@1.21.0)(postcss@8.4.44)
+      postcss-load-config: 6.0.1(jiti@1.21.0)(postcss@8.4.45)
       resolve-from: 5.0.0
       rollup: 4.19.0
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
-      postcss: 8.4.44
+      postcss: 8.4.45
       typescript: 5.5.4
     transitivePeerDependencies:
       - jiti
@@ -14599,7 +14599,7 @@ snapshots:
   vite@5.1.5(@types/node@20.16.4)(terser@5.27.0):
     dependencies:
       esbuild: 0.19.5
-      postcss: 8.4.44
+      postcss: 8.4.45
       rollup: 4.19.0
     optionalDependencies:
       '@types/node': 20.16.4
