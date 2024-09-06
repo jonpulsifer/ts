@@ -5,6 +5,20 @@ export type Environment = {
   lifecycle: string;
 };
 
+export type Incident = {
+  id: string;
+  date: string;
+  description: string;
+  resolved: boolean;
+};
+
+export type Dependency = {
+  id: string;
+  name: string;
+  slug: string;
+  version: string;
+};
+
 export type Service = {
   id: string;
   name: string;
@@ -16,6 +30,10 @@ export type Service = {
   status: string;
   version: string;
   repository: string;
+  uptimeData: { x: number; y: number }[];
+  responseTimeData: { x: number; y: number }[];
+  incidents: Incident[];
+  dependencies: Dependency[];
 };
 
 const SERVICES: Service[] = [
@@ -37,6 +55,32 @@ const SERVICES: Service[] = [
     latency: 100,
     version: '1.0.0',
     repository: 'https://github.com/jonpulsifer/ts',
+    uptimeData: [
+      { x: 1, y: 100 },
+      { x: 2, y: 99 },
+      { x: 3, y: 100 },
+    ],
+    responseTimeData: [
+      { x: 1, y: 100 },
+      { x: 2, y: 120 },
+      { x: 3, y: 95 },
+    ],
+    incidents: [
+      {
+        id: '1',
+        date: '2023-04-01',
+        description: 'Server downtime due to maintenance',
+        resolved: true,
+      },
+    ],
+    dependencies: [
+      {
+        id: '1',
+        name: 'Next.js',
+        slug: 'nextjs',
+        version: '13.0.0',
+      },
+    ],
   },
   {
     id: '2',
@@ -55,6 +99,32 @@ const SERVICES: Service[] = [
     latency: 250,
     version: '1.0.0',
     repository: 'https://github.com/jonpulsifer/ts',
+    uptimeData: [
+      { x: 1, y: 90 },
+      { x: 2, y: 85 },
+      { x: 3, y: 0 },
+    ],
+    responseTimeData: [
+      { x: 1, y: 200 },
+      { x: 2, y: 250 },
+      { x: 3, y: 0 },
+    ],
+    incidents: [
+      {
+        id: '1',
+        date: '2023-04-02',
+        description: 'Service offline due to critical bug',
+        resolved: false,
+      },
+    ],
+    dependencies: [
+      {
+        id: '1',
+        name: 'TensorFlow',
+        slug: 'tensorflow',
+        version: '2.9.0',
+      },
+    ],
   },
 ];
 
