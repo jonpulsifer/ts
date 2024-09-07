@@ -3,11 +3,7 @@ import { timeSince } from '../lib';
 import type { BotMessage } from '../types';
 
 export async function argoListApps({ message, say }: BotMessage) {
-  const argo = new ArgoCD(
-    process.env.ARGOCD_USERNAME ?? '',
-    process.env.ARGOCD_PASSWORD ?? '',
-    process.env.ARGOCD_SERVER ?? '',
-  );
+  const argo = new ArgoCD();
 
   if (message.subtype === undefined || message.subtype === 'bot_message') {
     const applications = await argo.applications().catch(console.error);

@@ -1,39 +1,33 @@
 export class ArgoCD {
   private readonly server: string;
-  private readonly username: string;
-  private readonly password: string;
   private token: string | undefined;
 
-  constructor(username: string, password: string, server: string) {
-    this.server = server;
-    this.username = username;
-    this.password = password;
-    this.initializeToken();
-  }
-
-  private async initializeToken() {
-    try {
-      await this.login();
-      console.log('ArgoCD: Successfully logged in');
-    } catch (error) {
-      console.error('ArgoCD: Failed to login', error);
-    }
+  constructor() {
+    this.server = process.env.ARGOCD_SERVER ?? '';
+    this.login().catch(console.error);
   }
 
   private async login() {
-    const url = `${this.server}/api/v1/session`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: this.username,
-        password: this.password,
-      }),
-    });
-    if (!response.ok) throw new Error(`Request failed: ${response.statusText}`);
-    const json = await response.json();
-    if (!json.token) throw new Error(`No token found in response`);
-    this.token = json.token;
+    const username = process.env.ARGOCD_USERNAME ?? '';
+    const password = process.env.ARGOCD_PASSWORD ?? '';
+    const loginUrl = `${this.server}/api/v1/session`;
+
+    try {
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) throw new Error(`Login failed: ${response.statusText}`);
+
+      const json = await response.json();
+      if (!json.token) throw new Error(`No token found in response`);
+
+      this.token = json.token;
+    } catch (error) {
+      console.error('Failed to login to ArgoCD:', error);
+    }
   }
 
   private async request(
@@ -41,23 +35,38 @@ export class ArgoCD {
     method: 'GET' | 'POST' | 'PUT' | 'PATCH',
     body?: object,
   ): Promise<any> {
-    const url = `${this.server}/api/v1/${path}`;
-    const headers: Record<string, string> = {};
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+    if (!this.token) {
+      await this.login();
+      if (!this.token) throw new Error('Failed to obtain token');
     }
+
+    const url = `${this.server}/api/v1/${path}`;
+    const headers: Record<string, string> = {
+      'Authorization': `Bearer ${this.token}`
+    };
+
     const options: RequestInit = { method, headers };
     if (body) {
-      headers['Content-Type'] = 'application/json';
       options.body = JSON.stringify(body);
+      headers['Content-Type'] = 'application/json';
     }
 
     const response = await fetch(url, options);
 
     if (response.status === 401) {
-      // Unauthorized, try to login and retry the request
+      // Token might have expired, try to login again
       await this.login();
-      return this.request(path, method, body);
+      if (!this.token) throw new Error('Failed to renew token');
+
+      // Retry the request with the new token
+      headers['Authorization'] = `Bearer ${this.token}`;
+      const retryResponse = await fetch(url, options);
+
+      if (!retryResponse.ok) {
+        throw new Error(`Request failed: ${retryResponse.statusText}`);
+      }
+
+      return retryResponse.json();
     }
 
     if (!response.ok) {
