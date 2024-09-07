@@ -8,6 +8,16 @@ export class ArgoCD {
     this.server = server;
     this.username = username;
     this.password = password;
+    this.initializeToken();
+  }
+
+  private async initializeToken() {
+    try {
+      await this.login();
+      console.log('ArgoCD: Successfully logged in');
+    } catch (error) {
+      console.error('ArgoCD: Failed to login', error);
+    }
   }
 
   private async login() {
@@ -30,26 +40,31 @@ export class ArgoCD {
     path: string,
     method: 'GET' | 'POST' | 'PUT' | 'PATCH',
     body?: object,
-
   ): Promise<any> {
-    await this.login();
-    if (!this.token) throw new Error('No token found');
     const url = `${this.server}/api/v1/${path}`;
-    const headers: Record<string, string> = {
-      Authorization: `Bearer ${this.token}`,
-    };
-    const options: RequestInit = {
-      method,
-      headers,
-    };
+    const headers: Record<string, string> = {};
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+    const options: RequestInit = { method, headers };
     if (body) {
       headers['Content-Type'] = 'application/json';
       options.body = JSON.stringify(body);
     }
+
     const response = await fetch(url, options);
-    if (!response.ok) throw new Error(`Request failed: ${response.statusText}`);
-    const json = await response.json();
-    return json;
+
+    if (response.status === 401) {
+      // Unauthorized, try to login and retry the request
+      await this.login();
+      return this.request(path, method, body);
+    }
+
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 
   async applications() {

@@ -1,11 +1,17 @@
 import type { BlockAction } from '@slack/bolt';
 import { App, LogLevel } from '@slack/bolt';
-import { config } from 'dotenv';
 import { distance } from 'fastest-levenshtein';
 import { argoListApps } from './features/argo';
 import { pdListOncalls, pdPageSomeone } from './features/oncall';
+import { config } from 'dotenv';
 
-if (process.env.NODE_ENV === 'development') config();
+const loadEnv = () => {
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    config();
+  }
+};
+
+loadEnv();
 
 const app = new App({
   signingSecret: process.env.SLACK_CLIENT_SIGNING_SECRET,
