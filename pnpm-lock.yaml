@@ -290,8 +290,8 @@ importers:
         specifier: 2.2.4
         version: 2.2.4
       '@slack/bolt':
-        specifier: 3.21.2
-        version: 3.21.2
+        specifier: 3.21.4
+        version: 3.21.4
       '@slack/web-api':
         specifier: 6.12.1
         version: 6.12.1
@@ -2018,9 +2018,9 @@ packages:
     resolution: {integrity: sha512-OPwQlEdg40HAj5KNF8WW6q2KG4Z+cBCZb3m4ninfTZKaBmbIJodviQsDBoYMPHkOyJJMHnOJo5j2+LKDOhOACg==}
     deprecated: Use version 10.1.0. Version 10.2.0 has potential breaking issues
 
-  '@slack/bolt@3.21.2':
-    resolution: {integrity: sha512-Cft+5dbl+YApK2GVFX9O86k0qIqQXshnBGq9oK4a4rLfklyfw9TcydmOxEd32aR/2HbBwr7o/pwu5UAI2c/bUg==}
-    engines: {node: '>=12.13.0', npm: '>=6.12.0'}
+  '@slack/bolt@3.21.4':
+    resolution: {integrity: sha512-4PqOuHXcVt8KxjKiLdLIqZp8285zdiYLj7HrrKvVHnUNbkD0l16HZxtMfIEe07REQ+vmM1mrqCiZqe9dPAMucA==}
+    engines: {node: '>=14.21.3', npm: '>=6.14.18'}
 
   '@slack/logger@3.0.0':
     resolution: {integrity: sha512-DTuBFbqu4gGfajREEMrkq5jBhcnskinhr4+AnfJEk48zhVeEv3XnUKGIX98B74kxhYsIMfApGGySTn7V3b5yBA==}
@@ -4759,8 +4759,9 @@ packages:
   path-to-regexp@3.2.0:
     resolution: {integrity: sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==}
 
-  path-to-regexp@6.2.1:
-    resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
+  path-to-regexp@8.1.0:
+    resolution: {integrity: sha512-Bqn3vc8CMHty6zuD+tG23s6v2kwxslHEhTj4eYaVKGIEB+YX/2wd0/rgXLFD9G9id9KCtbVy/3ZgmvZjpa0UdQ==}
+    engines: {node: '>=16'}
 
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
@@ -7513,7 +7514,7 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.0
 
-  '@slack/bolt@3.21.2':
+  '@slack/bolt@3.21.4':
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/oauth': 2.6.3
@@ -7525,7 +7526,7 @@ snapshots:
       '@types/tsscmp': 1.0.1
       axios: 1.7.4
       express: 4.19.2
-      path-to-regexp: 6.2.1
+      path-to-regexp: 8.1.0
       promise.allsettled: 1.0.7
       raw-body: 2.5.2
       tsscmp: 1.0.6
@@ -10853,7 +10854,7 @@ snapshots:
 
   path-to-regexp@3.2.0: {}
 
-  path-to-regexp@6.2.1: {}
+  path-to-regexp@8.1.0: {}
 
   path-type@4.0.0: {}
 

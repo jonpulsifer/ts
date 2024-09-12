@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@pagerduty/pdjs": "2.2.4",
-    "@slack/bolt": "3.21.2",
+    "@slack/bolt": "3.21.4",
     "dotenv": "16.4.5",
     "fastest-levenshtein": "1.0.16"
   },
