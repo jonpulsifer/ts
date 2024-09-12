@@ -23,7 +23,7 @@
     "node": ">=20.*.*",
     "npm": ">=10.*.*"
   },
-  "packageManager": "pnpm@9.9.0",
+  "packageManager": "pnpm@9.10.0",
   "cspell": {
     "version": "0.2",
     "ignorePaths": [],
