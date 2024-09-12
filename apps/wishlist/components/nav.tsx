@@ -144,7 +144,7 @@ export function SidebarMarkup() {
   const itemsMarkup = NAV_ITEMS.map(({ label, icon, url }) => {
     const current = isCurrentPath(currentPath, url);
     return (
-      <SidebarItem href={url} current={current}>
+      <SidebarItem key={label} href={url} current={current}>
         {label}
         {icon}
       </SidebarItem>

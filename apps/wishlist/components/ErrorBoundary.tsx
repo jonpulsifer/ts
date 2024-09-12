@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
 
-export default function ErrorBoundary({ children }: { children: JSX.Element }) {
+export default function ErrorBoundary({
+  children,
+}: { children?: JSX.Element | React.ReactNode }) {
   const [error, setError] = useState<Error | null>(null);
 
   if (error) {
@@ -22,7 +24,7 @@ function ErrorBoundaryFallback({
   children,
   onError,
 }: {
-  children: JSX.Element;
+  children?: JSX.Element | React.ReactNode;
   onError: (error: Error) => void;
 }) {
   try {

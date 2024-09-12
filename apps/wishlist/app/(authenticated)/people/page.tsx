@@ -26,10 +26,8 @@ const PeoplePage = async () => {
     (acc, gift) => {
       const ownerId = gift.ownerId;
       const ownerGifts = acc[ownerId] || [];
-      return {
-        ...acc,
-        [ownerId]: [...ownerGifts, gift],
-      };
+      acc[ownerId] = ownerGifts.concat(gift);
+      return acc;
     },
     {},
   );

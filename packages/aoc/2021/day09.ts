@@ -46,9 +46,8 @@ export function part2(input: string): number {
   for (let i = 0; i < readings.length; i++) {
     basin = false;
     for (let j = 0; j < readings[0].length; j++) {
-      let reading: Point;
       if (readings[i][j] === 9) continue;
-      reading = {
+      const reading: Point = {
         x: j,
         y: i,
         value: readings[i][j],

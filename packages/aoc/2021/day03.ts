@@ -33,20 +33,21 @@ export function part2(input: string): number {
 }
 
 function part2Filter(input: string[], criteria?: string): string[] {
-  const bits = input[0].length;
+  let readings = input;
+  const bits = readings[0].length;
   for (let bit = 0; bit < bits; bit++) {
     let zeroes = 0;
     let ones = 0;
-    for (const reading of input) {
-      if (input.length === 1) return input;
+    for (const reading of readings) {
+      if (readings.length === 1) return readings;
       reading[bit] === '1' ? ones++ : zeroes++;
     }
     const most = ones >= zeroes ? '1' : '0';
     const least = ones >= zeroes ? '0' : '1';
     const filter = criteria === 'o2' ? most : least;
-    input = input.filter((v) => {
+    readings = readings.filter((v) => {
       return v[bit] === filter;
     });
   }
-  return input;
+  return readings;
 }
