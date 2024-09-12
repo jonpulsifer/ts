@@ -1,6 +1,7 @@
+import { ArgoApplication } from '../types/argocd';
 import { ArgoCD } from '../clients/argocd';
-import { timeSince } from '../lib';
-import type { BotMessage } from '../types';
+import { timeSince } from '../lib/utils';
+import type { BotMessage } from '../types/bot';
 
 export async function argoListApps({ message, say }: BotMessage) {
   const argo = new ArgoCD();
@@ -8,10 +9,15 @@ export async function argoListApps({ message, say }: BotMessage) {
   if (message.subtype === undefined || message.subtype === 'bot_message') {
     const applications = await argo.applications().catch(console.error);
 
+    if (!applications) {
+      await say('No applications found');
+      return;
+    }
+
     const applicationBlocks: any[] = [];
 
 
-    applications.items.forEach((app: any, index: number, array: []) => {
+    applications.forEach((app, index, array: ArgoApplication[]) => {
       // get the distance between now and last reconciled
       const lastDeployment = app.status.history[app.status.history.length - 1];
       const lastDeploymentDate = new Date(lastDeployment.deployedAt);
@@ -77,7 +83,7 @@ export async function argoListApps({ message, say }: BotMessage) {
         });
       }
     });
-    say({
+    return {
       text: 'List of ArgoCD Applications',
       blocks: [
         {
@@ -92,6 +98,6 @@ export async function argoListApps({ message, say }: BotMessage) {
       ],
       unfurl_links: false,
       unfurl_media: false,
-    });
+    };
   }
 }

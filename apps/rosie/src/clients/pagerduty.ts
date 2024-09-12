@@ -1,5 +1,6 @@
 import { api } from '@pagerduty/pdjs';
 import type { PartialCall } from '@pagerduty/pdjs/build/src/api';
+import { loadEnv } from '../utils/env';
 
 interface OnCallsType {
   escalation_policy: {
@@ -25,6 +26,7 @@ interface OnCallsType {
 export class PagerDuty {
   readonly pd: PartialCall;
   constructor() {
+    loadEnv();
     this.pd = api({
       token: process.env.PAGERDUTY_TOKEN,
       headers: { From: 'jonathan@pulsifer.ca' },

@@ -1,6 +1,6 @@
 import type { App } from '@slack/bolt';
 import { PagerDuty } from '../clients/pagerduty';
-import type { BotAction, BotMessage } from '../types';
+import type { BotAction, BotMessage } from '../types/bot';
 
 interface UserOnCall {
   id: string;
@@ -40,7 +40,7 @@ export async function pdListOncalls({ message, say }: BotMessage, app: App) {
       });
     }
 
-    say({
+    return {
       text: 'Page someone',
       blocks: [
         {

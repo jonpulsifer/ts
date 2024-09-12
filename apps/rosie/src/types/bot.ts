@@ -1,3 +1,11 @@
+export type CommandHandler = (params: {
+  args: string[];
+  event: any;
+  say: any;
+  app: any;
+  respond?: (message: string) => Promise<void>;
+}) => Promise<void>;
+
 import type {
   AckFn,
   AppMentionEvent,

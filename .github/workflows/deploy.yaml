@@ -8,7 +8,6 @@ on:
         type: choice
         options:
           - authme
-          - galaxy
           - hub
           - request-headers
           - rosie
