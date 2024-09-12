@@ -7,13 +7,11 @@
   "devDependencies": {
     "@types/k6": "0.53.1",
     "@types/node": "20.16.5",
-    "@repo/eslint-config": "workspace:*",
     "ts-node": "10.9.2",
     "@repo/typescript-config": "workspace*",
     "typescript": "5.5.4"
   },
   "scripts": {
-    "lint": "eslint --fix",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "dev": "tsc --watch"

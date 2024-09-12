@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import fetch from 'cross-fetch';
 import { mkdirSync, writeFileSync } from 'fs';
 import * as path from 'path';
@@ -23,7 +22,6 @@ function saveInput(): void {
   const outputDir = path.resolve('.', year);
   try {
     mkdirSync(outputDir);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.code !== 'EEXIST') {
       throw new Error(`${error.code}: could not create directory`);

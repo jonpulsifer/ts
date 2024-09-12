@@ -9,16 +9,14 @@
     "build": "turbo build",
     "clean": "turbo clean",
     "dev": "turbo dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format-and-lint": "biome check .",
+    "format-and-lint:fix": "biome check . --write",
     "lint": "turbo lint",
     "test": "turbo test"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/prettier-config": "workspace:*",
+    "@biomejs/biome": "1.8.3",
     "@repo/typescript-config": "workspace:*",
-    "eslint": "8.57.0",
-    "prettier": "3.3.3",
     "turbo": "2.1.1"
   },
   "engines": {

@@ -1,17 +1,12 @@
 import { App, LogLevel } from '@slack/bolt';
-import { commands } from './commands';
-import { handleAppMention } from './handlers/appMention';
-import { handleSlashCommand } from './handlers/slashCommand';
 import { setupBlockActions } from './handlers/blockActions';
 import { loadEnv } from './utils/env';
-import { findCommand } from './utils/commands';
 
 (async () => {
   try {
     loadEnv();
 
     const app = new App({
-      signingSecret: process.env.SLACK_CLIENT_SIGNING_SECRET!,
       token: process.env.SLACK_BOT_TOKEN,
       appToken: process.env.SLACK_APP_TOKEN,
       logLevel: LogLevel.INFO,
@@ -41,16 +36,9 @@ import { findCommand } from './utils/commands';
         });
         return;
       }
-
-      const command = findCommand(context.command);
-      if (!command) {
-        await respond({
-          text: 'Command not found.',
-        });
-        return;
-      }
-
-
+      await respond({
+        text: `Hello, ${user.real_name}!`,
+      });
     });
 
 

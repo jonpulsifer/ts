@@ -41,7 +41,6 @@ export function Login(): JSX.Element {
     <button
       className="flex w-full h-10 justify-center font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-zinc-800 text-center inline-flex items-center bg-white text-black dark:bg-zinc-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
       onClick={(e) => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function -- dunno wat do
         handleSignIn(e).catch(() => {});
       }}
       type="button"
@@ -81,7 +80,6 @@ export function Login(): JSX.Element {
       className="flex w-full h-10 justify-center font-semibold focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 dark:focus:ring-indigo-600 p-2 border rounded-lg border-gray-700 dark:hover:border-indigo-600 dark:border-zinc-800 text-center inline-flex items-center bg-white text-black dark:bg-zinc-900 dark:text-white dark:hover:bg-black dark:hover:text-indigo-500 hover:bg-black hover:text-white transition ease-in-out duration-100"
       disabled={loading}
       onClick={(e) => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function -- dunno wat do
         handleSignOut(e).catch(() => {});
       }}
       type="button"
@@ -93,7 +91,6 @@ export function Login(): JSX.Element {
     <Card subtitle="This is a card with a Google Sign In button" title="Login">
       <div className="p-4">
         {
-          // eslint-disable-next-line no-nested-ternary -- but i want to
           loading ? button : isAuthenticated ? button : googleButton
         }
       </div>

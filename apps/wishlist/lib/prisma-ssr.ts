@@ -1,4 +1,3 @@
-/* eslint-disable no-console -- because we like to log */
 import { Prisma } from '@prisma/client';
 import { auth } from 'app/auth';
 import { redirect } from 'next/navigation';

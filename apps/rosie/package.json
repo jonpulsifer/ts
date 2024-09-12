@@ -6,8 +6,6 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node-dev --watch --transpile-only src/main.ts",
-    "format": "prettier --write .",
-    "lint": "eslint . --ext .ts",
     "start": "ts-node src/main.ts"
   },
   "dependencies": {
@@ -22,7 +20,6 @@
   "devDependencies": {
     "@types/node": "20.16.5",
     "@types/node-fetch": "2.6.11",
-    "@repo/eslint-config": "workspace:*",
     "ts-node": "10.9.2",
     "ts-node-dev": "2.0.0",
     "@repo/typescript-config": "workspace:*",

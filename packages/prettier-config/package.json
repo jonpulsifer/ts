@@ -1,8 +1,0 @@
-{
-  "name": "@repo/prettier-config",
-  "version": "0.0.0",
-  "main": "index.js",
-  "types": "index.js",
-  "license": "WTFPL",
-  "private": true
-}

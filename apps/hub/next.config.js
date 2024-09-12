@@ -11,6 +11,9 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
 };
 
 module.exports = nextConfig;

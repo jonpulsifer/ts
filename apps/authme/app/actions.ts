@@ -1,6 +1,3 @@
-/* eslint-disable no-console -- this is wild */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access -- this is wild */
-/* eslint-disable @typescript-eslint/no-explicit-any -- this is wild */
 'use server';
 import type { User } from '@prisma/client';
 import { Prisma } from '@prisma/client';

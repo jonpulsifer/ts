@@ -25,7 +25,6 @@ RUN pnpm install --frozen-lockfile --filter=${APP}...
 
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/out ./out
-COPY .prettierrc.json .
 
 # Build the project
 RUN \

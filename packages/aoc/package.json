@@ -10,7 +10,6 @@
     "@types/jest": "29.5.12",
     "@types/node": "20.16.5",
     "cross-fetch": "4.0.0",
-    "@repo/eslint-config": "workspace:*",
     "jest": "29.7.0",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
@@ -18,7 +17,6 @@
     "typescript": "5.5.4"
   },
   "scripts": {
-    "lint": "eslint --fix",
     "typecheck": "tsc --noEmit",
     "fetch": "ts-node index.ts"
   }
