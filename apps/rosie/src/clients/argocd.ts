@@ -1,5 +1,5 @@
+import type { ArgoApplication, ArgoLoginResponse } from '../types/argocd';
 import { loadEnv } from '../utils/env';
-import { ArgoApplication, ArgoLoginResponse } from '../types/argocd';
 
 export class ArgoCD {
   private server: string;
@@ -24,12 +24,15 @@ export class ArgoCD {
     const response = await fetch(loginUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: this.username, password: this.password }),
+      body: JSON.stringify({
+        username: this.username,
+        password: this.password,
+      }),
     });
 
     if (!response.ok) throw new Error(`Login failed: ${response.statusText}`);
 
-    const json = await response.json() as ArgoLoginResponse;
+    const json = (await response.json()) as ArgoLoginResponse;
     if (!json.token) throw new Error('No token found in response');
 
     this.token = json.token;
@@ -46,7 +49,7 @@ export class ArgoCD {
 
     const url = `${this.server}/api/v1/${path}`;
     const headers: Record<string, string> = {
-      'Authorization': `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     };
 
     const options: RequestInit = { method, headers };
@@ -61,7 +64,7 @@ export class ArgoCD {
       await this.login();
       if (!this.token) throw new Error('Failed to renew token');
 
-      headers['Authorization'] = `Bearer ${this.token}`;
+      headers.Authorization = `Bearer ${this.token}`;
       const retryResponse = await fetch(url, options);
 
       if (!retryResponse.ok) {
@@ -79,7 +82,10 @@ export class ArgoCD {
   }
 
   async applications(): Promise<ArgoApplication[]> {
-    const results = await this.request<{ items: ArgoApplication[] }>('applications', 'GET');
+    const results = await this.request<{ items: ArgoApplication[] }>(
+      'applications',
+      'GET',
+    );
     return results.items as ArgoApplication[];
   }
 

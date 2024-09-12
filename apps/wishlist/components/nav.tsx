@@ -10,7 +10,7 @@ import {
   UserGroupIcon,
   UsersIcon,
 } from '@heroicons/react/20/solid';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import {
   Avatar,
   Dropdown,
@@ -70,7 +70,7 @@ export function NavBar({ user, users }: NavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const initials = user.name
     ? user.name[0].toUpperCase()
-    : user.email![0].toUpperCase();
+    : user.email?.[0].toUpperCase();
 
   // function that returns true if the current path matches the given path
   const currentPath = usePathname();

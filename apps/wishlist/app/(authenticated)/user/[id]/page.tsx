@@ -28,7 +28,7 @@ const ProfilePage = async ({ params }: Props) => {
   const { gifts, user } = await getVisibleGiftsForUserById(params.id);
   const isUserProfile = user.id === profile.id;
   const nameOrEmailOrDefault = profile.name || profile.email || 'Anonymous';
-  const title = isUserProfile ? `Your Profile` : nameOrEmailOrDefault;
+  const title = isUserProfile ? 'Your Profile' : nameOrEmailOrDefault;
   return (
     <>
       <Heading>{title}</Heading>

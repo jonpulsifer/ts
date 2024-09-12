@@ -22,14 +22,18 @@ export class PagerDutyService {
       });
     } catch (error) {
       console.error('Error listing on-calls:', error);
-      await say('Sorry, I encountered an error while fetching on-call information.');
+      await say(
+        'Sorry, I encountered an error while fetching on-call information.',
+      );
     }
   }
 
   async pageSomeone({ body, client }: { body: any; client: any }) {
     try {
-      const userId = body.state.values['oncall-user']['oncall-user'].selected_user;
-      const description = body.state.values['oncall-description']['oncall-description'].value;
+      const userId =
+        body.state.values['oncall-user']['oncall-user'].selected_user;
+      const description =
+        body.state.values['oncall-description']['oncall-description'].value;
 
       const pdUser = await this.pd.getEmailFromPDID(userId);
       if (!pdUser) {
@@ -40,7 +44,10 @@ export class PagerDutyService {
         return;
       }
 
-      const { resource, response } = await this.pd.createIncident(pdUser, description);
+      const { resource, response } = await this.pd.createIncident(
+        pdUser,
+        description,
+      );
 
       if (response.ok) {
         await client.chat.postMessage({

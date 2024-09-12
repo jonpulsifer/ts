@@ -11,7 +11,7 @@ import {
 import { deleteGift } from 'app/actions';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { GiftWithOwner } from 'types/prisma';
+import type { GiftWithOwner } from 'types/prisma';
 
 export const DeleteButton = ({
   gift,

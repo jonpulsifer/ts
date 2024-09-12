@@ -13,7 +13,7 @@ import {
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import React from 'react';
-import { GiftWithOwner } from 'types/prisma';
+import type { GiftWithOwner } from 'types/prisma';
 
 export const metadata: Metadata = {
   title: 'People',

@@ -1,6 +1,6 @@
+import { mkdirSync, writeFileSync } from 'node:fs';
+import * as path from 'node:path';
 import fetch from 'cross-fetch';
-import { mkdirSync, writeFileSync } from 'fs';
-import * as path from 'path';
 
 async function fetchInput(url: string, cookie: string): Promise<string> {
   const headers = {

@@ -61,7 +61,7 @@ const Chat = ({
   // clicking on a badge will submit the form
   const send = async (formData: FormData) => {
     const message = {
-      id: 'optimistic-' + Math.random(),
+      id: `optimistic-${Math.random()}`,
       timestamp: new Date().valueOf(),
       sender: name,
       content: formData.get('messageButton') as string,
@@ -87,10 +87,9 @@ const Chat = ({
     <>
       <div className="flex flex-col h-full">
         <div className="flex-1 overflow-y-auto">
-          {optimisticMessages &&
-            optimisticMessages.map((message) => (
-              <Message key={message.id} message={message} user={name} />
-            ))}
+          {optimisticMessages?.map((message) => (
+            <Message key={message.id} message={message} user={name} />
+          ))}
           <div ref={chatContainerRef} />
         </div>
 

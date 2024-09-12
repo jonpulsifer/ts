@@ -8,17 +8,21 @@ export function timeAgo(date: Date) {
 
   if (secondsPast < 60) {
     return getPlural(Math.round(secondsPast), 'second');
-  } else if (secondsPast < 3600) {
-    return getPlural(Math.round(secondsPast / 60), 'minute');
-  } else if (secondsPast < 86400) {
-    return getPlural(Math.round(secondsPast / 3600), 'hour');
-  } else if (secondsPast < 604800) {
-    return getPlural(Math.round(secondsPast / 86400), 'day');
-  } else if (secondsPast < 2419200) {
-    return getPlural(Math.round(secondsPast / 604800), 'week');
-  } else if (secondsPast < 29030400) {
-    return getPlural(Math.round(secondsPast / 2419200), 'month');
-  } else {
-    return getPlural(Math.round(secondsPast / 29030400), 'year');
   }
+  if (secondsPast < 3600) {
+    return getPlural(Math.round(secondsPast / 60), 'minute');
+  }
+  if (secondsPast < 86400) {
+    return getPlural(Math.round(secondsPast / 3600), 'hour');
+  }
+  if (secondsPast < 604800) {
+    return getPlural(Math.round(secondsPast / 86400), 'day');
+  }
+  if (secondsPast < 2419200) {
+    return getPlural(Math.round(secondsPast / 604800), 'week');
+  }
+  if (secondsPast < 29030400) {
+    return getPlural(Math.round(secondsPast / 2419200), 'month');
+  }
+  return getPlural(Math.round(secondsPast / 29030400), 'year');
 }

@@ -1,19 +1,19 @@
-import * as os from 'os';
+import * as os from 'node:os';
 
 import type { MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import {
-  Text,
-  Strong,
   Code,
-  Radio,
-  RadioField,
-  RadioGroup,
   Description,
   Fieldset,
   Label,
   Legend,
+  Radio,
+  RadioField,
+  RadioGroup,
+  Strong,
+  Text,
 } from '@repo/ui';
 
 export const meta: MetaFunction = () => [{ title: 'Hello, Remix' }];

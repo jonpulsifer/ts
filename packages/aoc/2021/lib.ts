@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import * as path from 'path';
+import { readFileSync } from 'node:fs';
+import * as path from 'node:path';
 
 export function readInput(d: number): string {
   const day = String(d).padStart(2, '0');

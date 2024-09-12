@@ -37,7 +37,8 @@ export function findCommand(commands: any, args: string[]): any {
     const command = commands[closestCommand];
     if (typeof command === 'function' || restArgs.length === 0) {
       return command;
-    } else if (typeof command === 'object') {
+    }
+    if (typeof command === 'object') {
       return findCommand(command, restArgs);
     }
   }

@@ -9,7 +9,7 @@ import {
   TableRow,
 } from '@repo/ui/table';
 import { Strong, Text } from '@repo/ui/text';
-import { UserWithGifts } from 'types/prisma';
+import type { UserWithGifts } from 'types/prisma';
 
 export function UserTable({ users }: { users: UserWithGifts[] }) {
   const tableRows = users.map((user) => {

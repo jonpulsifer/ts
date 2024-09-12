@@ -7,8 +7,9 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/16/solid';
-import { Avatar, AvatarProps } from '@repo/ui';
-import React, { Suspense } from 'react';
+import { Avatar, type AvatarProps } from '@repo/ui';
+import type React from 'react';
+import { Suspense } from 'react';
 
 interface Props {
   title?: string;

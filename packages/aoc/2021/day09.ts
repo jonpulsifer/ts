@@ -7,11 +7,11 @@ function parse(s: string): number[][] {
 
 const isLowPoint = (y: number, x: number, map: number[][]): boolean => {
   const middle = map[y][x];
-  const top = map[y - 1] ? map[y - 1][x] : NaN;
-  const bottom = map[y + 1] ? map[y + 1][x] : NaN;
-  const left = map[y][x - 1] !== undefined ? map[y][x - 1] : NaN;
-  const right = map[y][x + 1] !== undefined ? map[y][x + 1] : NaN;
-  const criteria = [top, bottom, left, right].filter((v) => !isNaN(v));
+  const top = map[y - 1] ? map[y - 1][x] : Number.NaN;
+  const bottom = map[y + 1] ? map[y + 1][x] : Number.NaN;
+  const left = map[y][x - 1] !== undefined ? map[y][x - 1] : Number.NaN;
+  const right = map[y][x + 1] !== undefined ? map[y][x + 1] : Number.NaN;
+  const criteria = [top, bottom, left, right].filter((v) => !Number.isNaN(v));
   return criteria.every((n) => n > middle);
 };
 

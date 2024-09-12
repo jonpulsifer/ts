@@ -18,7 +18,7 @@ import {
 import { claimGift, deleteGift, unclaimGift } from 'app/actions';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { GiftWithOwner } from 'types/prisma';
+import type { GiftWithOwner } from 'types/prisma';
 
 export function TableActions({
   gift,

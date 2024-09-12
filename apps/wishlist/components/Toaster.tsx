@@ -6,7 +6,7 @@ import {
   LightBulbIcon,
 } from '@heroicons/react/16/solid';
 import React from 'react';
-import { resolveValue, toast, Toaster, ToastIcon } from 'react-hot-toast';
+import { ToastIcon, Toaster, resolveValue, toast } from 'react-hot-toast';
 
 export function Toast() {
   return (
@@ -39,7 +39,7 @@ export function Toast() {
 
 export const dismissable = (content: string | JSX.Element) => {
   toast((t) => {
-    t.duration = Infinity;
+    t.duration = Number.POSITIVE_INFINITY;
     t.icon = <LightBulbIcon />;
     return (
       <div

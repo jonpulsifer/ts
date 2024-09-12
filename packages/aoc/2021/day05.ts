@@ -21,10 +21,10 @@ export function solve(
   for (const coord of coords) {
     const pos1 = coord[0];
     const pos2 = coord[1];
-    const x1 = pos1[0],
-      y1 = pos1[1],
-      x2 = pos2[0],
-      y2 = pos2[1];
+    const x1 = pos1[0];
+    const y1 = pos1[1];
+    const x2 = pos2[0];
+    const y2 = pos2[1];
 
     const diagonal = x1 !== x2 && y1 !== y2;
     if (!diagonals && diagonal) continue;

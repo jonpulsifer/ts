@@ -9,7 +9,7 @@ export async function GET() {
   const message = {
     id: uuidv4(),
     sender: 'API',
-    content: 'Hello, world! Number:' + Math.random(),
+    content: `Hello, world! Number:${Math.random()}`,
     timestamp: Date.now(),
   };
   // Using the timestamp as the score for sorted ordering.

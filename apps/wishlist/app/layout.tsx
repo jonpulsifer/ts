@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import ErrorBoundary from 'components/ErrorBoundary';
 import Toast from 'components/Toaster';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({
@@ -23,9 +23,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <body
         className={`h-full w-full ${inter.className} dark:text-zinc-100 dark:bg-zinc-900`}
       >
-        <ErrorBoundary>
-          <>{children}</>
-        </ErrorBoundary>
+        <ErrorBoundary>{children}</ErrorBoundary>
         <SpeedInsights />
         <Analytics />
         <Toast />

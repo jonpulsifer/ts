@@ -1,6 +1,6 @@
 import { check } from 'k6';
-import type { Options } from 'k6/options';
 import http from 'k6/http';
+import type { Options } from 'k6/options';
 
 export const options: Options = {
   vus: 1,
@@ -24,7 +24,6 @@ export const options: Options = {
     },
   },
 };
-
 
 export default () => {
   const res = http.get('https://request-headers.lolwtf.ca/api/headers');

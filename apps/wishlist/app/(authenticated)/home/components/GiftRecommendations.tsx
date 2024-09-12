@@ -1,6 +1,6 @@
 import { Button, Strong, Text } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { GiftRecommendation } from 'lib/prisma-ssr';
+import type { GiftRecommendation } from 'lib/prisma-ssr';
 import { useState } from 'react';
 
 export function GiftRecommendations() {
@@ -37,7 +37,11 @@ export function GiftRecommendations() {
           {isLoading ? (
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              transition={{
+                duration: 1,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: 'linear',
+              }}
               className="inline-block mr-2"
             >
               ⚡

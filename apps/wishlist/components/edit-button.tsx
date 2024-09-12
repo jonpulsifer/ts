@@ -1,5 +1,5 @@
 import { Button } from '@repo/ui/button';
-import { GiftWithOwner } from 'types/prisma';
+import type { GiftWithOwner } from 'types/prisma';
 
 export const EditButton = ({
   gift,

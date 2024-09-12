@@ -1,10 +1,7 @@
 {
   "name": "ts",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "build": "turbo build",
     "clean": "turbo clean",
@@ -29,9 +26,7 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": [
-      "nestjs"
-    ],
+    "words": ["nestjs"],
     "ignoreWords": [],
     "import": []
   }

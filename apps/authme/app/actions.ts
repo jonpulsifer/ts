@@ -1,8 +1,8 @@
 'use server';
 import type { User } from '@prisma/client';
 import { Prisma } from '@prisma/client';
-import { headers } from 'next/headers';
 import { getServerSession } from 'next-auth/next';
+import { headers } from 'next/headers';
 
 import { authOptions } from '../lib/auth';
 import { prisma } from '../lib/prisma';

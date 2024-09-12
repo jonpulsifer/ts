@@ -22,14 +22,14 @@ export function part1(input: string): number {
     epsilon = epsilon + e;
   }
 
-  return parseInt(gamma, 2) * parseInt(epsilon, 2);
+  return Number.parseInt(gamma, 2) * Number.parseInt(epsilon, 2);
 }
 
 export function part2(input: string): number {
   const readings = parse(input);
   const co2: string[] = part2Filter(readings);
   const o2: string[] = part2Filter(readings, 'o2');
-  return parseInt(o2[0], 2) * parseInt(co2[0], 2);
+  return Number.parseInt(o2[0], 2) * Number.parseInt(co2[0], 2);
 }
 
 function part2Filter(input: string[], criteria?: string): string[] {

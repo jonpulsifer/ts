@@ -41,12 +41,11 @@ import { loadEnv } from './utils/env';
       });
     });
 
-
     setupBlockActions(app);
 
     try {
       await app.start();
-      console.log(`⚡️ Bolt app is running!`);
+      console.log('⚡️ Bolt app is running!');
     } catch (error) {
       console.error('Failed to start app:', error);
       process.exit(1);

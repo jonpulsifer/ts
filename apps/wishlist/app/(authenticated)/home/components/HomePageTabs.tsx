@@ -5,7 +5,7 @@ import { GiftIcon, LightBulbIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
 import { motion } from 'framer-motion';
-import { GiftWithOwner } from 'types/prisma';
+import type { GiftWithOwner } from 'types/prisma';
 
 import { GiftRecommendations } from './GiftRecommendations';
 

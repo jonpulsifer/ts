@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import { part1, part2 } from './day02';
 import { readInput } from './lib';
 

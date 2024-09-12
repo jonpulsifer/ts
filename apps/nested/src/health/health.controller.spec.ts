@@ -1,5 +1,5 @@
 import { TerminusModule } from '@nestjs/terminus';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { HealthController } from './health.controller';
 
 describe('HealthController', () => {

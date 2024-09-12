@@ -2,10 +2,7 @@
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDirs": [
-      "src",
-      "test"
-    ],
+    "rootDirs": ["src", "test"],
     "baseUrl": "./",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -13,7 +10,7 @@
     "allowImportingTsExtensions": false,
     "target": "ES6",
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "node"
   },
   "exclude": ["dist"]
 }

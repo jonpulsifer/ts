@@ -1,8 +1,8 @@
 'use client';
 
 import { Card } from '@repo/ui/card';
-import { useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export function Login(): JSX.Element {
@@ -90,9 +90,7 @@ export function Login(): JSX.Element {
   return (
     <Card subtitle="This is a card with a Google Sign In button" title="Login">
       <div className="p-4">
-        {
-          loading ? button : isAuthenticated ? button : googleButton
-        }
+        {loading ? button : isAuthenticated ? button : googleButton}
       </div>
     </Card>
   );

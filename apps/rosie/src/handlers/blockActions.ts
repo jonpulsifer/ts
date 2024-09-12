@@ -1,4 +1,4 @@
-import { App, BlockAction } from '@slack/bolt';
+import type { App, BlockAction } from '@slack/bolt';
 import { PagerDutyService } from '../services/pagerduty';
 
 export const setupBlockActions = (app: App) => {
@@ -19,9 +19,12 @@ export const setupBlockActions = (app: App) => {
     },
   );
 
-  app.action<BlockAction>({ action_id: 'oncall-page' }, async ({ ack, body, client }) => {
-    await ack();
-    const pdService = new PagerDutyService();
-    await pdService.pageSomeone({ body, client });
-  });
+  app.action<BlockAction>(
+    { action_id: 'oncall-page' },
+    async ({ ack, body, client }) => {
+      await ack();
+      const pdService = new PagerDutyService();
+      await pdService.pageSomeone({ body, client });
+    },
+  );
 };

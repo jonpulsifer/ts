@@ -1,5 +1,5 @@
 import { ArgoCD } from '../clients/argocd';
-import { ArgoApplication } from '../types/argocd';
+import type { ArgoApplication } from '../types/argocd';
 import { timeSince } from '../utils/time';
 
 export class ArgoService {
@@ -20,7 +20,7 @@ export class ArgoService {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: `Here are the Argo applications:`,
+              text: 'Here are the Argo applications:',
             },
           },
           ...applicationBlocks,
@@ -28,7 +28,9 @@ export class ArgoService {
       });
     } catch (error) {
       console.error('Error listing Argo applications:', error);
-      await say('Sorry, I encountered an error while fetching Argo applications.');
+      await say(
+        'Sorry, I encountered an error while fetching Argo applications.',
+      );
     }
   }
 
@@ -36,7 +38,9 @@ export class ArgoService {
     if (appName) {
       try {
         const app = await this.argo.get(appName);
-        const statusBlock = this.generateApplicationBlocks([app as ArgoApplication]);
+        const statusBlock = this.generateApplicationBlocks([
+          app as ArgoApplication,
+        ]);
         await say({
           blocks: [
             {
@@ -54,16 +58,18 @@ export class ArgoService {
         await say(`Sorry, I couldn't fetch the status for ${appName}.`);
       }
     } else {
-      await say(`Please provide an application name to check its status.`);
+      await say('Please provide an application name to check its status.');
     }
   }
 
   private generateApplicationBlocks(apps: ArgoApplication[]) {
-    return apps.map((app) => {
+    return apps.flatMap((app) => {
       const health = app.status.health.status;
       const status = app.status.sync.status;
       const lastDeployment = app.status.history[0];
-      const lastDeploymentTime = lastDeployment ? timeSince(new Date(lastDeployment.deployedAt)) : 'N/A';
+      const lastDeploymentTime = lastDeployment
+        ? timeSince(new Date(lastDeployment.deployedAt))
+        : 'N/A';
 
       let healthEmoji = ':question:';
       if (health === 'Healthy') {
@@ -75,7 +81,8 @@ export class ArgoService {
       }
 
       const healthMarkupWithEmoji = `${healthEmoji} ${health}`;
-      const statusEmoji = status === 'Synced' ? ':large_green_circle:' : ':red_circle:';
+      const statusEmoji =
+        status === 'Synced' ? ':large_green_circle:' : ':red_circle:';
       const statusMarkupWithEmoji = `${statusEmoji} ${status}`;
 
       return [
@@ -106,6 +113,6 @@ export class ArgoService {
           ],
         },
       ];
-    }).flat();
+    });
   }
 }

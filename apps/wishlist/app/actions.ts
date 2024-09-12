@@ -56,7 +56,7 @@ export const leaveWishlist = async ({ wishlistId }: { wishlistId: string }) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath(`/`, 'layout');
+  revalidatePath('/', 'layout');
   redirect('/wishlists');
 };
 
@@ -97,7 +97,7 @@ export const joinWishlist = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath(`/`, 'layout');
+  revalidatePath('/', 'layout');
   redirect('/wishlists');
 };
 
@@ -154,7 +154,7 @@ export const addGift = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath(`/`, 'layout');
+  revalidatePath('/', 'layout');
 };
 
 export const deleteGift = async (id: string) => {
@@ -232,7 +232,7 @@ export const updateGift = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath(`/gift`, 'layout');
+  revalidatePath('/gift', 'layout');
 };
 
 export const claimGift = async (id: string) => {
@@ -251,7 +251,7 @@ export const claimGift = async (id: string) => {
     // determine if the gift has been claimed by someone else
     const isClaimed = Boolean(gift?.claimedBy);
     if (isClaimed) {
-      revalidatePath(`/gift`, 'layout');
+      revalidatePath('/gift', 'layout');
       revalidatePath('/gifts');
       throw new Error('This gift has already been claimed');
     }
@@ -281,7 +281,7 @@ export const claimGift = async (id: string) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath(`/gift`, 'layout');
+  revalidatePath('/gift', 'layout');
   revalidatePath('/gifts');
 };
 

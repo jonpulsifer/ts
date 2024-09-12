@@ -1,7 +1,7 @@
 'use client';
 
 import { GiftIcon, TrashIcon, UserGroupIcon } from '@heroicons/react/20/solid';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { Button, Subheading, Text } from '@repo/ui';
 import GiftDialog from 'components/gift-dialog';
 import { AnimatePresence, motion } from 'framer-motion';

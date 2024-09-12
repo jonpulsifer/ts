@@ -77,7 +77,10 @@ export function part2(input: string): number {
     const letters: Map<string, number> = new Map(
       Array.from(digits, (a) => [a[1], a[0]]),
     );
-    sum += parseInt(outputs.map((v) => letters.get(v) || 0).join(''), 10);
+    sum += Number.parseInt(
+      outputs.map((v) => letters.get(v) || 0).join(''),
+      10,
+    );
   }
 
   return sum;

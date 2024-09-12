@@ -2,7 +2,7 @@
 import { Button } from '@repo/ui/button';
 import { claimGift, unclaimGift } from 'app/actions';
 import toast from 'react-hot-toast';
-import { GiftWithOwner } from 'types/prisma';
+import type { GiftWithOwner } from 'types/prisma';
 
 export const ClaimButton = ({
   gift,

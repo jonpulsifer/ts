@@ -15,7 +15,7 @@ import { Strong, Text } from '@repo/ui/text';
 import { timeAgo } from 'lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
-import { GiftWithOwner, GiftWithOwnerAndWishlistIds } from 'types/prisma';
+import type { GiftWithOwner, GiftWithOwnerAndWishlistIds } from 'types/prisma';
 
 import { TableActions } from './table-actions';
 
@@ -60,7 +60,8 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
         return direction === 'asc'
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name);
-      } else if (column === 'owner') {
+      }
+      if (column === 'owner') {
         const aName = a.owner?.name || a.owner?.email || '';
         const bName = b.owner?.name || b.owner?.email || '';
         return direction === 'asc'
