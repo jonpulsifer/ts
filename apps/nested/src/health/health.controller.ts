@@ -1,8 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
+// biome-ignore lint/style/useImportType: we inject these so we dont just need the types
 import {
   HealthCheck,
-  type HealthCheckService,
-  type HttpHealthIndicator,
+  HealthCheckService,
+  HttpHealthIndicator,
 } from '@nestjs/terminus';
 
 @Controller('health')
