@@ -12,7 +12,7 @@
     "test": "turbo test"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.0",
     "@repo/typescript-config": "workspace:*",
     "turbo": "2.1.2"
   },
