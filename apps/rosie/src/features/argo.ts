@@ -17,7 +17,7 @@ export async function argoListApps({ message, say }: BotMessage) {
     const applicationBlocks: any[] = [];
 
     for (const app of applications) {
-      let lastDeploymentMarkup = 'N/A';
+      let lastDeploymentMarkup = 'N/A :no_entry_sign:';
       const lastDeployment = app.status.history.at(-1);
       if (lastDeployment) {
         const { deployedAt, revision, sources, source } = lastDeployment;

@@ -12,7 +12,7 @@ RUN turbo prune --scope=${APP} --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 ARG APP
-ENV IS_DOCKER=1
+ENV STANDALONE=1
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV TURBO_TELEMETRY_DISABLED 1
 WORKDIR /app
@@ -23,10 +23,8 @@ COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-* ./
 RUN pnpm install --frozen-lockfile --filter=${APP}...
 
-COPY --from=builder /app/out/full/ .
-COPY --from=builder /app/out ./out
-
 # Build the project
+COPY --from=builder /app/out/full/ .
 RUN \
   --mount=type=secret,id=TURBO_TOKEN \
   --mount=type=secret,id=TURBO_TEAM \

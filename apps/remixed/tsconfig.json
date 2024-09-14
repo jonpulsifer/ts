@@ -1,5 +1,11 @@
 {
   "extends": "@repo/typescript-config/remix.json",
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "../remixed2/app/healthz.tsx"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./app/*"]
+    }
+  },
   "exclude": ["node_modules"]
 }

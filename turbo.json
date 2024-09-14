@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "globalEnv": [
     "NODE_ENV",
-    "IS_DOCKER",
+    "STANDALONE",
     "npm_package_version",
     "npm_package_name"
   ],

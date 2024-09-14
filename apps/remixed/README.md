@@ -1,24 +1,40 @@
-# Tailwindcss Example
+# Welcome to Remix!
 
-Integrate Remix with tailwindcss.
+- 📖 [Remix docs](https://remix.run/docs)
 
-## Preview
+## Development
 
-Open this example on [CodeSandbox](https://codesandbox.io/s/remix-tailwind-2x8pg):
+Run the dev server:
 
-[![Open in CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/remix-run/examples/tree/main/tailwindcss)
+```shellscript
+pnpm dev
+```
 
-## Example
+## Deployment
 
-This example shows how to use Tailwind CSS (v3.0) with Remix. It follows the steps outlined in the official [Remix Styling docs](https://remix.run/guides/styling#tailwind).
+First, build your app for production:
 
-Relevant files:
+```sh
+npm run build
+```
 
-- [package.json](./package.json) where the tailwind CLI is used.
-- [tailwind.config.ts](./tailwind.config.ts) where tailwind is configured.
-- [app/root.tsx](./app/root.tsx) where tailwind is imported.
-- [.gitignore](.gitignore) where the generated tailwind.css is added to the ignore list.
+Then run the app in production mode:
 
-## Related Links
+```sh
+npm start
+```
 
-[Tailwind CSS](https://tailwindcss.com)
+Now you'll need to pick a host to deploy it to.
+
+### DIY
+
+If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+
+Make sure to deploy the output of `pnpm build`
+
+- `build/server`
+- `build/client`
+
+## Styling
+
+This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.

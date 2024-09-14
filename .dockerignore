@@ -4,3 +4,4 @@
 **/.turbo
 .github
 out
+**/build

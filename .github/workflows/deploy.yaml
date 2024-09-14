@@ -27,20 +27,20 @@ jobs:
         image: postgres:16@sha256:026d0ab72b34310b68160ab9299aa1add5544e4dc3243456b94f83cb1c119c2c
         env:
           POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        # options: >-
+        #   --health-cmd pg_isready
+        #   --health-interval 10s
+        #   --health-timeout 5s
+        #   --health-retries 5
         ports:
           - 5432:5432
       redis:
         image: redis:alpine@sha256:c35af3bbcef51a62c8bae5a9a563c6f1b60d7ebaea4cb5a3ccbcc157580ae098
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        # options: >-
+        #   --health-cmd "redis-cli ping"
+        #   --health-interval 10s
+        #   --health-timeout 5s
+        #   --health-retries 5
         ports:
           - 6379:6379
     steps:
@@ -86,6 +86,17 @@ jobs:
           flavor: |
             latest=true
 
+      - name: Get Dockerfile path
+        id: dockerfile
+        run: |
+          if [[ "${{ inputs.app }}" == "nested" || "${{ inputs.app }}" == "rosie" ]]; then
+            echo "path=k8s/docker/Dockerfile" >> $GITHUB_OUTPUT
+          elif [[ "${{ inputs.app }}" == "remixed" ]]; then
+            echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
+          else
+            echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build and push
         uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6
         with:
@@ -100,7 +111,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
-          file: ${{ contains(fromJSON('["nested", "remixed", "rosie"]'), inputs.app) && 'Dockerfile' || 'nextjs.Dockerfile' }}
+          file: ${{ steps.dockerfile.outputs.path }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
