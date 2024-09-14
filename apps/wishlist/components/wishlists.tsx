@@ -121,7 +121,7 @@ function Wishlists({ wishlists, user }: Props) {
               <Avatar
                 className="size-12"
                 square
-                initials={wishlist.name[0].toUpperCase()}
+                initials={wishlist.name[0]?.toUpperCase() || '?'}
               />
               <div>
                 <Strong>{wishlist.name}</Strong>

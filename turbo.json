@@ -12,8 +12,8 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
-    "//#format-and-lint": {},
-    "//#format-and-lint:fix": {
+    "//#lint": {},
+    "//#lint:fix": {
       "cache": false
     },
     "wishlist#build": {
@@ -80,9 +80,6 @@
     "remixed#build": {
       "dependsOn": ["^build"],
       "outputs": ["api/index.js", "api/build/**", "public/build/**"]
-    },
-    "lint": {
-      "outputs": ["dist/**", "build/**"]
     },
     "test": {
       "dependsOn": ["build"],

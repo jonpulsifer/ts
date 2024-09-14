@@ -33,6 +33,7 @@ import {
   SidebarItem,
   SidebarSection,
 } from '@repo/ui';
+import { getInitials } from 'lib/user-utils';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -68,9 +69,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export function NavBar({ user, users }: NavProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const initials = user.name
-    ? user.name[0].toUpperCase()
-    : user.email?.[0].toUpperCase();
+  const initials = getInitials(user);
 
   // function that returns true if the current path matches the given path
   const currentPath = usePathname();

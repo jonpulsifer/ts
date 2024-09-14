@@ -98,11 +98,11 @@ export function OnboardingCarousel({ user, users }: OnboardingCarouselProps) {
           className="p-6 rounded-lg"
         >
           <div className="flex items-center mb-4">
-            <div className="mr-2">{steps[currentStep].icon}</div>
-            <Subheading>{steps[currentStep].title}</Subheading>
+            <div className="mr-2">{steps[currentStep]?.icon}</div>
+            <Subheading>{steps[currentStep]?.title}</Subheading>
           </div>
-          <Text className="text-sm mb-4">{steps[currentStep].content}</Text>
-          <div className="mt-4">{steps[currentStep].action()}</div>
+          <Text className="text-sm mb-4">{steps[currentStep]?.content}</Text>
+          <div className="mt-4">{steps[currentStep]?.action()}</div>
         </motion.div>
       </AnimatePresence>
 

@@ -13,8 +13,8 @@ import type { UserWithGifts } from 'types/prisma';
 
 export function UserTable({ users }: { users: UserWithGifts[] }) {
   const tableRows = users.map((user) => {
-    const displayName = user.name || user.email;
-    const initials = displayName ? displayName[0].toUpperCase() : '';
+    const displayName = user.name || user.email || '?';
+    const initials = displayName.charAt(0).toUpperCase();
     return (
       <TableRow key={user.id} href={`/user/${user.id}`}>
         <TableCell>

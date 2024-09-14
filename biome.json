@@ -18,7 +18,7 @@
         "all": false
       },
       "complexity": {
-        "noForEach": "off"
+        "noUselessFragments": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"

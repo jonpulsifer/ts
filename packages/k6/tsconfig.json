@@ -3,14 +3,10 @@
   "include": ["**/*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "target": "es5",
-    "moduleResolution": "node",
-    "module": "commonjs",
     "noEmit": false,
-    "allowJs": true,
-    "removeComments": false,
     "outDir": "dist",
-    "allowImportingTsExtensions": false,
+    "module": "Preserve",
+    "sourceMap": false,
     "declaration": false,
     "declarationMap": false
   }

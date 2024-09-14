@@ -11,6 +11,7 @@ import {
   Text,
 } from '@repo/ui';
 import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
+import { getInitials } from 'lib/user-utils';
 import type { Metadata } from 'next';
 import React from 'react';
 import type { GiftWithOwner } from 'types/prisma';
@@ -34,10 +35,13 @@ const PeoplePage = async () => {
 
   const tableRows = Object.keys(giftsByOwnerId).map((ownerId) => {
     const gifts = giftsByOwnerId[ownerId];
-    const title = gifts[0].owner.name || gifts[0].owner.email;
+    if (!gifts || !gifts.length) return null;
+
+    const owner = (gifts[0] as GiftWithOwner).owner;
+    const title = owner.name || owner.email || 'Unknown';
     const claimedGifts = gifts.filter((gift) => gift.claimedById);
 
-    const { name, email, image } = gifts[0].owner;
+    const { image } = owner;
 
     // subtitle is the count of gifts for this owner
     const subtitleMarkup = (
@@ -47,7 +51,7 @@ const PeoplePage = async () => {
       >
         <div className="flex flex-row items-center">
           <GiftIcon width={16} className="mr-1" />
-          {gifts.length} gift{gifts.length > 1 ? 's' : ''}
+          {gifts.length} gift{gifts.length !== 1 ? 's' : ''}
         </div>
         <div className="flex flex-row items-center">
           <DocumentCheckIcon width={16} className="mr-1" />
@@ -57,8 +61,8 @@ const PeoplePage = async () => {
     );
 
     const avatar = {
-      src: image,
-      initials: name ? name[0].toUpperCase() : email[0].toUpperCase(),
+      src: image || undefined,
+      initials: getInitials(owner),
     };
 
     return (

@@ -6,18 +6,16 @@
     "build": "turbo build",
     "clean": "turbo clean",
     "dev": "turbo dev",
-    "format-and-lint": "biome check .",
-    "format-and-lint:fix": "biome check . --write",
-    "lint": "turbo lint",
+    "lint": "biome check .",
+    "lint:fix": "biome check . --write",
     "test": "turbo test"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.0",
-    "@repo/typescript-config": "workspace:*",
     "turbo": "2.1.2"
   },
   "engines": {
-    "node": ">=20.*.*",
+    "node": ">=22.*.*",
     "npm": ">=10.*.*"
   },
   "packageManager": "pnpm@9.10.0",

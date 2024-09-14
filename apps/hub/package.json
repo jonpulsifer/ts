@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint --fix"
+    "start": "next start"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",

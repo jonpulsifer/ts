@@ -80,7 +80,7 @@ export class PagerDutyService {
       },
     ];
 
-    oncalls.forEach((oncall) => {
+    for (const oncall of oncalls) {
       blocks.push({
         type: 'section',
         text: {
@@ -88,7 +88,7 @@ export class PagerDutyService {
           text: `*${oncall.schedule.summary}*\n${oncall.user.summary}`,
         },
       });
-    });
+    }
 
     blocks.push({
       type: 'actions',

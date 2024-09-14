@@ -25,9 +25,11 @@ export function generateHelp(commands: any): string {
 }
 
 export function findCommand(commands: any, args: string[]): any {
-  if (args.length === 0) return undefined;
+  if (!args || args.length === 0) return undefined;
 
   const [currentArg, ...restArgs] = args;
+  if (!currentArg) return undefined;
+
   const closestCommand = Object.keys(commands).find((cmd) => {
     const dist = distance(cmd, currentArg);
     return dist <= DISTANCE_THRESHOLD;

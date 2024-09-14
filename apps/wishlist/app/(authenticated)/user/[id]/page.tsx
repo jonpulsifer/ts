@@ -7,6 +7,7 @@ import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
+import { notFound } from 'next/navigation';
 import { UserProfile } from './components/user-profile';
 
 interface Props {
@@ -14,6 +15,9 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!params.id) {
+    notFound();
+  }
   const user = await getUserById(params.id);
   const { name, email } = user;
   const title = `${name || email}'s Profile`;
@@ -24,6 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const ProfilePage = async ({ params }: Props) => {
+  if (!params.id) {
+    notFound();
+  }
   const profile = await getUserById(params.id);
   const { gifts, user } = await getVisibleGiftsForUserById(params.id);
   const isUserProfile = user.id === profile.id;

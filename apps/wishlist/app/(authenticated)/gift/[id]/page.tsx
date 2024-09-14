@@ -22,15 +22,30 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
+  if (!params.id) {
+    return {
+      title: 'Gift Not Found',
+      description: 'The requested gift could not be found.',
+    };
+  }
+
   const gift = await getGiftById(params.id);
+  if (!gift) {
+    notFound();
+  }
+
   return {
-    title: gift?.name || 'Gift',
-    description: gift?.description || 'A gift',
+    title: gift.name,
+    description: gift.description || 'A gift',
   };
 }
 
 const GiftPage = async ({ params }: PageProps) => {
   const session = await auth();
+  if (!params.id) {
+    notFound();
+  }
+
   const gift = await getGiftById(params.id, true, true, true);
   if (!gift || !session) {
     notFound();

@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "prisma generate && prisma db push && next build",
+    "build": "prisma generate --no-hints && prisma db push && next build",
     "start": "next start",
-    "lint": "next lint --fix",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate --no-hints"
   },
   "peerDependencies": {
     "csstype": "3.1.3",

@@ -1,14 +1,8 @@
 {
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "noEmit": false,
-    "allowImportingTsExtensions": false,
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "rootDirs": ["src", "test"],
-    "target": "es6",
+    "module": "Preserve",
     "outDir": "dist"
   },
   "include": ["**/*.ts"],

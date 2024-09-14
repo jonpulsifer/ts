@@ -32,7 +32,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
 
   const handleSort = useCallback(
     (value: string) => {
-      const [column, direction] = value.split('_');
+      const [column, direction] = value.split('_') as [string, string];
       const newParams = new URLSearchParams(params.toString());
       newParams.set('column', column);
       newParams.set('direction', direction);
