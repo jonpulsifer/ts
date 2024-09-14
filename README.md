@@ -1,6 +1,6 @@
 # ts
 
-aka personal typescript monorepo
+A personal TypeScript monorepo
 
 ## What's inside?
 
@@ -8,22 +8,22 @@ This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes th
 
 ### Apps and Packages
 
-- `authme`: a [Next.js](https://nextjs.org) app that uses JWTs to authenticate users. It is deployed at [https://authme.vercel.app](https://authme.vercel.app)
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `request-headers`: a [Next.js](https://nextjs.org) app that returns request headers. It is deployed at [https://request-headers.vercel.app](https://request-headers.vercel.app)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `wishlist` a [Next.js](https://nextjs.org) app that uses firebase to store my family's christmas wishlist. It is deployed at [https://wishin.app](https://wishin.app)
-
-E
+- `authme`: A [Next.js](https://nextjs.org) app that uses JWTs to authenticate users. It is deployed at [https://authme.vercel.app](https://authme.vercel.app)
+- `hub`: A [Next.js](https://nextjs.org) app that runs on two different Raspberry Pis. It is deployed on Kubernetes inside my home lab.
+- `nested`: A [NestJS](https://nestjs.com/) learning project.
+- `request-headers`: A [Next.js](https://nextjs.org) app that returns request headers. It is deployed at [https://request-headers.vercel.app](https://request-headers.vercel.app)
+- `remixed`: A [Remix](https://remix.run/) application integrated with Tailwind CSS for enhanced styling.
+- `rosie`: A chatbot built with [Bolt for JavaScript](https://slack.dev/bolt-js/) for Slack integrations.
+- `ui`: A React component library shared by both `hub` and `remixed` applications.
+- `wishlist`: A [Next.js](https://nextjs.org) app that is my family's Christmas wishlist. It is deployed on Vercel.
 
 ### Utilities
 
-This turborepo has some additional tools already setup for you:
+This turborepo has some additional tools already set up for you:
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- [pnpm](https://pnpm.io/) for package management
+- [turbo](https://turbo.build/repo/docs) for building and testing
+- [biome](https://biomejs.dev/) for code linting and formatting
 
 ### Build
 
