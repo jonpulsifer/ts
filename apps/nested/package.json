@@ -51,6 +51,7 @@
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
+    "useESM": true,
     "collectCoverageFrom": ["**/*.ts"],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

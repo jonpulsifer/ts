@@ -4,7 +4,8 @@
     "outDir": "dist",
     "noEmit": false,
     "module": "Preserve",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "verbatimModuleSyntax": false
   },
   "exclude": ["dist", "node_modules", "test"]
 }
