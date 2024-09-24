@@ -61,7 +61,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-
+            ${{ runner.os }}-turbo-${{ github.ref }}
 
       - name: Prepare db & env files
         env:
