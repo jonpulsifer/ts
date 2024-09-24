@@ -55,14 +55,6 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Cache turbo build setup
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ github.ref }}
-
       - name: Prepare db & env files
         env:
           PGPASSWORD: postgres
