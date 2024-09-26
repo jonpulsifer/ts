@@ -5,7 +5,7 @@ import {
   ArrowRightStartOnRectangleIcon,
   LightBulbIcon,
 } from '@heroicons/react/16/solid';
-import React from 'react';
+import type React from 'react';
 import { ToastIcon, Toaster, resolveValue, toast } from 'react-hot-toast';
 
 export function Toast() {
@@ -37,7 +37,7 @@ export function Toast() {
   );
 }
 
-export const dismissable = (content: string | JSX.Element) => {
+export const dismissable = (content: React.ReactNode) => {
   toast((t) => {
     t.duration = Number.POSITIVE_INFINITY;
     t.icon = <LightBulbIcon />;

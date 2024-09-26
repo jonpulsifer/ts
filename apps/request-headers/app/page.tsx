@@ -15,7 +15,7 @@ import ClientComponentWithEnvironmentVariables from './components/client';
 const { NODE_NAME, NODE_IP, POD_NAME, POD_IP, POD_CHANGE_ME } = process.env;
 const isInKubernetes = Boolean(process.env.POD_NAME);
 
-function KubernetesTable(): JSX.Element {
+function KubernetesTable() {
   return (
     <Table>
       <TableHead>

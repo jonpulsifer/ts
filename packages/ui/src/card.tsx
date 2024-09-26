@@ -31,7 +31,7 @@ export function Card({
   badges,
   children,
   className,
-}: CardProps): JSX.Element {
+}: CardProps) {
   const headerContent = (
     <div className="flex flex-row">
       <div className="flex flex-col grow xs:gap-2">

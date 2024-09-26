@@ -19,7 +19,7 @@ export function DatabaseCard({
   version,
   connections,
   maxConnections,
-}: CardProps): JSX.Element {
+}: CardProps) {
   return (
     <Card subtitle={version} title="Database">
       <Table>

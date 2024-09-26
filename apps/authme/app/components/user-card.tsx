@@ -17,7 +17,7 @@ interface UserCardProps {
   user: User | null;
 }
 
-export function UserCard({ user }: UserCardProps): JSX.Element | null {
+export function UserCard({ user }: UserCardProps) {
   const [currentUser, setCurrentUser] = useState(user);
   const { status } = useSession();
 

@@ -36,6 +36,7 @@ import {
 import { getInitials } from 'lib/user-utils';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import type React from 'react';
 
 import { DaysUntilChristmasBadge } from './days-until-christmas-badge';
 import GiftDialog from './gift-dialog';
@@ -45,7 +46,7 @@ import { LogoutDropDownItem } from './logout';
 type NavItem = {
   label: string;
   url: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 };
 
 const isCurrentPath = (current: string, path: string) => current === path;

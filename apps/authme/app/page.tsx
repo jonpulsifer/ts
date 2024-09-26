@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'My little application Sandbox',
 };
 
-const Home = async (): Promise<JSX.Element> => {
+const Home = async () => {
   const { connections, maxConnections, version } = await getDatabaseInfo();
   const user = await getMe();
   return (
