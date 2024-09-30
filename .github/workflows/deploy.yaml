@@ -91,7 +91,7 @@ jobs:
         run: |
           if [[ "${{ inputs.app }}" == "nested" || "${{ inputs.app }}" == "rosie" ]]; then
             echo "path=k8s/docker/Dockerfile" >> $GITHUB_OUTPUT
-          elif [[ "${{ inputs.app }}" == "remixed" ]]; then
+          elif [[ "${{ inputs.app }}" == "remixed" || "${{ inputs.app }}" == "hub" ]]; then
             echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
           else
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
