@@ -487,8 +487,8 @@ importers:
         specifier: workspace*
         version: link:../typescript-config
       '@types/k6':
-        specifier: 0.54.0
-        version: 0.54.0
+        specifier: 0.54.1
+        version: 0.54.1
       '@types/node':
         specifier: 20.16.10
         version: 20.16.10
@@ -2433,8 +2433,8 @@ packages:
   '@types/jsonwebtoken@8.5.9':
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
 
-  '@types/k6@0.54.0':
-    resolution: {integrity: sha512-ZgsqDQs0dtu9RVxN/315MQOZ3BSrdL85HleMZckcLPrmaE5gtGse02/2EuAIQEtYqNDmqcTrOnoxvptUHIoBYw==}
+  '@types/k6@0.54.1':
+    resolution: {integrity: sha512-ezTMhuWr3TZIMOqAv51/4rD5T4FE1pSryrh5BCgxsniuqxbi5jQ3YEiOlO9C1+LvJcliC2byyd2Cw6cnUY7CLg==}
 
   '@types/mdast@3.0.15':
     resolution: {integrity: sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==}
@@ -8234,7 +8234,7 @@ snapshots:
     dependencies:
       '@types/node': 20.16.10
 
-  '@types/k6@0.54.0': {}
+  '@types/k6@0.54.1': {}
 
   '@types/mdast@3.0.15':
     dependencies:
