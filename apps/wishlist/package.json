@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "2.5.3",
-    "@headlessui/react": "2.1.5",
+    "@headlessui/react": "2.1.9",
     "@heroicons/react": "2.1.5",
     "@prisma/client": "5.20.0",
     "@repo/ui": "workspace:*",

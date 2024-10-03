@@ -49,7 +49,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@headlessui/react": "2.1.5",
+    "@headlessui/react": "2.1.9",
     "clsx": "2.1.1",
     "lucide-react": "0.447.0",
     "framer-motion": "11.10.0"
