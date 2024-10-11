@@ -23,6 +23,8 @@ const getMe = async () => {
 const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
   const session = await isAuthenticated();
   const { id } = session.user;
+  const currentYear = new Date().getFullYear();
+
   try {
     const user = prisma.user.findUniqueOrThrow({
       where: {
@@ -33,6 +35,12 @@ const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
           include: {
             owner: true,
             createdBy: true,
+          },
+          where: {
+            createdAt: {
+              gte: new Date(`${currentYear}-01-01`),
+              lt: new Date(`${currentYear + 1}-01-01`),
+            },
           },
         },
       },
@@ -51,10 +59,15 @@ const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
 
 const getGiftsWithOwnerByUserId = async (id: string) => {
   await isAuthenticated();
+  const currentYear = new Date().getFullYear();
   try {
     const gifts = await prisma.gift.findMany({
       where: {
         ownerId: id,
+        createdAt: {
+          gte: new Date(`${currentYear}-01-01`),
+          lt: new Date(`${currentYear + 1}-01-01`),
+        },
       },
       include: {
         owner: true,
@@ -87,13 +100,24 @@ const getUserById = async (
   wishlists = false,
   createdBy = false,
 ) => {
+  const currentYear = new Date().getFullYear();
   try {
     const user = prisma.user.findUniqueOrThrow({
       where: {
         id,
       },
       include: {
-        gifts: gifts ? { include: { createdBy } } : undefined,
+        gifts: gifts
+          ? {
+              where: {
+                createdAt: {
+                  gte: new Date(`${currentYear}-01-01`),
+                  lt: new Date(`${currentYear + 1}-01-01`),
+                },
+              },
+              include: { createdBy },
+            }
+          : undefined,
         wishlists,
       },
     });
@@ -145,10 +169,15 @@ const getUserWithGiftsById = async (id: string): Promise<UserWithGifts> => {
 const getClaimedGiftsForMe = async () => {
   const session = await isAuthenticated();
   const user = session.user;
+  const currentYear = new Date().getFullYear();
   const gifts = await prisma.gift.findMany({
     where: {
       claimedById: {
         equals: session.user.id,
+      },
+      createdAt: {
+        gte: new Date(`${currentYear}-01-01`),
+        lt: new Date(`${currentYear + 1}-01-01`),
       },
     },
     include: {
@@ -164,9 +193,14 @@ const getClaimedGiftsForMe = async () => {
 const getVisibleGiftsForUserById = async (id: string) => {
   const session = await isAuthenticated();
   const currentUserId = session.user.id;
+  const currentYear = new Date().getFullYear();
   const gifts = await prisma.gift.findMany({
     where: {
       ownerId: id,
+      createdAt: {
+        gte: new Date(`${currentYear}-01-01`),
+        lt: new Date(`${currentYear + 1}-01-01`),
+      },
       AND: {
         OR: [
           { claimed: false },
@@ -195,8 +229,13 @@ const getVisibleGiftsForUserById = async (id: string) => {
 const getLatestVisibleGiftsForUserById = async (id: string) => {
   const session = await isAuthenticated();
   const currentUserId = session.user.id;
+  const currentYear = new Date().getFullYear();
   const gifts = await prisma.gift.findMany({
     where: {
+      createdAt: {
+        gte: new Date(`${currentYear}-01-01`),
+        lt: new Date(`${currentYear + 1}-01-01`),
+      },
       ownerId: { not: id },
       AND: {
         OR: [
@@ -241,11 +280,16 @@ const getVisibleGiftsForUser = async () => {
   if (!user.wishlists.length) return { gifts: [], user: session.user };
 
   try {
+    const currentYear = new Date().getFullYear();
     const wishlistIds = user.wishlists.map((w) => w.id);
     const gifts = await prisma.gift.findMany({
       where: {
         ownerId: { not: id },
         wishlists: { some: { id: { in: wishlistIds } } },
+        createdAt: {
+          gte: new Date(`${currentYear}-01-01`),
+          lt: new Date(`${currentYear + 1}-01-01`),
+        },
         AND: {
           OR: [
             { claimed: false },
@@ -294,12 +338,17 @@ const getSortedVisibleGiftsForUser = async ({
 
   const orderBy =
     column === 'owner' ? { owner: { name: direction } } : { name: direction };
+  const currentYear = new Date().getFullYear();
   try {
     const wishlistIds = user.wishlists.map((w) => w.id);
     const gifts = await prisma.gift.findMany({
       where: {
         ownerId: { not: id },
         wishlists: { some: { id: { in: wishlistIds } } },
+        createdAt: {
+          gte: new Date(`${currentYear}-01-01`),
+          lt: new Date(`${currentYear + 1}-01-01`),
+        },
         AND: {
           OR: [
             { claimed: false },
@@ -327,9 +376,37 @@ const getSortedVisibleGiftsForUser = async ({
   redirect('/login');
 };
 
+const getUsersForPeoplePage = async () => {
+  const session = await isAuthenticated();
+  const { id } = session.user;
+  const currentYear = new Date().getFullYear();
+  return prisma.user.findMany({
+    include: {
+      gifts: {
+        where: {
+          createdAt: {
+            gte: new Date(`${currentYear}-01-01`),
+          },
+        },
+      },
+    },
+    where: {
+      wishlists: {
+        some: {
+          members: { some: { id } },
+        },
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+};
+
 const getWishlists = async () => {
   const session = await isAuthenticated();
   const { id } = session.user;
+  const currentYear = new Date().getFullYear();
   try {
     const wishlists = await prisma.wishlist.findMany({
       select: {
@@ -338,7 +415,14 @@ const getWishlists = async () => {
         _count: {
           select: {
             members: true,
-            gifts: true,
+            gifts: {
+              where: {
+                createdAt: {
+                  gte: new Date(`${currentYear}-01-01`),
+                  lt: new Date(`${currentYear + 1}-01-01`),
+                },
+              },
+            },
           },
         },
       },
@@ -355,6 +439,7 @@ const getWishlists = async () => {
 const getPeopleForUser = async () => {
   const session = await isAuthenticated();
   const { id } = session.user;
+  const currentYear = new Date().getFullYear();
   try {
     const users = await prisma.user.findMany({
       where: {
@@ -375,6 +460,10 @@ const getPeopleForUser = async () => {
       include: {
         gifts: {
           where: {
+            createdAt: {
+              gte: new Date(`${currentYear}-01-01`),
+              lt: new Date(`${currentYear + 1}-01-01`),
+            },
             AND: {
               OR: [
                 { claimed: false },
@@ -527,6 +616,7 @@ export {
   getUserOnboardingStatus,
   getUserWithGifts,
   getUserWithGiftsById,
+  getUsersForPeoplePage,
   getVisibleGiftsForUser,
   getVisibleGiftsForUserById,
   getWishlists,

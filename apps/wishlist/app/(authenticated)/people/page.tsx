@@ -10,7 +10,7 @@ import {
   TableRow,
   Text,
 } from '@repo/ui';
-import { getVisibleGiftsForUser } from 'lib/prisma-ssr';
+import { getUsersForPeoplePage, getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { getInitials } from 'lib/user-utils';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -22,31 +22,15 @@ export const metadata: Metadata = {
 };
 
 const PeoplePage = async () => {
-  const { gifts } = await getVisibleGiftsForUser();
-  const giftsByOwnerId = gifts.reduce<Record<string, GiftWithOwner[]>>(
-    (acc, gift) => {
-      const ownerId = gift.ownerId;
-      const ownerGifts = acc[ownerId] || [];
-      acc[ownerId] = ownerGifts.concat(gift);
-      return acc;
-    },
-    {},
-  );
+  const users = await getUsersForPeoplePage();
 
-  const tableRows = Object.keys(giftsByOwnerId).map((ownerId) => {
-    const gifts = giftsByOwnerId[ownerId];
-    if (!gifts || !gifts.length) return null;
-
-    const owner = (gifts[0] as GiftWithOwner).owner;
-    const title = owner.name || owner.email || 'Unknown';
+  const tableRows = users.map((user) => {
+    const gifts = user.gifts || [];
     const claimedGifts = gifts.filter((gift) => gift.claimedById);
 
-    const { image } = owner;
-
-    // subtitle is the count of gifts for this owner
     const subtitleMarkup = (
       <div
-        key={ownerId}
+        key={user.id}
         className="flex flex-row gap-4 text-sm text-zinc-500 dark:text-zinc-400"
       >
         <div className="flex flex-row items-center">
@@ -61,12 +45,12 @@ const PeoplePage = async () => {
     );
 
     const avatar = {
-      src: image || undefined,
-      initials: getInitials(owner),
+      src: user.image || undefined,
+      initials: getInitials(user),
     };
 
     return (
-      <TableRow key={ownerId} href={`/user/${ownerId}`}>
+      <TableRow key={user.id} href={`/user/${user.id}`}>
         <TableCell>
           <div className="flex items-center gap-4">
             <Avatar
@@ -76,7 +60,7 @@ const PeoplePage = async () => {
               className="size-12"
             />
             <div className="flex flex-col">
-              <Heading>{title}</Heading>
+              <Heading>{user.name || user.email || 'Unknown'}</Heading>
               {subtitleMarkup}
             </div>
           </div>
