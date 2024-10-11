@@ -86,7 +86,7 @@ export function HomePageTabs({
                 <Text
                   className={`text-xs ${selected ? 'text-purple-700 dark:text-purple-200' : 'text-gray-600 dark:text-gray-400'}`}
                 >
-                  View everyone
+                  View everyone in one place!
                 </Text>
               </div>
             </div>
