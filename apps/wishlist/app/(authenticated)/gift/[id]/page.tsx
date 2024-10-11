@@ -8,6 +8,7 @@ import {
   Text,
 } from '@repo/ui';
 import { auth } from 'app/auth';
+import { BackButton } from 'components/back-button';
 import { ClaimButton } from 'components/claim-button';
 import { DeleteButton } from 'components/delete-button';
 import { EditButton } from 'components/edit-button';
@@ -51,17 +52,27 @@ const GiftPage = async ({ params }: PageProps) => {
     notFound();
   }
   const user = await getUserWithGiftsById(gift.ownerId);
+
+  const isOwner = gift.ownerId === session.user.id;
+  const isCreator = gift.createdById === session.user.id;
+
+  const ownerName = user?.name || user?.email || user?.id;
+  const creatorName =
+    gift.createdBy?.name || gift.createdBy?.email || gift.createdBy?.id;
+
   return (
     <>
       <div className="flex w-full flex-wrap items-end justify-between gap-4">
         <div>
           <Heading>{gift.name}</Heading>
           <Text>
-            {user?.name || user?.email || user?.id}{' '}
-            {gift.ownerId === session.user.id ? 'is giving' : 'wants'} this gift
+            {isOwner === isCreator
+              ? `${ownerName} wants this gift`
+              : `${creatorName} recommends this gift for ${ownerName}`}
           </Text>
         </div>
         <div className="flex gap-4">
+          <BackButton />
           <ClaimButton gift={gift} currentUserId={session.user.id} />
           <EditButton gift={gift} currentUserId={session.user.id} />
           <DeleteButton gift={gift} currentUserId={session.user.id} />
@@ -71,18 +82,17 @@ const GiftPage = async ({ params }: PageProps) => {
       <DescriptionList>
         <DescriptionTerm>Name</DescriptionTerm>
         <DescriptionDetails>{gift.name}</DescriptionDetails>
-        <DescriptionTerm>Created By</DescriptionTerm>
-        <DescriptionDetails>
-          {gift.createdBy?.name || gift.createdBy?.email || gift.createdById}
-        </DescriptionDetails>
-        <DescriptionTerm>Owner</DescriptionTerm>
-        <DescriptionDetails>
-          {gift.owner?.name || gift.owner?.email || gift.ownerId}
-        </DescriptionDetails>
         <DescriptionTerm>URL</DescriptionTerm>
         {gift.url ? (
           <DescriptionDetails>
-            <Link href={gift.url}>{gift.url}</Link>
+            <Link
+              target="_blank"
+              rel="noreferrer"
+              href={gift.url}
+              className="block max-w-full break-all"
+            >
+              {gift.url}
+            </Link>
           </DescriptionDetails>
         ) : null}
         <DescriptionTerm>Description</DescriptionTerm>

@@ -1,24 +1,24 @@
 'use client';
 
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
-import { GiftIcon, LightBulbIcon, UserIcon } from '@heroicons/react/24/outline';
+import { GiftIcon, UserIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
-import { motion } from 'framer-motion';
-import type { GiftWithOwner } from 'types/prisma';
-
-import { GiftRecommendations } from './GiftRecommendations';
+import type { GiftWithOwner, UserWithGifts } from 'types/prisma';
+import { UserTable } from '../../people/components/user-table';
 
 interface HomePageTabsProps {
   gifts: GiftWithOwner[];
   userGifts: GiftWithOwner[];
   currentUserId: string;
+  users: UserWithGifts[];
 }
 
 export function HomePageTabs({
   gifts,
   userGifts,
   currentUserId,
+  users,
 }: HomePageTabsProps) {
   return (
     <TabGroup>
@@ -71,32 +71,25 @@ export function HomePageTabs({
         </Tab>
         <Tab className="outline-none">
           {({ selected }) => (
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <div
               className={`w-full flex flex-col items-center gap-1 p-3 rounded-lg text-left text-base/6 font-medium transition-all duration-200 ease-in-out ${
                 selected
-                  ? 'bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white shadow-lg'
+                  ? 'bg-purple-100 text-purple-900 shadow-md dark:bg-purple-900 dark:text-purple-100'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
               }`}
             >
-              <motion.div
-                animate={{ rotate: selected ? 360 : 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LightBulbIcon
-                  className={`h-5 w-5 ${selected ? 'text-yellow-300' : 'text-gray-500 dark:text-gray-400'} shrink-0`}
-                />
-              </motion.div>
+              <UsersIcon
+                className={`h-5 w-5 ${selected ? 'text-purple-500 dark:text-purple-300' : 'text-gray-500 dark:text-gray-400'} shrink-0`}
+              />
               <div className="text-center">
-                <Strong className="block text-sm">Gift Ideas</Strong>
+                <Strong className="block text-sm">People</Strong>
                 <Text
-                  className={`text-xs ${selected ? 'text-yellow-200' : 'text-gray-600 dark:text-gray-400'}`}
+                  className={`text-xs ${selected ? 'text-purple-700 dark:text-purple-200' : 'text-gray-600 dark:text-gray-400'}`}
                 >
-                  Discover recommendations
+                  View everyone
                 </Text>
               </div>
-            </motion.div>
+            </div>
           )}
         </Tab>
       </TabList>
@@ -123,12 +116,12 @@ export function HomePageTabs({
           <GiftTable gifts={userGifts} currentUserId={currentUserId} />
         </TabPanel>
         <TabPanel>
-          <Heading className="text-2xl mb-4">Gift Recommendations</Heading>
+          <Heading className="text-2xl mb-4">People</Heading>
           <Text className="mb-4">
-            Explore personalized gift ideas based on your interests and
-            preferences. These recommendations are tailored just for you!
+            View everyone in your wishlists and their gifts. You can view
+            someone's profile by clicking on their name.
           </Text>
-          <GiftRecommendations />
+          <UserTable users={users} />
         </TabPanel>
       </TabPanels>
     </TabGroup>

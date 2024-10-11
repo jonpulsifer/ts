@@ -47,7 +47,14 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   const filteredGifts = useMemo(() => {
     if (!searchTerm) return gifts;
     return gifts.filter((gift) =>
-      [gift.name, gift.url, gift.description]
+      [
+        gift.name,
+        gift.url,
+        gift.description,
+        gift.owner?.name,
+        gift.owner?.email,
+      ]
+        .filter(Boolean)
         .join(' ')
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
@@ -84,18 +91,20 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
     const createdAtHumanReadable = timeAgo(gift.createdAt);
     return (
       <TableRow key={gift.id} href={`/gift/${gift.id}`}>
-        <TableCell className="overflow-hidden font-medium">
-          <Text className="truncate">
+        <TableCell className="overflow-hidden font-medium max-w-0 w-full">
+          <Text className="truncate block">
             <Strong>{gift.name}</Strong>
           </Text>
           <div className="flex justify-between text-xs text-zinc-400">
             {showGiftOwner && gift.owner && (
-              <span>{gift.owner.name || gift.owner.email}</span>
+              <span className="truncate">
+                {gift.owner.name || gift.owner.email}
+              </span>
             )}
-            <span>Created {createdAtHumanReadable}</span>
+            <span className="shrink-0">Created {createdAtHumanReadable}</span>
           </div>
         </TableCell>
-        <TableCell className="text-right">
+        <TableCell className="text-right whitespace-nowrap">
           <div className="space-x-4">
             <TableActions gift={gift} currentUserId={currentUserId} />
           </div>
@@ -112,7 +121,7 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
             <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
             <Input
               type="search"
-              placeholder="Search gifts by name, url, or description"
+              placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

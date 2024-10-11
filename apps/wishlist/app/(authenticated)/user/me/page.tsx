@@ -1,9 +1,9 @@
 import { CogIcon } from '@heroicons/react/16/solid';
 import { Button, Divider, Heading } from '@repo/ui';
+import { GiftTable } from 'components/gift-table';
 import GiftRecommendations, {
   GiftRecommendationsFallback,
-} from 'components/gift-recommendations';
-import { GiftTable } from 'components/gift-table';
+} from 'components/recommendations-user';
 import { getGiftsWithOwnerByUserId, getMe } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -29,7 +29,7 @@ const MePage = async () => {
       </div>
       <Divider soft className="my-4" />
       <Suspense fallback={GiftRecommendationsFallback}>
-        <GiftRecommendations userId={user.id} />
+        <GiftRecommendations forUser={user} />
       </Suspense>
       <GiftTable gifts={gifts} currentUserId={user.id} />
     </>

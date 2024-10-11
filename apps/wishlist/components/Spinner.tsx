@@ -26,13 +26,15 @@ function Spinner({ Icon = Cog6ToothIcon }: Props) {
   const loadingMessage =
     LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
   return (
-    <div className="min-h-48 animate-pulse flex flex-col gap-2 justify-center items-center">
-      <div className="relative animate-spin-slower w-20 h-20">
-        <Icon />
-        <Logo className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+    <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="animate-pulse flex flex-col gap-2 items-center -mt-16">
+        <div className="relative animate-spin-slower w-20 h-20">
+          <Icon />
+          <Logo className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+        </div>
+        <Heading>{loadingMessage}</Heading>
+        <Subheading>One moment...</Subheading>
       </div>
-      <Heading>{loadingMessage}</Heading>
-      <Subheading>One moment...</Subheading>
     </div>
   );
 }

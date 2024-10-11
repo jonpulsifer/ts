@@ -93,7 +93,7 @@ function GiftForm({ gift }: Props) {
         {gift ? 'Save changes' : 'Add to wishlist'}
       </Button>
       <Button outline onClick={() => router.back()}>
-        Cancel
+        Back
       </Button>
     </form>
   );

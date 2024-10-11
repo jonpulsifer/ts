@@ -2,6 +2,7 @@ import {
   getGiftsWithOwnerByUserId,
   getLatestVisibleGiftsForUserById,
   getMe,
+  getPeopleForUser,
 } from 'lib/prisma-ssr';
 import { redirect } from 'next/navigation';
 
@@ -16,8 +17,14 @@ export default async function HomePage() {
 
   const { gifts } = await getLatestVisibleGiftsForUserById(user.id);
   const userGifts = await getGiftsWithOwnerByUserId(user.id);
+  const { users } = await getPeopleForUser();
 
   return (
-    <HomePageTabs gifts={gifts} userGifts={userGifts} currentUserId={user.id} />
+    <HomePageTabs
+      gifts={gifts}
+      userGifts={userGifts}
+      currentUserId={user.id}
+      users={users}
+    />
   );
 }

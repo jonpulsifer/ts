@@ -1,20 +1,37 @@
-import { Avatar } from '@repo/ui';
-import { Badge } from '@repo/ui';
+'use client';
+
 import {
+  Avatar,
+  Badge,
+  Input,
+  Strong,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@repo/ui/table';
-import { Strong, Text } from '@repo/ui/text';
+  Text,
+} from '@repo/ui';
+import { useState } from 'react';
 import type { UserWithGifts } from 'types/prisma';
 
 export function UserTable({ users }: { users: UserWithGifts[] }) {
-  const tableRows = users.map((user) => {
-    const displayName = user.name || user.email || '?';
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredUsers = users.filter((user) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      user.name?.toLowerCase().includes(searchLower) ||
+      user.email?.toLowerCase().includes(searchLower)
+    );
+  });
+
+  const tableRows = filteredUsers.map((user) => {
+    const displayName = user.name || user.email || 'Unknown';
     const initials = displayName.charAt(0).toUpperCase();
+    const giftCount = user.gifts?.length || 0;
+
     return (
       <TableRow key={user.id} href={`/user/${user.id}`}>
         <TableCell>
@@ -29,34 +46,43 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
               <Text>
                 <Strong>{displayName}</Strong>
               </Text>
-              {/* <div className="text-zinc-500">
-                <a href="#" className="hover:text-zinc-700">
-                  {user.email}
-                </a>
-              </div> */}
+              {user.email && (
+                <Text className="text-sm text-zinc-500">{user.email}</Text>
+              )}
             </div>
           </div>
         </TableCell>
         <TableCell>
-          <Badge color="zinc">Offline</Badge>
+          <Badge color={giftCount > 0 ? 'green' : 'zinc'}>
+            {giftCount} {giftCount === 1 ? 'Gift' : 'Gifts'}
+          </Badge>
         </TableCell>
       </TableRow>
     );
   });
 
   return (
-    <Table
-      bleed
-      dense
-      className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]"
-    >
-      <TableHead>
-        <TableRow>
-          <TableHeader>Name</TableHeader>
-          <TableHeader>Status</TableHeader>
-        </TableRow>
-      </TableHead>
-      <TableBody>{tableRows}</TableBody>
-    </Table>
+    <div>
+      <Input
+        type="search"
+        placeholder="Search users..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="mb-4"
+      />
+      <Table
+        bleed
+        dense
+        className="[--gutter:theme(spacing.6)] sm:[--gutter:theme(spacing.8)]"
+      >
+        <TableHead>
+          <TableRow>
+            <TableHeader>Name</TableHeader>
+            <TableHeader>Gifts</TableHeader>
+          </TableRow>
+        </TableHead>
+        <TableBody>{tableRows}</TableBody>
+      </Table>
+    </div>
   );
 }

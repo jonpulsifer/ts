@@ -1,8 +1,8 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
+import { GiftTable } from 'components/gift-table';
 import GiftRecommendations, {
   GiftRecommendationsFallback,
-} from 'components/gift-recommendations';
-import { GiftTable } from 'components/gift-table';
+} from 'components/recommendations-user';
 import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -43,7 +43,7 @@ const ProfilePage = async ({ params }: Props) => {
       <UserProfile currentUserId={user.id} user={profile} />
       <Divider soft className="my-4" />
       <Suspense fallback={GiftRecommendationsFallback}>
-        <GiftRecommendations userId={profile.id} />
+        <GiftRecommendations forUser={profile} />
       </Suspense>
       {gifts.length ? (
         <GiftTable currentUserId={user.id} gifts={gifts} />

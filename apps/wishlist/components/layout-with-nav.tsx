@@ -1,6 +1,12 @@
 import { StackedLayout } from '@repo/ui';
 import { getPeopleForUser } from 'lib/prisma-ssr';
 
+import {
+  GiftIcon,
+  HomeIcon,
+  LightBulbIcon,
+  UserGroupIcon,
+} from '@heroicons/react/24/outline';
 import { NavBar, SidebarMarkup } from './nav';
 
 type Props = {

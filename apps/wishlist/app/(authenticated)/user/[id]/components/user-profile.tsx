@@ -53,7 +53,6 @@ export function UserProfile({ user }: UserProfileProps) {
   const sizesMarkup =
     shirtSizeMarkup || shoeSizeMarkup || pantSizeMarkup ? (
       <div className="grid grid-cols-3 gap-4 sm:gap-8 sm:col-span-2">
-        {' '}
         {shirtSizeMarkup}
         {shoeSizeMarkup}
         {pantSizeMarkup}

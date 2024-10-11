@@ -4,6 +4,7 @@ import {
   CogIcon,
   GiftIcon,
   HomeIcon,
+  LightBulbIcon,
   NumberedListIcon,
   PlusCircleIcon,
   UserCircleIcon,
@@ -65,6 +66,11 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Wishlists',
     url: '/wishlists',
     icon: <UserGroupIcon height={20} />,
+  },
+  {
+    label: 'AI Recommendations',
+    url: '/recommendations',
+    icon: <LightBulbIcon height={20} />,
   },
 ];
 
@@ -143,6 +149,21 @@ export function SidebarMarkup() {
   const currentPath = usePathname();
   const itemsMarkup = NAV_ITEMS.map(({ label, icon, url }) => {
     const current = isCurrentPath(currentPath, url);
+
+    if (label === 'AI Recommendations') {
+      return (
+        <SidebarItem
+          key={label}
+          href={url}
+          current={current}
+          className="rounded-lg bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white hover:from-purple-500 hover:via-pink-600 hover:to-red-600 transition-all duration-300 shadow-md hover:shadow-lg"
+        >
+          {label}
+          {icon}
+        </SidebarItem>
+      );
+    }
+
     return (
       <SidebarItem key={label} href={url} current={current}>
         {label}
@@ -150,6 +171,7 @@ export function SidebarMarkup() {
       </SidebarItem>
     );
   });
+
   return (
     <Sidebar>
       <SidebarHeader className="space-y-4">
