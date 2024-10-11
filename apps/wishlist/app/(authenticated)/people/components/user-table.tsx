@@ -46,9 +46,6 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
               <Text>
                 <Strong>{displayName}</Strong>
               </Text>
-              {user.email && (
-                <Text className="text-sm text-zinc-500">{user.email}</Text>
-              )}
             </div>
           </div>
         </TableCell>
