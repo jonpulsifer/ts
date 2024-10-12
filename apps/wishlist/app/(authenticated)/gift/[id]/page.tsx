@@ -52,10 +52,6 @@ const GiftPage = async ({ params }: PageProps) => {
     notFound();
   }
   const user = await getUserWithGiftsById(gift.ownerId);
-
-  const isOwner = gift.ownerId === session.user.id;
-  const isCreator = gift.createdById === session.user.id;
-
   const ownerName = user?.name || user?.email || user?.id;
   const creatorName =
     gift.createdBy?.name || gift.createdBy?.email || gift.createdBy?.id;
@@ -66,7 +62,7 @@ const GiftPage = async ({ params }: PageProps) => {
         <div>
           <Heading>{gift.name}</Heading>
           <Text>
-            {isOwner === isCreator
+            {gift.ownerId === gift.createdById
               ? `${ownerName} wants this gift`
               : `${creatorName} recommends this gift for ${ownerName}`}
           </Text>
@@ -82,21 +78,27 @@ const GiftPage = async ({ params }: PageProps) => {
       <DescriptionList>
         <DescriptionTerm>Name</DescriptionTerm>
         <DescriptionDetails>{gift.name}</DescriptionDetails>
-        <DescriptionTerm>URL</DescriptionTerm>
         {gift.url ? (
-          <DescriptionDetails>
-            <Link
-              target="_blank"
-              rel="noreferrer"
-              href={gift.url}
-              className="block max-w-full break-all"
-            >
-              {gift.url}
-            </Link>
-          </DescriptionDetails>
+          <>
+            <DescriptionTerm>URL</DescriptionTerm>
+            <DescriptionDetails>
+              <Link
+                target="_blank"
+                rel="noreferrer"
+                href={gift.url}
+                className="block max-w-full break-all"
+              >
+                {gift.url}
+              </Link>
+            </DescriptionDetails>
+          </>
         ) : null}
-        <DescriptionTerm>Description</DescriptionTerm>
-        <DescriptionDetails>{gift.description}</DescriptionDetails>
+        {gift.description ? (
+          <>
+            <DescriptionTerm>Description</DescriptionTerm>
+            <DescriptionDetails>{gift.description}</DescriptionDetails>
+          </>
+        ) : null}
       </DescriptionList>
     </>
   );

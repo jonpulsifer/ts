@@ -4,6 +4,7 @@ import {
   Divider,
   Heading,
   Strong,
+  Subheading,
   Table,
   TableBody,
   TableCell,
@@ -14,7 +15,6 @@ import { getUsersForPeoplePage, getVisibleGiftsForUser } from 'lib/prisma-ssr';
 import { getInitials } from 'lib/user-utils';
 import type { Metadata } from 'next';
 import React from 'react';
-import type { GiftWithOwner } from 'types/prisma';
 
 export const metadata: Metadata = {
   title: 'People',
@@ -60,7 +60,7 @@ const PeoplePage = async () => {
               className="size-12"
             />
             <div className="flex flex-col">
-              <Heading>{user.name || user.email || 'Unknown'}</Heading>
+              <Subheading>{user.name || user.email || 'Unknown'}</Subheading>
               {subtitleMarkup}
             </div>
           </div>
@@ -78,7 +78,7 @@ const PeoplePage = async () => {
         gifts. You can <Strong>view someone&apos;s profile by clicking</Strong>{' '}
         on their name.
       </Text>
-      <Table bleed dense>
+      <Table bleed dense className="mt-4">
         <TableBody>{tableRows}</TableBody>
       </Table>
     </>

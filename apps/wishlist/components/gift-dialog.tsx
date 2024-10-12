@@ -63,7 +63,12 @@ export default function GiftDialog({
     if (result?.error) {
       toast.error(result.error);
     } else {
-      toast.success(`Added ${name} to your wishlist!`);
+      const recipientUser = users.find((user) => user.id === recipient);
+      const recipientName =
+        recipientUser?.id === currentUser.id
+          ? 'your'
+          : `${recipientUser?.name || recipientUser?.email}'s`;
+      toast.success(`Added ${name} to ${recipientName} wishlist!`);
       formRef.current?.reset();
       inputRef.current?.focus();
     }

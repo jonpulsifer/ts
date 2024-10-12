@@ -66,13 +66,11 @@ export function TableActions({
 
   const renderActionButtons = () => (
     <>
-      {gift.ownerId !== currentUserId &&
-        gift.createdById !== currentUserId &&
-        !gift.claimed && (
-          <Button onClick={handleClaim} color="green">
-            Claim
-          </Button>
-        )}
+      {gift.ownerId !== currentUserId && !gift.claimed && (
+        <Button onClick={handleClaim} color="green">
+          Claim
+        </Button>
+      )}
       {gift.claimedById === currentUserId && (
         <Button onClick={handleUnclaim} color="red">
           Unclaim
@@ -99,13 +97,11 @@ export function TableActions({
             <EllipsisVerticalIcon />
           </DropdownButton>
           <DropdownMenu className="right-0 origin-top-right">
-            {gift.ownerId !== currentUserId &&
-              gift.createdById !== currentUserId &&
-              !gift.claimed && (
-                <DropdownItem onClick={handleClaim}>
-                  <span className="font-medium text-green-600">Claim</span>
-                </DropdownItem>
-              )}
+            {gift.ownerId !== currentUserId && !gift.claimed && (
+              <DropdownItem onClick={handleClaim}>
+                <span className="font-medium text-green-600">Claim</span>
+              </DropdownItem>
+            )}
             {gift.claimedById === currentUserId && (
               <DropdownItem onClick={handleUnclaim}>
                 <span className="font-medium text-red-600">Unclaim</span>
