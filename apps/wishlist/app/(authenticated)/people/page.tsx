@@ -11,7 +11,7 @@ import {
   TableRow,
   Text,
 } from '@repo/ui';
-import { getUsersForPeoplePage, getVisibleGiftsForUser } from 'lib/prisma-ssr';
+import { getUsersForPeoplePage } from 'lib/prisma-ssr';
 import { getInitials } from 'lib/user-utils';
 import type { Metadata } from 'next';
 import React from 'react';

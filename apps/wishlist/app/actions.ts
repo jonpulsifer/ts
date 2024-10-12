@@ -1,10 +1,10 @@
 'use server';
 
+import { auth } from 'app/auth';
 import prisma from 'lib/prisma';
 import { isAuthenticated } from 'lib/prisma-ssr';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { auth } from 'app/auth';
 
 export const updateUser = async (_state: unknown, formData: FormData) => {
   const { user } = await isAuthenticated();
@@ -520,7 +520,7 @@ export async function joinSecretSanta(eventId: string) {
     }
 
     const alreadyParticipating = event.participants.some(
-      (p) => p.userId === session.user.id
+      (p) => p.userId === session.user.id,
     );
 
     if (alreadyParticipating) {
@@ -538,6 +538,8 @@ export async function joinSecretSanta(eventId: string) {
     return { success: 'You have successfully joined the Secret Santa event!' };
   } catch (error) {
     console.error('Error joining Secret Santa event:', error);
-    return { error: 'Failed to join the Secret Santa event. Please try again.' };
+    return {
+      error: 'Failed to join the Secret Santa event. Please try again.',
+    };
   }
 }

@@ -3,7 +3,7 @@ import { GiftTable } from 'components/gift-table';
 import GiftRecommendations, {
   GiftRecommendationsFallback,
 } from 'components/recommendations-user';
-import { getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
+import { getMe, getUserById, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -32,21 +32,22 @@ const ProfilePage = async ({ params }: Props) => {
     notFound();
   }
   const profile = await getUserById(params.id);
-  const { gifts, user } = await getVisibleGiftsForUserById(params.id);
-  const isUserProfile = user.id === profile.id;
+  const currentUser = await getMe();
+  const gifts = await getVisibleGiftsForUserById(params.id);
+  const isUserProfile = currentUser.id === profile.id;
   const nameOrEmailOrDefault = profile.name || profile.email || 'Anonymous';
   const title = isUserProfile ? 'Your Profile' : nameOrEmailOrDefault;
   return (
     <>
       <Heading>{title}</Heading>
       <Divider soft className="my-4" />
-      <UserProfile currentUserId={user.id} user={profile} />
+      <UserProfile currentUserId={currentUser.id} user={profile} />
       <Divider soft className="my-4" />
       <Suspense fallback={GiftRecommendationsFallback}>
         <GiftRecommendations forUser={profile} />
       </Suspense>
       {gifts.length ? (
-        <GiftTable currentUserId={user.id} gifts={gifts} />
+        <GiftTable currentUserId={currentUser.id} gifts={gifts} />
       ) : (
         <Text>
           No gifts found. <Strong>Add more gifts</Strong> to this wishlist!

@@ -1,13 +1,15 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
-import { getSortedVisibleGiftsForUser } from 'lib/prisma-ssr';
+import { getMe, getSortedVisibleGiftsForUser } from 'lib/prisma-ssr';
+import type { GiftWithOwnerAndClaimedByAndCreatedBy } from 'types/prisma';
 
 export default async function Gifts({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { gifts, user } = await getSortedVisibleGiftsForUser({
+  const user = await getMe();
+  const gifts = await getSortedVisibleGiftsForUser({
     direction: searchParams.direction as 'asc' | 'desc' | undefined,
     column: searchParams.column as 'name' | 'owner' | undefined,
   });
@@ -32,7 +34,11 @@ export default async function Gifts({
         </Text>
       </div>
 
-      <GiftTable gifts={gifts} currentUserId={user.id} showGiftOwner />
+      <GiftTable
+        gifts={gifts as GiftWithOwnerAndClaimedByAndCreatedBy[]}
+        currentUserId={user.id}
+        showGiftOwner
+      />
     </>
   );
 }

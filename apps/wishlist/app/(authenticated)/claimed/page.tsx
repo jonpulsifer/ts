@@ -2,7 +2,7 @@ import { GiftIcon } from '@heroicons/react/16/solid';
 import { Divider, Heading, Strong, Text } from '@repo/ui';
 import EmptyState from 'components/EmptyState';
 import { GiftTable } from 'components/gift-table';
-import { getClaimedGiftsForMe } from 'lib/prisma-ssr';
+import { getClaimedGiftsForMe, getMe } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 };
 
 const ClaimedPage = async () => {
-  const { gifts, user } = await getClaimedGiftsForMe();
+  const user = await getMe();
+  const gifts = await getClaimedGiftsForMe();
 
   const claimedGifts = gifts.length ? (
     <>

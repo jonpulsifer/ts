@@ -9,14 +9,14 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/solid';
 import { Heading, Strong, Text } from '@repo/ui';
-import { GiftTable } from 'components/gift-table';
-import { Logo } from 'components/logo';
-import type { GiftWithOwner, UserWithGifts } from 'types/prisma';
-import { UserTable } from '../../people/components/user-table';
 import { Button } from '@repo/ui';
 import { joinSecretSanta } from 'app/actions';
+import { GiftTable } from 'components/gift-table';
+import { Logo } from 'components/logo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import type { GiftWithOwner, UserWithGifts } from 'types/prisma';
+import { UserTable } from '../../people/components/user-table';
 
 interface HomePageTabsProps {
   gifts: GiftWithOwner[];

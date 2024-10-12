@@ -43,3 +43,11 @@ export type GiftWithOwnerAndClaimedBy = Prisma.GiftGetPayload<{
     claimedBy: true;
   };
 }>;
+
+export type GiftWithOwnerAndClaimedByAndCreatedBy = Prisma.GiftGetPayload<{
+  include: {
+    owner: true;
+    claimedBy: true;
+    createdBy: true;
+  };
+}>;

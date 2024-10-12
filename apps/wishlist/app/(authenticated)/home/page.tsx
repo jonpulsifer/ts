@@ -1,9 +1,9 @@
 import {
-  getGiftsWithOwnerByUserId,
   getLatestVisibleGiftsForUserById,
   getMe,
   getPeopleForUser,
   getSecretSantaEvents,
+  getVisibleGiftsForUserById,
 } from 'lib/prisma-ssr';
 import { redirect } from 'next/navigation';
 
@@ -16,30 +16,35 @@ export default async function HomePage() {
     redirect('/onboarding');
   }
 
-  const { gifts } = await getLatestVisibleGiftsForUserById(user.id);
-  const userGifts = await getGiftsWithOwnerByUserId(user.id);
+  const { gifts: latestGifts } = await getLatestVisibleGiftsForUserById(
+    user.id,
+  );
+  const userGifts = await getVisibleGiftsForUserById(user.id);
   const { users } = await getPeopleForUser();
   const secretSantaEvents = await getSecretSantaEvents(user.id);
 
-  const secretSantaAssignments = secretSantaEvents.map(event => ({
+  const secretSantaAssignments = secretSantaEvents.map((event) => ({
     eventName: event.name,
     eventId: event.id,
-    assignedTo: event.participants.find(p => p.userId === user.id)?.assignedTo,
+    assignedTo: event.participants.find((p) => p.userId === user.id)
+      ?.assignedTo,
     canJoin: event.canJoin,
   }));
 
   return (
     <HomePageTabs
-      gifts={gifts}
+      gifts={latestGifts}
       userGifts={userGifts}
       currentUserId={user.id}
       users={users}
-      secretSantaAssignments={secretSantaAssignments.map(assignment => ({
+      secretSantaAssignments={secretSantaAssignments.map((assignment) => ({
         ...assignment,
-        assignedTo: assignment.assignedTo ? {
-          name: assignment.assignedTo.name || '',
-          email: assignment.assignedTo.email
-        } : null
+        assignedTo: assignment.assignedTo
+          ? {
+              name: assignment.assignedTo.name || '',
+              email: assignment.assignedTo.email,
+            }
+          : null,
       }))}
     />
   );

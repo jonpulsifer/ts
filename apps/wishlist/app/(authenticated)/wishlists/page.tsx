@@ -1,6 +1,6 @@
-import Wishlists from './components/wishlists';
 import { getWishlists } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
+import Wishlists from './components/wishlists';
 
 export const metadata: Metadata = {
   title: 'Join a wishlist',

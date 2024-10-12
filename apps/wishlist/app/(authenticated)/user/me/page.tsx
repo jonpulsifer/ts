@@ -4,7 +4,7 @@ import { GiftTable } from 'components/gift-table';
 import GiftRecommendations, {
   GiftRecommendationsFallback,
 } from 'components/recommendations-user';
-import { getGiftsWithOwnerByUserId, getMe } from 'lib/prisma-ssr';
+import { getMe, getVisibleGiftsForUserById } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const MePage = async () => {
   const user = await getMe();
-  const gifts = await getGiftsWithOwnerByUserId(user.id);
+  const gifts = await getVisibleGiftsForUserById(user.id);
   return (
     <>
       <div className="flex w-full flex-wrap items-end justify-between">

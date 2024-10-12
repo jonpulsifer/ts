@@ -15,12 +15,23 @@ import { Strong, Text } from '@repo/ui/text';
 import { timeAgo } from 'lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
-import type { GiftWithOwner, GiftWithOwnerAndWishlistIds } from 'types/prisma';
+import type {
+  AllVisibleGiftsForUserWithOwners,
+  GiftWithOwner,
+  GiftWithOwnerAndClaimedBy,
+  GiftWithOwnerAndClaimedByAndCreatedBy,
+  GiftWithOwnerAndWishlistIds,
+} from 'types/prisma';
 
 import { TableActions } from './table-actions';
 
 interface Props {
-  gifts: GiftWithOwner[] | GiftWithOwnerAndWishlistIds[];
+  gifts:
+    | GiftWithOwner[]
+    | GiftWithOwnerAndWishlistIds[]
+    | GiftWithOwnerAndClaimedByAndCreatedBy[]
+    | GiftWithOwnerAndClaimedBy[]
+    | AllVisibleGiftsForUserWithOwners['gifts'];
   currentUserId: string;
   showGiftOwner?: boolean;
 }
