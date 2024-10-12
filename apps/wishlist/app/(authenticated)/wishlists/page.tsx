@@ -1,4 +1,4 @@
-import Wishlists from 'components/wishlists';
+import Wishlists from './components/wishlists';
 import { getWishlists } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 

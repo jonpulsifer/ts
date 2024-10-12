@@ -82,21 +82,23 @@ export function SecretSantaList({
               </TableCell>
               <TableCell className="flex gap-2">
                 <Button
+                  outline
                   onClick={() =>
                     setSelectedEvent(
                       event as unknown as SecretSantaEventWithParticipants,
                     )
                   }
                 >
-                  View Details
+                  Details
                 </Button>
                 {event.createdById === currentUser.id && (
                   <Button
                     onClick={() => handleAssign(event.id)}
                     disabled={event.participants.some((p) => p.assignedToId)}
+                    color="red"
                   >
                     {event.participants.some((p) => p.assignedToId)
-                      ? 'Reassign'
+                      ? 'Assigned'
                       : 'Assign'}
                   </Button>
                 )}

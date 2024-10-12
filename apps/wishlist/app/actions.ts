@@ -4,6 +4,7 @@ import prisma from 'lib/prisma';
 import { isAuthenticated } from 'lib/prisma-ssr';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { auth } from 'app/auth';
 
 export const updateUser = async (_state: unknown, formData: FormData) => {
   const { user } = await isAuthenticated();
@@ -500,4 +501,43 @@ export async function assignSecretSanta(eventId: string) {
 
   revalidatePath('/secret-santa');
   return updatedEvent;
+}
+
+export async function joinSecretSanta(eventId: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'You must be logged in to join a Secret Santa event.' };
+  }
+
+  try {
+    const event = await prisma.secretSantaEvent.findUnique({
+      where: { id: eventId },
+      include: { participants: true },
+    });
+
+    if (!event) {
+      return { error: 'Secret Santa event not found.' };
+    }
+
+    const alreadyParticipating = event.participants.some(
+      (p) => p.userId === session.user.id
+    );
+
+    if (alreadyParticipating) {
+      return { error: 'You are already participating in this event.' };
+    }
+
+    await prisma.secretSantaParticipant.create({
+      data: {
+        userId: session.user.id,
+        eventId: eventId,
+      },
+    });
+
+    revalidatePath('/home');
+    return { success: 'You have successfully joined the Secret Santa event!' };
+  } catch (error) {
+    console.error('Error joining Secret Santa event:', error);
+    return { error: 'Failed to join the Secret Santa event. Please try again.' };
+  }
 }

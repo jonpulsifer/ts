@@ -619,34 +619,24 @@ const updateUserOnboardingStatus = async (
   }
 };
 
-const getSecretSantaEvents = async (userId: string) => {
+export async function getSecretSantaEvents(userId: string) {
   const events = await prisma.secretSantaEvent.findMany({
-    where: {
-      OR: [{ createdById: userId }, { participants: { some: { userId } } }],
-    },
     include: {
       participants: {
         include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-          assignedTo: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
+          user: true,
+          assignedTo: true,
         },
       },
     },
   });
-  return events;
-};
+
+  return events.map(event => ({
+    ...event,
+    isParticipating: event.participants.some(p => p.userId === userId),
+    canJoin: !event.participants.some(p => p.userId === userId) && !event.participants.some(p => p.assignedToId),
+  }));
+}
 
 export {
   getClaimedGiftsForMe,
@@ -659,7 +649,6 @@ export {
   getPeopleForUser,
   getRecommendations,
   getRecommendationsForHomePage,
-  getSecretSantaEvents,
   getSortedVisibleGiftsForUser,
   getUserById,
   getUserOnboardingStatus,

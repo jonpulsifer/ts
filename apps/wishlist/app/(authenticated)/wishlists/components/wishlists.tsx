@@ -7,7 +7,6 @@ import {
 } from '@heroicons/react/16/solid';
 import type { Prisma, Wishlist } from '@prisma/client';
 import {
-  Avatar,
   Button,
   Divider,
   Field,
@@ -25,7 +24,7 @@ import {
 import { joinWishlist, leaveWishlist } from 'app/actions';
 import { toast } from 'react-hot-toast';
 
-import EmptyState from './EmptyState';
+import EmptyState from 'components/EmptyState';
 
 type UserWithWishlists = Prisma.UserGetPayload<{
   include: { wishlists: true };
@@ -118,13 +117,10 @@ function Wishlists({ wishlists, user }: Props) {
         <TableRow key={wishlist.id}>
           <TableCell>
             <div className="flex items-center gap-4">
-              <Avatar
-                className="size-12"
-                square
-                initials={wishlist.name[0]?.toUpperCase() || '?'}
-              />
               <div>
-                <Strong>{wishlist.name}</Strong>
+                <Strong className="font-semibold text-lg">
+                  {wishlist.name}
+                </Strong>
                 <div className="flex flex-row gap-4 text-xs text-zinc-500 dark:text-zinc-400">
                   <div className="gap-1 flex items-center">
                     <UsersIcon height={16} />

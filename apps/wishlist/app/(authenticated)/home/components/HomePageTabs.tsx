@@ -13,6 +13,10 @@ import { GiftTable } from 'components/gift-table';
 import { Logo } from 'components/logo';
 import type { GiftWithOwner, UserWithGifts } from 'types/prisma';
 import { UserTable } from '../../people/components/user-table';
+import { Button } from '@repo/ui';
+import { joinSecretSanta } from 'app/actions';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 interface HomePageTabsProps {
   gifts: GiftWithOwner[];
@@ -21,7 +25,9 @@ interface HomePageTabsProps {
   users: UserWithGifts[];
   secretSantaAssignments: {
     eventName: string;
+    eventId: string;
     assignedTo: { name: string; email: string } | null;
+    canJoin: boolean;
   }[];
 }
 
@@ -32,6 +38,18 @@ export function HomePageTabs({
   users,
   secretSantaAssignments,
 }: HomePageTabsProps) {
+  const router = useRouter();
+
+  const handleJoinSecretSanta = async (eventId: string) => {
+    const result = await joinSecretSanta(eventId);
+    if (result.error) {
+      toast.error(result.error);
+    } else if (result.success) {
+      toast.success(result.success);
+      router.refresh();
+    }
+  };
+
   return (
     <TabGroup>
       <TabList className="grid grid-cols-4 gap-2 mb-6">
@@ -150,11 +168,28 @@ export function HomePageTabs({
                         </Strong>
                       </Text>
                     </div>
+                  ) : assignment.canJoin ? (
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-center">
+                        <GiftIcon className="w-5 h-5 text-yellow-500 mr-2" />
+                        <Text className="text-yellow-700 dark:text-yellow-300 mr-2">
+                          You're not participating in this event yet.
+                        </Text>
+                      </div>
+                      <Button
+                        onClick={() =>
+                          handleJoinSecretSanta(assignment.eventId)
+                        }
+                        color="green"
+                      >
+                        Join
+                      </Button>
+                    </div>
                   ) : (
                     <div className="flex items-center">
                       <GiftIcon className="w-5 h-5 text-yellow-500 mr-2" />
                       <Text className="text-yellow-700 dark:text-yellow-300">
-                        Assignments haven't been made yet for this event.
+                        Assignments haven't been made yet!
                       </Text>
                     </div>
                   )}
@@ -164,7 +199,7 @@ export function HomePageTabs({
           ) : (
             <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
               <Text className="text-gray-600 dark:text-gray-300">
-                You're not participating in any Secret Santa events yet.
+                No Secret Santa events available at the moment.
               </Text>
             </div>
           )}
