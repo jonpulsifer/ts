@@ -39,24 +39,28 @@ model Session {
 }
 
 model User {
-  id                    String     @id @default(uuid()) @db.Uuid
-  createdAt             DateTime   @default(now())
-  updatedAt             DateTime   @updatedAt
-  name                  String?
-  address               String?
-  email                 String     @unique
-  emailVerified         DateTime?
-  image                 String?
-  pant_size             String?
-  shirt_size            String?
-  shoe_size             String?
-  hasCompletedOnboarding Boolean   @default(false)
-  gifts                 Gift[]
-  claimed               Gift[]     @relation("ClaimedByUser")
-  createdGifts          Gift[]     @relation("CreatedByUser")
-  wishlists             Wishlist[]
-  accounts              Account[]
-  sessions              Session[]
+  id                        String                   @id @default(uuid()) @db.Uuid
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @updatedAt
+  name                      String?
+  address                   String?
+  email                     String                   @unique
+  emailVerified             DateTime?
+  image                     String?
+  pant_size                 String?
+  shirt_size                String?
+  shoe_size                 String?
+  hasCompletedOnboarding    Boolean                  @default(false)
+  gifts                     Gift[]
+  claimed                   Gift[]                   @relation("ClaimedByUser")
+  createdGifts              Gift[]                   @relation("CreatedByUser")
+  wishlists                 Wishlist[]
+  accounts                  Account[]
+  sessions                  Session[]
+  createdEvents             SecretSantaEvent[]       @relation("CreatedEvents")
+  secretSantaParticipations SecretSantaParticipant[]
+  secretSantaAssignedTo     SecretSantaParticipant[] @relation("AssignedTo")
+  secretSantaAssignedBy     SecretSantaParticipant[] @relation("AssignedBy")
 }
 
 model VerificationToken {
@@ -94,4 +98,28 @@ model Wishlist {
   password  String
   members   User[]
   gifts     Gift[]
+}
+
+model SecretSantaEvent {
+  id           String                   @id @default(uuid()) @db.Uuid
+  name         String
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
+  createdBy    User                     @relation("CreatedEvents", fields: [createdById], references: [id])
+  createdById  String                   @db.Uuid
+  participants SecretSantaParticipant[]
+}
+
+model SecretSantaParticipant {
+  id           String           @id @default(uuid()) @db.Uuid
+  event        SecretSantaEvent @relation(fields: [eventId], references: [id])
+  eventId      String           @db.Uuid
+  user         User             @relation(fields: [userId], references: [id])
+  userId       String           @db.Uuid
+  assignedTo   User?            @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedToId String?          @db.Uuid
+  assignedBy   User?            @relation("AssignedBy", fields: [assignedById], references: [id])
+  assignedById String?          @db.Uuid
+
+  @@unique([eventId, userId])
 }

@@ -15,9 +15,28 @@ const openai = new OpenAI({
 });
 
 const getMe = async () => {
-  const session = await isAuthenticated();
-  const { id } = session.user;
-  return getUserById(id, false, false);
+  const session = await auth();
+  if (!session?.user?.email) {
+    throw new Error('Not authenticated');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    include: {
+      secretSantaParticipations: {
+        include: {
+          event: true,
+          assignedTo: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user;
 };
 
 const getMeWithGifts = async (): Promise<UserWithGiftsWithOwners> => {
@@ -600,6 +619,35 @@ const updateUserOnboardingStatus = async (
   }
 };
 
+const getSecretSantaEvents = async (userId: string) => {
+  const events = await prisma.secretSantaEvent.findMany({
+    where: {
+      OR: [{ createdById: userId }, { participants: { some: { userId } } }],
+    },
+    include: {
+      participants: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          assignedTo: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return events;
+};
+
 export {
   getClaimedGiftsForMe,
   getGiftById,
@@ -611,6 +659,7 @@ export {
   getPeopleForUser,
   getRecommendations,
   getRecommendationsForHomePage,
+  getSecretSantaEvents,
   getSortedVisibleGiftsForUser,
   getUserById,
   getUserOnboardingStatus,

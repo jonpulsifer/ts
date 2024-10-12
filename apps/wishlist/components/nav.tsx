@@ -72,6 +72,11 @@ const NAV_ITEMS: NavItem[] = [
     url: '/recommendations',
     icon: <LightBulbIcon height={20} />,
   },
+  {
+    label: 'Secret Santa',
+    url: '/secret-santa',
+    icon: <GiftIcon height={20} />,
+  },
 ];
 
 export function NavBar({ user, users }: NavProps) {

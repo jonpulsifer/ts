@@ -33,7 +33,7 @@ export function GiftRecommendations({ userId }: { userId: string }) {
   const handleAddGift = async (recommendation: GiftRecommendation) => {
     try {
       const result = await addGift({
-        name: recommendation.name  + ' ✨',
+        name: `${recommendation.name} \u2728`,
         description: recommendation.description,
         url: '',
         recipient: userId,
