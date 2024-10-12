@@ -143,9 +143,7 @@ export function HomePageTabs({
           <UserTable users={users} />
         </TabPanel>
         <TabPanel>
-          <Heading className="text-2xl mb-4">
-            Your Secret Santa Assignments
-          </Heading>
+          <Heading className="text-2xl mb-4">Secret Santa Assignments</Heading>
           {secretSantaAssignments.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {secretSantaAssignments.map((assignment, index) => (
