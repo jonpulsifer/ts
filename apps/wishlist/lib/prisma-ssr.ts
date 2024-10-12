@@ -83,7 +83,6 @@ const getGiftsWithOwnerByUserId = async (id: string) => {
     const gifts = await prisma.gift.findMany({
       where: {
         ownerId: id,
-        createdById: id,
         createdAt: {
           gte: new Date(`${currentYear}-01-01`),
           lt: new Date(`${currentYear + 1}-01-01`),
