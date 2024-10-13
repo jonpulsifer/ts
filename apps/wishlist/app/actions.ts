@@ -407,9 +407,9 @@ export async function assignSecretSanta(eventId: string) {
       '16554dbd-97f6-4717-9d9c-ae053f3bb932',
     ], // tania, jason1
     [
-      '77489aa8-5444-4f61-8990-1ec1ced81c1c',
-      'fc1389af-2946-4420-81da-efe26de961d7',
-    ], // tania, jason2
+      '263fdb2c-2015-4a77-94e1-c2a0b43a4188',
+      '7636e0ea-dab3-4ef0-8036-560707493b74',
+    ], // nathalie, tim
   ];
 
   while (attempts < maxAttempts) {
