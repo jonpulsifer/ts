@@ -424,7 +424,7 @@ const getRecommendations = async (userId: string) => {
         content: `The person I'm buying for is named: ${name} and has these items on their Christmas wishlist: ${preferences}. What would Santa recommend as great Christmas gifts for them?`,
       },
     ],
-    temperature: 0.2,
+    temperature: 0.7,
   });
 
   return completion.choices[0]?.message?.content;
