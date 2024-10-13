@@ -424,7 +424,7 @@ const getRecommendations = async (userId: string) => {
         content: `The person I'm buying for is named: ${name} and has these items on their Christmas wishlist: ${preferences}. What would Santa recommend as great Christmas gifts for them?`,
       },
     ],
-    temperature: 0.7,
+    temperature: 1.0,
   });
 
   return completion.choices[0]?.message?.content;
@@ -479,7 +479,7 @@ const getRecommendationsForHomePage = async (
         content: `The person I'm buying for is named: ${name} and has these items on their Christmas wishlist: ${preferences}. What would you recommend as great gift ideas for them?`,
       },
     ],
-    temperature: 0.7,
+    temperature: 1.0,
   });
 
   const functionCall = completion.choices[0]?.message?.function_call;
