@@ -16,7 +16,7 @@ import { Logo } from 'components/logo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import type { GiftWithOwner, UserWithGifts } from 'types/prisma';
-import { UserTable } from '../../people/components/user-table';
+import { UserTable } from './UserTable';
 
 interface HomePageTabsProps {
   gifts: GiftWithOwner[];

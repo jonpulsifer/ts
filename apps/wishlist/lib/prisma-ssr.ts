@@ -302,10 +302,14 @@ const getUsersForPeoplePage = async () => {
   const currentYear = new Date().getFullYear();
   return prisma.user.findMany({
     include: {
-      gifts: {
-        where: {
-          createdAt: {
-            gte: new Date(`${currentYear}-01-01`),
+      _count: {
+        select: {
+          gifts: {
+            where: {
+              createdAt: {
+                gte: new Date(`${currentYear}-01-01`),
+              },
+            },
           },
         },
       },
@@ -314,6 +318,11 @@ const getUsersForPeoplePage = async () => {
       wishlists: {
         some: {
           members: { some: { id } },
+        },
+      },
+      AND: {
+        NOT: {
+          id,
         },
       },
     },

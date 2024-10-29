@@ -1,4 +1,4 @@
-import { DocumentCheckIcon, GiftIcon } from '@heroicons/react/16/solid';
+import { GiftIcon } from '@heroicons/react/16/solid';
 import {
   Avatar,
   Divider,
@@ -25,8 +25,7 @@ const PeoplePage = async () => {
   const users = await getUsersForPeoplePage();
 
   const tableRows = users.map((user) => {
-    const gifts = user.gifts || [];
-    const claimedGifts = gifts.filter((gift) => gift.claimedById);
+    const giftCount = user._count.gifts;
 
     const subtitleMarkup = (
       <div
@@ -35,11 +34,7 @@ const PeoplePage = async () => {
       >
         <div className="flex flex-row items-center">
           <GiftIcon width={16} className="mr-1" />
-          {gifts.length} gift{gifts.length !== 1 ? 's' : ''}
-        </div>
-        <div className="flex flex-row items-center">
-          <DocumentCheckIcon width={16} className="mr-1" />
-          {`${claimedGifts.length} claimed`}
+          {giftCount} gift{giftCount !== 1 ? 's' : ''}
         </div>
       </div>
     );
