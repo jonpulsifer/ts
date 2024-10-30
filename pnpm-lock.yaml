@@ -183,7 +183,7 @@ importers:
         version: 10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6)
       '@nestjs/terminus':
         specifier: 10.2.3
-        version: 10.2.3(@nestjs/axios@3.1.1(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7)(rxjs@7.8.1))(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@prisma/client@5.21.1(prisma@5.21.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
+        version: 10.2.3(@nestjs/axios@3.1.1(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7)(rxjs@7.8.1))(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6)(@prisma/client@5.21.1(prisma@5.21.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
       reflect-metadata:
         specifier: 0.2.2
         version: 0.2.2
@@ -199,7 +199,7 @@ importers:
         version: 10.2.3(chokidar@3.6.0)(typescript@5.6.3)
       '@nestjs/testing':
         specifier: 10.4.6
-        version: 10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6))
+        version: 10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6)(@nestjs/platform-express@10.4.6)
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -338,8 +338,8 @@ importers:
         specifier: npm:types-react@19.0.0-rc.1
         version: types-react@19.0.0-rc.1
       '@types/react-dom':
-        specifier: npm:types-react-dom@19.0.0-rc.1
-        version: types-react-dom@19.0.0-rc.1
+        specifier: npm:types-react-dom@19.0.0
+        version: types-react-dom@19.0.0
       tailwindcss:
         specifier: 3.4.14
         version: 3.4.14(ts-node@10.9.2(@types/node@22.8.4)(typescript@5.6.3))
@@ -6233,8 +6233,8 @@ packages:
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  types-react-dom@19.0.0-rc.1:
-    resolution: {integrity: sha512-VSLZJl8VXCD0fAWp7DUTFUDCcZ8DVXOQmjhJMD03odgeFmu14ZQJHCXeETm3BEAhJqfgJaFkLnGkQv88sRx0fQ==}
+  types-react-dom@19.0.0:
+    resolution: {integrity: sha512-qtWBYduBCmrgf4wqnTrGttEJJSZ6cTGmzuvmWd/34TJNKz/Pp69Islc1+txHF3nRxSuRvmhxztFXvLyxhp8G2w==}
 
   types-react@19.0.0-rc.1:
     resolution: {integrity: sha512-RshndUfqTW6K3STLPis8BtAYCGOkMbtvYsi90gmVNDZBXUyUc5juf2PE9LfS/JmOlUIRO8cWTS/1MTnmhjDqyQ==}
@@ -7669,7 +7669,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/terminus@10.2.3(@nestjs/axios@3.1.1(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7)(rxjs@7.8.1))(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@prisma/client@5.21.1(prisma@5.21.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+  '@nestjs/terminus@10.2.3(@nestjs/axios@3.1.1(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7)(rxjs@7.8.1))(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6)(@prisma/client@5.21.1(prisma@5.21.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -7681,7 +7681,7 @@ snapshots:
       '@nestjs/axios': 3.1.1(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(axios@1.7.7)(rxjs@7.8.1)
       '@prisma/client': 5.21.1(prisma@5.21.1)
 
-  '@nestjs/testing@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6))':
+  '@nestjs/testing@10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.6)(@nestjs/platform-express@10.4.6)':
     dependencies:
       '@nestjs/common': 10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 10.4.6(@nestjs/common@10.4.6(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.6)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -12988,7 +12988,7 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  types-react-dom@19.0.0-rc.1:
+  types-react-dom@19.0.0:
     dependencies:
       '@types/react': 18.3.12
 
