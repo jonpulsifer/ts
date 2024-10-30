@@ -10,8 +10,8 @@
   "dependencies": {
     "@repo/ui": "workspace:*",
     "next": "15.0.2",
-    "react-dom": "19.0.0-rc-02c0e824-20241028",
-    "react": "19.0.0-rc-02c0e824-20241028"
+    "react-dom": "19.0.0-rc-fb9a90fa48-20240614",
+    "react": "19.0.0-rc-fb9a90fa48-20240614"
   },
   "devDependencies": {
     "@repo/tailwind-config": "workspace:*",
