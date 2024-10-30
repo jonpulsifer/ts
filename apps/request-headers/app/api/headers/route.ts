@@ -3,9 +3,10 @@ import { NextResponse } from 'next/server';
 
 import * as myJson from './data/my.json';
 
-export function GET(): NextResponse {
+export async function GET(): Promise<NextResponse> {
   const res = Object.create(null);
-  for (const [key, value] of headers().entries()) {
+  const headersList = await headers();
+  for (const [key, value] of headersList.entries()) {
     res[key] = value;
   }
   // do stuff with file to get data

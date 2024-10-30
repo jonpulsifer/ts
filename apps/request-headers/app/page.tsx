@@ -15,7 +15,7 @@ import ClientComponentWithEnvironmentVariables from './components/client';
 const { NODE_NAME, NODE_IP, POD_NAME, POD_IP, POD_CHANGE_ME } = process.env;
 const isInKubernetes = Boolean(process.env.POD_NAME);
 
-function KubernetesTable() {
+const KubernetesTable = () => {
   return (
     <Table>
       <TableHead>
@@ -48,9 +48,9 @@ function KubernetesTable() {
       </TableBody>
     </Table>
   );
-}
+};
 
-function EnvironmentTable() {
+const EnvironmentTable = () => {
   return (
     <Table>
       <TableHead>
@@ -72,13 +72,13 @@ function EnvironmentTable() {
       </TableBody>
     </Table>
   );
-}
+};
 
-function HeadersTable() {
+async function HeadersTable() {
   const obj: Record<string, string> = {};
 
-  // Iterate through the headers using Headers.values()
-  for (const [key, value] of headers().entries()) {
+  const headersList = await headers();
+  for (const [key, value] of headersList.entries()) {
     obj[key] = value;
   }
   return (
