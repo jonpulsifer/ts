@@ -19,7 +19,7 @@
     "@prisma/client": "5.22.0",
     "@repo/ui": "workspace:*",
     "@vercel/analytics": "1.3.2",
-    "@vercel/speed-insights": "1.0.14",
+    "@vercel/speed-insights": "1.1.0",
     "next": "14.2.17",
     "next-auth": "5.0.0-beta.25",
     "nookies": "2.5.2",
