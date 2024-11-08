@@ -3,16 +3,27 @@
 import { revalidatePath } from 'next/cache';
 import { revalidateTag } from 'next/cache';
 import { unstable_cache } from 'next/cache';
+import { createClient } from 'redis';
 
 const INITIAL_EMOJI = '🦄';
 const FUN_EMOJIS = ['😎', '🚀', '🌈', '🦄', '🍕', '🎉', '🌮', '🧙‍♂️', '🏄‍♂️'];
-const db = new Map<string, string>([['emoji', INITIAL_EMOJI]]);
 
-// Add timestamp to see when cache was last updated
+// Create Redis client
+const redis = createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379',
+  database: 2,
+});
+redis.connect();
+
+// Initialize Redis with default emoji if not exists
+redis.get('emoji').then((result) => {
+  if (!result) redis.set('emoji', INITIAL_EMOJI);
+});
+
 export const getEmoji = unstable_cache(
   async () => {
-    const currentEmoji = db.get('emoji');
-    console.log('got emoji from db', currentEmoji);
+    const currentEmoji = await redis.get('emoji');
+    console.log('got emoji from redis', currentEmoji);
     return {
       emoji: currentEmoji,
       timestamp: new Date().toISOString(),
@@ -26,12 +37,12 @@ export const getEmoji = unstable_cache(
 
 export async function setEmoji(formData: FormData) {
   const emoji = formData.get('emoji') as string;
-  db.set('emoji', emoji);
+  await redis.set('emoji', emoji);
   revalidateTag('emoji');
 }
 
 export async function revalidateEmoji() {
   const newEmoji = FUN_EMOJIS[Math.floor(Math.random() * FUN_EMOJIS.length)];
-  db.set('emoji', newEmoji);
+  await redis.set('emoji', newEmoji);
   revalidatePath('/');
 }
