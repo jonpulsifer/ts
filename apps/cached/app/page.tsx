@@ -31,7 +31,7 @@ export default async function Home() {
       <Suspense fallback={<div>Loading emoji...</div>}>
         <EmojiDisplay initialEmoji={emoji} />
       </Suspense>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
           {timestamp.unixtime}
         </code>
