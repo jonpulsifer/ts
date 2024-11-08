@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { revalidateTag } from 'next/cache';
 import { unstable_cache } from 'next/cache';
 
@@ -32,5 +33,5 @@ export async function setEmoji(formData: FormData) {
 export async function revalidateEmoji() {
   const newEmoji = FUN_EMOJIS[Math.floor(Math.random() * FUN_EMOJIS.length)];
   db.set('emoji', newEmoji);
-  revalidateTag('emoji');
+  revalidatePath('/');
 }
