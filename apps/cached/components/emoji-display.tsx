@@ -8,7 +8,7 @@ import { Loader2 } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 
 interface EmojiData {
-  emoji: string;
+  emoji?: string;
   timestamp: string;
   node?: string;
   pod?: string;

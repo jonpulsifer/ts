@@ -7,10 +7,18 @@ import { Suspense } from 'react';
 // export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
 
+async function getGithubUser() {
+  console.log('fetching github user');
+  const github = await fetch('https://api.github.com/users/jonpulsifer', {
+    next: { revalidate: 300, tags: ['github'] },
+  });
+  return github.json();
+}
+
 export default async function Home() {
   const emoji = await getEmoji();
-  const NODE_NAME = process.env.NODE_NAME;
-  const POD_NAME = process.env.POD_NAME;
+  const githubUser = await getGithubUser();
+  const { NODE_NAME, POD_NAME } = process.env;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400 space-y-4">
@@ -21,6 +29,9 @@ export default async function Home() {
         <EmojiDisplay initialEmoji={emoji} />
       </Suspense>
       <div className="grid grid-cols-2 gap-2">
+        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+          {githubUser.login}
+        </code>
         <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
           NODE_NAME: {NODE_NAME}
         </code>

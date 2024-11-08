@@ -7,15 +7,11 @@ const INITIAL_EMOJI = '🦄';
 const FUN_EMOJIS = ['😎', '🚀', '🌈', '🦄', '🍕', '🎉', '🌮', '🧙‍♂️', '🏄‍♂️'];
 const db = new Map<string, string>([['emoji', INITIAL_EMOJI]]);
 
-// Simulate DB latency
-const simulateLatency = () =>
-  new Promise((resolve) => setTimeout(resolve, Math.random() * 2000 + 500));
-
 // Add timestamp to see when cache was last updated
 export const getEmoji = unstable_cache(
   async () => {
-    await simulateLatency();
-    const currentEmoji = db.get('emoji') ?? INITIAL_EMOJI;
+    const currentEmoji = db.get('emoji');
+    console.log('got emoji from db', currentEmoji);
     return {
       emoji: currentEmoji,
       timestamp: new Date().toISOString(),
@@ -24,7 +20,7 @@ export const getEmoji = unstable_cache(
     };
   },
   ['emoji-cache-key'],
-  { revalidate: 30, tags: ['emoji'] },
+  { revalidate: 300, tags: ['emoji'] },
 );
 
 export async function setEmoji(formData: FormData) {
