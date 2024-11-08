@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 
 // behave like < next 14
 // export const fetchCache = 'force-cache';
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
 
 async function getTimestamp() {
