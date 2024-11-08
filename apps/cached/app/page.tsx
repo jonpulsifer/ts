@@ -17,7 +17,7 @@ export default async function Home() {
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
         Emoji of the Day
       </h1>
-      <Suspense key={emoji} fallback={<div>Loading emoji...</div>}>
+      <Suspense fallback={<div>Loading emoji...</div>}>
         <EmojiDisplay initialEmoji={emoji} />
       </Suspense>
       <div className="grid grid-cols-2 gap-2">
