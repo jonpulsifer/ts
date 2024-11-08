@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: &app cached
+
+namePrefix: cached-
+
+# images:
+#   - name: jonpulsifer/does-not-exist
+#     newName: ghcr.io/jonpulsifer/cached
+
+commonLabels:
+  app.kubernetes.io/name: *app
+  app.kubernetes.io/part-of: *app
+
+resources:
+  - ../../../k8s/workload
+  - ../../../k8s/gateway
+
+replicas:
+  - name: app
+    count: 2
+
+patches:
+  - path: env.yaml
+  - path: gateway.yaml
+  - path: http-route.yaml
+
+transformers:
+  - http-route-prefixer.yaml

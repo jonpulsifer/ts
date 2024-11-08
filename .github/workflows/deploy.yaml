@@ -8,6 +8,7 @@ on:
         type: choice
         options:
           - authme
+          - cached
           - hub
           - request-headers
           - rosie
