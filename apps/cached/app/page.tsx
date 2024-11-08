@@ -7,17 +7,20 @@ import { Suspense } from 'react';
 // export const dynamic = 'force-dynamic';
 // export const revalidate = 3600;
 
-async function getGithubUser() {
-  console.log('fetching github user');
-  const github = await fetch('https://api.github.com/users/jonpulsifer', {
-    next: { revalidate: 300, tags: ['github'] },
-  });
-  return github.json();
+async function getTimestamp() {
+  console.log('fetching timestamp');
+  const timestamp = await fetch(
+    'http://worldtimeapi.org/api/timezone/America/Halifax',
+    {
+      next: { revalidate: 300, tags: ['timestamp'] },
+    },
+  );
+  return timestamp.json();
 }
 
 export default async function Home() {
   const emoji = await getEmoji();
-  const githubUser = await getGithubUser();
+  const timestamp = await getTimestamp();
   const { NODE_NAME, POD_NAME } = process.env;
 
   return (
@@ -30,7 +33,7 @@ export default async function Home() {
       </Suspense>
       <div className="grid grid-cols-2 gap-2">
         <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
-          {githubUser.login}
+          {timestamp.unixtime}
         </code>
         <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
           NODE_NAME: {NODE_NAME}
