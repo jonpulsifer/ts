@@ -2,19 +2,18 @@ import EmojiDisplay from '@/components/emoji-display';
 import { getEmoji } from './actions';
 import { Suspense } from 'react';
 
-// behave like < next 14
-// export const fetchCache = 'force-cache';
+export const fetchCache = 'force-cache';
 export const dynamic = 'force-dynamic';
-// export const revalidate = 3600;
+export const revalidate = 3600;
 
 async function getTimestamp() {
-  console.log('fetching timestamp');
   const timestamp = await fetch(
     'http://worldtimeapi.org/api/timezone/America/Halifax',
     {
       next: { revalidate: 300, tags: ['timestamp'] },
     },
   );
+  console.log('fetched timestamp');
   return timestamp.json();
 }
 
