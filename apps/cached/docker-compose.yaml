@@ -1,6 +1,6 @@
 services:
   redis-stack:
-    image: redis/redis-stack:latest
+    image: redis/redis-stack:latest@sha256:ca1e9182f3f6e1e40a766b1bb72f13fa89b8061477dd7843a79bf53e4b2307ae
     container_name: redis
     ports:
       - "6379:6379"
