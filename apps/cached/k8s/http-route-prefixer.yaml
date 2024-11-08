@@ -2,7 +2,7 @@ apiVersion: builtin
 kind: PrefixSuffixTransformer
 metadata:
   name: httproute
-prefix: hub-
+prefix: cached-
 fieldSpecs:
   - path: spec/parentRefs/name
     kind: HTTPRoute
