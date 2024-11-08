@@ -6,7 +6,7 @@ const nextConfig = {
       ? require.resolve('./lib/cache-handler.js')
       : undefined,
   cacheMaxMemorySize: 0, // disable the default (50mb) in-memory cache
-  output: process.env.IS_DOCKER ? 'standalone' : undefined,
+  output: process.env.STANDALONE ? 'standalone' : undefined,
 };
 
 module.exports = nextConfig;
