@@ -1,4 +1,4 @@
-FROM node:22-alpine@sha256:f265794478aa0b1a23d85a492c8311ed795bc527c3fe7e43453b3c872dcd71a3 AS base
+FROM node:20-alpine AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo@2
 
@@ -41,7 +41,7 @@ ARG APP
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
 
-COPY --from=installer /app/apps/${APP}/next.config.js .
+COPY --from=installer /app/apps/${APP}/next.config.* .
 COPY --from=installer /app/apps/${APP}/package.json .
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/standalone ./
 COPY --from=installer --chown=65532:65532 /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
