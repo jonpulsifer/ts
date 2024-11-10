@@ -4,15 +4,18 @@ import "./globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+import { Geist, Geist_Mono } from "next/font/google";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  fallback: ["sans-serif"],
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
   variable: "--font-geist-mono",
-  weight: "100 900",
+  fallback: ["monospace"],
 });
 
 export const metadata: Metadata = {
@@ -27,9 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`antialiased ${geist.variable} ${geistMono.variable}`}>
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>

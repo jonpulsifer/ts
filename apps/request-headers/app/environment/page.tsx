@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Breadcrumb,
@@ -9,13 +8,9 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@radix-ui/react-separator";
-import RequestHeaders from "./_components/request-headers";
+import Environment from "./_components/environment";
 
-export default async function ApiTesterPage() {
-  const headersList = await headers();
-  const serverHeaders = Object.fromEntries(
-    Array.from(headersList.entries()).sort(([a], [b]) => a.localeCompare(b))
-  );
+export default async function EnvironmentPage() {
   const serverEnv = Object.fromEntries(
     Object.entries(process.env)
       .filter(([key]) => !key.startsWith("NEXT_PUBLIC_"))
@@ -53,7 +48,7 @@ export default async function ApiTesterPage() {
         </span>
         <span className={starColor}>☆</span>
       </h1>
-      <RequestHeaders serverHeaders={serverHeaders} serverEnv={serverEnv} />
+      <Environment serverEnv={serverEnv} />
     </div>
   );
 }

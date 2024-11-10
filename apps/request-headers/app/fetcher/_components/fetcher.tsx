@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-export default function ApiTester() {
+export default function Fetcher() {
   const [url, setUrl] = useState("");
   const [method, setMethod] = useState<HttpMethod>("GET");
   const [body, setBody] = useState("");
