@@ -2,23 +2,12 @@
 
 import type * as React from "react";
 import {
-  Beaker,
-  BeakerIcon,
   BookOpen,
-  Bot,
   Network,
-  Download,
   FlaskConical,
-  Frame,
   Home,
-  LifeBuoy,
-  MoreHorizontal,
-  PieChart,
   Send,
-  Settings2,
-  SquareTerminal,
   Terminal,
-  Upload,
 } from "lucide-react";
 
 import {
