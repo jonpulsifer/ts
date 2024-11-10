@@ -3,12 +3,11 @@ on:
   workflow_dispatch:
     inputs:
       app:
-        description: 'App to deploy'
+        description: "App to deploy"
         required: true
         type: choice
         options:
           - authme
-          - cached
           - hub
           - request-headers
           - rosie
