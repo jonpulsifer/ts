@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "22.9.0",
-    "@types/node-fetch": "2.6.11",
+    "@types/node-fetch": "2.6.12",
     "ts-node": "10.9.2",
     "ts-node-dev": "2.0.0",
     "@repo/typescript-config": "workspace:*",
