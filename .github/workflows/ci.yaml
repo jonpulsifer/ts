@@ -22,7 +22,7 @@ jobs:
       TURBO_TELEMETRY_DISABLED: 1
     services:
       postgres:
-        image: postgres:17@sha256:2838b352c95941267f50c7c17c0580d43d122a8b57c31976d58d46c3bc437b38
+        image: postgres:17@sha256:f176fef320ed02c347e9f85352620945547a9a23038f02b57cf7939a198182ae
         env:
           POSTGRES_PASSWORD: postgres
         options: >-
