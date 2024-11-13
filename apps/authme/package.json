@@ -19,7 +19,7 @@
     "@prisma/client": "5.22.0",
     "@repo/ui": "workspace:*",
     "next-auth": "4.24.10",
-    "next": "14.2.17",
+    "next": "14.2.18",
     "react-dom": "18.3.1",
     "react": "18.3.1"
   },
