@@ -20,7 +20,7 @@
     "@repo/ui": "workspace:*",
     "@vercel/analytics": "1.4.0",
     "@vercel/speed-insights": "1.1.0",
-    "next": "14.2.17",
+    "next": "14.2.18",
     "next-auth": "5.0.0-beta.25",
     "nookies": "2.5.2",
     "openai": "4.72.0",
