@@ -1,14 +1,14 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import Fetcher from "./_components/fetcher";
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
+  BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@radix-ui/react-separator";
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@radix-ui/react-separator';
+import Fetcher from './_components/fetcher';
 
 export default function FetcherPage() {
   return (

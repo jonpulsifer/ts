@@ -1,30 +1,51 @@
-"use client";
+'use client';
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type EnvironmentProps = {
   serverEnv: Record<string, string>;
 };
 
 export default function Environment({ serverEnv }: EnvironmentProps) {
-  const clientEnv: Record<string, string> = {
-    NEXT_PUBLIC_ENVIRONMENT_VARIABLE:
-      process.env.NEXT_PUBLIC_ENVIRONMENT_VARIABLE || "",
-    POD_NAME: process.env.POD_NAME || "",
-  };
+  const MY_NEXTJS_BUNDLED_ENVIRONMENT_VARIABLES = [
+    'NEXT_PUBLIC_ENVIRONMENT_VARIABLE',
+  ];
+  const VERCEL_ENV_VARIABLES = [
+    'NEXT_PUBLIC_VERCEL_ENV',
+    'NEXT_PUBLIC_VERCEL_URL',
+    'NEXT_PUBLIC_VERCEL_BRANCH_URL',
+    'NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL',
+    'NEXT_PUBLIC_VERCEL_AUTOMATION_BYPASS_SECRET',
+    'NEXT_PUBLIC_VERCEL_GIT_PROVIDER',
+    'NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG',
+    'NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER',
+    'NEXT_PUBLIC_VERCEL_GIT_REPO_ID',
+    'NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF',
+    'NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA',
+    'NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE',
+    'NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_LOGIN',
+    'NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME',
+    'NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID',
+  ] as const;
+
+  const clientEnv: Record<string, string> = Object.fromEntries(
+    [...MY_NEXTJS_BUNDLED_ENVIRONMENT_VARIABLES, ...VERCEL_ENV_VARIABLES].map(
+      (key) => [key, process.env[key] || ''],
+    ),
+  );
 
   const renderObject = (obj: Record<string, string>) => (
     <Accordion type="single" collapsible className="w-full">
@@ -42,9 +63,9 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Request Information</CardTitle>
+        <CardTitle>Environment Variables</CardTitle>
         <CardDescription>
-          View headers and environment variables
+          View server and client environment variables
         </CardDescription>
       </CardHeader>
       <CardContent>

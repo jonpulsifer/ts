@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import type * as React from "react";
 import {
   BookOpen,
-  Network,
   FlaskConical,
   Home,
+  Network,
   Send,
   Terminal,
-} from "lucide-react";
+} from 'lucide-react';
+import type * as React from 'react';
 
 import {
   Sidebar,
@@ -19,14 +19,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
 const projects = [
-  { name: "Home", url: "/", icon: Home },
-  { name: "Environment", url: "/environment", icon: Terminal },
-  { name: "Fetcher", url: "/fetcher", icon: Send },
-  { name: "Network Tools", url: "/network", icon: Network },
-  { name: "Request Headers", url: "/request-headers", icon: BookOpen },
+  { name: 'Home', url: '/', icon: Home },
+  { name: 'Environment', url: '/environment', icon: Terminal },
+  { name: 'Fetcher', url: '/fetcher', icon: Send },
+  { name: 'Network Tools', url: '/network', icon: Network },
+  { name: 'Request Headers', url: '/request-headers', icon: BookOpen },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

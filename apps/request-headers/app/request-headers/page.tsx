@@ -1,29 +1,25 @@
-import { headers } from "next/headers";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
+  BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@radix-ui/react-separator";
-import RequestHeaders from "./_components/request-headers";
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@radix-ui/react-separator';
+import { headers } from 'next/headers';
+import { Suspense } from 'react';
+import RequestHeaders from './_components/request-headers';
 
-export default async function ApiTesterPage() {
+export default async function RequestHeadersPage() {
   const headersList = await headers();
-  const serverHeaders = Object.fromEntries(
-    Array.from(headersList.entries()).sort(([a], [b]) => a.localeCompare(b))
+  const requestHeaders = Object.fromEntries(
+    Array.from(headersList.entries()).sort(([a], [b]) => a.localeCompare(b)),
   );
-  const serverEnv = Object.fromEntries(
-    Object.entries(process.env)
-      .filter(([key]) => !key.startsWith("NEXT_PUBLIC_"))
-      .filter(([_, value]) => value !== undefined)
-      .sort(([a], [b]) => a.localeCompare(b))
-  ) as Record<string, string>;
 
-  const starColor = "text-yellow-300 hover:animate-ping hover:text-pink-600";
+  const starColor = 'text-yellow-300 hover:animate-ping hover:text-pink-600';
 
   return (
     <div>
@@ -53,7 +49,9 @@ export default async function ApiTesterPage() {
         </span>
         <span className={starColor}>☆</span>
       </h1>
-      <RequestHeaders serverHeaders={serverHeaders} serverEnv={serverEnv} />
+      <Suspense fallback={<Skeleton className="w-full h-[500px]" />}>
+        <RequestHeaders requestHeaders={requestHeaders} />
+      </Suspense>
     </div>
   );
 }

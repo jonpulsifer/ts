@@ -1,24 +1,24 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
+  BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@radix-ui/react-separator";
-import Environment from "./_components/environment";
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@radix-ui/react-separator';
+import Environment from './_components/environment';
 
 export default async function EnvironmentPage() {
   const serverEnv = Object.fromEntries(
     Object.entries(process.env)
-      .filter(([key]) => !key.startsWith("NEXT_PUBLIC_"))
+      .filter(([key]) => !key.startsWith('NEXT_PUBLIC_'))
       .filter(([_, value]) => value !== undefined)
-      .sort(([a], [b]) => a.localeCompare(b))
+      .sort(([a], [b]) => a.localeCompare(b)),
   ) as Record<string, string>;
 
-  const starColor = "text-yellow-300 hover:animate-ping hover:text-pink-600";
+  const starColor = 'text-yellow-300 hover:animate-ping hover:text-pink-600';
 
   return (
     <div>
