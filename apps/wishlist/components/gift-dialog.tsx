@@ -24,8 +24,8 @@ import { toast } from 'react-hot-toast';
 type Props = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  currentUser: User;
-  users: User[];
+  currentUser: Pick<User, 'id' | 'name' | 'email'>;
+  users: Pick<User, 'id' | 'name' | 'email'>[];
 };
 
 export default function GiftDialog({

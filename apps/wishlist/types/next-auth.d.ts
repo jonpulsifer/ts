@@ -9,6 +9,9 @@ declare module 'next-auth' {
     user: {
       /** The user's id */
       id: string;
+      image: string | null;
+      name: string | null;
+      email: string;
     } & DefaultSession['user'];
   }
 }

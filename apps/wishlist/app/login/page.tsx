@@ -23,12 +23,10 @@ function LoginPage() {
   const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
     setShowLoading(true);
     e.preventDefault();
-    signIn('google', { callbackUrl: '/people', redirect: false }).finally(
-      () => {
-        setShowLoading(false);
-        welcome();
-      },
-    );
+    signIn('google', { redirect: false, redirectTo: '/home' }).finally(() => {
+      setShowLoading(false);
+      welcome();
+    });
   };
 
   return (

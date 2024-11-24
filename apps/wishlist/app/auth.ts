@@ -1,5 +1,5 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, type User } from '@prisma/client';
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
@@ -30,7 +30,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
     async session({ session, user }) {
-      session.user = user;
+      session.user = user as User;
       return session;
     },
   },

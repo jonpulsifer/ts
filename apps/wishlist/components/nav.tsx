@@ -27,7 +27,7 @@ import {
   NavbarLabel,
   NavbarSection,
   NavbarSpacer,
-  Sidebar,
+  Sidebar as SidebarComponent,
   SidebarBody,
   SidebarHeader,
   SidebarHeading,
@@ -53,8 +53,8 @@ type NavItem = {
 const isCurrentPath = (current: string, path: string) => current === path;
 
 type NavProps = {
-  user: User;
-  users: User[];
+  user: Pick<User, 'id' | 'name' | 'email' | 'image'>;
+  users: Pick<User, 'id' | 'name' | 'email'>[];
 };
 
 const NAV_ITEMS: NavItem[] = [
@@ -150,7 +150,7 @@ export function NavBar({ user, users }: NavProps) {
   );
 }
 
-export function SidebarMarkup() {
+export function Sidebar() {
   const currentPath = usePathname();
   const itemsMarkup = NAV_ITEMS.map(({ label, icon, url }) => {
     const current = isCurrentPath(currentPath, url);
@@ -178,7 +178,7 @@ export function SidebarMarkup() {
   });
 
   return (
-    <Sidebar>
+    <SidebarComponent>
       <SidebarHeader className="space-y-4">
         <div className="flex flex-row items-center justify-center gap-2">
           <Logo />
@@ -192,6 +192,6 @@ export function SidebarMarkup() {
           {itemsMarkup}
         </SidebarSection>
       </SidebarBody>
-    </Sidebar>
+    </SidebarComponent>
   );
 }

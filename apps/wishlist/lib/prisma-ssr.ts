@@ -332,9 +332,7 @@ const getUsersForPeoplePage = async () => {
   });
 };
 
-const getWishlists = async () => {
-  const session = await isAuthenticated();
-  const { id } = session.user;
+const getWishlists = async (id: string) => {
   const currentYear = new Date().getFullYear();
   try {
     const wishlists = await prisma.wishlist.findMany({

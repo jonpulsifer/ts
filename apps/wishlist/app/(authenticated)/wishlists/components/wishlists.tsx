@@ -5,7 +5,7 @@ import {
   UserPlusIcon,
   UsersIcon,
 } from '@heroicons/react/16/solid';
-import type { Prisma, Wishlist } from '@prisma/client';
+import type { Prisma, User, Wishlist } from '@prisma/client';
 import {
   Button,
   Divider,
@@ -26,14 +26,15 @@ import { toast } from 'react-hot-toast';
 
 import EmptyState from 'components/EmptyState';
 
-type UserWithWishlists = Prisma.UserGetPayload<{
-  include: { wishlists: true };
-}>;
-
 type WishlistsWithoutPasswords = Prisma.WishlistGetPayload<{
   select: {
     id: true;
     name: true;
+    members: {
+      select: {
+        id: true;
+      };
+    };
     _count: {
       select: {
         members: true;
@@ -45,11 +46,13 @@ type WishlistsWithoutPasswords = Prisma.WishlistGetPayload<{
 
 interface Props {
   wishlists: WishlistsWithoutPasswords[];
-  user: UserWithWishlists;
+  userId: string;
 }
 
-function Wishlists({ wishlists, user }: Props) {
-  const handleLeaveWishlist = async (wishlist: Wishlist) => {
+function Wishlists({ wishlists, userId }: Props) {
+  const handleLeaveWishlist = async (
+    wishlist: Pick<Wishlist, 'id' | 'name'>,
+  ) => {
     const result = await leaveWishlist({
       wishlistId: wishlist.id,
     });
@@ -103,9 +106,9 @@ function Wishlists({ wishlists, user }: Props) {
         </form>
       );
 
-      const membership = user.wishlists.find((w) => w.id === wishlist.id);
+      const membership = wishlist.members.find((m) => m.id === userId);
       const actionMarkup = membership ? (
-        <Button onClick={() => handleLeaveWishlist(membership)} type="submit">
+        <Button onClick={() => handleLeaveWishlist(wishlist)} type="submit">
           <UserMinusIcon />
           Leave
         </Button>
