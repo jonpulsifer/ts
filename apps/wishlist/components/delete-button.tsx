@@ -1,4 +1,5 @@
 'use client';
+import type { Gift } from '@prisma/client';
 import {
   Alert,
   AlertActions,
@@ -11,13 +12,12 @@ import {
 import { deleteGift } from 'app/actions';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import type { GiftWithOwner } from 'types/prisma';
 
 export const DeleteButton = ({
   gift,
   currentUserId,
 }: {
-  gift: GiftWithOwner;
+  gift: Pick<Gift, 'id' | 'name' | 'ownerId' | 'createdById'>;
   currentUserId: string;
 }) => {
   const [open, setOpen] = useState(false);

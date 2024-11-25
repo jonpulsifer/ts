@@ -22,7 +22,7 @@ import toast from 'react-hot-toast';
 import { SecretSantaDetails } from './secret-santa-details';
 
 interface SecretSantaListProps {
-  currentUser: User;
+  currentUser: Pick<User, 'id'>;
   secretSantaEvents: Prisma.SecretSantaEventGetPayload<{
     include: { participants: true };
   }>[];

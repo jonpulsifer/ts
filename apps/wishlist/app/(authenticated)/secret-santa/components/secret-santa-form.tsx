@@ -9,8 +9,8 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface SecretSantaFormProps {
-  currentUser: User;
-  users: User[];
+  currentUser: Pick<User, 'id'>;
+  users: Pick<User, 'id' | 'name' | 'email'>[];
 }
 
 export function SecretSantaForm({ currentUser, users }: SecretSantaFormProps) {

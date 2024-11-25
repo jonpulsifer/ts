@@ -1,21 +1,24 @@
-import { Suspense } from 'react';
+import { LockClosedIcon } from '@heroicons/react/24/solid';
 import { StackedLayout } from '@repo/ui';
-import { isAuthenticated } from 'lib/prisma-ssr';
-import { getPeopleForNewGiftModal } from 'lib/prisma-cached';
-import { NavBar, Sidebar } from 'components/nav';
+import { auth } from 'app/auth';
 import Spinner from 'components/Spinner';
-import { CakeIcon } from '@heroicons/react/20/solid';
+import { NavBar, Sidebar } from 'components/nav';
+import { getPeopleForNewGiftModal } from 'lib/prisma-cached';
+import { SessionProvider } from 'next-auth/react';
 
 async function Layout({ children }: { children: React.ReactNode }) {
-  const { user: currentUser } = await isAuthenticated();
-  const people = await getPeopleForNewGiftModal(currentUser.id);
+  const session = await auth();
+  if (!session?.user) return <Spinner Icon={LockClosedIcon} />;
+  const people = await getPeopleForNewGiftModal(session.user.id);
   return (
-    <StackedLayout
-      navbar={<NavBar user={currentUser} users={people} />}
-      sidebar={<Sidebar />}
-    >
-      <Suspense fallback={<Spinner Icon={CakeIcon} />}>{children}</Suspense>
-    </StackedLayout>
+    <SessionProvider session={session}>
+      <StackedLayout
+        navbar={<NavBar user={session.user} users={people} />}
+        sidebar={<Sidebar />}
+      >
+        {children}
+      </StackedLayout>
+    </SessionProvider>
   );
 }
 export default Layout;

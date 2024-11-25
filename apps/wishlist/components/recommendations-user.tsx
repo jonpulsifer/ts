@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
 type GiftRecommendationsProps = {
-  forUser: User;
+  forUser: Pick<User, 'id' | 'name' | 'email'>;
 };
 
 export const GiftRecommendationsFallback = (

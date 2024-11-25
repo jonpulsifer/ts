@@ -15,14 +15,14 @@ import { GiftTable } from 'components/gift-table';
 import { Logo } from 'components/logo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import type { GiftWithOwner, UserWithGifts } from 'types/prisma';
+import type { GiftWithOwner, UserWithGiftCount } from 'types/prisma';
 import { UserTable } from './UserTable';
 
 interface HomePageTabsProps {
   gifts: GiftWithOwner[];
   userGifts: GiftWithOwner[];
   currentUserId: string;
-  users: UserWithGifts[];
+  usersWithGiftCount: UserWithGiftCount[];
   secretSantaAssignments: {
     eventName: string;
     eventId: string;
@@ -35,7 +35,7 @@ export function HomePageTabs({
   gifts,
   userGifts,
   currentUserId,
-  users,
+  usersWithGiftCount,
   secretSantaAssignments,
 }: HomePageTabsProps) {
   const router = useRouter();
@@ -140,7 +140,7 @@ export function HomePageTabs({
             View everyone in your wishlists and their gifts. You can view
             someone's profile by clicking on their name.
           </Text>
-          <UserTable users={users} />
+          <UserTable users={usersWithGiftCount} />
         </TabPanel>
         <TabPanel>
           <Heading className="text-2xl mb-4">Secret Santa Assignments</Heading>

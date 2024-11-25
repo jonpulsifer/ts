@@ -1,6 +1,7 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
-import { getMe, getSortedVisibleGiftsForUser } from 'lib/prisma-ssr';
+import { getSortedVisibleGiftsForUser } from 'lib/prisma-cached';
+import { isAuthenticated } from 'lib/prisma-ssr';
 import type { GiftWithOwnerAndClaimedByAndCreatedBy } from 'types/prisma';
 
 export default async function Gifts({
@@ -8,8 +9,9 @@ export default async function Gifts({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const user = await getMe();
+  const { user } = await isAuthenticated();
   const gifts = await getSortedVisibleGiftsForUser({
+    userId: user.id,
     direction: searchParams.direction as 'asc' | 'desc' | undefined,
     column: searchParams.column as 'name' | 'owner' | undefined,
   });

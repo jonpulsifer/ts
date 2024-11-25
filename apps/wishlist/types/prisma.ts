@@ -4,20 +4,6 @@ export type UserWithGifts = Prisma.UserGetPayload<{
   include: { gifts: true };
 }>;
 
-export type UserWithGiftsAndWishlists = Prisma.UserGetPayload<{
-  include: { gifts: true; wishlists: true };
-}>;
-
-export type UserWithGiftsWithOwners = Prisma.UserGetPayload<{
-  include: {
-    gifts: {
-      include: {
-        owner: true;
-      };
-    };
-  };
-}>;
-
 export type AllVisibleGiftsForUserWithOwners = Prisma.UserGetPayload<{
   include: {
     gifts: {
@@ -49,5 +35,15 @@ export type GiftWithOwnerAndClaimedByAndCreatedBy = Prisma.GiftGetPayload<{
     owner: true;
     claimedBy: true;
     createdBy: true;
+  };
+}>;
+
+export type UserWithGiftCount = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    email: true;
+    image: true;
+    _count: { select: { gifts: true } };
   };
 }>;

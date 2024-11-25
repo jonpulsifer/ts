@@ -1,6 +1,12 @@
-export function timeAgo(date: Date) {
+export function timeAgo(date: Date | string) {
+  const parsedDate = date instanceof Date ? date : new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    throw new Error('Invalid date provided');
+  }
+
   const now = new Date();
-  const secondsPast = (now.getTime() - date.getTime()) / 1000;
+  const secondsPast = (now.getTime() - parsedDate.getTime()) / 1000;
 
   const getPlural = (value: number, unit: string) => {
     return value === 1 ? `${value} ${unit} ago` : `${value} ${unit}s ago`;

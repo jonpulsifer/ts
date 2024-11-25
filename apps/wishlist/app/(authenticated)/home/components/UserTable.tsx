@@ -1,5 +1,6 @@
 'use client';
 
+import type { User } from '@prisma/client';
 import {
   Avatar,
   Badge,
@@ -14,9 +15,13 @@ import {
   Text,
 } from '@repo/ui';
 import { useState } from 'react';
-import type { UserWithGifts } from 'types/prisma';
+import type { UserWithGiftCount } from 'types/prisma';
 
-export function UserTable({ users }: { users: UserWithGifts[] }) {
+export function UserTable({
+  users,
+}: {
+  users: UserWithGiftCount[];
+}) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredUsers = users.filter((user) => {
@@ -30,7 +35,6 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
   const tableRows = filteredUsers.map((user) => {
     const displayName = user.name || user.email || 'Unknown';
     const initials = displayName.charAt(0).toUpperCase();
-    const giftCount = user.gifts?.length || 0;
 
     return (
       <TableRow key={user.id} href={`/user/${user.id}`}>
@@ -50,8 +54,8 @@ export function UserTable({ users }: { users: UserWithGifts[] }) {
           </div>
         </TableCell>
         <TableCell>
-          <Badge color={giftCount > 0 ? 'green' : 'zinc'}>
-            {giftCount} {giftCount === 1 ? 'Gift' : 'Gifts'}
+          <Badge color={user._count.gifts > 0 ? 'green' : 'zinc'}>
+            {user._count.gifts} {user._count.gifts === 1 ? 'Gift' : 'Gifts'}
           </Badge>
         </TableCell>
       </TableRow>

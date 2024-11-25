@@ -1,11 +1,12 @@
 import { Divider, Heading, Subheading, Text } from '@repo/ui';
-import { getMe, getPeopleForUser, getSecretSantaEvents } from 'lib/prisma-ssr';
+import { getSecretSantaEvents, getUsersForPeoplePage } from 'lib/prisma-cached';
+import { isAuthenticated } from 'lib/prisma-ssr';
 import { SecretSantaForm } from './components/secret-santa-form';
 import { SecretSantaList } from './components/secret-santa-list';
 
 export default async function SecretSantaPage() {
-  const user = await getMe();
-  const { users } = await getPeopleForUser();
+  const { user } = await isAuthenticated();
+  const users = await getUsersForPeoplePage(user.id);
   const secretSantaEvents = await getSecretSantaEvents(user.id);
 
   return (

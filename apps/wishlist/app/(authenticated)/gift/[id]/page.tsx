@@ -7,18 +7,26 @@ import {
   Link,
   Text,
 } from '@repo/ui';
-import { auth } from 'app/auth';
 import { BackButton } from 'components/back-button';
 import { ClaimButton } from 'components/claim-button';
 import { DeleteButton } from 'components/delete-button';
 import { EditButton } from 'components/edit-button';
-import { getGiftById, getUserWithGiftsById } from 'lib/prisma-ssr';
+import {
+  getGiftWithOwnerClaimedByAndCreatedBy,
+  getGiftsWithOwnerClaimedByAndCreatedBy,
+} from 'lib/prisma-cached';
+import { isAuthenticated } from 'lib/prisma-ssr';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
   params: { [K in string]: string };
 }
+
+export const generateStaticParams = async () => {
+  const gifts = await getGiftsWithOwnerClaimedByAndCreatedBy();
+  return gifts.map((gift) => ({ id: gift.id }));
+};
 
 export async function generateMetadata({
   params,
@@ -30,7 +38,7 @@ export async function generateMetadata({
     };
   }
 
-  const gift = await getGiftById(params.id);
+  const gift = await getGiftWithOwnerClaimedByAndCreatedBy(params.id);
   if (!gift) {
     notFound();
   }
@@ -42,19 +50,19 @@ export async function generateMetadata({
 }
 
 const GiftPage = async ({ params }: PageProps) => {
-  const session = await auth();
   if (!params.id) {
     notFound();
   }
 
-  const gift = await getGiftById(params.id, true, true, true);
-  if (!gift || !session) {
+  const gift = await getGiftWithOwnerClaimedByAndCreatedBy(params.id);
+  if (!gift) {
     notFound();
   }
-  const user = await getUserWithGiftsById(gift.ownerId);
-  const ownerName = user?.name || user?.email || user?.id;
+
+  const ownerName = gift.owner.name || gift.owner.email || gift.owner.id;
   const creatorName =
     gift.createdBy?.name || gift.createdBy?.email || gift.createdBy?.id;
+  const { user: currentUser } = await isAuthenticated();
 
   return (
     <>
@@ -69,9 +77,9 @@ const GiftPage = async ({ params }: PageProps) => {
         </div>
         <div className="flex gap-4">
           <BackButton />
-          <ClaimButton gift={gift} currentUserId={session.user.id} />
-          <EditButton gift={gift} currentUserId={session.user.id} />
-          <DeleteButton gift={gift} currentUserId={session.user.id} />
+          <ClaimButton gift={gift} currentUserId={currentUser.id} />
+          <EditButton gift={gift} currentUserId={currentUser.id} />
+          <DeleteButton gift={gift} currentUserId={currentUser.id} />
         </div>
       </div>
       <Divider className="my-4" soft />

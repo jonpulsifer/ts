@@ -14,7 +14,7 @@ type SecretSantaEventWithParticipants = SecretSantaEvent & {
 
 interface SecretSantaDetailsProps {
   event: SecretSantaEventWithParticipants;
-  currentUser: User;
+  currentUser: Pick<User, 'id'>;
   onClose: () => void;
 }
 

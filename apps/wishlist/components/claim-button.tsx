@@ -1,14 +1,14 @@
 'use client';
+import type { Gift } from '@prisma/client';
 import { Button } from '@repo/ui/button';
 import { claimGift, unclaimGift } from 'app/actions';
 import toast from 'react-hot-toast';
-import type { GiftWithOwner } from 'types/prisma';
 
 export const ClaimButton = ({
   gift,
   currentUserId,
 }: {
-  gift: GiftWithOwner;
+  gift: Pick<Gift, 'id' | 'name' | 'ownerId' | 'createdById' | 'claimedById'>;
   currentUserId: string;
 }) => {
   if (gift.ownerId === currentUserId && gift.createdById === currentUserId) {

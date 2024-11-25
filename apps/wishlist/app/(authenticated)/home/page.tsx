@@ -1,26 +1,19 @@
 import {
   getLatestVisibleGiftsForUserById,
-  getMe,
-  getPeopleForUser,
   getSecretSantaEvents,
+  getUsersWithGiftCount,
   getVisibleGiftsForUserById,
-} from 'lib/prisma-ssr';
-import { redirect } from 'next/navigation';
+} from 'lib/prisma-cached';
+import { isAuthenticated } from 'lib/prisma-ssr';
 
 import { HomePageTabs } from './components/HomePageTabs';
 
 export default async function HomePage() {
-  const user = await getMe();
+  const { user } = await isAuthenticated();
 
-  if (!user.hasCompletedOnboarding) {
-    redirect('/onboarding');
-  }
-
-  const { gifts: latestGifts } = await getLatestVisibleGiftsForUserById(
-    user.id,
-  );
-  const userGifts = await getVisibleGiftsForUserById(user.id);
-  const { users } = await getPeopleForUser();
+  const userGifts = await getVisibleGiftsForUserById(user.id, user.id);
+  const latestGifts = await getLatestVisibleGiftsForUserById(user.id);
+  const usersWithGiftCount = await getUsersWithGiftCount(user.id);
   const secretSantaEvents = await getSecretSantaEvents(user.id);
 
   const secretSantaAssignments = secretSantaEvents.map((event) => ({
@@ -36,7 +29,7 @@ export default async function HomePage() {
       gifts={latestGifts}
       userGifts={userGifts}
       currentUserId={user.id}
-      users={users}
+      usersWithGiftCount={usersWithGiftCount}
       secretSantaAssignments={secretSantaAssignments.map((assignment) => ({
         ...assignment,
         assignedTo: assignment.assignedTo

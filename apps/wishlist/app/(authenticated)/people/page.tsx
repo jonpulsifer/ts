@@ -1,4 +1,4 @@
-import { GiftIcon } from '@heroicons/react/16/solid';
+import { GiftIcon, UserGroupIcon } from '@heroicons/react/16/solid';
 import {
   Avatar,
   Divider,
@@ -11,10 +11,12 @@ import {
   TableRow,
   Text,
 } from '@repo/ui';
-import { getUsersForPeoplePage } from 'lib/prisma-ssr';
+import Spinner from 'components/Spinner';
+import { getUsersForPeoplePage } from 'lib/prisma-cached';
+import { isAuthenticated } from 'lib/prisma-ssr';
 import { getInitials } from 'lib/user-utils';
 import type { Metadata } from 'next';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'People',
@@ -22,7 +24,8 @@ export const metadata: Metadata = {
 };
 
 const PeoplePage = async () => {
-  const users = await getUsersForPeoplePage();
+  const { user } = await isAuthenticated();
+  const users = await getUsersForPeoplePage(user.id);
 
   const tableRows = users.map((user) => {
     const giftCount = user._count.gifts;
@@ -73,9 +76,11 @@ const PeoplePage = async () => {
         gifts. You can <Strong>view someone&apos;s profile by clicking</Strong>{' '}
         on their name.
       </Text>
-      <Table bleed dense className="mt-4">
-        <TableBody>{tableRows}</TableBody>
-      </Table>
+      <Suspense fallback={<Spinner Icon={UserGroupIcon} />}>
+        <Table bleed dense className="mt-4">
+          <TableBody>{tableRows}</TableBody>
+        </Table>
+      </Suspense>
     </>
   );
 };

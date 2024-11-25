@@ -1,11 +1,11 @@
+import type { Gift } from '@prisma/client';
 import { Button } from '@repo/ui/button';
-import type { GiftWithOwner } from 'types/prisma';
 
 export const EditButton = ({
   gift,
   currentUserId,
 }: {
-  gift: GiftWithOwner;
+  gift: Pick<Gift, 'id' | 'ownerId' | 'createdById'>;
   currentUserId: string;
 }) => {
   if (gift.ownerId !== currentUserId && gift.createdById !== currentUserId) {

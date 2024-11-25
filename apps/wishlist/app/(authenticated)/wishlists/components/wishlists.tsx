@@ -25,6 +25,9 @@ import { joinWishlist, leaveWishlist } from 'app/actions';
 import { toast } from 'react-hot-toast';
 
 import EmptyState from 'components/EmptyState';
+import Spinner from 'components/Spinner';
+import { useSession } from 'next-auth/react';
+import { Suspense } from 'react';
 
 type WishlistsWithoutPasswords = Prisma.WishlistGetPayload<{
   select: {
@@ -46,10 +49,20 @@ type WishlistsWithoutPasswords = Prisma.WishlistGetPayload<{
 
 interface Props {
   wishlists: WishlistsWithoutPasswords[];
-  userId: string;
 }
 
-function Wishlists({ wishlists, userId }: Props) {
+function Wishlists({ wishlists }: Props) {
+  const { data: session } = useSession();
+  if (!wishlists.length)
+    return (
+      <EmptyState
+        subtitle="Something is broken, talk to the webmaster"
+        title="👨‍👩‍👧‍👦 No Wishlists Found"
+      >
+        <div className="p-4">The elves could not find any wishlists.</div>
+      </EmptyState>
+    );
+  const userId = session?.user.id;
   const handleLeaveWishlist = async (
     wishlist: Pick<Wishlist, 'id' | 'name'>,
   ) => {
@@ -139,7 +152,7 @@ function Wishlists({ wishlists, userId }: Props) {
     });
   };
 
-  return wishlists.length ? (
+  return (
     <>
       <Heading>Available Wishlists</Heading>
       <Divider soft className="my-4" />
@@ -150,23 +163,18 @@ function Wishlists({ wishlists, userId }: Props) {
       <Text className="my-4">
         <Strong>Join a wishlist</Strong> to view people&apos;s gift ideas.
       </Text>
-      <Table bleed>
-        <TableBody>{familyList(wishlists)}</TableBody>
-        <TableHead>
-          <TableRow>
-            <TableHeader>Wishlist</TableHeader>
-            <TableHeader className="text-right">Action</TableHeader>
-          </TableRow>
-        </TableHead>
-      </Table>
+      <Suspense fallback={<Spinner />}>
+        <Table bleed>
+          <TableBody>{familyList(wishlists)}</TableBody>
+          <TableHead>
+            <TableRow>
+              <TableHeader>Wishlist</TableHeader>
+              <TableHeader className="text-right">Action</TableHeader>
+            </TableRow>
+          </TableHead>
+        </Table>
+      </Suspense>
     </>
-  ) : (
-    <EmptyState
-      subtitle="Something is broken, talk to the webmaster"
-      title="👨‍👩‍👧‍👦 No Wishlists Found"
-    >
-      <div className="p-4">The elves could not find any wishlists.</div>
-    </EmptyState>
   );
 }
 

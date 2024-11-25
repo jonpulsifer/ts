@@ -61,10 +61,6 @@ const getGiftsWithOwnerByUserId = async (id: string) => {
   return redirect('/login');
 };
 
-const getUserWithGifts = async (id: string) => {
-  return getUserById(id, true, false);
-};
-
 const getUserById = async (
   id: string,
   gifts = false,
@@ -110,7 +106,6 @@ const getGiftById = async (
   claimedBy = false,
   createdBy = false,
 ) => {
-  await isAuthenticated();
   try {
     const gift = await prisma.gift.findUniqueOrThrow({
       where: {
@@ -133,106 +128,6 @@ const getGiftById = async (
   }
 };
 
-const getUserWithGiftsById = async (id: string): Promise<UserWithGifts> => {
-  return getUserById(id, true, false);
-};
-
-const getClaimedGiftsForMe = async () => {
-  const session = await isAuthenticated();
-  const currentYear = new Date().getFullYear();
-  const gifts = await prisma.gift.findMany({
-    where: {
-      claimedById: {
-        equals: session.user.id,
-      },
-      createdAt: {
-        gte: new Date(`${currentYear}-01-01`),
-        lt: new Date(`${currentYear + 1}-01-01`),
-      },
-    },
-    include: {
-      owner: true,
-    },
-    orderBy: {
-      name: 'asc',
-    },
-  });
-  return gifts;
-};
-
-const getVisibleGiftsForUserById = async (id: string) => {
-  const session = await isAuthenticated();
-  const currentUserId = session.user.id;
-  const currentYear = new Date().getFullYear();
-  const gifts = await prisma.gift.findMany({
-    where: {
-      ownerId: id,
-      createdById: currentUserId === id ? id : undefined,
-      createdAt: {
-        gte: new Date(`${currentYear}-01-01`),
-        lt: new Date(`${currentYear + 1}-01-01`),
-      },
-      AND: {
-        OR: [
-          { claimed: false },
-          {
-            claimed: true,
-            claimedBy: {
-              id: currentUserId,
-            },
-          },
-          { createdBy: { id: currentUserId } },
-        ],
-      },
-    },
-    include: {
-      owner: true,
-      claimedBy: true,
-      createdBy: true,
-    },
-    orderBy: {
-      name: 'asc',
-    },
-  });
-  return gifts;
-};
-
-const getLatestVisibleGiftsForUserById = async (id: string) => {
-  const session = await isAuthenticated();
-  const currentUserId = session.user.id;
-  const currentYear = new Date().getFullYear();
-  const gifts = await prisma.gift.findMany({
-    where: {
-      createdAt: {
-        gte: new Date(`${currentYear}-01-01`),
-        lt: new Date(`${currentYear + 1}-01-01`),
-      },
-      ownerId: { not: id },
-      AND: {
-        OR: [
-          { claimed: false },
-          {
-            claimed: true,
-            claimedBy: {
-              id: currentUserId,
-            },
-          },
-        ],
-      },
-    },
-    include: {
-      owner: true,
-      claimedBy: true,
-      createdBy: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 10,
-  });
-  return { gifts, user: session.user };
-};
-
 const isAuthenticated = async () => {
   const session = await auth();
   if (!session || !session?.user) {
@@ -242,125 +137,6 @@ const isAuthenticated = async () => {
     return redirect('/login');
   }
   return session;
-};
-
-const getSortedVisibleGiftsForUser = async ({
-  column = 'name',
-  direction = 'asc',
-}: {
-  direction?: 'asc' | 'desc';
-  column?: 'name' | 'owner';
-}) => {
-  const session = await isAuthenticated();
-  const { id } = session.user;
-  const user = await getUserById(id, true, true);
-  if (!user.wishlists.length) return { gifts: [], user: session.user };
-
-  const orderBy =
-    column === 'owner' ? { owner: { name: direction } } : { name: direction };
-  const currentYear = new Date().getFullYear();
-  try {
-    const wishlistIds = user.wishlists.map((w) => w.id);
-    const gifts = await prisma.gift.findMany({
-      where: {
-        ownerId: { not: id },
-        wishlists: { some: { id: { in: wishlistIds } } },
-        createdAt: {
-          gte: new Date(`${currentYear}-01-01`),
-          lt: new Date(`${currentYear + 1}-01-01`),
-        },
-        AND: {
-          OR: [
-            { claimed: false },
-            {
-              claimed: true,
-              claimedBy: {
-                id,
-              },
-            },
-            { createdBy: { id } },
-          ],
-        },
-      },
-      include: {
-        owner: true,
-        claimedBy: true,
-        createdBy: true,
-      },
-      orderBy: [orderBy],
-    });
-    return gifts;
-  } catch (e) {
-    console.log(JSON.stringify(e));
-  }
-  redirect('/login');
-};
-
-const getUsersForPeoplePage = async () => {
-  const session = await isAuthenticated();
-  const { id } = session.user;
-  const currentYear = new Date().getFullYear();
-  return prisma.user.findMany({
-    include: {
-      _count: {
-        select: {
-          gifts: {
-            where: {
-              createdAt: {
-                gte: new Date(`${currentYear}-01-01`),
-              },
-            },
-          },
-        },
-      },
-    },
-    where: {
-      wishlists: {
-        some: {
-          members: { some: { id } },
-        },
-      },
-      AND: {
-        NOT: {
-          id,
-        },
-      },
-    },
-    orderBy: {
-      name: 'asc',
-    },
-  });
-};
-
-const getWishlists = async (id: string) => {
-  const currentYear = new Date().getFullYear();
-  try {
-    const wishlists = await prisma.wishlist.findMany({
-      select: {
-        id: true,
-        name: true,
-        _count: {
-          select: {
-            members: true,
-            gifts: {
-              where: {
-                createdAt: {
-                  gte: new Date(`${currentYear}-01-01`),
-                  lt: new Date(`${currentYear + 1}-01-01`),
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-    const user = await getUserById(id, false, true);
-
-    return { wishlists, user };
-  } catch (e) {
-    console.error('getWishlists', JSON.stringify(e));
-  }
-  return redirect('/login');
 };
 
 const getPeopleForUser = async () => {
@@ -527,44 +303,15 @@ const updateUserOnboardingStatus = async (
   }
 };
 
-export async function getSecretSantaEvents(userId: string) {
-  const events = await prisma.secretSantaEvent.findMany({
-    include: {
-      participants: {
-        include: {
-          user: true,
-          assignedTo: true,
-        },
-      },
-    },
-  });
-
-  return events.map((event) => ({
-    ...event,
-    isParticipating: event.participants.some((p) => p.userId === userId),
-    canJoin:
-      !event.participants.some((p) => p.userId === userId) &&
-      !event.participants.some((p) => p.assignedToId),
-  }));
-}
-
 export {
-  getClaimedGiftsForMe,
   getGiftById,
   getGiftsWithOwnerByUserId,
-  getLatestVisibleGiftsForUserById,
   getMe,
   getPeopleForUser,
   getRecommendations,
   getRecommendationsForHomePage,
-  getSortedVisibleGiftsForUser,
   getUserById,
   getUserOnboardingStatus,
-  getUserWithGifts,
-  getUserWithGiftsById,
-  getUsersForPeoplePage,
-  getVisibleGiftsForUserById,
-  getWishlists,
   isAuthenticated,
   updateUserOnboardingStatus,
 };

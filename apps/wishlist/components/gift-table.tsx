@@ -41,6 +41,14 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
   const params = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
 
+  if (!gifts || !gifts.length) {
+    return (
+      <Text>
+        No gifts found. <Strong>Add more gifts</Strong> to this wishlist!
+      </Text>
+    );
+  }
+
   const handleSort = useCallback(
     (value: string) => {
       const [column, direction] = value.split('_') as [string, string];
@@ -89,14 +97,6 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
       return 0;
     });
   }, [filteredGifts, column, direction]);
-
-  if (!gifts || !gifts.length) {
-    return (
-      <Text>
-        No gifts found. <Strong>Add more gifts</Strong> to this wishlist!
-      </Text>
-    );
-  }
 
   const tableRows = sortedGifts.map((gift) => {
     const createdAtHumanReadable = timeAgo(gift.createdAt);
