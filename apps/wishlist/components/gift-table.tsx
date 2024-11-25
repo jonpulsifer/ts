@@ -100,8 +100,16 @@ export function GiftTable({ gifts, currentUserId, showGiftOwner }: Props) {
 
   const tableRows = sortedGifts.map((gift) => {
     const createdAtHumanReadable = timeAgo(gift.createdAt);
+    const claimedByCurrentUser = gift.claimedById === currentUserId;
+    const claimedBackgroundStyle = claimedByCurrentUser
+      ? 'dark:bg-green-800/50 bg-green-200/50'
+      : '';
     return (
-      <TableRow key={gift.id} href={`/gift/${gift.id}`}>
+      <TableRow
+        key={gift.id}
+        href={`/gift/${gift.id}`}
+        className={claimedBackgroundStyle}
+      >
         <TableCell className="overflow-hidden font-medium max-w-0 w-full">
           <Text className="truncate block">
             <Strong>{gift.name}</Strong>

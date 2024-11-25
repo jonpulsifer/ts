@@ -68,6 +68,9 @@ const getUsersWithGiftCount = unstable_cache(
             },
           },
         },
+        NOT: {
+          id,
+        },
       },
       orderBy: {
         name: 'asc',
