@@ -88,6 +88,12 @@ model Gift {
   createdBy   User?      @relation("CreatedByUser", fields: [createdById], references: [id])
   createdById String?    @db.Uuid
   wishlists   Wishlist[]
+
+  @@index([createdAt])
+  @@index([ownerId, createdAt])
+  @@index([claimedById, createdAt])
+  @@index([claimed, createdAt])
+  @@index([createdById, createdAt])
 }
 
 model Wishlist {
@@ -98,6 +104,8 @@ model Wishlist {
   password  String
   members   User[]
   gifts     Gift[]
+
+  @@index([createdAt])
 }
 
 model SecretSantaEvent {
