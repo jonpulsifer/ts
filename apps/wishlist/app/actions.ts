@@ -6,6 +6,12 @@ import { isAuthenticated } from 'lib/prisma-ssr';
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+const revalidateGiftRelatedCaches = () => {
+  revalidateTag('gifts');
+  revalidateTag('users');
+  revalidateTag('wishlists');
+};
+
 export const updateUser = async (_state: unknown, formData: FormData) => {
   const { user } = await isAuthenticated();
   const name = formData.get('name') as string;
@@ -24,7 +30,7 @@ export const updateUser = async (_state: unknown, formData: FormData) => {
         shoe_size,
       },
     });
-    revalidateTag('users');
+    revalidateGiftRelatedCaches();
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {
@@ -57,9 +63,7 @@ export const leaveWishlist = async ({ wishlistId }: { wishlistId: string }) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidateTag('wishlists');
-  revalidateTag('users');
-  revalidateTag('gifts');
+  revalidateGiftRelatedCaches();
   redirect('/wishlists');
 };
 
@@ -100,9 +104,7 @@ export const joinWishlist = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidateTag('wishlists');
-  revalidateTag('users');
-  revalidateTag('gifts');
+  revalidateGiftRelatedCaches();
   redirect('/wishlists');
 };
 
@@ -159,8 +161,7 @@ export const addGift = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidateTag('gifts');
-  revalidateTag('users');
+  revalidateGiftRelatedCaches();
 };
 
 export const deleteGift = async (id: string) => {
@@ -191,8 +192,7 @@ export const deleteGift = async (id: string) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidateTag('gifts');
-  revalidateTag('users');
+  revalidateGiftRelatedCaches();
 };
 
 export const updateGift = async ({
@@ -239,8 +239,7 @@ export const updateGift = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidateTag('gifts');
-  revalidateTag('users');
+  revalidateGiftRelatedCaches();
 };
 
 export const claimGift = async (id: string) => {
@@ -259,7 +258,7 @@ export const claimGift = async (id: string) => {
     // determine if the gift has been claimed by someone else
     const isClaimed = Boolean(gift?.claimedBy);
     if (isClaimed) {
-      revalidateTag('gifts');
+      revalidateGiftRelatedCaches();
       throw new Error('This gift has already been claimed');
     }
 
@@ -288,8 +287,7 @@ export const claimGift = async (id: string) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidateTag('gifts');
-  revalidateTag('users');
+  revalidateGiftRelatedCaches();
 };
 
 export const unclaimGift = async (id: string) => {
@@ -325,8 +323,7 @@ export const unclaimGift = async (id: string) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidateTag('gifts');
-  revalidateTag('users');
+  revalidateGiftRelatedCaches();
 };
 
 export const updateUserOnboardingStatus = async (
