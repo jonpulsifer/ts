@@ -2,6 +2,12 @@ import { unstable_cache } from 'next/cache';
 import prisma from './client';
 
 const CURRENT_YEAR = new Date().getFullYear();
+const currentYearFilter = {
+  createdAt: {
+    gte: new Date(`${CURRENT_YEAR}-01-01`),
+    lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
+  },
+};
 
 const getPeopleForNewGiftModal = unstable_cache(
   async (userId: string) =>
@@ -37,10 +43,7 @@ const getUsersWithGiftCount = unstable_cache(
           select: {
             gifts: {
               where: {
-                createdAt: {
-                  gte: new Date(`${CURRENT_YEAR}-01-01`),
-                  lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
-                },
+                ...currentYearFilter,
                 AND: {
                   OR: [
                     { claimed: false },
@@ -95,12 +98,7 @@ const getWishlistsWithMemberIds = unstable_cache(
           select: {
             members: true,
             gifts: {
-              where: {
-                createdAt: {
-                  gte: new Date(`${CURRENT_YEAR}-01-01`),
-                  lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
-                },
-              },
+              where: currentYearFilter,
             },
           },
         },
@@ -142,10 +140,7 @@ const getVisibleGiftsForUserById = unstable_cache(
       where: {
         ownerId: id,
         createdById: currentUserId === id ? id : undefined,
-        createdAt: {
-          gte: new Date(`${CURRENT_YEAR}-01-01`),
-          lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
-        },
+        ...currentYearFilter,
         AND: {
           OR: [
             { claimed: false },
@@ -180,9 +175,7 @@ const getUsersForPeoplePage = unstable_cache(
           select: {
             gifts: {
               where: {
-                createdAt: {
-                  gte: new Date(`${CURRENT_YEAR}-01-01`),
-                },
+                ...currentYearFilter,
                 AND: {
                   OR: [
                     { claimed: false },
@@ -235,12 +228,7 @@ const getGiftsWithOwnerClaimedByAndCreatedBy = unstable_cache(
         createdBy: { select: { id: true, name: true, email: true } },
         claimedBy: { select: { id: true, name: true, email: true } },
       },
-      where: {
-        createdAt: {
-          gte: new Date(`${CURRENT_YEAR}-01-01`),
-          lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
-        },
-      },
+      where: currentYearFilter,
     }),
   ['gifts'],
   {
@@ -255,10 +243,7 @@ const getClaimedGiftsForMe = unstable_cache(
         claimedById: {
           equals: currentUserId,
         },
-        createdAt: {
-          gte: new Date(`${CURRENT_YEAR}-01-01`),
-          lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
-        },
+        ...currentYearFilter,
       },
       include: {
         owner: true,
@@ -322,10 +307,7 @@ const getSortedVisibleGiftsForUser = unstable_cache(
             members: { some: { id: userId } },
           },
         },
-        createdAt: {
-          gte: new Date(`${CURRENT_YEAR}-01-01`),
-          lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
-        },
+        ...currentYearFilter,
         OR: [
           { claimed: false },
           { claimedById: userId },
@@ -348,10 +330,7 @@ const getLatestVisibleGiftsForUserById = unstable_cache(
   async (id: string) =>
     prisma.gift.findMany({
       where: {
-        createdAt: {
-          gte: new Date(`${CURRENT_YEAR}-01-01`),
-          lt: new Date(`${CURRENT_YEAR + 1}-01-01`),
-        },
+        ...currentYearFilter,
         ownerId: { not: id },
         AND: {
           OR: [
