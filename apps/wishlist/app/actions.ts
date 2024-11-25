@@ -3,7 +3,7 @@
 import { auth } from 'app/auth';
 import prisma from 'lib/prisma';
 import { isAuthenticated } from 'lib/prisma-ssr';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export const updateUser = async (_state: unknown, formData: FormData) => {
@@ -24,7 +24,7 @@ export const updateUser = async (_state: unknown, formData: FormData) => {
         shoe_size,
       },
     });
-    revalidatePath(`/user/${user.id}`, 'layout');
+    revalidateTag('users');
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {
@@ -57,7 +57,9 @@ export const leaveWishlist = async ({ wishlistId }: { wishlistId: string }) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath('/', 'layout');
+  revalidateTag('wishlists');
+  revalidateTag('users');
+  revalidateTag('gifts');
   redirect('/wishlists');
 };
 
@@ -98,7 +100,9 @@ export const joinWishlist = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath('/', 'layout');
+  revalidateTag('wishlists');
+  revalidateTag('users');
+  revalidateTag('gifts');
   redirect('/wishlists');
 };
 
@@ -155,7 +159,8 @@ export const addGift = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath('/', 'layout');
+  revalidateTag('gifts');
+  revalidateTag('users');
 };
 
 export const deleteGift = async (id: string) => {
@@ -186,7 +191,8 @@ export const deleteGift = async (id: string) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath('/', 'layout');
+  revalidateTag('gifts');
+  revalidateTag('users');
 };
 
 export const updateGift = async ({
@@ -233,7 +239,8 @@ export const updateGift = async ({
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath('/gift', 'layout');
+  revalidateTag('gifts');
+  revalidateTag('users');
 };
 
 export const claimGift = async (id: string) => {
@@ -249,13 +256,10 @@ export const claimGift = async (id: string) => {
       },
     });
 
-    revalidateTag('gifts');
-
     // determine if the gift has been claimed by someone else
     const isClaimed = Boolean(gift?.claimedBy);
     if (isClaimed) {
-      revalidatePath('/gift', 'layout');
-      revalidatePath('/gifts');
+      revalidateTag('gifts');
       throw new Error('This gift has already been claimed');
     }
 
@@ -284,8 +288,8 @@ export const claimGift = async (id: string) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath('/gift', 'layout');
-  revalidatePath('/gifts');
+  revalidateTag('gifts');
+  revalidateTag('users');
 };
 
 export const unclaimGift = async (id: string) => {
@@ -321,8 +325,8 @@ export const unclaimGift = async (id: string) => {
     }
     return { error: 'Something went wrong in the server action' };
   }
-  revalidatePath('/gift/[id]/page', 'page');
-  revalidatePath('/gifts');
+  revalidateTag('gifts');
+  revalidateTag('users');
 };
 
 export const updateUserOnboardingStatus = async (
@@ -344,6 +348,7 @@ export const updateUserOnboardingStatus = async (
     }
     return { error: 'Something went wrong in the server action' };
   }
+  revalidateTag('users');
 };
 
 export async function createSecretSantaEvent({
@@ -365,6 +370,8 @@ export async function createSecretSantaEvent({
         },
       },
     });
+    revalidateTag('secretSanta');
+    revalidateTag('users');
     return event;
   } catch (error) {
     if (error instanceof Error) {
@@ -501,7 +508,8 @@ export async function assignSecretSanta(eventId: string) {
     },
   });
 
-  revalidatePath('/secret-santa');
+  revalidateTag('secretSanta');
+  revalidateTag('users');
   return updatedEvent;
 }
 
@@ -536,7 +544,8 @@ export async function joinSecretSanta(eventId: string) {
       },
     });
 
-    revalidatePath('/home');
+    revalidateTag('secretSanta');
+    revalidateTag('users');
     return { success: 'You have successfully joined the Secret Santa event!' };
   } catch (error) {
     console.error('Error joining Secret Santa event:', error);

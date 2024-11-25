@@ -21,7 +21,7 @@ const getPeopleForNewGiftModal = unstable_cache(
     }),
   ['peopleForNewGiftModal'],
   {
-    tags: ['peopleForNewGiftModal', 'users'],
+    tags: ['users'],
   },
 );
 
@@ -74,7 +74,7 @@ const getUsersWithGiftCount = unstable_cache(
       },
     }),
   ['usersWithGiftCount'],
-  { tags: ['usersWithGiftCount', 'users', 'gifts'] },
+  { tags: ['users', 'gifts'] },
 );
 
 const getWishlistsWithMemberIds = unstable_cache(
@@ -105,7 +105,7 @@ const getWishlistsWithMemberIds = unstable_cache(
     }),
   ['wishlists'],
   {
-    tags: ['wishlists'],
+    tags: ['wishlists', 'users', 'gifts'],
   },
 );
 
@@ -116,7 +116,7 @@ const getUsers = unstable_cache(async () => prisma.user.findMany(), ['users'], {
 const getUserById = unstable_cache(
   async (id: string) => prisma.user.findUnique({ where: { id } }),
   ['userById'],
-  { tags: ['userById'] },
+  { tags: ['users'] },
 );
 
 const getFullUserById = unstable_cache(
@@ -130,7 +130,7 @@ const getFullUserById = unstable_cache(
       },
     }),
   ['fullUserById'],
-  { tags: ['fullUserById', 'users'] },
+  { tags: ['users', 'gifts', 'wishlists'] },
 );
 
 const getVisibleGiftsForUserById = unstable_cache(
@@ -166,7 +166,7 @@ const getVisibleGiftsForUserById = unstable_cache(
       },
     }),
   ['visibleGiftsForUserById'],
-  { tags: ['visibleGiftsForUserById', 'gifts'] },
+  { tags: ['gifts', 'users'] },
 );
 
 const getUsersForPeoplePage = unstable_cache(
@@ -214,7 +214,7 @@ const getUsersForPeoplePage = unstable_cache(
       },
     }),
   ['people'],
-  { tags: ['people', 'gifts'] },
+  { tags: ['users', 'gifts', 'wishlists'] },
 );
 
 const getGiftsWithOwnerClaimedByAndCreatedBy = unstable_cache(
@@ -241,7 +241,7 @@ const getGiftsWithOwnerClaimedByAndCreatedBy = unstable_cache(
     }),
   ['gifts'],
   {
-    tags: ['gifts'],
+    tags: ['gifts', 'users'],
   },
 );
 
@@ -266,7 +266,7 @@ const getClaimedGiftsForMe = unstable_cache(
     }),
   ['claimedGiftsForMe'],
   {
-    tags: ['claimedGiftsForMe', 'gifts', 'claimed'],
+    tags: ['gifts', 'users'],
   },
 );
 
@@ -289,7 +289,7 @@ const getGiftWithOwnerClaimedByAndCreatedBy = unstable_cache(
     }),
   ['fullGiftById'],
   {
-    tags: ['fullGiftById', 'gifts'],
+    tags: ['gifts'],
   },
 );
 
@@ -332,7 +332,7 @@ const getSortedVisibleGiftsForUser = unstable_cache(
     });
   },
   ['sortedVisibleGifts'],
-  { tags: ['gifts', 'sortedVisibleGifts'] },
+  { tags: ['gifts', 'users'] },
 );
 
 const getLatestVisibleGiftsForUserById = unstable_cache(
@@ -367,7 +367,7 @@ const getLatestVisibleGiftsForUserById = unstable_cache(
       take: 10,
     }),
   ['latestVisibleGiftsForUserById'],
-  { tags: ['gifts', 'latestVisibleGiftsForUserById'] },
+  { tags: ['gifts', 'users'] },
 );
 
 const getSecretSantaEvents = unstable_cache(
@@ -392,7 +392,7 @@ const getSecretSantaEvents = unstable_cache(
     }));
   },
   ['secretSantaEvents'],
-  { tags: ['secretSantaEvents'] },
+  { tags: ['secretSanta'] },
 );
 
 export {
