@@ -15,7 +15,7 @@ import {
   Text,
 } from '@repo/ui';
 import { useState } from 'react';
-import type { UserWithGiftCount } from 'types/prisma';
+import type { UserWithGiftCount } from 'lib/db/types';
 
 export function UserTable({
   users,

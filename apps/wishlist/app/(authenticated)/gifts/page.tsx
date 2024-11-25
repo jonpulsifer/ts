@@ -2,7 +2,7 @@ import { Divider, Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
 import { getSortedVisibleGiftsForUser } from 'lib/db/queries-cached';
 import { isAuthenticated } from 'lib/db/queries';
-import type { GiftWithOwnerAndClaimedByAndCreatedBy } from 'types/prisma';
+import type { GiftWithOwnerAndClaimedByAndCreatedBy } from 'lib/db/types';
 
 export default async function Gifts({
   searchParams,

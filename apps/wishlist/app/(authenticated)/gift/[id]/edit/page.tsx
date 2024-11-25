@@ -2,8 +2,8 @@ import { Divider, Heading } from '@repo/ui';
 import type { Metadata } from 'next';
 
 import { notFound } from 'next/navigation';
-import EmptyState from '../../../../../components/EmptyState';
-import { getGiftById } from '../../../../../lib/db/queries';
+import EmptyState from 'components/EmptyState';
+import { getGiftById } from 'lib/db/queries';
 import GiftForm from './components/gift-form';
 
 interface PageProps {

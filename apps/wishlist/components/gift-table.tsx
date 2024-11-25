@@ -21,7 +21,7 @@ import type {
   GiftWithOwnerAndClaimedBy,
   GiftWithOwnerAndClaimedByAndCreatedBy,
   GiftWithOwnerAndWishlistIds,
-} from 'types/prisma';
+} from 'lib/db/types';
 
 import { TableActions } from './table-actions';
 

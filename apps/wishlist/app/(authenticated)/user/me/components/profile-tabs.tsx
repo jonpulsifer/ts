@@ -3,7 +3,7 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { Card, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
 import { useState } from 'react';
-import type { GiftWithOwner, UserWithGifts } from 'types/prisma';
+import type { GiftWithOwner, UserWithGifts } from 'lib/db/types';
 
 import UserForm from './user-form';
 
