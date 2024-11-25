@@ -57,12 +57,12 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   icons: {
-    icon: '/favicon.png',
-    shortcut: '/santa.png',
+    icon: '/favicon.svg',
+    shortcut: '/santaicon.png',
     apple: '/apple-touch-icon.png',
     other: {
-      rel: 'apple-touch-icon-precomposed',
-      url: '/apple-touch-icon-precomposed.png',
+      rel: 'apple-touch-icon',
+      url: '/apple-touch-icon.png',
     },
   },
   manifest: '/site.webmanifest',
