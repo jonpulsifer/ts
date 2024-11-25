@@ -3,8 +3,8 @@ import {
   getSecretSantaEvents,
   getUsersWithGiftCount,
   getVisibleGiftsForUserById,
-} from 'lib/prisma-cached';
-import { isAuthenticated } from 'lib/prisma-ssr';
+} from 'lib/db/queries-cached';
+import { isAuthenticated } from 'lib/db/queries';
 
 import { HomePageTabs } from './components/HomePageTabs';
 

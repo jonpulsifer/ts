@@ -3,7 +3,7 @@
 import { Button, Strong, Text } from '@repo/ui';
 import { addGift } from 'app/actions';
 import { AnimatePresence, motion } from 'framer-motion';
-import type { GiftRecommendation } from 'lib/prisma-ssr';
+import type { GiftRecommendation } from 'lib/db/queries';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 

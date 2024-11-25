@@ -4,8 +4,8 @@ import { GiftTable } from 'components/gift-table';
 import GiftRecommendations, {
   GiftRecommendationsFallback,
 } from 'components/recommendations-user';
-import { getVisibleGiftsForUserById } from 'lib/prisma-cached';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import { getVisibleGiftsForUserById } from 'lib/db/queries-cached';
+import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 

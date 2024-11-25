@@ -1,5 +1,5 @@
 import { Heading, Text } from '@repo/ui';
-import { getPeopleForUser } from 'lib/prisma-ssr';
+import { getPeopleForUser } from 'lib/db/queries';
 
 import { OnboardingCarousel } from './components/OnboardingCarousel';
 

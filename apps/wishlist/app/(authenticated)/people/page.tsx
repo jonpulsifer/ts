@@ -12,8 +12,8 @@ import {
   Text,
 } from '@repo/ui';
 import Spinner from 'components/Spinner';
-import { getUsersForPeoplePage } from 'lib/prisma-cached';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import { getUsersForPeoplePage } from 'lib/db/queries-cached';
+import { isAuthenticated } from 'lib/db/queries';
 import { getInitials } from 'lib/user-utils';
 import type { Metadata } from 'next';
 import React, { Suspense } from 'react';

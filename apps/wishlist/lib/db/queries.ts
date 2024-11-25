@@ -3,8 +3,8 @@ import { auth } from 'app/auth';
 import { redirect } from 'next/navigation';
 import OpenAI from 'openai';
 
-import type { UserWithGifts } from '../types/prisma';
-import prisma from './prisma';
+import db from './client';
+import type { GiftRecommendation } from './types';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,7 +16,7 @@ const getMe = async () => {
     throw new Error('Not authenticated');
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: { email: session.user.email },
     include: {
       secretSantaParticipations: {
@@ -39,7 +39,7 @@ const getGiftsWithOwnerByUserId = async (id: string) => {
   await isAuthenticated();
   const currentYear = new Date().getFullYear();
   try {
-    const gifts = await prisma.gift.findMany({
+    const gifts = await db.gift.findMany({
       where: {
         ownerId: id,
         createdAt: {
@@ -69,7 +69,7 @@ const getUserById = async (
 ) => {
   const currentYear = new Date().getFullYear();
   try {
-    const user = prisma.user.findUniqueOrThrow({
+    const user = db.user.findUniqueOrThrow({
       where: {
         id,
       },
@@ -107,7 +107,7 @@ const getGiftById = async (
   createdBy = false,
 ) => {
   try {
-    const gift = await prisma.gift.findUniqueOrThrow({
+    const gift = await db.gift.findUniqueOrThrow({
       where: {
         id,
       },
@@ -144,7 +144,7 @@ const getPeopleForUser = async () => {
   const { id } = session.user;
   const currentYear = new Date().getFullYear();
   try {
-    const users = await prisma.user.findMany({
+    const users = await db.user.findMany({
       where: {
         wishlists: {
           some: {
@@ -213,12 +213,6 @@ const getRecommendations = async (userId: string) => {
   return completion.choices[0]?.message?.content;
 };
 
-type GiftRecommendation = {
-  name: string;
-  description: string;
-  estimatedPrice?: string;
-};
-
 const getRecommendationsForHomePage = async (
   userId: string,
 ): Promise<GiftRecommendation[]> => {
@@ -277,7 +271,7 @@ const getRecommendationsForHomePage = async (
 
 const getUserOnboardingStatus = async (userId: string): Promise<boolean> => {
   try {
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await db.user.findUniqueOrThrow({
       where: { id: userId },
       select: { hasCompletedOnboarding: true },
     });
@@ -293,7 +287,7 @@ const updateUserOnboardingStatus = async (
   status: boolean,
 ): Promise<void> => {
   try {
-    await prisma.user.update({
+    await db.user.update({
       where: { id: userId },
       data: { hasCompletedOnboarding: status },
     });

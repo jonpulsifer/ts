@@ -1,7 +1,7 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
 import { GiftTable } from 'components/gift-table';
-import { getSortedVisibleGiftsForUser } from 'lib/prisma-cached';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import { getSortedVisibleGiftsForUser } from 'lib/db/queries-cached';
+import { isAuthenticated } from 'lib/db/queries';
 import type { GiftWithOwnerAndClaimedByAndCreatedBy } from 'types/prisma';
 
 export default async function Gifts({

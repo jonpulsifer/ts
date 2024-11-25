@@ -1,3 +1,5 @@
+import type { User } from '@prisma/client';
+
 export function timeAgo(date: Date | string) {
   const parsedDate = date instanceof Date ? date : new Date(date);
 
@@ -31,4 +33,16 @@ export function timeAgo(date: Date | string) {
     return getPlural(Math.round(secondsPast / 2419200), 'month');
   }
   return getPlural(Math.round(secondsPast / 29030400), 'year');
+}
+
+export function getInitials(user: Pick<User, 'name' | 'email'>): string {
+  if (user.name?.trim()) {
+    return user.name.trim().charAt(0).toUpperCase();
+  }
+
+  if (user.email?.trim()) {
+    return user.email.trim().charAt(0).toUpperCase();
+  }
+
+  return '?';
 }

@@ -53,7 +53,9 @@ interface Props {
 
 function Wishlists({ wishlists }: Props) {
   const { data: session } = useSession();
-  if (!wishlists.length)
+  const userId = session?.user.id;
+
+  if (!wishlists.length || !userId) {
     return (
       <EmptyState
         subtitle="Something is broken, talk to the webmaster"
@@ -62,7 +64,8 @@ function Wishlists({ wishlists }: Props) {
         <div className="p-4">The elves could not find any wishlists.</div>
       </EmptyState>
     );
-  const userId = session?.user.id;
+  }
+
   const handleLeaveWishlist = async (
     wishlist: Pick<Wishlist, 'id' | 'name'>,
   ) => {

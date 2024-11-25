@@ -1,5 +1,5 @@
 import { auth } from 'app/auth';
-import { getRecommendations } from 'lib/prisma-ssr';
+import { getRecommendations } from 'lib/db/queries';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(

@@ -2,7 +2,7 @@
 
 import { auth } from 'app/auth';
 import prisma from 'lib/prisma';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import { isAuthenticated } from 'lib/db/queries';
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 

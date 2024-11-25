@@ -1,5 +1,5 @@
 import { auth } from 'app/auth';
-import { getRecommendationsForHomePage } from 'lib/prisma-ssr';
+import { getRecommendationsForHomePage } from 'lib/db/queries';
 import { NextResponse } from 'next/server';
 
 export async function POST() {

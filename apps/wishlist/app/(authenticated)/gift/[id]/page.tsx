@@ -14,8 +14,8 @@ import { EditButton } from 'components/edit-button';
 import {
   getGiftWithOwnerClaimedByAndCreatedBy,
   getGiftsWithOwnerClaimedByAndCreatedBy,
-} from 'lib/prisma-cached';
-import { isAuthenticated } from 'lib/prisma-ssr';
+} from 'lib/db/queries-cached';
+import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 

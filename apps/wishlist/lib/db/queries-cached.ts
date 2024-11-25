@@ -1,5 +1,5 @@
 import { unstable_cache } from 'next/cache';
-import prisma from './prisma';
+import prisma from './client';
 
 const CURRENT_YEAR = new Date().getFullYear();
 

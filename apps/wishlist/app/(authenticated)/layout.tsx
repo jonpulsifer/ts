@@ -3,7 +3,7 @@ import { StackedLayout } from '@repo/ui';
 import { auth } from 'app/auth';
 import Spinner from 'components/Spinner';
 import { NavBar, Sidebar } from 'components/nav';
-import { getPeopleForNewGiftModal } from 'lib/prisma-cached';
+import { getPeopleForNewGiftModal } from 'lib/db/queries-cached';
 import { SessionProvider } from 'next-auth/react';
 
 async function Layout({ children }: { children: React.ReactNode }) {

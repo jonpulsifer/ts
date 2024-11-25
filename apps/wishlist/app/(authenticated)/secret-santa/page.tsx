@@ -1,6 +1,9 @@
 import { Divider, Heading, Subheading, Text } from '@repo/ui';
-import { getSecretSantaEvents, getUsersForPeoplePage } from 'lib/prisma-cached';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import {
+  getSecretSantaEvents,
+  getUsersForPeoplePage,
+} from 'lib/db/queries-cached';
+import { isAuthenticated } from 'lib/db/queries';
 import { SecretSantaForm } from './components/secret-santa-form';
 import { SecretSantaList } from './components/secret-santa-list';
 

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import prisma from '../../../lib/prisma';
+import prisma from '../../../lib/db/client';
 
 export async function GET() {
   const gifts = await prisma.gift.count();

@@ -1,5 +1,5 @@
 import { Divider, Heading } from '@repo/ui';
-import { getMe } from 'lib/prisma-ssr';
+import { getMe } from 'lib/db/queries';
 import type { Metadata } from 'next';
 
 import UserForm from './components/user-form';

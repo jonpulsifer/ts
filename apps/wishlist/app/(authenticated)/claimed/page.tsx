@@ -4,8 +4,8 @@ import { Divider, Heading, Strong, Text } from '@repo/ui';
 import EmptyState from 'components/EmptyState';
 import Spinner from 'components/Spinner';
 import { GiftTable } from 'components/gift-table';
-import { getClaimedGiftsForMe } from 'lib/prisma-cached';
-import { isAuthenticated } from 'lib/prisma-ssr';
+import { getClaimedGiftsForMe } from 'lib/db/queries-cached';
+import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 

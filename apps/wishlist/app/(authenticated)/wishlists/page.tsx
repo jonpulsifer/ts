@@ -1,4 +1,4 @@
-import { getWishlistsWithMemberIds } from 'lib/prisma-cached';
+import { getWishlistsWithMemberIds } from 'lib/db/queries-cached';
 import type { Metadata } from 'next';
 import Wishlists from './components/wishlists';
 export const metadata: Metadata = {
