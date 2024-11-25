@@ -1,5 +1,5 @@
 import { auth } from 'app/auth';
-import { getRecommendations } from 'lib/db/queries';
+import { getRecommendations } from 'lib/ai';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(

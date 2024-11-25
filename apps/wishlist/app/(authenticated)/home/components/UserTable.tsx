@@ -14,8 +14,8 @@ import {
   TableRow,
   Text,
 } from '@repo/ui';
-import { useState } from 'react';
 import type { UserWithGiftCount } from 'lib/db/types';
+import { useState } from 'react';
 
 export function UserTable({
   users,

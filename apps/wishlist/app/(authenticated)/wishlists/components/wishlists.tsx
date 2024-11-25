@@ -49,13 +49,11 @@ type WishlistsWithoutPasswords = Prisma.WishlistGetPayload<{
 
 interface Props {
   wishlists: WishlistsWithoutPasswords[];
+  currentUserId: string;
 }
 
-function Wishlists({ wishlists }: Props) {
-  const { data: session } = useSession();
-  const userId = session?.user.id;
-
-  if (!wishlists.length || !userId) {
+function Wishlists({ wishlists, currentUserId }: Props) {
+  if (!wishlists.length || !currentUserId) {
     return (
       <EmptyState
         subtitle="Something is broken, talk to the webmaster"
@@ -122,7 +120,7 @@ function Wishlists({ wishlists }: Props) {
         </form>
       );
 
-      const membership = wishlist.members.find((m) => m.id === userId);
+      const membership = wishlist.members.find((m) => m.id === currentUserId);
       const actionMarkup = membership ? (
         <Button onClick={() => handleLeaveWishlist(wishlist)} type="submit">
           <UserMinusIcon />

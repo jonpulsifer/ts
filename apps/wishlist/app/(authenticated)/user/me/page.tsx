@@ -1,11 +1,11 @@
 import { CogIcon } from '@heroicons/react/16/solid';
 import { Button, Divider, Heading } from '@repo/ui';
+import { getSession } from 'app/auth';
 import { GiftTable } from 'components/gift-table';
 import GiftRecommendations, {
   GiftRecommendationsFallback,
 } from 'components/recommendations-user';
 import { getVisibleGiftsForUserById } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const MePage = async () => {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   const gifts = await getVisibleGiftsForUserById(user.id, user.id);
   return (
     <>

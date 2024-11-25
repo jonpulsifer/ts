@@ -1,4 +1,5 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
+import { getSession } from 'app/auth';
 import { GiftTable } from 'components/gift-table';
 import GiftRecommendations, {
   GiftRecommendationsFallback,
@@ -8,7 +9,6 @@ import {
   getUsers,
   getVisibleGiftsForUserById,
 } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const ProfilePage = async ({ params }: Props) => {
   if (!params.id) notFound();
 
-  const { user: currentUser } = await isAuthenticated();
+  const { user: currentUser } = await getSession();
   if (!currentUser) notFound();
 
   const profile = await getUserById(params.id);

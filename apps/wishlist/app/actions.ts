@@ -1,8 +1,8 @@
 'use server';
 
 import { auth } from 'app/auth';
+import { getSession } from 'app/auth';
 import db from 'lib/db/client';
-import { isAuthenticated } from 'lib/db/queries';
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -13,7 +13,7 @@ const revalidateGiftRelatedCaches = () => {
 };
 
 export const updateUser = async (_state: unknown, formData: FormData) => {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   const name = formData.get('name') as string;
   const address = formData.get('address') as string;
   const shirt_size = formData.get('shirt_size') as string;
@@ -43,7 +43,7 @@ export const updateUser = async (_state: unknown, formData: FormData) => {
 };
 
 export const leaveWishlist = async ({ wishlistId }: { wishlistId: string }) => {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   try {
     await db.user.update({
       where: {
@@ -74,7 +74,7 @@ export const joinWishlist = async ({
   wishlistId: string;
   password: string;
 }) => {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   try {
     const wishlist = await db.wishlist.findUniqueOrThrow({
       where: {
@@ -120,7 +120,7 @@ export const addGift = async ({
   recipient: string;
 }) => {
   try {
-    const { user } = await isAuthenticated();
+    const { user } = await getSession();
     const wishlists = await db.wishlist.findMany({
       select: {
         id: true,
@@ -166,7 +166,7 @@ export const addGift = async ({
 
 export const deleteGift = async (id: string) => {
   try {
-    const { user } = await isAuthenticated();
+    const { user } = await getSession();
     const gift = await db.gift.findUnique({
       where: {
         id,
@@ -207,7 +207,7 @@ export const updateGift = async ({
   url: string;
 }) => {
   try {
-    const { user } = await isAuthenticated();
+    const { user } = await getSession();
     const gift = await db.gift.findUnique({
       where: {
         id,
@@ -244,7 +244,7 @@ export const updateGift = async ({
 
 export const claimGift = async (id: string) => {
   try {
-    const { user } = await isAuthenticated();
+    const { user } = await getSession();
     const gift = await db.gift.findUnique({
       where: {
         id,
@@ -292,7 +292,7 @@ export const claimGift = async (id: string) => {
 
 export const unclaimGift = async (id: string) => {
   try {
-    const { user } = await isAuthenticated();
+    const { user } = await getSession();
     const gift = await db.gift.findUnique({
       where: {
         id,
@@ -331,7 +331,7 @@ export const updateUserOnboardingStatus = async (
   status: boolean,
 ) => {
   try {
-    const { user } = await isAuthenticated();
+    const { user } = await getSession();
     if (user.id !== userId) {
       throw new Error('You are not authorized to update this user');
     }
@@ -354,7 +354,7 @@ export async function createSecretSantaEvent({
   participantIds,
 }: { name: string; createdById: string; participantIds: string[] }) {
   try {
-    const { user } = await isAuthenticated();
+    const { user } = await getSession();
     if (user.id !== createdById) {
       throw new Error('You are not authorized to create this event');
     }

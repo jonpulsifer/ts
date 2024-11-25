@@ -1,15 +1,15 @@
+import { getSession } from 'app/auth';
 import {
   getLatestVisibleGiftsForUserById,
   getSecretSantaEvents,
   getUsersWithGiftCount,
   getVisibleGiftsForUserById,
 } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 
 import { HomePageTabs } from './components/HomePageTabs';
 
 export default async function HomePage() {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
 
   const userGifts = await getVisibleGiftsForUserById(user.id, user.id);
   const latestGifts = await getLatestVisibleGiftsForUserById(user.id);

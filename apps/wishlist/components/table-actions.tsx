@@ -16,9 +16,9 @@ import {
   DropdownMenu,
 } from '@repo/ui/dropdown';
 import { claimGift, deleteGift, unclaimGift } from 'app/actions';
+import type { GiftWithOwner } from 'lib/db/types';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import type { GiftWithOwner } from 'lib/db/types';
 
 export function TableActions({
   gift,

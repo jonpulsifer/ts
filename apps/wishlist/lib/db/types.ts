@@ -47,9 +47,3 @@ export type UserWithGiftCount = Prisma.UserGetPayload<{
     _count: { select: { gifts: true } };
   };
 }>;
-
-export type GiftRecommendation = {
-  name: string;
-  description: string;
-  estimatedPrice?: string;
-};

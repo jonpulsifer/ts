@@ -1,3 +1,4 @@
+import { getSession } from 'app/auth';
 import { getWishlistsWithMemberIds } from 'lib/db/queries-cached';
 import type { Metadata } from 'next';
 import Wishlists from './components/wishlists';
@@ -8,8 +9,9 @@ export const metadata: Metadata = {
 
 const WishlistsPage = async () => {
   const wishlists = await getWishlistsWithMemberIds();
+  const { user } = await getSession();
 
-  return <Wishlists wishlists={wishlists} />;
+  return <Wishlists currentUserId={user.id} wishlists={wishlists} />;
 };
 
 export default WishlistsPage;

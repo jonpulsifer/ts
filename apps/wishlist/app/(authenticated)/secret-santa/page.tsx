@@ -1,14 +1,14 @@
 import { Divider, Heading, Subheading, Text } from '@repo/ui';
+import { getSession } from 'app/auth';
 import {
   getSecretSantaEvents,
   getUsersForPeoplePage,
 } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 import { SecretSantaForm } from './components/secret-santa-form';
 import { SecretSantaList } from './components/secret-santa-list';
 
 export default async function SecretSantaPage() {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   const users = await getUsersForPeoplePage(user.id);
   const secretSantaEvents = await getSecretSantaEvents(user.id);
 

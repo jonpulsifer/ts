@@ -2,6 +2,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { PrismaClient, type User } from '@prisma/client';
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
+import { redirect } from 'next/navigation';
 
 const prisma = new PrismaClient();
 
@@ -40,3 +41,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     updateAge: 24 * 60 * 60,
   },
 });
+
+export const getSession = async () => {
+  const session = await auth();
+  if (!session || !session?.user) {
+    console.error(
+      'could not get session or user from session, redirecting to login',
+    );
+    return redirect('/login');
+  }
+  return session;
+};

@@ -1,11 +1,11 @@
 import { Heading, Text } from '@repo/ui';
-import { isAuthenticated } from 'lib/db/queries';
+import { getSession } from 'app/auth';
 
-import { OnboardingCarousel } from './components/OnboardingCarousel';
 import { getPeopleForNewGiftModal } from 'lib/db/queries-cached';
+import { OnboardingCarousel } from './components/OnboardingCarousel';
 
 export default async function OnboardingPage() {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   const users = await getPeopleForNewGiftModal(user.id);
   return (
     <div className="flex flex-col items-center gap-6">

@@ -7,6 +7,7 @@ import {
   Link,
   Text,
 } from '@repo/ui';
+import { getSession } from 'app/auth';
 import { BackButton } from 'components/back-button';
 import { ClaimButton } from 'components/claim-button';
 import { DeleteButton } from 'components/delete-button';
@@ -15,7 +16,6 @@ import {
   getGiftWithOwnerClaimedByAndCreatedBy,
   getGiftsWithOwnerClaimedByAndCreatedBy,
 } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -62,7 +62,7 @@ const GiftPage = async ({ params }: PageProps) => {
   const ownerName = gift.owner.name || gift.owner.email || gift.owner.id;
   const creatorName =
     gift.createdBy?.name || gift.createdBy?.email || gift.createdBy?.id;
-  const { user: currentUser } = await isAuthenticated();
+  const { user: currentUser } = await getSession();
 
   return (
     <>

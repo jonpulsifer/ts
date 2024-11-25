@@ -12,9 +12,6 @@ import {
 } from '@repo/ui';
 import { Input } from '@repo/ui';
 import { Strong, Text } from '@repo/ui/text';
-import { timeAgo } from 'lib/utils';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
 import type {
   AllVisibleGiftsForUserWithOwners,
   GiftWithOwner,
@@ -22,6 +19,9 @@ import type {
   GiftWithOwnerAndClaimedByAndCreatedBy,
   GiftWithOwnerAndWishlistIds,
 } from 'lib/db/types';
+import { timeAgo } from 'lib/utils';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useMemo, useState } from 'react';
 
 import { TableActions } from './table-actions';
 

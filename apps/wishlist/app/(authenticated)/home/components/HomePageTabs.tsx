@@ -13,9 +13,9 @@ import { Button } from '@repo/ui';
 import { joinSecretSanta } from 'app/actions';
 import { GiftTable } from 'components/gift-table';
 import { Logo } from 'components/logo';
+import type { GiftWithOwner, UserWithGiftCount } from 'lib/db/types';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import type { GiftWithOwner, UserWithGiftCount } from 'lib/db/types';
 import { UserTable } from './UserTable';
 
 interface HomePageTabsProps {

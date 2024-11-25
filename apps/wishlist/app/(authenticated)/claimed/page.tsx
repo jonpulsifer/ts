@@ -1,11 +1,11 @@
 import { GiftIcon } from '@heroicons/react/16/solid';
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
 import { Divider, Heading, Strong, Text } from '@repo/ui';
+import { getSession } from 'app/auth';
 import EmptyState from 'components/EmptyState';
 import Spinner from 'components/Spinner';
 import { GiftTable } from 'components/gift-table';
 import { getClaimedGiftsForMe } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const ClaimedPage = async () => {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   const gifts = await getClaimedGiftsForMe(user.id);
 
   if (!gifts.length) {

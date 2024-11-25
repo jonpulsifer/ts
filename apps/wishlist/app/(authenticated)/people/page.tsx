@@ -11,9 +11,9 @@ import {
   TableRow,
   Text,
 } from '@repo/ui';
+import { getSession } from 'app/auth';
 import Spinner from 'components/Spinner';
 import { getUsersForPeoplePage } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 import { getInitials } from 'lib/utils';
 import type { Metadata } from 'next';
 import React, { Suspense } from 'react';
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 const PeoplePage = async () => {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   const users = await getUsersForPeoplePage(user.id);
 
   const tableRows = users.map((user) => {

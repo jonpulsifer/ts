@@ -1,27 +1,18 @@
-import { auth } from 'app/auth';
-import { redirect } from 'next/navigation';
 import OpenAI from 'openai';
 
-import db from './client';
-import type { GiftRecommendation } from './types';
-import { getFullUserById } from './queries-cached';
+import { getFullUserById } from './db/queries-cached';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const isAuthenticated = async () => {
-  const session = await auth();
-  if (!session || !session?.user) {
-    console.error(
-      'could not get session or user from session, redirecting to login',
-    );
-    return redirect('/login');
-  }
-  return session;
+export type GiftRecommendation = {
+  name: string;
+  description: string;
+  estimatedPrice?: string;
 };
 
-const getRecommendations = async (userId: string) => {
+export const getRecommendations = async (userId: string) => {
   const user = await getFullUserById(userId);
   const preferences = user?.gifts.map((gift) => gift.name).join(', ');
   const name = user?.name?.split(' ')[0] || 'someone mysterious';
@@ -43,7 +34,7 @@ const getRecommendations = async (userId: string) => {
   return completion.choices[0]?.message?.content;
 };
 
-const getRecommendationsForHomePage = async (
+export const getRecommendationsForHomePage = async (
   userId: string,
 ): Promise<GiftRecommendation[]> => {
   const user = await getFullUserById(userId);
@@ -52,30 +43,36 @@ const getRecommendationsForHomePage = async (
 
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
-    functions: [
+    tools: [
       {
-        name: 'get_gift_recommendations',
-        description: 'Get gift recommendations for the user',
-        parameters: {
-          type: 'object',
-          properties: {
-            recommendations: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  name: { type: 'string' },
-                  description: { type: 'string' },
-                  estimatedPrice: { type: 'string' },
+        type: 'function',
+        function: {
+          name: 'get_gift_recommendations',
+          description: 'Get gift recommendations for the user',
+          parameters: {
+            type: 'object',
+            properties: {
+              recommendations: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    name: { type: 'string' },
+                    description: { type: 'string' },
+                    estimatedPrice: { type: 'string' },
+                  },
+                  required: ['name', 'description'],
                 },
-                required: ['name', 'description'],
               },
             },
           },
         },
       },
     ],
-    function_call: { name: 'get_gift_recommendations' },
+    tool_choice: {
+      type: 'function',
+      function: { name: 'get_gift_recommendations' },
+    },
     messages: [
       {
         role: 'system',
@@ -89,16 +86,11 @@ const getRecommendationsForHomePage = async (
     temperature: 1.0,
   });
 
-  const functionCall = completion.choices[0]?.message?.function_call;
-  if (functionCall && functionCall.name === 'get_gift_recommendations') {
-    const recommendations: { recommendations: GiftRecommendation[] } =
-      JSON.parse(functionCall.arguments || '{}');
-    return recommendations.recommendations;
+  const firstCall = completion.choices[0]?.message?.tool_calls?.[0];
+  if (!firstCall || firstCall.function.name !== 'get_gift_recommendations') {
+    return [];
   }
 
-  return [];
+  const { recommendations } = JSON.parse(firstCall.function.arguments || '{}');
+  return recommendations;
 };
-
-export { getRecommendations, getRecommendationsForHomePage, isAuthenticated };
-
-export type { GiftRecommendation };

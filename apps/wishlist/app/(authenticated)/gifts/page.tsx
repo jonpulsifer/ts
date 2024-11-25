@@ -1,7 +1,7 @@
 import { Divider, Heading, Strong, Text } from '@repo/ui';
+import { getSession } from 'app/auth';
 import { GiftTable } from 'components/gift-table';
 import { getSortedVisibleGiftsForUser } from 'lib/db/queries-cached';
-import { isAuthenticated } from 'lib/db/queries';
 import type { GiftWithOwnerAndClaimedByAndCreatedBy } from 'lib/db/types';
 
 export default async function Gifts({
@@ -9,7 +9,7 @@ export default async function Gifts({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { user } = await isAuthenticated();
+  const { user } = await getSession();
   const gifts = await getSortedVisibleGiftsForUser({
     userId: user.id,
     direction: searchParams.direction as 'asc' | 'desc' | undefined,
