@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from 'app/auth';
-import prisma from 'lib/prisma';
+import db from 'lib/db/client';
 import { isAuthenticated } from 'lib/db/queries';
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -20,7 +20,7 @@ export const updateUser = async (_state: unknown, formData: FormData) => {
   const pant_size = formData.get('pant_size') as string;
   const shoe_size = formData.get('shoe_size') as string;
   try {
-    await prisma.user.update({
+    await db.user.update({
       where: { id: user.id },
       data: {
         name,
@@ -45,7 +45,7 @@ export const updateUser = async (_state: unknown, formData: FormData) => {
 export const leaveWishlist = async ({ wishlistId }: { wishlistId: string }) => {
   const { user } = await isAuthenticated();
   try {
-    await prisma.user.update({
+    await db.user.update({
       where: {
         id: user.id,
       },
@@ -76,7 +76,7 @@ export const joinWishlist = async ({
 }) => {
   const { user } = await isAuthenticated();
   try {
-    const wishlist = await prisma.wishlist.findUniqueOrThrow({
+    const wishlist = await db.wishlist.findUniqueOrThrow({
       where: {
         id: wishlistId,
       },
@@ -86,7 +86,7 @@ export const joinWishlist = async ({
       throw new Error('Pin does not match');
     }
 
-    await prisma.user.update({
+    await db.user.update({
       where: {
         id: user.id,
       },
@@ -121,7 +121,7 @@ export const addGift = async ({
 }) => {
   try {
     const { user } = await isAuthenticated();
-    const wishlists = await prisma.wishlist.findMany({
+    const wishlists = await db.wishlist.findMany({
       select: {
         id: true,
       },
@@ -135,7 +135,7 @@ export const addGift = async ({
     });
 
     const wishlistIds = wishlists.map((wishlist) => ({ id: wishlist.id }));
-    await prisma.gift.create({
+    await db.gift.create({
       data: {
         name,
         url,
@@ -167,7 +167,7 @@ export const addGift = async ({
 export const deleteGift = async (id: string) => {
   try {
     const { user } = await isAuthenticated();
-    const gift = await prisma.gift.findUnique({
+    const gift = await db.gift.findUnique({
       where: {
         id,
       },
@@ -181,7 +181,7 @@ export const deleteGift = async (id: string) => {
     if (!isOwner && !isCreator) {
       throw new Error('You are not the owner or creator of this gift');
     }
-    await prisma.gift.delete({
+    await db.gift.delete({
       where: {
         id,
       },
@@ -208,7 +208,7 @@ export const updateGift = async ({
 }) => {
   try {
     const { user } = await isAuthenticated();
-    const gift = await prisma.gift.findUnique({
+    const gift = await db.gift.findUnique({
       where: {
         id,
       },
@@ -220,7 +220,7 @@ export const updateGift = async ({
     const isOwner = gift?.ownerId === user.id;
     const isCreator = gift?.createdById === user.id;
     if (isOwner || isCreator) {
-      await prisma.gift.update({
+      await db.gift.update({
         where: {
           id,
         },
@@ -245,7 +245,7 @@ export const updateGift = async ({
 export const claimGift = async (id: string) => {
   try {
     const { user } = await isAuthenticated();
-    const gift = await prisma.gift.findUnique({
+    const gift = await db.gift.findUnique({
       where: {
         id,
       },
@@ -268,7 +268,7 @@ export const claimGift = async (id: string) => {
       throw new Error('You cannot claim your own gift');
     }
 
-    await prisma.gift.update({
+    await db.gift.update({
       where: {
         id,
       },
@@ -293,7 +293,7 @@ export const claimGift = async (id: string) => {
 export const unclaimGift = async (id: string) => {
   try {
     const { user } = await isAuthenticated();
-    const gift = await prisma.gift.findUnique({
+    const gift = await db.gift.findUnique({
       where: {
         id,
       },
@@ -306,7 +306,7 @@ export const unclaimGift = async (id: string) => {
       throw new Error('You have not claimed this gift');
     }
 
-    await prisma.gift.update({
+    await db.gift.update({
       where: {
         id,
       },
@@ -335,7 +335,7 @@ export const updateUserOnboardingStatus = async (
     if (user.id !== userId) {
       throw new Error('You are not authorized to update this user');
     }
-    await prisma.user.update({
+    await db.user.update({
       where: { id: userId },
       data: { hasCompletedOnboarding: status },
     });
@@ -358,7 +358,7 @@ export async function createSecretSantaEvent({
     if (user.id !== createdById) {
       throw new Error('You are not authorized to create this event');
     }
-    const event = await prisma.secretSantaEvent.create({
+    const event = await db.secretSantaEvent.create({
       data: {
         name,
         createdById,
@@ -379,7 +379,7 @@ export async function createSecretSantaEvent({
 }
 
 export async function assignSecretSanta(eventId: string) {
-  const event = await prisma.secretSantaEvent.findUnique({
+  const event = await db.secretSantaEvent.findUnique({
     where: { id: eventId },
     include: { participants: { include: { user: true } } },
   });
@@ -468,9 +468,9 @@ export async function assignSecretSanta(eventId: string) {
   }
 
   try {
-    await prisma.$transaction(
+    await db.$transaction(
       assignments.map((assignment) =>
-        prisma.secretSantaParticipant.update({
+        db.secretSantaParticipant.update({
           where: { id: assignment.participantId },
           data: { assignedToId: assignment.assignedToUserId },
         }),
@@ -481,7 +481,7 @@ export async function assignSecretSanta(eventId: string) {
     throw error;
   }
 
-  const updatedEvent = await prisma.secretSantaEvent.findUnique({
+  const updatedEvent = await db.secretSantaEvent.findUnique({
     where: { id: eventId },
     include: {
       participants: {
@@ -517,7 +517,7 @@ export async function joinSecretSanta(eventId: string) {
   }
 
   try {
-    const event = await prisma.secretSantaEvent.findUnique({
+    const event = await db.secretSantaEvent.findUnique({
       where: { id: eventId },
       include: { participants: true },
     });
@@ -534,7 +534,7 @@ export async function joinSecretSanta(eventId: string) {
       return { error: 'You are already participating in this event.' };
     }
 
-    await prisma.secretSantaParticipant.create({
+    await db.secretSantaParticipant.create({
       data: {
         userId: session.user.id,
         eventId: eventId,

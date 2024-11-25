@@ -14,7 +14,7 @@ import {
 import Spinner from 'components/Spinner';
 import { getUsersForPeoplePage } from 'lib/db/queries-cached';
 import { isAuthenticated } from 'lib/db/queries';
-import { getInitials } from 'lib/user-utils';
+import { getInitials } from 'lib/utils';
 import type { Metadata } from 'next';
 import React, { Suspense } from 'react';
 

@@ -34,7 +34,7 @@ import {
   SidebarItem,
   SidebarSection,
 } from '@repo/ui';
-import { getInitials } from 'lib/user-utils';
+import { getInitials } from 'lib/utils';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import type React from 'react';

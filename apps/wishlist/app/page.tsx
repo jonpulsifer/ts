@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { auth } from './auth';
+import LoginPage from './login/page';
 
 export const metadata: Metadata = {
   title: 'wishin.app',
@@ -13,7 +14,7 @@ const Home = async () => {
   if (session?.user) {
     redirect('/home');
   }
-  redirect('/login');
+  return <LoginPage />;
 };
 
 export default Home;
