@@ -22,8 +22,8 @@
     "date-fns": "^4.1.0",
     "lucide-react": "0.461.0",
     "next": "15.0.3",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react": "19.0.0-rc-fb9a90fa48-20240614",
+    "react-dom": "19.0.0-rc-fb9a90fa48-20240614",
     "tailwind-merge": "2.5.5",
     "tailwindcss-animate": "1.0.7"
   },
