@@ -11,11 +11,14 @@ import { useState } from 'react';
 import { updateUserOnboardingStatus } from '../../../actions';
 
 interface OnboardingCarouselProps {
-  user: User;
-  users: User[];
+  currentUser: Pick<User, 'id' | 'name' | 'email'>;
+  users: Pick<User, 'id' | 'name' | 'email'>[];
 }
 
-export function OnboardingCarousel({ user, users }: OnboardingCarouselProps) {
+export function OnboardingCarousel({
+  currentUser,
+  users,
+}: OnboardingCarouselProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isGiftDialogOpen, setIsGiftDialogOpen] = useState(false);
   const [isClaimed, setIsClaimed] = useState(false);
@@ -33,7 +36,7 @@ export function OnboardingCarousel({ user, users }: OnboardingCarouselProps) {
           <GiftDialog
             setIsOpen={setIsGiftDialogOpen}
             isOpen={isGiftDialogOpen}
-            currentUser={user}
+            currentUser={currentUser}
             users={users}
           />
         </>
@@ -82,7 +85,7 @@ export function OnboardingCarousel({ user, users }: OnboardingCarouselProps) {
   };
 
   const completeOnboarding = async () => {
-    await updateUserOnboardingStatus(user.id, true);
+    await updateUserOnboardingStatus(currentUser.id, true);
     router.push('/home');
   };
 

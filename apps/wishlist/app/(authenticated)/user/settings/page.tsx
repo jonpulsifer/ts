@@ -1,8 +1,10 @@
 import { Divider, Heading } from '@repo/ui';
-import { getMe } from 'lib/db/queries';
+import { isAuthenticated } from 'lib/db/queries';
 import type { Metadata } from 'next';
 
 import UserForm from './components/user-form';
+import { getUserById } from 'lib/db/queries-cached';
+import EmptyState from 'components/EmptyState';
 
 export const metadata: Metadata = {
   title: 'My Profile',
@@ -10,7 +12,11 @@ export const metadata: Metadata = {
 };
 
 const SettingsPage = async () => {
-  const user = await getMe();
+  const { user: currentUser } = await isAuthenticated();
+  const user = await getUserById(currentUser.id);
+  if (!user) {
+    return <EmptyState title="User not found" />;
+  }
   return (
     <>
       <Heading>Profile Settings</Heading>

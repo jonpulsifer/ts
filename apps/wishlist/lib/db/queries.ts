@@ -1,132 +1,14 @@
-import { Prisma } from '@prisma/client';
 import { auth } from 'app/auth';
 import { redirect } from 'next/navigation';
 import OpenAI from 'openai';
 
 import db from './client';
 import type { GiftRecommendation } from './types';
+import { getFullUserById } from './queries-cached';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-const getMe = async () => {
-  const session = await auth();
-  if (!session?.user?.email) {
-    throw new Error('Not authenticated');
-  }
-
-  const user = await db.user.findUnique({
-    where: { email: session.user.email },
-    include: {
-      secretSantaParticipations: {
-        include: {
-          event: true,
-          assignedTo: true,
-        },
-      },
-    },
-  });
-
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  return user;
-};
-
-const getGiftsWithOwnerByUserId = async (id: string) => {
-  await isAuthenticated();
-  const currentYear = new Date().getFullYear();
-  try {
-    const gifts = await db.gift.findMany({
-      where: {
-        ownerId: id,
-        createdAt: {
-          gte: new Date(`${currentYear}-01-01`),
-          lt: new Date(`${currentYear + 1}-01-01`),
-        },
-      },
-      include: {
-        owner: true,
-      },
-      orderBy: {
-        name: 'asc',
-      },
-    });
-    return gifts;
-  } catch (e) {
-    console.error('getGiftsWithOwnerByUserId', JSON.stringify(e));
-  }
-  return redirect('/login');
-};
-
-const getUserById = async (
-  id: string,
-  gifts = false,
-  wishlists = false,
-  createdBy = false,
-) => {
-  const currentYear = new Date().getFullYear();
-  try {
-    const user = db.user.findUniqueOrThrow({
-      where: {
-        id,
-      },
-      include: {
-        gifts: gifts
-          ? {
-              where: {
-                createdAt: {
-                  gte: new Date(`${currentYear}-01-01`),
-                  lt: new Date(`${currentYear + 1}-01-01`),
-                },
-              },
-              include: { createdBy },
-            }
-          : undefined,
-        wishlists,
-      },
-    });
-    return user;
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2025' || e.code === 'P2016') {
-        console.error('User not found');
-      }
-    }
-    console.error('getUserById', JSON.stringify(e));
-  }
-  return redirect('/login');
-};
-
-const getGiftById = async (
-  id: string,
-  owner = false,
-  claimedBy = false,
-  createdBy = false,
-) => {
-  try {
-    const gift = await db.gift.findUniqueOrThrow({
-      where: {
-        id,
-      },
-      include: {
-        owner,
-        claimedBy,
-        createdBy,
-      },
-    });
-    return gift;
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2025' || e.code === 'P2016') {
-        console.error('Gift not found');
-      }
-    }
-    console.error('getGiftById', JSON.stringify(e));
-  }
-};
 
 const isAuthenticated = async () => {
   const session = await auth();
@@ -139,62 +21,10 @@ const isAuthenticated = async () => {
   return session;
 };
 
-const getPeopleForUser = async () => {
-  const session = await isAuthenticated();
-  const { id } = session.user;
-  const currentYear = new Date().getFullYear();
-  try {
-    const users = await db.user.findMany({
-      where: {
-        wishlists: {
-          some: {
-            members: {
-              some: {
-                id,
-              },
-            },
-          },
-        },
-        // NOT: { id },
-      },
-      orderBy: {
-        name: 'asc',
-      },
-      include: {
-        gifts: {
-          where: {
-            createdAt: {
-              gte: new Date(`${currentYear}-01-01`),
-              lt: new Date(`${currentYear + 1}-01-01`),
-            },
-            AND: {
-              OR: [
-                { claimed: false },
-                {
-                  claimed: true,
-                  claimedBy: {
-                    id,
-                  },
-                },
-                { createdBy: { id } },
-              ],
-            },
-          },
-        },
-      },
-    });
-    const user = await getUserById(id, false, true);
-    return { users, user };
-  } catch (e) {
-    console.error('getPeopleForUser', JSON.stringify(e));
-  }
-  redirect('/login');
-};
-
 const getRecommendations = async (userId: string) => {
-  const gifts = await getGiftsWithOwnerByUserId(userId);
-  const preferences = gifts.map((gift) => gift.name).join(', ');
-  const name = gifts[0]?.owner?.name?.split(' ')[0] || 'someone mysterious';
+  const user = await getFullUserById(userId);
+  const preferences = user?.gifts.map((gift) => gift.name).join(', ');
+  const name = user?.name?.split(' ')[0] || 'someone mysterious';
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
@@ -216,9 +46,9 @@ const getRecommendations = async (userId: string) => {
 const getRecommendationsForHomePage = async (
   userId: string,
 ): Promise<GiftRecommendation[]> => {
-  const gifts = await getGiftsWithOwnerByUserId(userId);
-  const preferences = gifts.map((gift) => gift.name).join(', ');
-  const name = gifts[0]?.owner?.name?.split(' ')[0] || 'someone mysterious';
+  const user = await getFullUserById(userId);
+  const preferences = user?.gifts.map((gift) => gift.name).join(', ');
+  const name = user?.name?.split(' ')[0] || 'someone mysterious';
 
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
@@ -269,45 +99,6 @@ const getRecommendationsForHomePage = async (
   return [];
 };
 
-const getUserOnboardingStatus = async (userId: string): Promise<boolean> => {
-  try {
-    const user = await db.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { hasCompletedOnboarding: true },
-    });
-    return user.hasCompletedOnboarding;
-  } catch (e) {
-    console.error('getUserOnboardingStatus error:', e);
-    return false; // Assume onboarding is not completed if there's an error
-  }
-};
-
-const updateUserOnboardingStatus = async (
-  userId: string,
-  status: boolean,
-): Promise<void> => {
-  try {
-    await db.user.update({
-      where: { id: userId },
-      data: { hasCompletedOnboarding: status },
-    });
-  } catch (e) {
-    console.error('updateUserOnboardingStatus error:', e);
-    throw e;
-  }
-};
-
-export {
-  getGiftById,
-  getGiftsWithOwnerByUserId,
-  getMe,
-  getPeopleForUser,
-  getRecommendations,
-  getRecommendationsForHomePage,
-  getUserById,
-  getUserOnboardingStatus,
-  isAuthenticated,
-  updateUserOnboardingStatus,
-};
+export { getRecommendations, getRecommendationsForHomePage, isAuthenticated };
 
 export type { GiftRecommendation };

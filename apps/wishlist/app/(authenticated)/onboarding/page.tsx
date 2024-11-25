@@ -1,10 +1,12 @@
 import { Heading, Text } from '@repo/ui';
-import { getPeopleForUser } from 'lib/db/queries';
+import { isAuthenticated } from 'lib/db/queries';
 
 import { OnboardingCarousel } from './components/OnboardingCarousel';
+import { getPeopleForNewGiftModal } from 'lib/db/queries-cached';
 
 export default async function OnboardingPage() {
-  const { user, users } = await getPeopleForUser();
+  const { user } = await isAuthenticated();
+  const users = await getPeopleForNewGiftModal(user.id);
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="text-center">
@@ -15,7 +17,7 @@ export default async function OnboardingPage() {
         </Text>
       </div>
 
-      <OnboardingCarousel user={user} users={users} />
+      <OnboardingCarousel currentUser={user} users={users} />
     </div>
   );
 }

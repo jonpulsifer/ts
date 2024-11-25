@@ -296,6 +296,12 @@ const getGiftWithOwnerClaimedByAndCreatedBy = unstable_cache(
   },
 );
 
+const getGiftById = unstable_cache(
+  async (id: string) => prisma.gift.findUniqueOrThrow({ where: { id } }),
+  ['giftById'],
+  { tags: ['gifts'] },
+);
+
 const getSortedVisibleGiftsForUser = unstable_cache(
   async ({
     column = 'name',
@@ -399,18 +405,19 @@ const getSecretSantaEvents = unstable_cache(
 );
 
 export {
+  getClaimedGiftsForMe,
+  getFullUserById,
+  getGiftById,
+  getGiftsWithOwnerClaimedByAndCreatedBy,
+  getGiftWithOwnerClaimedByAndCreatedBy,
+  getLatestVisibleGiftsForUserById,
+  getPeopleForNewGiftModal,
   getSecretSantaEvents,
   getSortedVisibleGiftsForUser,
-  getGiftWithOwnerClaimedByAndCreatedBy,
-  getGiftsWithOwnerClaimedByAndCreatedBy,
-  getPeopleForNewGiftModal,
-  getWishlistsWithMemberIds,
-  getUsers,
-  getUsersWithGiftCount,
   getUserById,
-  getFullUserById,
-  getVisibleGiftsForUserById,
+  getUsers,
   getUsersForPeoplePage,
-  getClaimedGiftsForMe,
-  getLatestVisibleGiftsForUserById,
+  getUsersWithGiftCount,
+  getVisibleGiftsForUserById,
+  getWishlistsWithMemberIds,
 };

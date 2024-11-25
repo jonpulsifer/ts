@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 import { notFound } from 'next/navigation';
 import EmptyState from 'components/EmptyState';
-import { getGiftById } from 'lib/db/queries';
+import { getGiftById } from 'lib/db/queries-cached';
 import GiftForm from './components/gift-form';
 
 interface PageProps {
