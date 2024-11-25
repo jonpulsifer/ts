@@ -3,7 +3,7 @@
 import { auth } from 'app/auth';
 import prisma from 'lib/prisma';
 import { isAuthenticated } from 'lib/prisma-ssr';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export const updateUser = async (_state: unknown, formData: FormData) => {
@@ -248,6 +248,8 @@ export const claimGift = async (id: string) => {
         ownerId: true,
       },
     });
+
+    revalidateTag('gifts');
 
     // determine if the gift has been claimed by someone else
     const isClaimed = Boolean(gift?.claimedBy);
