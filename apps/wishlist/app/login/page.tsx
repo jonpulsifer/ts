@@ -33,7 +33,6 @@ function LoginPage() {
     setShowLoading(true);
     e.preventDefault();
     signIn('google', { redirect: true, redirectTo: '/home' }).finally(() => {
-      setShowLoading(false);
       welcome();
     });
   };

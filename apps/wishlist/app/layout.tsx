@@ -4,7 +4,7 @@ import '@repo/ui/styles.css';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import ErrorBoundary from 'components/ErrorBoundary';
-import Toast from 'components/Toaster';
+import Toaster from 'components/Toaster';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
@@ -26,7 +26,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <ErrorBoundary>{children}</ErrorBoundary>
         <SpeedInsights />
         <Analytics />
-        <Toast />
+        <Toaster />
       </body>
     </html>
   );
