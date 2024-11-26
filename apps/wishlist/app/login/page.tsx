@@ -6,7 +6,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import Spinner from '../../components/Spinner';
-import santa from '../../public/santaicon.png';
+import santa from 'app/santaicon.png';
 
 const welcome = (name?: string | null) => {
   const text = name ? `Welcome ${name}!` : 'Welcome!';
@@ -23,7 +23,7 @@ function LoginPage() {
   const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
     setShowLoading(true);
     e.preventDefault();
-    signIn('google', { redirect: false, redirectTo: '/home' }).finally(() => {
+    signIn('google', { redirect: true, redirectTo: '/home' }).finally(() => {
       setShowLoading(false);
       welcome();
     });
