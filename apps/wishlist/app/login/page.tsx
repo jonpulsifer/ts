@@ -5,8 +5,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
+import santa from 'public/santaicon.png';
 import Spinner from '../../components/Spinner';
-import santa from 'app/santaicon.png';
 
 const welcome = (name?: string | null) => {
   const text = name ? `Welcome ${name}!` : 'Welcome!';
