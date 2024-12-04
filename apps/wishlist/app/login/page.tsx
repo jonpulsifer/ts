@@ -1,11 +1,11 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
 
 import santa from 'public/santaicon.png';
 import Spinner from '../../components/Spinner';

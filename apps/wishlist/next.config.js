@@ -35,7 +35,7 @@ const ContentSecurityPolicy = `
     child-src 'self';
     style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com;
     img-src * blob: data:;
-    media-src 'none';
+    media-src 'self' data: blob:;
     manifest-src 'self';
     connect-src 'self' ${isDev ? '*' : '*.googleapis.com'};
     font-src 'self' cdnjs.cloudflare.com fonts.gstatic.com;
