@@ -27,7 +27,7 @@
     "@faker-js/faker": "9.3.0",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "22.9.0",
+    "@types/node": "22.10.1",
     "@types/react-dom": "18.3.1",
     "@types/react": "18.3.13",
     "prisma": "6.0.1",
