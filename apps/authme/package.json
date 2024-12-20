@@ -29,7 +29,7 @@
     "@repo/typescript-config": "workspace:*",
     "@types/node": "22.9.0",
     "@types/react-dom": "18.3.5",
-    "@types/react": "18.3.17",
+    "@types/react": "18.3.18",
     "prisma": "6.1.0",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.2"
