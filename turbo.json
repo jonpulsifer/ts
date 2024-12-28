@@ -28,7 +28,7 @@
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
-    "wishlist-next#build": {
+    "wishlist-prev#build": {
       "dependsOn": ["^build"],
       "env": [
         "AUTH_GOOGLE_ID",
