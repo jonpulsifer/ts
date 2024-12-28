@@ -1,12 +1,18 @@
 'use client';
 
-import santaIcon from '@/public/santaicon.png';
 import { motion, useAnimation } from 'framer-motion';
+import santaIcon from 'public/santaicon.png';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const BOARD_WIDTH = 400;
-const BOARD_HEIGHT = 600;
+const BOARD_WIDTH = Math.min(
+  400,
+  typeof window !== 'undefined' ? window.innerWidth - 32 : 400,
+);
+const BOARD_HEIGHT = Math.min(
+  600,
+  typeof window !== 'undefined' ? window.innerHeight - 200 : 600,
+);
 const PEG_RADIUS = 8;
 const SANTA_RADIUS = 22;
 const BUCKET_WIDTH = BOARD_WIDTH / 5;
@@ -228,12 +234,6 @@ const ChristmasPlinko: React.FC = () => {
   const [pegScore, setPegScore] = useState(0);
   const popupIdRef = useRef(0);
   const [hitPeg, setHitPeg] = useState<number | null>(null);
-
-  // Add state for dynamic board dimensions
-  const [dimensions] = useState({
-    width: BOARD_WIDTH,
-    height: BOARD_HEIGHT,
-  });
 
   const pegs: Position[] = [];
   for (let row = 1; row <= 7; row++) {
@@ -621,85 +621,87 @@ const ChristmasPlinko: React.FC = () => {
   };
 
   return (
-    <div className="p-2 sm:p-4 rounded-xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-sm overflow-auto">
-      <div className="min-w-[400px]">
-        <div className="">Score: {score}</div>
-        <div className="">Peg Hits: {pegScore}</div>
-        <div className="mb-1 sm:mb-2 text-xs sm:text-sm text-blue-600 dark:text-slate-400 font-medium">
-          Position Santa and click Drop to start! 🎅
-        </div>
-        <svg
-          width={dimensions.width}
-          height={dimensions.height}
-          className="rounded-lg cursor-pointer bg-gradient-to-b from-blue-50/90 to-blue-100/90 dark:from-slate-800/90 dark:to-slate-900/90"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchStart={(e) => {
-            if (!e.touches[0]) return;
+    <div className="p-2 sm:p-4 rounded-xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-sm">
+      <div className="mb-2 sm:mb-4 text-2xl sm:text-3xl font-bold text-blue-600 dark:text-slate-200">
+        Score: {score}
+      </div>
+      <div className="mb-1 sm:mb-2 text-xs sm:text-sm text-blue-500 dark:text-slate-400/90">
+        Peg Hits: {pegScore}
+      </div>
+      <div className="mb-1 sm:mb-2 text-xs sm:text-sm text-blue-600 dark:text-slate-400 font-medium">
+        Position Santa and click Drop to start! 🎅
+      </div>
+      <svg
+        width={BOARD_WIDTH}
+        height={BOARD_HEIGHT}
+        className="rounded-lg cursor-pointer bg-gradient-to-b from-blue-50/90 to-blue-100/90 dark:from-slate-800/90 dark:to-slate-900/90"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchStart={(e) => {
+          if (!e.touches[0]) return;
+          const touch = e.touches[0];
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = touch.clientX - rect.left;
+          if (!gameActive) {
+            setIsDragging(true);
+            setSantaPosition((prev) => ({
+              ...prev,
+              x: Math.max(
+                SANTA_RADIUS,
+                Math.min(BOARD_WIDTH - SANTA_RADIUS, x),
+              ),
+            }));
+          }
+        }}
+        onTouchMove={(e) => {
+          if (isDragging) {
             const touch = e.touches[0];
+            if (!touch) return;
             const rect = e.currentTarget.getBoundingClientRect();
             const x = touch.clientX - rect.left;
-            if (!gameActive) {
-              setIsDragging(true);
-              setSantaPosition((prev) => ({
-                ...prev,
-                x: Math.max(
-                  SANTA_RADIUS,
-                  Math.min(BOARD_WIDTH - SANTA_RADIUS, x),
-                ),
-              }));
-            }
-          }}
-          onTouchMove={(e) => {
-            if (isDragging) {
-              const touch = e.touches[0];
-              if (!touch) return;
-              const rect = e.currentTarget.getBoundingClientRect();
-              const x = touch.clientX - rect.left;
-              setSantaPosition((prev) => ({
-                ...prev,
-                x: Math.max(
-                  SANTA_RADIUS,
-                  Math.min(BOARD_WIDTH - SANTA_RADIUS, x),
-                ),
-              }));
-            }
-          }}
-          onTouchEnd={() => setIsDragging(false)}
-          onClick={handleBoardClick}
-        >
-          {pegs.map((peg, index) => (
-            <Peg key={index} position={peg} isHit={index === hitPeg} />
-          ))}
-          {buckets.map((bucket, index) => (
-            <Bucket
-              key={index}
-              position={bucket.position}
-              points={bucket.points}
-              isWinner={index === winningBucketIndex}
-            />
-          ))}
-          <Santa position={santaPosition} rotation={rotation} />
-          {scorePopups.map((popup) => (
-            <ScorePopup key={popup.id} x={popup.x} y={popup.y} />
-          ))}
-        </svg>
-        <button
-          className="mt-2 sm:mt-4 px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto 
-            bg-gradient-to-br from-red-500/90 to-red-600/90 
-            text-white rounded-lg font-medium shadow-sm 
-            transition-all duration-150 ease-in-out
-            hover:shadow-md hover:from-red-600/90 hover:to-red-700/90 
-            disabled:opacity-50 disabled:cursor-not-allowed
-            text-sm sm:text-base"
-          onClick={handleButtonClick}
-          disabled={gameActive}
-        >
-          {buttonText()}
-        </button>
-      </div>
+            setSantaPosition((prev) => ({
+              ...prev,
+              x: Math.max(
+                SANTA_RADIUS,
+                Math.min(BOARD_WIDTH - SANTA_RADIUS, x),
+              ),
+            }));
+          }
+        }}
+        onTouchEnd={() => setIsDragging(false)}
+        onClick={handleBoardClick}
+      >
+        {pegs.map((peg, index) => (
+          <Peg key={index} position={peg} isHit={index === hitPeg} />
+        ))}
+        {buckets.map((bucket, index) => (
+          <Bucket
+            key={index}
+            position={bucket.position}
+            points={bucket.points}
+            isWinner={index === winningBucketIndex}
+          />
+        ))}
+        <Santa position={santaPosition} rotation={rotation} />
+        {scorePopups.map((popup) => (
+          <ScorePopup key={popup.id} x={popup.x} y={popup.y} />
+        ))}
+      </svg>
+      <button
+        className="mt-2 sm:mt-4 px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto 
+          bg-gradient-to-br from-red-500/90 to-red-600/90 
+          text-white rounded-lg font-medium shadow-sm 
+          transition-all duration-150 ease-in-out
+          hover:shadow-md hover:from-red-600/90 hover:to-red-700/90 
+          disabled:opacity-50 disabled:cursor-not-allowed
+          text-sm sm:text-base"
+        onClick={handleButtonClick}
+        disabled={gameActive}
+      >
+        {buttonText()}
+      </button>
     </div>
   );
 };

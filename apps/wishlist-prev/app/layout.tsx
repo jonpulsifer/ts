@@ -1,21 +1,36 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
-import { Toaster } from '@/components/ui/toaster';
+import '@repo/ui/styles.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import ErrorBoundary from 'components/ErrorBoundary';
+import Toaster from 'components/Toaster';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const inter = Inter({
   subsets: ['latin'],
+  display: 'swap',
+  weight: 'variable',
 });
 
 const title = 'wishin.app';
 const description = 'A wishlist app for not everyone';
+
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html className="h-full w-full" lang="en">
+      <body
+        className={`h-full w-full ${inter.className} dark:text-zinc-100 dark:bg-zinc-900`}
+      >
+        <ErrorBoundary>{children}</ErrorBoundary>
+        <SpeedInsights />
+        <Analytics />
+        <Toaster />
+      </body>
+    </html>
+  );
+}
 
 export const metadata: Metadata = {
   robots: {
@@ -61,27 +76,4 @@ export const viewport = {
   userScalable: 1,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-
-          <Toaster />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
+export default Layout;

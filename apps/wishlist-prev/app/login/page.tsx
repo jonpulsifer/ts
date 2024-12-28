@@ -1,16 +1,18 @@
 'use client';
 
-import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
-import santa from '@/public/santaicon.png';
+import santa from 'public/santaicon.png';
+import Spinner from '../../components/Spinner';
 
-const welcome = (toast: any) => {
-  toast.success('Ho ho ho! Welcome!', {
+const welcome = (name?: string | null) => {
+  const text = name ? `Ho ho ho! Welcome ${name}!` : 'Ho ho ho! Welcome!';
+  toast.success(text, {
     icon: '🎅',
     style: {
       background: '#ff0066',
@@ -22,16 +24,16 @@ const welcome = (toast: any) => {
 function LoginPage() {
   const [showLoading, setShowLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const { toast } = useToast();
+
   if (showLoading) {
-    return 'Loading...';
+    return <Spinner />;
   }
 
   const handleGoogle = (e: React.MouseEvent | React.FormEvent) => {
     setShowLoading(true);
     e.preventDefault();
     signIn('google', { redirect: true, redirectTo: '/home' }).finally(() => {
-      welcome(toast);
+      welcome();
     });
   };
 

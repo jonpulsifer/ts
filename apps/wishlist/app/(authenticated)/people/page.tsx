@@ -1,88 +1,77 @@
-import { GiftIcon, UserGroupIcon } from '@heroicons/react/16/solid';
+import { auth } from '@/app/auth';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import {
-  Avatar,
-  Divider,
-  Heading,
-  Strong,
-  Subheading,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Text,
-} from '@repo/ui';
-import { getSession } from 'app/auth';
-import Spinner from 'components/Spinner';
-import { getUsersForPeoplePage } from 'lib/db/queries-cached';
-import { getInitials } from 'lib/utils';
-import type { Metadata } from 'next';
-import React, { Suspense } from 'react';
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { getUsersForPeoplePage } from '@/lib/db/queries-cached';
+import { getInitials } from '@/lib/utils';
+import Link from 'next/link';
+import { unauthorized } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'People',
-  description: 'View everyone and their gifts',
-};
-
-const PeoplePage = async () => {
-  const { user } = await getSession();
-  const users = await getUsersForPeoplePage(user.id);
-
-  const tableRows = users.map((user) => {
-    const giftCount = user._count.gifts;
-
-    const subtitleMarkup = (
-      <div
-        key={user.id}
-        className="flex flex-row gap-4 text-sm text-zinc-500 dark:text-zinc-400"
-      >
-        <div className="flex flex-row items-center">
-          <GiftIcon width={16} className="mr-1" />
-          {giftCount} gift{giftCount !== 1 ? 's' : ''}
-        </div>
-      </div>
-    );
-
-    const avatar = {
-      src: user.image || undefined,
-      initials: getInitials(user),
-    };
-
-    return (
-      <TableRow key={user.id} href={`/user/${user.id}`}>
-        <TableCell>
-          <div className="flex items-center gap-4">
-            <Avatar
-              square
-              src={avatar.src}
-              initials={avatar.initials}
-              className="size-12"
-            />
-            <div className="flex flex-col">
-              <Subheading>{user.name || user.email || 'Unknown'}</Subheading>
-              {subtitleMarkup}
-            </div>
-          </div>
-        </TableCell>
-      </TableRow>
-    );
-  });
-
+export default async function PeoplePage() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return unauthorized();
+  }
+  const people = await getUsersForPeoplePage(session.user.id);
   return (
-    <>
-      <Heading>👨‍👩‍👧‍👦 People</Heading>
-      <Divider soft className="my-4" />
-      <Text>
-        These are all of the people <Strong>in your wishlists</Strong> and their
-        gifts. You can <Strong>view someone&apos;s profile by clicking</Strong>{' '}
-        on their name.
-      </Text>
-      <Suspense fallback={<Spinner Icon={UserGroupIcon} />}>
-        <Table bleed dense className="mt-4">
-          <TableBody>{tableRows}</TableBody>
+    <SidebarInset>
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b">
+        <div className="flex items-center gap-2 px-3">
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbPage>People</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <p className="text-sm text-muted-foreground">
+          Here is a list of people who are part of your wishlists.
+        </p>
+        <Table>
+          <TableBody>
+            {people.map((person) => (
+              <Link
+                legacyBehavior
+                href={`/people/${person.id}`}
+                key={person.id}
+              >
+                <TableRow key={person.id}>
+                  <TableCell className="flex items-center gap-2">
+                    <Avatar>
+                      <AvatarImage src={person.image ?? undefined} />
+                      <AvatarFallback>{getInitials(person)}</AvatarFallback>
+                    </Avatar>
+                    {person.name ?? person.email}
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        person._count.gifts < 3 ? 'destructive' : 'default'
+                      }
+                    >
+                      {person._count.gifts} gift
+                      {person._count.gifts === 1 ? '' : 's'}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              </Link>
+            ))}
+          </TableBody>
         </Table>
-      </Suspense>
-    </>
+      </div>
+    </SidebarInset>
   );
-};
-
-export default PeoplePage;
+}

@@ -1,0 +1,52 @@
+{
+  "name": "wishlist",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "prisma generate --no-hints && prisma db push && next build",
+    "start": "next start",
+    "postinstall": "prisma generate --no-hints"
+  },
+  "peerDependencies": {
+    "csstype": "3.1.3",
+    "framer-motion": "11.15.0"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "2.7.4",
+    "@headlessui/react": "2.2.0",
+    "@heroicons/react": "2.2.0",
+    "@prisma/client": "6.1.0",
+    "@repo/ui": "workspace:*",
+    "@vercel/analytics": "1.4.1",
+    "@vercel/speed-insights": "1.1.0",
+    "lucide-react": "0.469.0",
+    "next": "14.2.22",
+    "next-auth": "5.0.0-beta.25",
+    "nookies": "2.5.2",
+    "openai": "4.77.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-hot-toast": "2.4.1",
+    "sharp": "0.33.5"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "9.3.0",
+    "@headlessui/tailwindcss": "0.2.1",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/forms": "0.5.9",
+    "@types/node": "22.9.0",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.49",
+    "prisma": "6.1.0",
+    "tailwindcss": "3.4.17",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.2"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  }
+}

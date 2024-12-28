@@ -24,9 +24,6 @@ const getPeopleForNewGiftModal = unstable_cache(
           },
         },
       },
-      orderBy: {
-        name: 'asc',
-      },
     }),
   ['peopleForNewGiftModal'],
   {
@@ -173,11 +170,7 @@ const getVisibleGiftsForUserById = unstable_cache(
 const getUsersForPeoplePage = unstable_cache(
   async (currentUserId: string) =>
     prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
+      include: {
         _count: {
           select: {
             gifts: {

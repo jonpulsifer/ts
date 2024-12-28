@@ -1,6 +1,6 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { PrismaClient, type User } from '@prisma/client';
-import NextAuth, { type DefaultSession } from 'next-auth';
+import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import { redirect } from 'next/navigation';
 
@@ -44,7 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 export const getSession = async () => {
   const session = await auth();
-  if (!session || !session.user) {
+  if (!session || !session?.user) {
     console.error(
       'could not get session or user from session, redirecting to login',
     );
@@ -52,18 +52,3 @@ export const getSession = async () => {
   }
   return session;
 };
-
-declare module 'next-auth' {
-  /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
-  interface Session {
-    user: {
-      /** The user's id */
-      id: string;
-      image: string | null;
-      name: string | null;
-      email: string;
-    } & DefaultSession['user'];
-  }
-}

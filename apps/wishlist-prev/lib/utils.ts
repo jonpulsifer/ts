@@ -1,10 +1,4 @@
 import type { User } from '@prisma/client';
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export function timeAgo(date: Date | string) {
   const parsedDate = date instanceof Date ? date : new Date(date);
