@@ -24,7 +24,7 @@
     "isbot": "5.1.19",
     "lucide-react": "0.469.0",
     "react": "19.0.0",
-    "react-day-picker": "9.4.4",
+    "react-day-picker": "9.5.0",
     "react-dom": "19.0.0",
     "tailwind-merge": "2.6.0",
     "tailwindcss-animate": "1.0.7"
