@@ -117,13 +117,13 @@ importers:
         version: 2.6.12
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@22.10.5)(typescript@5.7.2)
+        version: 10.9.2(@types/node@22.10.5)(typescript@5.7.3)
       ts-node-dev:
         specifier: 2.0.0
-        version: 2.0.0(@types/node@22.10.5)(typescript@5.7.2)
+        version: 2.0.0(@types/node@22.10.5)(typescript@5.7.3)
       typescript:
-        specifier: 5.7.2
-        version: 5.7.2
+        specifier: 5.7.3
+        version: 5.7.3
 
   apps/wishlist:
     dependencies:
@@ -241,10 +241,10 @@ importers:
         version: 22.10.5
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@22.10.5)(typescript@5.7.2)
+        version: 10.9.2(@types/node@22.10.5)(typescript@5.7.3)
       typescript:
-        specifier: 5.7.2
-        version: 5.7.2
+        specifier: 5.7.3
+        version: 5.7.3
 
   packages/tailwind-config:
     dependencies:
@@ -2541,6 +2541,11 @@ packages:
 
   typescript@5.7.2:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -4942,7 +4947,7 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node-dev@2.0.0(@types/node@22.10.5)(typescript@5.7.2):
+  ts-node-dev@2.0.0(@types/node@22.10.5)(typescript@5.7.3):
     dependencies:
       chokidar: 3.6.0
       dynamic-dedupe: 0.3.0
@@ -4952,9 +4957,9 @@ snapshots:
       rimraf: 2.7.1
       source-map-support: 0.5.21
       tree-kill: 1.2.2
-      ts-node: 10.9.2(@types/node@22.10.5)(typescript@5.7.2)
+      ts-node: 10.9.2(@types/node@22.10.5)(typescript@5.7.3)
       tsconfig: 7.0.0
-      typescript: 5.7.2
+      typescript: 5.7.3
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -4994,6 +4999,25 @@ snapshots:
       diff: 4.0.2
       make-error: 1.3.6
       typescript: 5.7.2
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optional: true
+
+  ts-node@10.9.2(@types/node@22.10.5)(typescript@5.7.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 22.10.5
+      acorn: 8.12.1
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.7.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
@@ -5073,6 +5097,8 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   typescript@5.7.2: {}
+
+  typescript@5.7.3: {}
 
   unbox-primitive@1.0.2:
     dependencies:
