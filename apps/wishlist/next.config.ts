@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
     ],
   },
+  experimental: {
+    authInterrupts: true,
+  },
 };
 
 export default nextConfig;

@@ -3,10 +3,13 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 // import { getPeopleForNewGiftModal } from 'lib/db/queries-cached';
 import { SessionProvider } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  if (!session?.user) return 'Loading...';
+  if (!session?.user) {
+    redirect('/login');
+  }
   // const people = await getPeopleForNewGiftModal(session.user.id);
   return (
     <SessionProvider session={session}>

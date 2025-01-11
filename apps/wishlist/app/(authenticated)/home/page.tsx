@@ -1,5 +1,6 @@
-import { auth } from '@/app/auth';
+import { auth, signOut } from '@/app/auth';
 import { AddGiftDialog } from '@/components/add-gift-dialog';
+import { ModeToggle } from '@/components/dark-mode-toggle';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,13 +10,12 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { getPeopleForNewGiftModal } from '@/lib/db/queries-cached';
-import { unauthorized } from 'next/navigation';
-import ChristmasPlinko from '../plinko/plinko';
+import { redirect } from 'next/navigation';
 
 export default async function HomePage() {
   const session = await auth();
   if (!session?.user?.id) {
-    return unauthorized();
+    redirect('/login');
   }
   const addGiftDialogUsers = await getPeopleForNewGiftModal(session.user.id);
   return (
@@ -31,6 +31,9 @@ export default async function HomePage() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+        </div>
+        <div className="ml-auto px-4">
+          <ModeToggle />
         </div>
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4">

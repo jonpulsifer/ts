@@ -25,6 +25,8 @@ import Image from 'next/image';
 
 import santaIcon from '@/public/santaicon.png';
 import { ModeToggle } from './dark-mode-toggle';
+import { SidebarUser } from './sidebar-user';
+import { auth } from '@/app/auth';
 
 // Menu items.
 const items = [
@@ -73,11 +75,14 @@ const getNextChristmas = () => {
     : thisChristmas;
 };
 
-export function AppSidebar() {
+export async function AppSidebar() {
   const daysUntilChristmas = Math.floor(
     (getNextChristmas().getTime() - new Date().getTime()) /
       (1000 * 60 * 60 * 24),
   );
+  const session = await auth();
+  const user = session!.user;
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -124,7 +129,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
+        <SidebarUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );
