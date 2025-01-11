@@ -60,7 +60,7 @@ jobs:
           PGPASSWORD: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_MULTIPLE_DATABASES: authme,wishlist
+          POSTGRES_MULTIPLE_DATABASES: wishlist
         run: |
           ./.github/scripts/create-multiple-postgresql-databases.sh
           find . -type f -name '.env.example' -execdir cp -v {} .env \;
