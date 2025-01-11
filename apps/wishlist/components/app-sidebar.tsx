@@ -23,10 +23,10 @@ import {
 
 import Image from 'next/image';
 
+import { auth } from '@/app/auth';
 import santaIcon from '@/public/santaicon.png';
 import { ModeToggle } from './dark-mode-toggle';
 import { SidebarUser } from './sidebar-user';
-import { auth } from '@/app/auth';
 
 // Menu items.
 const items = [

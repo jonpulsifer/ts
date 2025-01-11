@@ -18,7 +18,8 @@
         "all": false
       },
       "complexity": {
-        "noUselessFragments": "off"
+        "noUselessFragments": "off",
+        "noForEach": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"
