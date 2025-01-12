@@ -390,6 +390,66 @@ const getSecretSantaEvents = unstable_cache(
   { tags: ['secretSanta'] },
 );
 
+const getWishlists = unstable_cache(
+  async () =>
+    prisma.wishlist.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    }),
+  ['wishlists'],
+  {
+    tags: ['wishlists'],
+  },
+);
+
+const getUserWishlistsWithMemberCount = unstable_cache(
+  async (id: string) =>
+    prisma.wishlist.findMany({
+      where: { members: { some: { id } } },
+      select: {
+        id: true,
+        name: true,
+        password: true,
+        _count: {
+          select: { members: true },
+        },
+        members: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+            _count: {
+              select: {
+                gifts: {
+                  where: {
+                    ...currentYearFilter,
+                    ownerId: { not: id },
+                    AND: {
+                      OR: [
+                        { claimed: false },
+                        {
+                          claimed: true,
+                          claimedBy: {
+                            id,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
+  ['userWishlistsWithMemberCount'],
+  { tags: ['wishlists', 'users'] },
+);
+
 export {
   getClaimedGiftsForMe,
   getFullUserById,
@@ -405,5 +465,7 @@ export {
   getUsersForPeoplePage,
   getUsersWithGiftCount,
   getVisibleGiftsForUserById,
+  getWishlists,
   getWishlistsWithMemberIds,
+  getUserWishlistsWithMemberCount,
 };
