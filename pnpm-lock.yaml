@@ -210,8 +210,8 @@ importers:
         version: 3.24.1
     devDependencies:
       '@faker-js/faker':
-        specifier: 9.3.0
-        version: 9.3.0
+        specifier: 9.4.0
+        version: 9.4.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.10.6
@@ -372,8 +372,8 @@ packages:
   '@emnapi/runtime@1.2.0':
     resolution: {integrity: sha512-bV21/9LQmcQeCPEg3BDFtvwL6cwiTMksYNWQQ4KOxCZikEGalWtenoZ0wCiukJINlGCIi2KXx01g4FoH/LxpzQ==}
 
-  '@faker-js/faker@9.3.0':
-    resolution: {integrity: sha512-r0tJ3ZOkMd9xsu3VRfqlFR6cz0V/jFYRswAIpC+m/DIfAUXq7g8N7wTAlhSANySXYGKzGryfDXwtwsY8TxEIDw==}
+  '@faker-js/faker@9.4.0':
+    resolution: {integrity: sha512-85+k0AxaZSTowL0gXp8zYWDIrWclTbRPg/pm/V0dSFZ6W6D4lhcG3uuZl4zLsEKfEvs69xDbLN2cHQudwp95JA==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@floating-ui/core@1.6.8':
@@ -2739,7 +2739,7 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@faker-js/faker@9.3.0': {}
+  '@faker-js/faker@9.4.0': {}
 
   '@floating-ui/core@1.6.8':
     dependencies:
