@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "9.4.0",
-    "@headlessui/tailwindcss": "0.2.1",
+    "@headlessui/tailwindcss": "0.2.2",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/forms": "0.5.10",
