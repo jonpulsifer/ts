@@ -129,10 +129,10 @@ importers:
     dependencies:
       '@auth/prisma-adapter':
         specifier: 2.7.4
-        version: 2.7.4(@prisma/client@6.3.1(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3))
+        version: 2.7.4(@prisma/client@6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3))
       '@prisma/client':
-        specifier: 6.3.1
-        version: 6.3.1(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)
+        specifier: 6.4.0
+        version: 6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)
       '@radix-ui/react-accordion':
         specifier: ^1.2.1
         version: 1.2.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -751,8 +751,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@prisma/client@6.3.1':
-    resolution: {integrity: sha512-ARAJaPs+eBkemdky/XU3cvGRl+mIPHCN2lCXsl5Vlb0E2gV+R6IN7aCI8CisRGszEZondwIsW9Iz8EJkTdykyA==}
+  '@prisma/client@6.4.0':
+    resolution: {integrity: sha512-48tLb+VL7iuuqJXjD4Xbqa622fuh8UtqmjTf39AKrQjlTUdNaMc9sC/c49eXQkcnrAdh9FoS1qVupmZSYiZ9TQ==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
@@ -2866,10 +2866,10 @@ snapshots:
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
 
-  '@auth/prisma-adapter@2.7.4(@prisma/client@6.3.1(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3))':
+  '@auth/prisma-adapter@2.7.4(@prisma/client@6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3))':
     dependencies:
       '@auth/core': 0.37.4
-      '@prisma/client': 6.3.1(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)
+      '@prisma/client': 6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
@@ -3173,7 +3173,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@prisma/client@6.3.1(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)':
+  '@prisma/client@6.4.0(prisma@6.4.0(typescript@5.7.3))(typescript@5.7.3)':
     optionalDependencies:
       prisma: 6.4.0(typescript@5.7.3)
       typescript: 5.7.3
