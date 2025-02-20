@@ -52,6 +52,6 @@
     "@headlessui/react": "2.2.0",
     "clsx": "2.1.1",
     "lucide-react": "0.475.0",
-    "framer-motion": "12.4.5"
+    "framer-motion": "12.4.6"
   }
 }
