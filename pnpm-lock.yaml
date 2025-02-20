@@ -191,8 +191,8 @@ importers:
         specifier: ^0.4.4
         version: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       openai:
-        specifier: 4.85.2
-        version: 4.85.2(zod@3.24.2)
+        specifier: 4.85.3
+        version: 4.85.3(zod@3.24.2)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -2210,8 +2210,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  openai@4.85.2:
-    resolution: {integrity: sha512-ZQg3Q+K4A6M9dLFh5W36paZkZBQO+VbxMNJ1gUSyHsGiEWuXahdn02ermqNV68LhWQxdJQaWUFRAYpW/suTPWQ==}
+  openai@4.85.3:
+    resolution: {integrity: sha512-KTMXAK6FPd2IvsPtglMt0J1GyVrjMxCYzu/mVbCPabzzquSJoZlYpHtE0p0ScZPyt11XTc757xSO4j39j5g+Xw==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -4750,7 +4750,7 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  openai@4.85.2(zod@3.24.2):
+  openai@4.85.3(zod@3.24.2):
     dependencies:
       '@types/node': 18.19.76
       '@types/node-fetch': 2.6.12
