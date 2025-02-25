@@ -20,7 +20,7 @@ jobs:
       packages: write
     services:
       postgres:
-        image: postgres:17@sha256:be55fec1728a128ad034a7562115d227fa890fd8ca18d1364be326fbf7a0f8dd
+        image: postgres:17@sha256:1c47b7139517eeb5e9747882983297a745517c3d70d2451e376f9fd5cc7cf1ef
         env:
           POSTGRES_PASSWORD: postgres
         # options: >-
