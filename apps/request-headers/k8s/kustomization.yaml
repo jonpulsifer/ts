@@ -3,16 +3,18 @@ kind: Kustomization
 
 namespace: &app request-headers
 
-namePrefix: request-headers-
+namePrefix: request-headerses-
 
 # images:
 #   - name: jonpulsifer/does-not-exist
 #     newName: ghcr.io/jonpulsifer/request-headers
 #     newTag: latest
 
-commonLabels:
-  app.kubernetes.io/name: *app
-  app.kubernetes.io/part-of: *app
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/part-of: *app
 
 resources:
   - ../../../k8s/workload
