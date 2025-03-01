@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: app
   annotations:
-    argocd.argoproj.io/sync-options: Delete=false
+    argocd.argoproj.io/sync-options: Delete=confirm
 spec:
   replicas: 1
   template:
