@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: &app request-headers
 
-namePrefix: request-headerses-
+namePrefix: request-headers-
 
 # images:
 #   - name: jonpulsifer/does-not-exist
