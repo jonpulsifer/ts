@@ -111,16 +111,16 @@ importers:
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: 22.13.10
-        version: 22.13.11
+        version: 22.13.10
       '@types/node-fetch':
         specifier: 2.6.12
         version: 2.6.12
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@22.13.11)(typescript@5.7.3)
+        version: 10.9.2(@types/node@22.13.10)(typescript@5.7.3)
       ts-node-dev:
         specifier: 2.0.0
-        version: 2.0.0(@types/node@22.13.11)(typescript@5.7.3)
+        version: 2.0.0(@types/node@22.13.10)(typescript@5.7.3)
       typescript:
         specifier: 5.7.3
         version: 5.7.3
@@ -240,14 +240,14 @@ importers:
         specifier: workspace*
         version: link:../typescript-config
       '@types/k6':
-        specifier: 0.57.1
-        version: 0.57.1
+        specifier: 1.0.1
+        version: 1.0.1
       '@types/node':
         specifier: 22.13.10
-        version: 22.13.11
+        version: 22.13.10
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@22.13.11)(typescript@5.7.3)
+        version: 10.9.2(@types/node@22.13.10)(typescript@5.7.3)
       typescript:
         specifier: 5.7.3
         version: 5.7.3
@@ -1263,8 +1263,8 @@ packages:
   '@types/jsonwebtoken@8.5.9':
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
 
-  '@types/k6@0.57.1':
-    resolution: {integrity: sha512-S/p2RQAYUBXyYROkR2fgeON/LaxJ0YR+KIlnPQW/TOeLBXD7tX4RfDSWaIecuDTWKblmc6UwANyP0e5QDZPhMw==}
+  '@types/k6@1.0.1':
+    resolution: {integrity: sha512-C2VX1t9jj543L1RxyNuToXR2VZvmfOHCORDTBYUKctrbVbTpBRmb1IhMl5/ZHb851MIIrCzdG27HwewPPQ2E6Q==}
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
@@ -1274,6 +1274,9 @@ packages:
 
   '@types/node@18.19.81':
     resolution: {integrity: sha512-7KO9oZ2//ivtSsryp0LQUqq79zyGXzwq1WqfywpC9ucjY7YyltMMmxWgtRFRKCxwa7VPxVBVy4kHf5UC1E8Lug==}
+
+  '@types/node@22.13.10':
+    resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
 
   '@types/node@22.13.11':
     resolution: {integrity: sha512-iEUCUJoU0i3VnrCmgoWCXttklWcvoCIx4jzcP22fioIVSdTmjgoEvmAO/QPw6TcS9k5FrNgn4w7q5lGOd1CT5g==}
@@ -3660,18 +3663,18 @@ snapshots:
 
   '@slack/logger@3.0.0':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
   '@slack/logger@4.0.0':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
   '@slack/oauth@2.6.3':
     dependencies:
       '@slack/logger': 3.0.0
       '@slack/web-api': 6.13.0
       '@types/jsonwebtoken': 8.5.9
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
       jsonwebtoken: 9.0.2
       lodash.isstring: 4.0.1
     transitivePeerDependencies:
@@ -3681,7 +3684,7 @@ snapshots:
     dependencies:
       '@slack/logger': 3.0.0
       '@slack/web-api': 6.13.0
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
       '@types/ws': 7.4.7
       eventemitter3: 5.0.1
       finity: 0.5.4
@@ -3698,7 +3701,7 @@ snapshots:
       '@slack/logger': 3.0.0
       '@slack/types': 2.14.0
       '@types/is-stream': 1.1.0
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
       axios: 1.7.7
       eventemitter3: 3.1.2
       form-data: 2.5.1
@@ -3726,17 +3729,17 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
   '@types/cookie@0.6.0': {}
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
       '@types/qs': 6.9.16
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -3752,24 +3755,28 @@ snapshots:
 
   '@types/is-stream@1.1.0':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
   '@types/jsonwebtoken@8.5.9':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
-  '@types/k6@0.57.1': {}
+  '@types/k6@1.0.1': {}
 
   '@types/mime@1.3.5': {}
 
   '@types/node-fetch@2.6.12':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
       form-data: 4.0.0
 
   '@types/node@18.19.81':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/node@22.13.10':
+    dependencies:
+      undici-types: 6.20.0
 
   '@types/node@22.13.11':
     dependencies:
@@ -3794,12 +3801,12 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
       '@types/send': 0.17.4
 
   '@types/strip-bom@3.0.0': {}
@@ -3810,7 +3817,7 @@ snapshots:
 
   '@types/ws@7.4.7':
     dependencies:
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
 
   abort-controller@3.0.0:
     dependencies:
@@ -5243,7 +5250,7 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node-dev@2.0.0(@types/node@22.13.11)(typescript@5.7.3):
+  ts-node-dev@2.0.0(@types/node@22.13.10)(typescript@5.7.3):
     dependencies:
       chokidar: 3.6.0
       dynamic-dedupe: 0.3.0
@@ -5253,7 +5260,7 @@ snapshots:
       rimraf: 2.7.1
       source-map-support: 0.5.21
       tree-kill: 1.2.2
-      ts-node: 10.9.2(@types/node@22.13.11)(typescript@5.7.3)
+      ts-node: 10.9.2(@types/node@22.13.10)(typescript@5.7.3)
       tsconfig: 7.0.0
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -5261,14 +5268,14 @@ snapshots:
       - '@swc/wasm'
       - '@types/node'
 
-  ts-node@10.9.2(@types/node@22.13.11)(typescript@5.7.3):
+  ts-node@10.9.2(@types/node@22.13.10)(typescript@5.7.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.13.11
+      '@types/node': 22.13.10
       acorn: 8.12.1
       acorn-walk: 8.3.4
       arg: 4.1.3
