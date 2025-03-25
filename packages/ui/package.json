@@ -33,7 +33,7 @@
     "type-check": "tsc --noEmit"
   },
   "peerDependencies": {
-    "next": "14.2.25",
+    "next": "14.2.26",
     "react": "19.0.0",
     "@types/node": "*"
   },
