@@ -240,8 +240,8 @@ importers:
         specifier: workspace*
         version: link:../typescript-config
       '@types/k6':
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.0.2
+        version: 1.0.2
       '@types/node':
         specifier: 22.13.13
         version: 22.13.13
@@ -1263,8 +1263,8 @@ packages:
   '@types/jsonwebtoken@8.5.9':
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
 
-  '@types/k6@1.0.1':
-    resolution: {integrity: sha512-C2VX1t9jj543L1RxyNuToXR2VZvmfOHCORDTBYUKctrbVbTpBRmb1IhMl5/ZHb851MIIrCzdG27HwewPPQ2E6Q==}
+  '@types/k6@1.0.2':
+    resolution: {integrity: sha512-bpja1c7OXIJk06aPGN+Aw5f3QhP0PjvgX2Fwfa3rJUaUI+O1ZE3491g9hMjhH21ZlTaAhz7h6veyxaz/RqPUTg==}
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
@@ -3758,7 +3758,7 @@ snapshots:
     dependencies:
       '@types/node': 22.13.13
 
-  '@types/k6@1.0.1': {}
+  '@types/k6@1.0.2': {}
 
   '@types/mime@1.3.5': {}
 
