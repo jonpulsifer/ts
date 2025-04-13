@@ -31,7 +31,7 @@
     "sharp": "0.34.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "9.6.0",
+    "@faker-js/faker": "9.7.0",
     "@headlessui/tailwindcss": "0.2.2",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
