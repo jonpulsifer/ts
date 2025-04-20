@@ -13,7 +13,7 @@
     "framer-motion": "12.7.4"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "2.8.0",
+    "@auth/prisma-adapter": "2.9.0",
     "@headlessui/react": "2.2.2",
     "@heroicons/react": "2.2.0",
     "@prisma/client": "6.6.0",
