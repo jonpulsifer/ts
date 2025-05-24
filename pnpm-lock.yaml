@@ -192,7 +192,7 @@ importers:
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       openai:
         specifier: 4.103.0
-        version: 4.103.0(zod@3.25.27)
+        version: 4.103.0(zod@3.25.28)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -207,7 +207,7 @@ importers:
         version: 1.0.7(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.15.21)(typescript@5.8.3)))
       zod:
         specifier: ^3.24.1
-        version: 3.25.27
+        version: 3.25.28
     devDependencies:
       '@faker-js/faker':
         specifier: 9.8.0
@@ -2751,8 +2751,8 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
 
-  zod@3.25.27:
-    resolution: {integrity: sha512-xkYsE+ztNLzBeoAG8Ipd2ICr86gyMpovQlB+Vid1LT7V16/Dj0z+Up1u1qxNX58cmJ/AtG2mvGw/7+jK48xEYw==}
+  zod@3.25.28:
+    resolution: {integrity: sha512-/nt/67WYKnr5by3YS7LroZJbtcCBurDKKPBPWWzaxvVCGuG/NOsiKkrjoOhI8mJ+SQUXEbUzeB3S+6XDUEEj7Q==}
 
 snapshots:
 
@@ -4624,7 +4624,7 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  openai@4.103.0(zod@3.25.27):
+  openai@4.103.0(zod@3.25.28):
     dependencies:
       '@types/node': 18.19.103
       '@types/node-fetch': 2.6.12
@@ -4634,7 +4634,7 @@ snapshots:
       formdata-node: 4.4.1
       node-fetch: 2.7.0
     optionalDependencies:
-      zod: 3.25.27
+      zod: 3.25.28
     transitivePeerDependencies:
       - encoding
 
@@ -5370,4 +5370,4 @@ snapshots:
 
   yn@3.1.1: {}
 
-  zod@3.25.27: {}
+  zod@3.25.28: {}
