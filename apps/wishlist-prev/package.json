@@ -21,7 +21,7 @@
     "@vercel/analytics": "1.5.0",
     "@vercel/speed-insights": "1.2.0",
     "lucide-react": "0.511.0",
-    "next": "14.2.29",
+    "next": "15.2.2",
     "next-auth": "5.0.0-beta.28",
     "nookies": "2.5.2",
     "openai": "4.103.0",
