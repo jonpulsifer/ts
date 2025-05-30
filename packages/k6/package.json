@@ -6,7 +6,7 @@
   "private": true,
   "devDependencies": {
     "@types/k6": "1.0.2",
-    "@types/node": "22.15.26",
+    "@types/node": "22.15.27",
     "ts-node": "10.9.2",
     "@repo/typescript-config": "workspace*",
     "typescript": "5.8.3"
