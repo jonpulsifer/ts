@@ -16,43 +16,6 @@
     "//#lint:fix": {
       "cache": false
     },
-    "wishlist#build": {
-      "dependsOn": ["^build"],
-      "env": [
-        "AUTH_GOOGLE_ID",
-        "AUTH_GOOGLE_SECRET",
-        "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA",
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "OPENAI_API_KEY"
-      ],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-    },
-    "wishlist-prev#build": {
-      "dependsOn": ["^build"],
-      "env": [
-        "AUTH_GOOGLE_ID",
-        "AUTH_GOOGLE_SECRET",
-        "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA",
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "OPENAI_API_KEY"
-      ],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-    },
-    "authme#build": {
-      "dependsOn": ["^build"],
-      "env": [
-        "AUTH_GOOGLE_ID",
-        "AUTH_GOOGLE_SECRET",
-        "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA",
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "CLIENT_IDENTITY_PKCS12",
-        "SERVER_CA"
-      ],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-    },
     "request-headers#build": {
       "dependsOn": ["^build"],
       "env": [
@@ -67,32 +30,6 @@
         "NEXT_PUBLIC_SOME_VARIABLE"
       ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-    },
-    "hub#build": {
-      "dependsOn": ["^build"],
-      "env": ["REDIS_URL"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-    },
-    "rosie#build": {
-      "dependsOn": ["^build"],
-      "env": [
-        "ARGOCD_USERNAME",
-        "ARGOCD_PASSWORD",
-        "ARGOCD_SERVER",
-        "PAGERDUTY_TOKEN",
-        "SLACK_BOT_TOKEN",
-        "SLACK_CLIENT_SIGNING_SECRET",
-        "SLACK_APP_TOKEN"
-      ],
-      "outputs": ["dist/**"]
-    },
-    "nested#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
-    "remixed#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["api/index.js", "api/build/**", "public/build/**"]
     },
     "test": {
       "dependsOn": ["build"],
