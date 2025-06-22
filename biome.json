@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.4/schema.json",
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -9,13 +9,14 @@
     "lineWidth": 80,
     "attributePosition": "auto"
   },
-  "organizeImports": { "enabled": true },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "a11y": {
-        "all": false
+        "noSvgWithoutTitle": "off",
+        "useFocusableInteractive": "off"
       },
       "complexity": {
         "noUselessFragments": "off",
@@ -26,7 +27,16 @@
       },
       "style": {
         "noNonNullAssertion": "off",
-        "noParameterAssign": "off"
+        "noParameterAssign": "off",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error"
       },
       "suspicious": {
         "noExplicitAny": "off",
@@ -49,7 +59,7 @@
   },
   "overrides": [
     {
-      "include": ["*.html"],
+      "includes": ["**/*.html"],
       "javascript": { "formatter": { "trailingCommas": "none" } }
     }
   ],

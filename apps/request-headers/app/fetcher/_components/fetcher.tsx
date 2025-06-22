@@ -1,5 +1,8 @@
 'use client';
 
+import { formatDistanceToNow } from 'date-fns';
+import { Clock, Loader2 } from 'lucide-react';
+import { useId, useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -23,9 +26,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { formatDistanceToNow } from 'date-fns';
-import { Clock, Loader2 } from 'lucide-react';
-import { useState } from 'react';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -41,6 +41,9 @@ interface RequestHistory {
 }
 
 export default function ApiTester() {
+  const urlId = useId();
+  const methodId = useId();
+  const bodyId = useId();
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState<HttpMethod>('GET');
   const [body, setBody] = useState('');
@@ -109,12 +112,12 @@ export default function ApiTester() {
       <CardContent className="space-y-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="url">API Endpoint URL</Label>
+            <Label htmlFor={urlId}>API Endpoint URL</Label>
             <Select
               value={url}
               onValueChange={(value: string) => setUrl(value)}
             >
-              <SelectTrigger id="url">
+              <SelectTrigger id={urlId}>
                 <SelectValue placeholder="Select API endpoint" />
               </SelectTrigger>
               <SelectContent>
@@ -128,12 +131,12 @@ export default function ApiTester() {
             </Select>
           </div>
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="method">HTTP Method</Label>
+            <Label htmlFor={methodId}>HTTP Method</Label>
             <Select
               value={method}
               onValueChange={(value: HttpMethod) => setMethod(value)}
             >
-              <SelectTrigger id="method">
+              <SelectTrigger id={methodId}>
                 <SelectValue placeholder="Select HTTP method" />
               </SelectTrigger>
               <SelectContent>
@@ -146,9 +149,9 @@ export default function ApiTester() {
           </div>
           {method !== 'GET' && (
             <div className="flex flex-col space-y-2">
-              <Label htmlFor="body">Request Body (JSON)</Label>
+              <Label htmlFor={bodyId}>Request Body (JSON)</Label>
               <Textarea
-                id="body"
+                id={bodyId}
                 placeholder='{"key": "value"}'
                 value={body}
                 onChange={(e) => setBody(e.target.value)}

@@ -1,13 +1,16 @@
 {
   "name": "ts",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "clean": "turbo clean",
     "dev": "turbo dev",
-    "lint": "biome check .",
-    "lint:fix": "biome check . --write",
+    "lint": "pnpm biome check .",
+    "lint:fix": "pnpm biome check . --write",
     "test": "turbo test"
   },
   "devDependencies": {
@@ -24,7 +27,9 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": ["nestjs"],
+    "words": [
+      "nestjs"
+    ],
     "ignoreWords": [],
     "import": []
   }

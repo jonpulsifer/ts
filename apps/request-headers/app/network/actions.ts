@@ -55,7 +55,7 @@ async function execSafeCommand(
     // Execute the command with the validated domain
     const { stdout } = await execPromise(commandFn(domain));
     return stdout;
-  } catch (error) {
+  } catch (_error) {
     // Don't expose internal error details to client
     throw new Error(`Failed to execute ${tool} command`);
   }

@@ -1,5 +1,8 @@
 'use client';
 
+import { formatDistanceToNow } from 'date-fns';
+import { Clock } from 'lucide-react';
+import { useActionState, useId, useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -24,9 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { formatDistanceToNow } from 'date-fns';
-import { Clock } from 'lucide-react';
-import { useActionState, useState } from 'react';
 import { performNetworkAction } from '../actions';
 
 type Tool = 'dns' | 'whois' | 'ping' | 'ssl';
@@ -41,6 +41,8 @@ interface ToolHistory {
 }
 
 export default function NetworkTools() {
+  const toolId = useId();
+  const targetId = useId();
   const [tool, setTool] = useState<Tool>('dns');
   const [history, setHistory] = useState<ToolHistory[]>([]);
   const [state, formAction] = useActionState(performNetworkAction, null);
@@ -129,13 +131,13 @@ export default function NetworkTools() {
       <CardContent className="space-y-6">
         <form action={handleSubmit} className="space-y-4">
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="tool">Tool</Label>
+            <Label htmlFor={toolId}>Tool</Label>
             <Select
               name="tool"
               value={tool}
               onValueChange={(value: Tool) => setTool(value)}
             >
-              <SelectTrigger id="tool">
+              <SelectTrigger>
                 <SelectValue placeholder="Select tool" />
               </SelectTrigger>
               <SelectContent>
@@ -148,9 +150,9 @@ export default function NetworkTools() {
           </div>
 
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="target">Target Domain/IP</Label>
+            <Label htmlFor={targetId}>Target Domain/IP</Label>
             <Input
-              id="target"
+              id={targetId}
               name="target"
               placeholder="example.com"
               required

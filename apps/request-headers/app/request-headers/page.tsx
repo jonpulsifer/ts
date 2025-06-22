@@ -1,3 +1,6 @@
+import { Separator } from '@radix-ui/react-separator';
+import { headers } from 'next/headers';
+import { Suspense } from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,9 +11,6 @@ import {
 } from '@/components/ui/breadcrumb';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@radix-ui/react-separator';
-import { headers } from 'next/headers';
-import { Suspense } from 'react';
 import RequestHeaders from './_components/request-headers';
 
 export default async function RequestHeadersPage() {

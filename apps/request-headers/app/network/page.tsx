@@ -1,3 +1,4 @@
+import { Separator } from '@radix-ui/react-separator';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Separator } from '@radix-ui/react-separator';
 import NetworkTools from './_components/network-tools';
 
 export default function NetworkToolsPage() {
