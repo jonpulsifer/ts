@@ -96,7 +96,7 @@ export function useWeatherSocket() {
 
             case 'obs_air':
               // Air observations: [timestamp, station_pressure, air_temperature, relative_humidity, lightning_strike_count, lightning_strike_avg_distance, battery, report_interval]
-              if (data.obs && data.obs[0]) {
+              if (data.obs?.[0]) {
                 const obs = data.obs[0];
                 setWeatherData((prev) => ({
                   ...prev,
@@ -110,7 +110,7 @@ export function useWeatherSocket() {
 
             case 'obs_sky':
               // Sky observations: [timestamp, illuminance, uv, rain_accumulated, wind_lull, wind_avg, wind_gust, wind_direction, battery, report_interval, solar_radiation, local_day_rain_accumulation, precipitation_type, wind_sample_interval]
-              if (data.obs && data.obs[0]) {
+              if (data.obs?.[0]) {
                 const obs = data.obs[0];
                 setWeatherData((prev) => ({
                   ...prev,
@@ -123,7 +123,7 @@ export function useWeatherSocket() {
 
             case 'obs_st':
               // Tempest observations: [timestamp, wind_lull, wind_avg, wind_gust, wind_direction, wind_sample_interval, station_pressure, air_temperature, relative_humidity, illuminance, uv, solar_radiation, rain_accumulated, precipitation_type, lightning_strike_avg_distance, lightning_strike_count, battery, report_interval]
-              if (data.obs && data.obs[0]) {
+              if (data.obs?.[0]) {
                 const obs = data.obs[0];
                 console.log('obs_st raw data:', obs);
                 console.log('Temperature from obs[7]:', obs[7]);
