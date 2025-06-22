@@ -21,7 +21,7 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-* ./
-RUN pnpm install --frozen-lockfile --filter=${APP}...
+RUN pnpm install --frozen-lockfile --prod --no-optional --filter=${APP}...
 
 # Build the project
 COPY --from=builder /app/out/full/ .
@@ -36,7 +36,7 @@ RUN \
   REDIS_URL=$(cat /run/secrets/REDIS_URL) \
   turbo run build --filter=${APP}...
 
-FROM cgr.dev/chainguard/node:20@sha256:f30d39c6980f0a50119f2aa269498307a80c2654928d8e23bb25431b9cbbdc4f AS runner
+FROM node:22-alpine@sha256:41e4389f3d988d2ed55392df4db1420ad048ae53324a8e2b7c6d19508288107e AS runner
 ARG APP
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app

@@ -19,14 +19,16 @@ RUN pnpm install --frozen-lockfile --filter=${APP}...
 FROM base AS production-dependencies
 WORKDIR /app
 ARG APP
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/${APP}/node_modules ./apps/${APP}/node_modules
+# https://pnpm.io/cli/prune
+# The prune command does not support recursive execution on a monorepo currently. To only install production-dependencies in a monorepo node_modules folders can be deleted and then re-installed with pnpm install --prod.
+# COPY --from=dependencies /app/node_modules ./node_modules
+# COPY --from=dependencies /app/apps/${APP}/node_modules ./apps/${APP}/node_modules
 COPY --from=pruner /app/out/json/ .
-RUN pnpm prune --prod
+RUN pnpm install --frozen-lockfile --prod --no-optional --filter=${APP}...
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS builder
-ENV TURBO_TELEMETRY_DISABLED 1
+ENV TURBO_TELEMETRY_DISABLED=1
 WORKDIR /app
 ARG APP
 
@@ -47,7 +49,7 @@ RUN \
   REDIS_URL=$(cat /run/secrets/REDIS_URL) \
   turbo run build --filter=${APP}...
 
-FROM cgr.dev/chainguard/node:22
+FROM node:22-alpine@sha256:41e4389f3d988d2ed55392df4db1420ad048ae53324a8e2b7c6d19508288107e
 ARG APP
 WORKDIR /app/apps/${APP}
 
