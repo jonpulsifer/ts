@@ -8,8 +8,7 @@ on:
         type: choice
         options:
           - request-headers
-          - rosie
-          - wishlist
+          - hub
 
 jobs:
   containerize:
