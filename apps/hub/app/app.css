@@ -134,7 +134,9 @@ body {
 }
 
 /* Optimize for small 800x480 screen */
-html, body, #root {
+html,
+body,
+#root {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -174,7 +176,7 @@ html, body, #root {
     font-size: 1.5rem;
     line-height: 1.2;
   }
-  
+
   .text-lg {
     font-size: 0.9rem;
   }
@@ -182,7 +184,8 @@ html, body, #root {
 
 /* Weather card animations */
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

@@ -1,37 +1,47 @@
-"use client"
+'use client';
 
-import { useId, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
-import { Input } from "~/components/ui/input"
-import { Label } from "~/components/ui/label"
-import { Button } from "~/components/ui/button"
-import { Badge } from "~/components/ui/badge"
-import { useWeatherSocket } from "~/hooks/use-weather-socket"
+import { useId, useState } from 'react';
+import { Badge } from '~/components/ui/badge';
+import { Button } from '~/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
+import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
+import { useWeatherSocket } from '~/hooks/use-weather-socket';
 
 export default function Settings() {
-  const [token, setToken] = useState(import.meta.env.VITE_TEMPESTWX_TOKEN)
-  const [deviceId, setDeviceId] = useState(import.meta.env.VITE_TEMPESTWX_DEVICE_ID)
-  const tokenId = useId()
-  const deviceIdId = useId()
-  const { connectionStatus, connect, disconnect } = useWeatherSocket()
+  const [token, setToken] = useState(import.meta.env.VITE_TEMPESTWX_TOKEN);
+  const [deviceId, setDeviceId] = useState(
+    import.meta.env.VITE_TEMPESTWX_DEVICE_ID,
+  );
+  const tokenId = useId();
+  const deviceIdId = useId();
+  const { connectionStatus, connect, disconnect } = useWeatherSocket();
 
   const handleConnect = () => {
     if (token && deviceId) {
-      connect(token, Number.parseInt(deviceId))
+      connect(token, Number.parseInt(deviceId));
     }
-  }
+  };
 
   return (
     <div className="p-4 h-full overflow-y-auto">
       <div className="max-w-2xl space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Tempest Weather Connection</CardTitle>
+            <CardTitle className="text-lg">
+              Tempest Weather Connection
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center space-x-2">
               <span className="text-sm">Status:</span>
-              <Badge variant={connectionStatus === "connected" ? "default" : "secondary"}>{connectionStatus}</Badge>
+              <Badge
+                variant={
+                  connectionStatus === 'connected' ? 'default' : 'secondary'
+                }
+              >
+                {connectionStatus}
+              </Badge>
             </div>
 
             <div className="space-y-2">
@@ -85,5 +95,5 @@ export default function Settings() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
