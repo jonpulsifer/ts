@@ -1,13 +1,18 @@
-import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import Dashboard from "~/components/dashboard";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Weather Hub - Tempest Dashboard" },
+    { name: "description", content: "Real-time weather data from WeatherFlow Tempest station" },
+    { name: "viewport", content: "width=device-width, initial-scale=1, user-scalable=no" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <div className="h-screen w-screen overflow-hidden">
+      <Dashboard />
+    </div>
+  );
 }
+
