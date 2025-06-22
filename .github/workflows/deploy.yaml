@@ -84,8 +84,8 @@ jobs:
       - name: Get Dockerfile path
         id: dockerfile
         run: |
-          if [[ "${{ inputs.app }}" == "rosie" ]]; then
-            echo "path=k8s/docker/Dockerfile" >> $GITHUB_OUTPUT
+          if [[ "${{ inputs.app }}" == "hub" ]]; then
+            echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
           else
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
           fi
