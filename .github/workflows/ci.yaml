@@ -20,27 +20,27 @@ jobs:
       TURBO_TEAM: ${{ secrets.VERCEL_ID }}
       NEXT_TELEMETRY_DISABLED: 1
       TURBO_TELEMETRY_DISABLED: 1
-    services:
-      postgres:
-        image: postgres:17@sha256:6cf6142afacfa89fb28b894d6391c7dcbf6523c33178bdc33e782b3b533a9342
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 1s
-          --health-timeout 5s
-          --health-retries 10
-        ports:
-          - 5432:5432
-      redis:
-        image: redis:alpine@sha256:48501c5ad00d5563bc30c075c7bcef41d7d98de3e9a1e6c752068c66f0a8463b
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 1s
-          --health-timeout 5s
-          --health-retries 10
-        ports:
-          - 6379:6379
+    # services:
+    #   postgres:
+    #     image: postgres:17@sha256:6cf6142afacfa89fb28b894d6391c7dcbf6523c33178bdc33e782b3b533a9342
+    #     env:
+    #       POSTGRES_PASSWORD: postgres
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 1s
+    #       --health-timeout 5s
+    #       --health-retries 10
+    #     ports:
+    #       - 5432:5432
+    #   redis:
+    #     image: redis:alpine@sha256:48501c5ad00d5563bc30c075c7bcef41d7d98de3e9a1e6c752068c66f0a8463b
+    #     options: >-
+    #       --health-cmd "redis-cli ping"
+    #       --health-interval 1s
+    #       --health-timeout 5s
+    #       --health-retries 10
+    #     ports:
+    #       - 6379:6379
     steps:
       - name: Check out code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -52,18 +52,18 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
 
-      - name: Prepare db & env files
-        env:
-          PGPASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_MULTIPLE_DATABASES: wishlist
-        run: |
-          ./.github/scripts/create-multiple-postgresql-databases.sh
-          find . -type f -name '.env.example' -execdir cp -v {} .env \;
+      # - name: Prepare db & env files
+      #   env:
+      #     PGPASSWORD: postgres
+      #     POSTGRES_USER: postgres
+      #     POSTGRES_PASSWORD: postgres
+      #     POSTGRES_MULTIPLE_DATABASES: wishlist
+      #   run: |
+      #     ./.github/scripts/create-multiple-postgresql-databases.sh
+      #     find . -type f -name '.env.example' -execdir cp -v {} .env \;
 
       - name: Install dependencies
         run: pnpm install
