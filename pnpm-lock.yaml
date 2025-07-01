@@ -263,11 +263,11 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
       '@types/node':
-        specifier: 22.15.34
-        version: 22.15.34
+        specifier: 22.15.35
+        version: 22.15.35
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@22.15.34)(typescript@5.8.3)
+        version: 10.9.2(@types/node@22.15.35)(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1797,8 +1797,8 @@ packages:
   '@types/node@22.15.32':
     resolution: {integrity: sha512-3jigKqgSjsH6gYZv2nEsqdXfZqIFGAV36XYYjf9KGZ3PSG+IhLecqPnI310RvjutyMwifE2hhhNEklOUrvx/wA==}
 
-  '@types/node@22.15.34':
-    resolution: {integrity: sha512-8Y6E5WUupYy1Dd0II32BsWAx5MWdcnRd8L84Oys3veg1YrYtNtzgO4CFhiBg6MDSjk7Ay36HYOnU7/tuOzIzcw==}
+  '@types/node@22.15.35':
+    resolution: {integrity: sha512-stV91mHxlWpDksiUiivmFfQzjy2JLlb2NUTxKipiANEbxBZsdbDU9fSrT7SHY4uoCXAxYfJZVasn3x2/hqpd3g==}
 
   '@types/react-dom@19.1.5':
     resolution: {integrity: sha512-CMCjrWucUBZvohgZxkjd6S9h0nZxXjzus6yDfUb+xLxYM7VvjKNH1tQrE9GWLql1XoOP4/Ds3bwFqShHUYraGg==}
@@ -4853,7 +4853,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@22.15.34':
+  '@types/node@22.15.35':
     dependencies:
       undici-types: 6.21.0
 
@@ -6202,14 +6202,14 @@ snapshots:
       yn: 3.1.1
     optional: true
 
-  ts-node@10.9.2(@types/node@22.15.34)(typescript@5.8.3):
+  ts-node@10.9.2(@types/node@22.15.35)(typescript@5.8.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.15.34
+      '@types/node': 22.15.35
       acorn: 8.14.1
       acorn-walk: 8.3.4
       arg: 4.1.3
