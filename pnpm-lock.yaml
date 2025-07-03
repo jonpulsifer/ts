@@ -233,7 +233,7 @@ importers:
         version: 1.1.2(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       zod:
         specifier: ^3.25.67
-        version: 3.25.70
+        version: 3.25.71
     devDependencies:
       '@types/node':
         specifier: ^22.0.0
@@ -3385,8 +3385,8 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
 
-  zod@3.25.70:
-    resolution: {integrity: sha512-2WWzL2X2GpPU6as2xK1HFb6U5BZdJMdpB5Qtlan4a1KLYcZ6Gvox+mqZpxOd66sfe5AP3pEWpd2BC3f0yLH/nQ==}
+  zod@3.25.71:
+    resolution: {integrity: sha512-BsBc/NPk7h8WsUWYWYL+BajcJPY8YhjelaWu2NMLuzgraKAz4Lb4/6K11g9jpuDetjMiqhZ6YaexFLOC0Ogi3Q==}
 
 snapshots:
 
@@ -6412,4 +6412,4 @@ snapshots:
 
   yn@3.1.1: {}
 
-  zod@3.25.70: {}
+  zod@3.25.71: {}
