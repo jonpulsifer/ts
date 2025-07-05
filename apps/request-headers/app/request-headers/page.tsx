@@ -23,7 +23,7 @@ export default async function RequestHeadersPage() {
 
   return (
     <div>
-      <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
@@ -43,7 +43,7 @@ export default async function RequestHeadersPage() {
       <h1 className="text-md sm:text-2xl md:text-3xl lg:text-4xl tracking-tight font-extrabold pt-4 mb-4">
         <span>(∩ ͡° ͜ʖ ͡°)⊃</span>
         <span className="text-indigo-600">━</span>
-        <span className="font-mono text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
+        <span className="font-mono text-transparent bg-clip-text bg-linear-to-r from-indigo-600 to-pink-600">
           <span className={starColor}>⭑</span>·~-.¸.·~
           <span className={starColor}>⭒</span>·._.·
         </span>
