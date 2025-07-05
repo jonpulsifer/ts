@@ -1,13 +1,16 @@
 'use client';
 
 import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUp,
   Clock,
   Droplets,
   Eye,
+  Sun,
   Thermometer,
   Wifi,
   Wind,
-  Zap,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '~/components/ui/card';
@@ -28,11 +31,15 @@ export default function Dashboard() {
 
   // Keep temperature in Celsius (no conversion needed)
   const tempC = weatherData?.temperature;
+  const feelsLike = weatherData?.feelsLike;
 
   // Convert wind speed from m/s to km/h
   const windKmh = weatherData?.windSpeed
     ? weatherData.windSpeed * 3.6
     : undefined;
+
+  // Get barometric trend
+  const barometricTrend = weatherData?.barometricTrend || 'steady';
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], {
@@ -50,6 +57,18 @@ export default function Dashboard() {
     });
   };
 
+  // Get barometric trend icon and color
+  const getBarometricTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'rising':
+        return <ArrowUp className="w-4 h-4 text-green-400" />;
+      case 'falling':
+        return <ArrowDown className="w-4 h-4 text-red-400" />;
+      default:
+        return <ArrowRight className="w-4 h-4 text-gray-400" />;
+    }
+  };
+
   // Debug: Log the raw temperature value
   useEffect(() => {
     if (weatherData?.temperature !== undefined) {
@@ -64,13 +83,13 @@ export default function Dashboard() {
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center space-x-3">
           <Clock className="w-5 h-5 text-gray-400" />
-          <div>
-            <div className="text-2xl font-mono font-bold text-white">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-4xl font-mono font-bold text-white">
               {formatTime(currentTime)}
             </div>
-            <div className="text-sm text-gray-400">
-              {formatDate(currentTime)} {currentTime.getFullYear()}
-            </div>
+          </div>
+          <div className="text-2xl font-mono font-bold text-white">
+            {formatDate(currentTime)} {currentTime.getFullYear()}
           </div>
         </div>
 
@@ -112,6 +131,13 @@ export default function Dashboard() {
               {tempC !== undefined ? tempC.toFixed(1) : '--'}
             </div>
             <div className="text-lg text-gray-300">°C</div>
+            {feelsLike !== undefined &&
+              tempC !== undefined &&
+              Math.abs(feelsLike - tempC) > 2 && (
+                <div className="text-xs text-gray-400 mt-1">
+                  Feels like {feelsLike.toFixed(1)}°C
+                </div>
+              )}
             <div className="text-xs text-gray-500">Temperature</div>
           </CardContent>
         </Card>
@@ -146,23 +172,28 @@ export default function Dashboard() {
         {/* Pressure */}
         <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
           <CardContent className="p-3 flex flex-col justify-center items-center h-full text-center">
-            <Eye className="w-6 h-6 text-purple-400 mb-2" />
-            <div className="text-3xl font-bold text-white mb-1">
-              {weatherData?.pressure ? weatherData.pressure.toFixed(0) : '--'}
+            <div className="flex items-center space-x-2 mb-2">
+              <Eye className="w-6 h-6 text-purple-400" />
+            </div>
+            <div className="text-3xl font-bold text-white mb-1 flex-row flex items-center gap-1">
+              {weatherData?.pressure ? weatherData.pressure.toFixed(0) : '--'}{' '}
+              {getBarometricTrendIcon(barometricTrend)}
             </div>
             <div className="text-lg text-gray-300">mb</div>
-            <div className="text-xs text-gray-500">Pressure</div>
+            <div className="text-xs text-gray-500 flex items-center space-x-1">
+              <span>Pressure</span>
+            </div>
           </CardContent>
         </Card>
 
         {/* UV Index */}
         <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
           <CardContent className="p-3 flex flex-col justify-center items-center h-full text-center">
-            <Zap className="w-6 h-6 text-yellow-400 mb-2" />
+            <Sun className="w-6 h-6 text-yellow-400 mb-2" />
             <div className="text-3xl font-bold text-white mb-1">
               {weatherData?.uvIndex ? weatherData.uvIndex.toFixed(1) : '--'}
             </div>
-            <div className="text-lg text-gray-300">Index</div>
+            <div className="text-lg text-gray-300">UV Index</div>
             <div className="text-xs text-gray-500">
               {weatherData?.uvIndex
                 ? weatherData.uvIndex <= 2
