@@ -269,8 +269,8 @@ importers:
         specifier: workspace*
         version: link:../typescript-config
       '@types/k6':
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 1.1.1
+        version: 1.1.1
       '@types/node':
         specifier: 22.16.0
         version: 22.16.0
@@ -1790,8 +1790,8 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  '@types/k6@1.1.0':
-    resolution: {integrity: sha512-PsC9JBjp93WUxfbKzA3qc8zltkY+ulnc8lVcFcUpAk/MQAP44XJ3U/OYx6qGvOR++v8HYxTsJmBqAr5MpFRZvQ==}
+  '@types/k6@1.1.1':
+    resolution: {integrity: sha512-ioNtKGb59VEBfmM8iJIRp1OpE4y8sfEBHBy55VXYzoicIQAWWVae+RYDstCoVAIqyFA1bfaLwAWKKEUxp0SwnA==}
 
   '@types/node@22.16.0':
     resolution: {integrity: sha512-B2egV9wALML1JCpv3VQoQ+yesQKAmNMBIAY7OteVrikcOcAkWm+dGL6qpeCktPjAv6N1JLnhbNiqS35UpFyBsQ==}
@@ -4595,7 +4595,7 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/k6@1.1.0': {}
+  '@types/k6@1.1.1': {}
 
   '@types/node@22.16.0':
     dependencies:
