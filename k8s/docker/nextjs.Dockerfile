@@ -1,4 +1,4 @@
-FROM node:22-alpine@sha256:fc3e945f920b7e3000cd1af86c4ae406ec70c72f328b667baf0f3a8910d69eed AS base
+FROM node:22-alpine@sha256:edaff7359149b451922a1ec148ceeba6cc8ba20411235f782f16329f41fe37e6 AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo@2
 
@@ -36,7 +36,7 @@ RUN \
   REDIS_URL=$(cat /run/secrets/REDIS_URL) \
   turbo run build --filter=${APP}...
 
-FROM node:22-alpine@sha256:fc3e945f920b7e3000cd1af86c4ae406ec70c72f328b667baf0f3a8910d69eed AS runner
+FROM node:22-alpine@sha256:edaff7359149b451922a1ec148ceeba6cc8ba20411235f782f16329f41fe37e6 AS runner
 ARG APP
 ENV NEXT_TELEMETRY_DISABLED 1
 WORKDIR /app
