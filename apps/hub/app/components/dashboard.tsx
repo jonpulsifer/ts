@@ -18,10 +18,11 @@ import { useWeatherSocket } from '~/hooks/use-weather-socket';
 
 export default function Dashboard() {
   const { weatherData, lastUpdate, connectionStatus } = useWeatherSocket();
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
-  // Update current time every second
+  // Update current time every second, only on the client
   useEffect(() => {
+    setCurrentTime(new Date());
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -78,21 +79,23 @@ export default function Dashboard() {
   }, [weatherData]);
 
   return (
-    <div className="p-2 h-screen overflow-hidden bg-gray-900 text-white">
+    <div className="p-2 h-screen overflow-hidden bg-gray-900 text-white flex flex-col">
       {/* Header with time and connection */}
       <div className="flex justify-between items-baseline mb-2">
         {/* Time */}
         <div className="flex items-baseline space-x-3">
           <Clock className="w-5 h-5 text-gray-400" />
           <div className="text-4xl font-mono font-bold text-white">
-            {formatTime(currentTime)}
+            {currentTime ? formatTime(currentTime) : '--:--:--'}
           </div>
         </div>
 
         {/* Date and Connection Status */}
         <div className="flex items-baseline space-x-4">
           <div className="text-2xl font-mono font-bold text-white">
-            {formatDate(currentTime)} {currentTime.getFullYear()}
+            {currentTime
+              ? `${formatDate(currentTime)} ${currentTime.getFullYear()}`
+              : '---, --- --'}
           </div>
           <div className="flex items-center space-x-2">
             <Wifi
@@ -117,112 +120,107 @@ export default function Dashboard() {
                       : 'text-gray-400'
               }`}
             >
-              {connectionStatus}
+              {lastUpdate
+                ? `Updated: ${new Date(lastUpdate).toLocaleTimeString()}`
+                : connectionStatus}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Main weather grid - top row */}
-      <div className="grid grid-cols-3 gap-2 h-48 mb-2">
+      {/* Weather Grid */}
+      <div className="flex-grow grid grid-rows-2 grid-cols-6 gap-2 pb-2">
         {/* Temperature */}
-        <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-          <CardContent className="p-3 flex flex-col justify-center items-center h-full text-center">
-            <Thermometer className="w-6 h-6 text-orange-400 mb-2" />
-            <div className="text-3xl font-bold text-white mb-1">
-              {tempC !== undefined ? tempC.toFixed(1) : '--'}
+        <Card className="col-span-2 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
+          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
+            <Thermometer className="w-6 h-6 text-orange-400" />
+            <div className="flex-grow flex flex-col justify-center items-center">
+              <div className="text-6xl font-bold text-white">
+                {tempC !== undefined ? tempC.toFixed(1) : '--'}
+              </div>
+              <div className="text-xl text-gray-300">°C</div>
+              {feelsLike !== undefined &&
+                tempC !== undefined &&
+                Math.abs(feelsLike - tempC) > 2 && (
+                  <div className="text-sm text-gray-400">
+                    Feels like {feelsLike.toFixed(1)}°C
+                  </div>
+                )}
             </div>
-            <div className="text-lg text-gray-300">°C</div>
-            {feelsLike !== undefined &&
-              tempC !== undefined &&
-              Math.abs(feelsLike - tempC) > 2 && (
-                <div className="text-xs text-gray-400 mt-1">
-                  Feels like {feelsLike.toFixed(1)}°C
-                </div>
-              )}
-            <div className="text-xs text-gray-500">Temperature</div>
+            <div className="text-sm text-gray-500">Temperature</div>
           </CardContent>
         </Card>
 
         {/* Humidity */}
-        <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-          <CardContent className="p-3 flex flex-col justify-center items-center h-full text-center">
-            <Droplets className="w-6 h-6 text-blue-400 mb-2" />
-            <div className="text-3xl font-bold text-white mb-1">
-              {weatherData?.humidity ? weatherData.humidity.toFixed(0) : '--'}
+        <Card className="col-span-2 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
+          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
+            <Droplets className="w-6 h-6 text-blue-400" />
+            <div className="flex-grow flex flex-col justify-center items-center">
+              <div className="text-6xl font-bold text-white">
+                {weatherData?.humidity ? weatherData.humidity.toFixed(0) : '--'}
+              </div>
+              <div className="text-xl text-gray-300">%</div>
             </div>
-            <div className="text-lg text-gray-300">%</div>
-            <div className="text-xs text-gray-500">Humidity</div>
+            <div className="text-sm text-gray-500">Humidity</div>
           </CardContent>
         </Card>
 
         {/* Wind Speed */}
-        <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-          <CardContent className="p-3 flex flex-col justify-center items-center h-full text-center">
-            <Wind className="w-6 h-6 text-gray-400 mb-2" />
-            <div className="text-3xl font-bold text-white mb-1">
-              {windKmh ? windKmh.toFixed(1) : '--'}
+        <Card className="col-span-2 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
+          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
+            <Wind className="w-6 h-6 text-gray-400" />
+            <div className="flex-grow flex flex-col justify-center items-center">
+              <div className="text-6xl font-bold text-white">
+                {windKmh ? windKmh.toFixed(1) : '--'}
+              </div>
+              <div className="text-xl text-gray-300">km/h</div>
             </div>
-            <div className="text-lg text-gray-300">km/h</div>
-            <div className="text-xs text-gray-500">Wind Speed</div>
+            <div className="text-sm text-gray-500">Wind Speed</div>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Bottom row */}
-      <div className="grid grid-cols-2 gap-2 h-48">
         {/* Pressure */}
-        <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-          <CardContent className="p-3 flex flex-col justify-center items-center h-full text-center">
-            <div className="flex items-center space-x-2 mb-2">
-              <Eye className="w-6 h-6 text-purple-400" />
+        <Card className="col-span-3 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
+          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
+            <Eye className="w-6 h-6 text-purple-400" />
+            <div className="flex-grow flex flex-col justify-center items-center">
+              <div className="text-6xl font-bold text-white flex items-center gap-1">
+                {weatherData?.pressure
+                  ? weatherData.pressure.toFixed(0)
+                  : '--'}{' '}
+                {getBarometricTrendIcon(barometricTrend)}
+              </div>
+              <div className="text-xl text-gray-300">mb</div>
             </div>
-            <div className="text-3xl font-bold text-white mb-1 flex-row flex items-center gap-1">
-              {weatherData?.pressure ? weatherData.pressure.toFixed(0) : '--'}{' '}
-              {getBarometricTrendIcon(barometricTrend)}
-            </div>
-            <div className="text-lg text-gray-300">mb</div>
-            <div className="text-xs text-gray-500 flex items-center space-x-1">
-              <span>Pressure</span>
-            </div>
+            <div className="text-sm text-gray-500">Pressure</div>
           </CardContent>
         </Card>
 
         {/* UV Index */}
-        <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-          <CardContent className="p-3 flex flex-col justify-center items-center h-full text-center">
-            <Sun className="w-6 h-6 text-yellow-400 mb-2" />
-            <div className="text-3xl font-bold text-white mb-1">
-              {weatherData?.uvIndex ? weatherData.uvIndex.toFixed(1) : '--'}
-            </div>
-            <div className="text-lg text-gray-300">UV Index</div>
-            <div className="text-xs text-gray-500">
-              {weatherData?.uvIndex
-                ? weatherData.uvIndex <= 2
-                  ? 'Low'
-                  : weatherData.uvIndex <= 5
-                    ? 'Moderate'
-                    : weatherData.uvIndex <= 7
-                      ? 'High'
-                      : weatherData.uvIndex <= 10
-                        ? 'Very High'
-                        : 'Extreme'
-                : 'UV Index'}
+        <Card className="col-span-3 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
+          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
+            <Sun className="w-6 h-6 text-yellow-400" />
+            <div className="flex-grow flex flex-col justify-center items-center">
+              <div className="text-6xl font-bold text-white">
+                {weatherData?.uvIndex ? weatherData.uvIndex.toFixed(1) : '--'}
+              </div>
+              <div className="text-xl text-gray-300">UV Index</div>
+              <div className="text-sm text-gray-500">
+                {weatherData?.uvIndex
+                  ? weatherData.uvIndex <= 2
+                    ? 'Low'
+                    : weatherData.uvIndex <= 5
+                      ? 'Moderate'
+                      : weatherData.uvIndex <= 7
+                        ? 'High'
+                        : weatherData.uvIndex <= 10
+                          ? 'Very High'
+                          : 'Extreme'
+                  : ''}
+              </div>
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Footer */}
-      <div className="flex justify-center items-center text-xs text-gray-600 mt-2">
-        {lastUpdate
-          ? `Updated: ${new Date(lastUpdate).toLocaleTimeString()}`
-          : 'Waiting for data...'}
-        {weatherData?.timestamp && (
-          <span className="ml-4">
-            Data: {new Date(weatherData.timestamp * 1000).toLocaleTimeString()}
-          </span>
-        )}
       </div>
     </div>
   );
