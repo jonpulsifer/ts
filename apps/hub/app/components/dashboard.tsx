@@ -80,44 +80,46 @@ export default function Dashboard() {
   return (
     <div className="p-2 h-screen overflow-hidden bg-gray-900 text-white">
       {/* Header with time and connection */}
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center space-x-3">
+      <div className="flex justify-between items-baseline mb-2">
+        {/* Time */}
+        <div className="flex items-baseline space-x-3">
           <Clock className="w-5 h-5 text-gray-400" />
-          <div className="grid grid-cols-2 gap-2">
-            <div className="text-4xl font-mono font-bold text-white">
-              {formatTime(currentTime)}
-            </div>
-          </div>
-          <div className="text-2xl font-mono font-bold text-white">
-            {formatDate(currentTime)} {currentTime.getFullYear()}
+          <div className="text-4xl font-mono font-bold text-white">
+            {formatTime(currentTime)}
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Wifi
-            className={`w-4 h-4 ${
-              connectionStatus === 'connected'
-                ? 'text-green-400'
-                : connectionStatus === 'connecting'
-                  ? 'text-yellow-400'
-                  : connectionStatus === 'error'
-                    ? 'text-red-400'
-                    : 'text-gray-400'
-            }`}
-          />
-          <span
-            className={`text-sm capitalize ${
-              connectionStatus === 'connected'
-                ? 'text-green-400'
-                : connectionStatus === 'connecting'
-                  ? 'text-yellow-400'
-                  : connectionStatus === 'error'
-                    ? 'text-red-400'
-                    : 'text-gray-400'
-            }`}
-          >
-            {connectionStatus}
-          </span>
+        {/* Date and Connection Status */}
+        <div className="flex items-baseline space-x-4">
+          <div className="text-2xl font-mono font-bold text-white">
+            {formatDate(currentTime)} {currentTime.getFullYear()}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Wifi
+              className={`w-4 h-4 ${
+                connectionStatus === 'connected'
+                  ? 'text-green-400'
+                  : connectionStatus === 'connecting'
+                    ? 'text-yellow-400'
+                    : connectionStatus === 'error'
+                      ? 'text-red-400'
+                      : 'text-gray-400'
+              }`}
+            />
+            <span
+              className={`text-sm capitalize ${
+                connectionStatus === 'connected'
+                  ? 'text-green-400'
+                  : connectionStatus === 'connecting'
+                    ? 'text-yellow-400'
+                    : connectionStatus === 'error'
+                      ? 'text-red-400'
+                      : 'text-gray-400'
+              }`}
+            >
+              {connectionStatus}
+            </span>
+          </div>
         </div>
       </div>
 
