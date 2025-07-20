@@ -1,5 +1,3 @@
-'use client';
-
 import {
   ArrowDown,
   ArrowRight,
@@ -35,9 +33,10 @@ export default function Dashboard() {
   const feelsLike = weatherData?.feelsLike;
 
   // Convert wind speed from m/s to km/h
-  const windKmh = weatherData?.windSpeed
-    ? weatherData.windSpeed * 3.6
-    : undefined;
+  const windKmh =
+    weatherData?.windSpeed != null
+      ? weatherData.windSpeed * 3.6
+      : undefined;
 
   // Get barometric trend
   const barometricTrend = weatherData?.barometricTrend || 'steady';
@@ -79,20 +78,20 @@ export default function Dashboard() {
   }, [weatherData]);
 
   return (
-    <div className="p-2 h-screen overflow-hidden bg-gray-900 text-white flex flex-col">
+    <div className="p-4 h-full flex flex-col">
       {/* Header with time and connection */}
-      <div className="flex justify-between items-baseline mb-2">
+      <div className="flex justify-between items-center mb-4">
         {/* Time */}
-        <div className="flex items-baseline space-x-3">
-          <Clock className="w-5 h-5 text-gray-400" />
-          <div className="text-4xl font-mono font-bold text-white">
+        <div className="flex items-baseline space-x-2">
+          <Clock className="w-6 h-6 text-gray-400" />
+          <div className="text-3xl font-mono font-bold text-white">
             {currentTime ? formatTime(currentTime) : '--:--:--'}
           </div>
         </div>
 
         {/* Date and Connection Status */}
         <div className="flex items-baseline space-x-4">
-          <div className="text-2xl font-mono font-bold text-white">
+          <div className="text-xl font-mono font-bold text-white">
             {currentTime
               ? `${formatDate(currentTime)} ${currentTime.getFullYear()}`
               : '---, --- --'}
@@ -110,7 +109,7 @@ export default function Dashboard() {
               }`}
             />
             <span
-              className={`text-sm capitalize ${
+              className={`text-xs capitalize ${
                 connectionStatus === 'connected'
                   ? 'text-green-400'
                   : connectionStatus === 'connecting'
@@ -129,97 +128,88 @@ export default function Dashboard() {
       </div>
 
       {/* Weather Grid */}
-      <div className="flex-grow grid grid-rows-2 grid-cols-6 gap-2 pb-2">
-        {/* Temperature */}
-        <Card className="col-span-2 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
-          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
-            <Thermometer className="w-6 h-6 text-orange-400" />
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <div className="text-6xl font-bold text-white">
-                {tempC !== undefined ? tempC.toFixed(1) : '--'}
-              </div>
-              <div className="text-xl text-gray-300">°C</div>
-              {feelsLike !== undefined &&
-                tempC !== undefined &&
-                Math.abs(feelsLike - tempC) > 2 && (
-                  <div className="text-sm text-gray-400">
-                    Feels like {feelsLike.toFixed(1)}°C
-                  </div>
-                )}
+      <div className="flex-grow grid grid-cols-3 grid-rows-2 gap-4">
+        {/* Temperature & Humidity */}
+        <Card className="col-span-1 row-span-2 bg-gray-800 border-gray-700 flex flex-col p-4">
+          <div className="flex-grow flex flex-col justify-center items-center text-center">
+            <Thermometer className="w-8 h-8 text-orange-400" />
+            <div className="text-7xl font-bold text-white mt-2">
+              {tempC !== undefined ? tempC.toFixed(1) : '--'}°C
             </div>
-            <div className="text-sm text-gray-500">Temperature</div>
-          </CardContent>
-        </Card>
-
-        {/* Humidity */}
-        <Card className="col-span-2 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
-          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
-            <Droplets className="w-6 h-6 text-blue-400" />
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <div className="text-6xl font-bold text-white">
-                {weatherData?.humidity ? weatherData.humidity.toFixed(0) : '--'}
-              </div>
-              <div className="text-xl text-gray-300">%</div>
+            {feelsLike !== undefined &&
+              tempC !== undefined &&
+              Math.abs(feelsLike - tempC) > 2 && (
+                <div className="text-lg text-gray-400">
+                  Feels like {feelsLike.toFixed(1)}°C
+                </div>
+              )}
+          </div>
+          <div className="flex-grow flex flex-col justify-center items-center text-center mt-4">
+            <Droplets className="w-8 h-8 text-blue-400" />
+            <div className="text-5xl font-bold text-white mt-2">
+              {weatherData?.humidity ? weatherData.humidity.toFixed(0) : '--'}%
             </div>
-            <div className="text-sm text-gray-500">Humidity</div>
-          </CardContent>
+            <div className="text-md text-gray-500">Humidity</div>
+          </div>
         </Card>
 
         {/* Wind Speed */}
-        <Card className="col-span-2 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
-          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
-            <Wind className="w-6 h-6 text-gray-400" />
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <div className="text-6xl font-bold text-white">
-                {windKmh ? windKmh.toFixed(1) : '--'}
+        <Card className="col-span-2 bg-gray-800 border-gray-700 flex flex-col p-4">
+          <div className="flex-grow flex flex-col justify-center items-center text-center">
+            <Wind className="w-8 h-8 text-gray-400" />
+            {windKmh != null && windKmh > 0 ? (
+              <>
+                <div className="text-6xl font-bold text-white mt-2">
+                  {windKmh.toFixed(1)}
+                </div>
+                <div className="text-xl text-gray-300">km/h</div>
+              </>
+            ) : (
+              <div className="text-4xl font-bold text-white mt-2">
+                Windless™
               </div>
-              <div className="text-xl text-gray-300">km/h</div>
-            </div>
-            <div className="text-sm text-gray-500">Wind Speed</div>
-          </CardContent>
+            )}
+            <div className="text-md text-gray-500 mt-auto">Wind Speed</div>
+          </div>
         </Card>
 
         {/* Pressure */}
-        <Card className="col-span-3 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
-          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
-            <Eye className="w-6 h-6 text-purple-400" />
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <div className="text-6xl font-bold text-white flex items-center gap-1">
-                {weatherData?.pressure
-                  ? weatherData.pressure.toFixed(0)
-                  : '--'}{' '}
-                {getBarometricTrendIcon(barometricTrend)}
-              </div>
-              <div className="text-xl text-gray-300">mb</div>
+        <Card className="col-span-1 bg-gray-800 border-gray-700 flex flex-col p-4">
+          <div className="flex-grow flex flex-col justify-center items-center text-center">
+            <Eye className="w-8 h-8 text-purple-400" />
+            <div className="text-4xl font-bold text-white mt-2 flex items-center gap-1">
+              {weatherData?.pressure
+                ? weatherData.pressure.toFixed(0)
+                : '--'}{' '}
+              {getBarometricTrendIcon(barometricTrend)}
             </div>
-            <div className="text-sm text-gray-500">Pressure</div>
-          </CardContent>
+            <div className="text-lg text-gray-300">mb</div>
+            <div className="text-md text-gray-500 mt-auto">Pressure</div>
+          </div>
         </Card>
 
         {/* UV Index */}
-        <Card className="col-span-3 bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors flex flex-col">
-          <CardContent className="p-2 flex flex-col justify-between items-center h-full text-center flex-grow">
-            <Sun className="w-6 h-6 text-yellow-400" />
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <div className="text-6xl font-bold text-white">
-                {weatherData?.uvIndex ? weatherData.uvIndex.toFixed(1) : '--'}
-              </div>
-              <div className="text-xl text-gray-300">UV Index</div>
-              <div className="text-sm text-gray-500">
-                {weatherData?.uvIndex
-                  ? weatherData.uvIndex <= 2
-                    ? 'Low'
-                    : weatherData.uvIndex <= 5
-                      ? 'Moderate'
-                      : weatherData.uvIndex <= 7
-                        ? 'High'
-                        : weatherData.uvIndex <= 10
-                          ? 'Very High'
-                          : 'Extreme'
-                  : ''}
-              </div>
+        <Card className="col-span-1 bg-gray-800 border-gray-700 flex flex-col p-4">
+          <div className="flex-grow flex flex-col justify-center items-center text-center">
+            <Sun className="w-8 h-8 text-yellow-400" />
+            <div className="text-4xl font-bold text-white mt-2">
+              {weatherData?.uvIndex ? weatherData.uvIndex.toFixed(1) : '--'}
             </div>
-          </CardContent>
+            <div className="text-lg text-gray-300">UV Index</div>
+            <div className="text-md text-gray-500 mt-auto">
+              {weatherData?.uvIndex
+                ? weatherData.uvIndex <= 2
+                  ? 'Low'
+                  : weatherData.uvIndex <= 5
+                    ? 'Moderate'
+                    : weatherData.uvIndex <= 7
+                      ? 'High'
+                      : weatherData.uvIndex <= 10
+                        ? 'Very High'
+                        : 'Extreme'
+                : ''}
+            </div>
+          </div>
         </Card>
       </div>
     </div>
