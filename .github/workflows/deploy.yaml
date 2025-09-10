@@ -14,6 +14,10 @@ jobs:
   containerize:
     name: containerize
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJSON((inputs.app == 'hub') && '["linux/amd64","linux/arm64"]' || '["linux/amd64"]') }}
     permissions:
       contents: read
       packages: write
@@ -85,9 +89,39 @@ jobs:
         id: dockerfile
         run: |
           if [[ "${{ inputs.app }}" == "hub" ]]; then
-            echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
+            echo "path=apps/hub/Dockerfile" >> $GITHUB_OUTPUT
+            echo "context=apps/hub" >> $GITHUB_OUTPUT
           else
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
+            echo "context=." >> $GITHUB_OUTPUT
+          fi
+
+      - name: Compute tags per platform
+        id: tags
+        run: |
+          # default: use metadata-action tags as-is
+          TAGS='${{ steps.meta.outputs.tags }}'
+          if [[ "${{ inputs.app }}" == "hub" ]]; then
+            # Append platform suffix (-amd64 or -arm64) to each tag when building hub
+            mapfile -t arr < <(printf '%s\n' "$TAGS")
+            out=()
+            case "${{ matrix.platform }}" in
+              linux/arm64)
+                suffix='-arm64'
+                ;;
+              linux/amd64)
+                suffix='-amd64'
+                ;;
+              *)
+                suffix='' # fallback
+                ;;
+            esac
+            for t in "${arr[@]}"; do
+              out+=("${t}${suffix}")
+            done
+            printf 'value=%s\n' "$(printf '%s\n' "${out[@]}")" >> "$GITHUB_OUTPUT"
+          else
+            printf 'value=%s\n' "$TAGS" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build and push
@@ -103,10 +137,13 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          context: .
+          context: ${{ steps.dockerfile.outputs.context }}
           file: ${{ steps.dockerfile.outputs.path }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          platforms: ${{ matrix.platform }}
+          tags: ${{ steps.tags.outputs.value }}
+          labels: |
+            ${{ steps.meta.outputs.labels }}
+            org.opencontainers.image.platform=${{ matrix.platform }}
           sbom: true
           provenance: true
 
