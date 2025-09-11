@@ -86,10 +86,8 @@ jobs:
         run: |
           if [[ "${{ inputs.app }}" == "hub" ]]; then
             echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
-            echo "context=." >> $GITHUB_OUTPUT
           else
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
-            echo "context=." >> $GITHUB_OUTPUT
           fi
 
       - name: Compute platforms
@@ -114,7 +112,6 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          context: ${{ steps.dockerfile.outputs.context }}
           file: ${{ steps.dockerfile.outputs.path }}
           platforms: ${{ steps.platforms.outputs.value }}
           tags: ${{ steps.meta.outputs.tags }}
