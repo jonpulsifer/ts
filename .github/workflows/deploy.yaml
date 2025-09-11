@@ -85,8 +85,8 @@ jobs:
         id: dockerfile
         run: |
           if [[ "${{ inputs.app }}" == "hub" ]]; then
-            echo "path=apps/hub/Dockerfile" >> $GITHUB_OUTPUT
-            echo "context=apps/hub" >> $GITHUB_OUTPUT
+            echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
+            echo "context=." >> $GITHUB_OUTPUT
           else
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
             echo "context=." >> $GITHUB_OUTPUT
