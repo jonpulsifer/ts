@@ -239,7 +239,7 @@ importers:
         version: 1.1.2(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       zod:
         specifier: ^4.0.0
-        version: 4.1.5
+        version: 4.1.6
     devDependencies:
       '@types/node':
         specifier: ^22.0.0
@@ -3180,8 +3180,8 @@ packages:
   zimmerframe@1.1.2:
     resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
 
-  zod@4.1.5:
-    resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
+  zod@4.1.6:
+    resolution: {integrity: sha512-ODK6zDMdQmu2MuklFFjN79FpiXECO+7uNBXPxHKNZu/dQQbuptvukshF7dmLOkMnR9inMTeLqqHuGKhs32SHdQ==}
 
 snapshots:
 
@@ -5987,4 +5987,4 @@ snapshots:
 
   zimmerframe@1.1.2: {}
 
-  zod@4.1.5: {}
+  zod@4.1.6: {}
