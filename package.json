@@ -21,7 +21,7 @@
     "node": ">=22.*.*",
     "npm": ">=10.*.*"
   },
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.18.1",
   "cspell": {
     "version": "0.2",
     "ignorePaths": [],
