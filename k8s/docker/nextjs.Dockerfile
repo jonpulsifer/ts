@@ -13,8 +13,9 @@ RUN turbo prune --scope=${APP} --docker
 FROM base AS installer
 ARG APP
 ENV STANDALONE=1
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV TURBO_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV TURBO_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
@@ -38,7 +39,7 @@ RUN \
 
 FROM node:22-alpine@sha256:dbcedd8aeab47fbc0f4dd4bffa55b7c3c729a707875968d467aaaea42d6225af AS runner
 ARG APP
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 
 COPY --from=installer /app/apps/${APP}/next.config.* .
