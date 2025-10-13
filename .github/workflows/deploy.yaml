@@ -117,7 +117,7 @@ jobs:
           workload_identity_provider: projects/629296473058/locations/global/workloadIdentityPools/homelab/providers/github
 
       - name: Attest
-        uses: jonpulsifer/attest-action@main
+        uses: jonpulsifer/attester-action@main
         with:
           projectId: trusted-builds
           attestorId: provenance
