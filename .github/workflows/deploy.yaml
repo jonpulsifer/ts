@@ -112,7 +112,7 @@ jobs:
           provenance: true
 
       - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v3
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
           workload_identity_provider: projects/629296473058/locations/global/workloadIdentityPools/homelab/providers/github
 
