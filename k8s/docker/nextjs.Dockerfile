@@ -15,7 +15,6 @@ ARG APP
 ENV STANDALONE=1
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV TURBO_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
