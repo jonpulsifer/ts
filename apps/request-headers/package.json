@@ -60,7 +60,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "postcss": "^8.5.6",
