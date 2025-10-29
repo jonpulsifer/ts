@@ -17,9 +17,10 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
     services:
       postgres:
-        image: postgres:17@sha256:feff5b24fedd610975a1f5e743c51a4b360437f4dc3a11acf740dcd708f413f6
+        image: postgres:18@sha256:1ffc019dae94eca6b09a49ca67d37398951346de3c3d0cfe23d8d4ca33da83fb
         env:
           POSTGRES_PASSWORD: postgres
         # options: >-
@@ -30,7 +31,7 @@ jobs:
         ports:
           - 5432:5432
       redis:
-        image: redis:alpine@sha256:987c376c727652f99625c7d205a1cba3cb2c53b92b0b62aade2bd48ee1593232
+        image: redis:alpine@sha256:59b6e694653476de2c992937ebe1c64182af4728e54bb49e9b7a6c26614d8933
         # options: >-
         #   --health-cmd "redis-cli ping"
         #   --health-interval 10s
@@ -65,7 +66,7 @@ jobs:
             network=host
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -101,6 +102,7 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
+        id: docker-build
         with:
           build-args: |
             APP=${{ inputs.app }}
@@ -118,6 +120,25 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: true
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          project_id: trusted-builds
+          workload_identity_provider: projects/629296473058/locations/global/workloadIdentityPools/homelab/providers/github
+
+      - name: Attest
+        uses: jonpulsifer/attester-action@main
+        with:
+          projectId: trusted-builds
+          attestorId: provenance
+          imageName: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
+          imageDigest: ${{ steps.docker-build.outputs.digest }}
+          keyProject: trusted-builds
+          keyLocation: northamerica-northeast1
+          keyRing: keys
+          keyName: signer
+          keyVersion: 1
 
   deploy:
     needs: [containerize]
