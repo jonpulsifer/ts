@@ -13,12 +13,12 @@ on:
 
 jobs:
   containerize:
-    uses: ./.github/workflows/containerize.yaml@main
+    uses: ./.github/workflows/containerize.yaml
     with:
       app: ${{ inputs.app }}
   
   attest:
-    uses: ./.github/workflows/attest.yaml@main
+    uses: ./.github/workflows/attest.yaml
     if: ${{ github.ref == 'refs/heads/main' }}
     with:
       image: ${{ needs.containerize.build-and-push.outputs.image }}
