@@ -1,4 +1,4 @@
-import { RefreshCw, RotateCcw } from 'lucide-react';
+import { Power, RefreshCw, RotateCcw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 interface RefreshMenuProps {
@@ -13,7 +13,26 @@ export function RefreshMenu({
   isRefreshing,
 }: RefreshMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const handleExit = async () => {
+    setIsExiting(true);
+    try {
+      const response = await fetch('/api/exit');
+      if (!response.ok) {
+        throw new Error('Failed to exit');
+      }
+      // If the exit fails, show a message after a delay
+      setTimeout(() => {
+        setIsExiting(false);
+        alert('Exit request sent. Container should restart shortly.');
+      }, 2000);
+    } catch (error) {
+      setIsExiting(false);
+      alert('Failed to exit process. Please restart the container manually.');
+    }
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -66,10 +85,29 @@ export function RefreshMenu({
               onReconnect();
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors last:rounded-b-lg"
+            className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Reconnect WebSocket</span>
+          </button>
+          <div className="border-t border-gray-700 my-1" />
+          <button
+            type="button"
+            onClick={() => {
+              if (
+                confirm(
+                  'This will exit the Node.js process and restart the container. Continue?',
+                )
+              ) {
+                handleExit();
+                setIsOpen(false);
+              }
+            }}
+            disabled={isExiting}
+            className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed last:rounded-b-lg"
+          >
+            <Power className={`w-4 h-4 ${isExiting ? 'animate-pulse' : ''}`} />
+            <span>{isExiting ? 'Exiting...' : 'Exit Process (Restart)'}</span>
           </button>
         </div>
       )}
