@@ -91,6 +91,15 @@ jobs:
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
           fi
 
+      - name: Compute platforms
+        id: platforms
+        run: |
+          if [[ "${{ inputs.app }}" == "hub" ]]; then
+            echo "value=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
+          else
+            echo "value=linux/amd64" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build and push
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
         id: docker-build
@@ -105,8 +114,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          context: .
           file: ${{ steps.dockerfile.outputs.path }}
+          platforms: ${{ steps.platforms.outputs.value }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
