@@ -8,7 +8,6 @@ on:
         type: string
       registry:
         description: "Registry to push to"
-        required: true
         type: string
         default: ghcr.io/${{ github.repository_owner }}
     outputs:
