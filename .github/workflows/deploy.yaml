@@ -20,8 +20,8 @@ jobs:
     uses: ./.github/actions/attest.yaml
     if: ${{ github.ref == 'refs/heads/main' }}
     with:
-      image: ${{ jobs.containerize.outputs.image }}
-      digest: ${{ jobs.containerize.outputs.digest }}
+      image: ${{ containerize.build-and-push.outputs.image }}
+      digest: ${{ containerize.build-and-push.outputs.digest }}
 
   deploy:
     needs: [containerize]
