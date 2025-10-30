@@ -1,6 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type {
+  WeatherData,
+  WeatherEvent,
+  ConnectionStatus,
+  StationData,
+} from '~/lib/weatherflow/types';
 
 // Logging utility - only log in development
 // NODE_ENV is replaced at build time by Remix/Vite
@@ -18,50 +24,6 @@ const logError = (...args: any[]) => {
     console.error(...args);
   }
 };
-
-interface WeatherData {
-  temperature?: number;
-  humidity?: number;
-  windSpeed?: number; // Wind Avg (m/s)
-  windLull?: number; // Wind Lull (m/s)
-  windGust?: number; // Wind Gust (m/s)
-  windDirection?: number; // Wind Direction (degrees)
-  pressure?: number;
-  uvIndex?: number;
-  illuminance?: number; // Lux
-  solarRadiation?: number; // W/m^2
-  timestamp?: number;
-  barometricTrend?: 'rising' | 'falling' | 'steady';
-  feelsLike?: number;
-  device_id?: number;
-  stationLabel?: string;
-  rainTotal?: number; // mm
-  rainDuration?: number; // minutes
-  minMax24h?: {
-    tempMin?: number;
-    tempMax?: number;
-    humidityMin?: number;
-    humidityMax?: number;
-    windSpeedMax?: number;
-    pressureMin?: number;
-    pressureMax?: number;
-    uvIndexMax?: number;
-  };
-}
-
-interface WeatherEvent {
-  type: string;
-  timestamp: number;
-  data?: any;
-}
-
-type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
-
-interface StationData {
-  weatherData: WeatherData;
-  connectionStatus: ConnectionStatus;
-  lastUpdate: number | null;
-}
 
 export function useWeatherSocket() {
   const [stations, setStations] = useState<Map<number, StationData>>(new Map());

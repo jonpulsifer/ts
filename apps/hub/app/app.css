@@ -1,7 +1,14 @@
+/* ============================================================================
+   Tailwind CSS Imports
+   ============================================================================ */
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+/* ============================================================================
+   Theme Configuration
+   ============================================================================ */
 
 @theme {
   --font-sans:
@@ -9,15 +16,7 @@
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
-}
-
+/* Theme variables for design system */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -56,6 +55,7 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Light theme colors */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -91,6 +91,7 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* Dark theme colors */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -125,6 +126,10 @@ body {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ============================================================================
+   Base Styles
+   ============================================================================ */
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -134,7 +139,19 @@ body {
   }
 }
 
-/* Optimize for small 800x480 screen */
+html,
+body {
+  @apply bg-white dark:bg-gray-950;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+/* ============================================================================
+   Weather Hub Layout - Optimized for 800x480 Raspberry Pi Display
+   ============================================================================ */
+
 html,
 body,
 #root {
@@ -147,7 +164,7 @@ body,
   color: white;
 }
 
-/* Ensure no scrollbars on small screen */
+/* Hide scrollbars on small screen */
 * {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -157,7 +174,10 @@ body,
   display: none;
 }
 
-/* Compact font sizes for small screen */
+/* ============================================================================
+   Typography Utilities - Compact sizes for small display
+   ============================================================================ */
+
 .text-xs {
   font-size: 0.65rem;
 }
@@ -166,12 +186,7 @@ body,
   font-size: 0.75rem;
 }
 
-/* Ensure cards don't get too small padding */
-.card {
-  min-height: fit-content;
-}
-
-/* Custom utilities for the small display */
+/* Responsive typography adjustments */
 @media (max-width: 900px) {
   .text-3xl {
     font-size: 1.5rem;
@@ -183,7 +198,19 @@ body,
   }
 }
 
-/* Weather card animations */
+/* ============================================================================
+   Component Utilities
+   ============================================================================ */
+
+/* Ensure cards don't get too small padding */
+.card {
+  min-height: fit-content;
+}
+
+/* ============================================================================
+   Weather Dashboard Animations
+   ============================================================================ */
+
 @keyframes pulse-glow {
   0%,
   100% {
