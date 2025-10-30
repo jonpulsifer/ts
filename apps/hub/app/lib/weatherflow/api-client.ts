@@ -1,6 +1,10 @@
 import { WEATHERFLOW_CONFIG } from './config';
+import { WeatherMessageHandler } from './message-handler';
 import type {
+  ObsAirMessage,
   ObservationsApiResponse,
+  ObsSkyMessage,
+  ObsStMessage,
   StationApiResponse,
   StationMapping,
   WeatherData,
@@ -93,14 +97,23 @@ export class WeatherFlowApiClient {
   }
 
   /**
-   * Fetch 24-hour min/max values for a device
+   * Fetch recent observation summary (latest data + 24h min/max) for a device
    */
-  async get24HourMinMax(
+  async getObservationSummary(
     deviceId: number,
     token: string,
-  ): Promise<WeatherData['minMax24h']> {
+    stationLabel: string,
+  ): Promise<{
+    latestWeatherData?: WeatherData;
+    minMax24h?: WeatherData['minMax24h'];
+  }> {
+    const result: {
+      latestWeatherData?: WeatherData;
+      minMax24h?: WeatherData['minMax24h'];
+    } = {};
+
     try {
-      const now = Math.floor(Date.now() / 1000); // Current time in seconds
+      const now = Math.floor(Date.now() / 1000);
       const twentyFourHoursAgo =
         now - WEATHERFLOW_CONFIG.MIN_MAX_WINDOW_HOURS * 60 * 60;
 
@@ -114,109 +127,170 @@ export class WeatherFlowApiClient {
       if (response.ok) {
         const data = (await response.json()) as ObservationsApiResponse;
 
-        if (data.obs && Array.isArray(data.obs) && data.obs.length > 0) {
-          let tempMin: number | undefined;
-          let tempMax: number | undefined;
-          let humidityMin: number | undefined;
-          let humidityMax: number | undefined;
-          let windSpeedMax: number | undefined;
-          let pressureMin: number | undefined;
-          let pressureMax: number | undefined;
-          let uvIndexMax: number | undefined;
+        if (Array.isArray(data.obs) && data.obs.length > 0) {
+          const messageHandler = new WeatherMessageHandler();
+          const minMax: WeatherData['minMax24h'] = {};
+          let latest: WeatherData | undefined;
 
-          // Process all observations to find min/max values
           for (const obs of data.obs) {
-            if (obs && Array.isArray(obs)) {
-              // Check if it's obs_st (Tempest) format
-              if (obs.length >= 21) {
-                // obs_st format: [time, windLull, windAvg, windGust, windDir, windSampleInterval,
-                //                 pressure, temp, humidity, illuminance, uv, solarRad, ...]
-                const temp = obs[7];
-                const humidity = obs[8];
-                const windSpeed = obs[2]; // windAvg
-                const pressure = obs[6];
-                const uvIndex = obs[10];
+            const inferredType = this.inferObservationType(obs, data.type);
+            if (!inferredType) {
+              continue;
+            }
 
-                if (temp !== null && temp !== undefined) {
-                  if (tempMin === undefined || temp < tempMin) tempMin = temp;
-                  if (tempMax === undefined || temp > tempMax) tempMax = temp;
-                }
-                if (humidity !== null && humidity !== undefined) {
-                  if (humidityMin === undefined || humidity < humidityMin)
-                    humidityMin = humidity;
-                  if (humidityMax === undefined || humidity > humidityMax)
-                    humidityMax = humidity;
-                }
-                if (windSpeed !== null && windSpeed !== undefined) {
-                  if (windSpeedMax === undefined || windSpeed > windSpeedMax)
-                    windSpeedMax = windSpeed;
-                }
-                if (pressure !== null && pressure !== undefined) {
-                  if (pressureMin === undefined || pressure < pressureMin)
-                    pressureMin = pressure;
-                  if (pressureMax === undefined || pressure > pressureMax)
-                    pressureMax = pressure;
-                }
-                if (uvIndex !== null && uvIndex !== undefined) {
-                  if (uvIndexMax === undefined || uvIndex > uvIndexMax)
-                    uvIndexMax = uvIndex;
-                }
-              } else if (obs.length >= 8) {
-                // obs_air format: [time, pressure, temp, humidity, ...]
-                const temp = obs[2];
-                const humidity = obs[3];
-                const pressure = obs[1];
+            let message: ObsStMessage | ObsSkyMessage | ObsAirMessage | null =
+              null;
 
-                if (temp !== null && temp !== undefined) {
-                  if (tempMin === undefined || temp < tempMin) tempMin = temp;
-                  if (tempMax === undefined || temp > tempMax) tempMax = temp;
-                }
-                if (humidity !== null && humidity !== undefined) {
-                  if (humidityMin === undefined || humidity < humidityMin)
-                    humidityMin = humidity;
-                  if (humidityMax === undefined || humidity > humidityMax)
-                    humidityMax = humidity;
-                }
-                if (pressure !== null && pressure !== undefined) {
-                  if (pressureMin === undefined || pressure < pressureMin)
-                    pressureMin = pressure;
-                  if (pressureMax === undefined || pressure > pressureMax)
-                    pressureMax = pressure;
-                }
-              } else if (obs.length >= 17) {
-                // obs_sky format: [time, illuminance, uv, rain, windLull, windAvg, windGust, windDir, ...]
-                const windSpeed = obs[5]; // windAvg
-                const uvIndex = obs[2];
+            switch (inferredType) {
+              case 'obs_st':
+                message = {
+                  type: 'obs_st',
+                  device_id: deviceId,
+                  obs: [obs],
+                } as ObsStMessage;
+                break;
+              case 'obs_sky':
+                message = {
+                  type: 'obs_sky',
+                  device_id: deviceId,
+                  obs: [obs],
+                } as ObsSkyMessage;
+                break;
+              case 'obs_air':
+                message = {
+                  type: 'obs_air',
+                  device_id: deviceId,
+                  obs: [obs],
+                } as ObsAirMessage;
+                break;
+              default:
+                message = null;
+            }
 
-                if (windSpeed !== null && windSpeed !== undefined) {
-                  if (windSpeedMax === undefined || windSpeed > windSpeedMax)
-                    windSpeedMax = windSpeed;
-                }
-                if (uvIndex !== null && uvIndex !== undefined) {
-                  if (uvIndexMax === undefined || uvIndex > uvIndexMax)
-                    uvIndexMax = uvIndex;
-                }
-              }
+            if (!message) {
+              continue;
+            }
+
+            const weatherData = messageHandler.processObservation(
+              message,
+              deviceId,
+              stationLabel,
+            );
+
+            if (weatherData) {
+              latest = {
+                ...latest,
+                ...weatherData,
+                device_id: deviceId,
+                stationLabel,
+              };
+              this.updateMinMaxFromWeatherData(minMax, weatherData);
             }
           }
 
-          return {
-            tempMin,
-            tempMax,
-            humidityMin,
-            humidityMax,
-            windSpeedMax,
-            pressureMin,
-            pressureMax,
-            uvIndexMax,
-          };
+          if (latest) {
+            if (this.hasMinMaxData(minMax)) {
+              latest = {
+                ...latest,
+                minMax24h: minMax,
+              };
+              result.minMax24h = minMax;
+            } else if (latest.minMax24h) {
+              result.minMax24h = latest.minMax24h;
+            }
+            result.latestWeatherData = latest;
+          } else if (this.hasMinMaxData(minMax)) {
+            result.minMax24h = minMax;
+          }
         }
       }
     } catch (error) {
-      logError(`Error fetching 24h min/max for device ${deviceId}:`, error);
+      logError(
+        `Error fetching observation summary for device ${deviceId}:`,
+        error,
+      );
     }
 
-    return undefined;
+    return result;
+  }
+
+  private inferObservationType(
+    obs: number[],
+    fallbackType?: ObservationsApiResponse['type'],
+  ): ObservationsApiResponse['type'] | null {
+    if (fallbackType && fallbackType !== 'rapid_wind') {
+      return fallbackType;
+    }
+    if (!Array.isArray(obs)) {
+      return null;
+    }
+    if (obs.length >= 21) {
+      return 'obs_st';
+    }
+    if (obs.length >= 17) {
+      return 'obs_sky';
+    }
+    if (obs.length >= 8) {
+      return 'obs_air';
+    }
+    return fallbackType ?? null;
+  }
+
+  private updateMinMaxFromWeatherData(
+    minMax: WeatherData['minMax24h'],
+    weatherData: WeatherData,
+  ) {
+    if (!minMax || !weatherData) {
+      return;
+    }
+
+    const updateMin = (current: number | undefined, value: number) =>
+      current === undefined || value < current ? value : current;
+    const updateMax = (current: number | undefined, value: number) =>
+      current === undefined || value > current ? value : current;
+
+    if (weatherData.temperature !== undefined) {
+      minMax.tempMin = updateMin(minMax.tempMin, weatherData.temperature);
+      minMax.tempMax = updateMax(minMax.tempMax, weatherData.temperature);
+    }
+
+    if (weatherData.humidity !== undefined) {
+      minMax.humidityMin = updateMin(minMax.humidityMin, weatherData.humidity);
+      minMax.humidityMax = updateMax(minMax.humidityMax, weatherData.humidity);
+    }
+
+    if (weatherData.windSpeed !== undefined) {
+      minMax.windSpeedMax = updateMax(
+        minMax.windSpeedMax,
+        weatherData.windSpeed,
+      );
+    }
+
+    if (weatherData.pressure !== undefined) {
+      minMax.pressureMin = updateMin(minMax.pressureMin, weatherData.pressure);
+      minMax.pressureMax = updateMax(minMax.pressureMax, weatherData.pressure);
+    }
+
+    if (weatherData.uvIndex !== undefined) {
+      minMax.uvIndexMax = updateMax(minMax.uvIndexMax, weatherData.uvIndex);
+    }
+  }
+
+  private hasMinMaxData(minMax: WeatherData['minMax24h']): boolean {
+    if (!minMax) {
+      return false;
+    }
+
+    return (
+      minMax.tempMin !== undefined ||
+      minMax.tempMax !== undefined ||
+      minMax.humidityMin !== undefined ||
+      minMax.humidityMax !== undefined ||
+      minMax.windSpeedMax !== undefined ||
+      minMax.pressureMin !== undefined ||
+      minMax.pressureMax !== undefined ||
+      minMax.uvIndexMax !== undefined
+    );
   }
 
   /**

@@ -32,6 +32,9 @@ export function useWeatherSocket() {
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isManualDisconnectRef = useRef<boolean>(false);
+  const lastHeartbeatRef = useRef<number>(Date.now());
+  const lastWeatherUpdateRef = useRef<number>(0);
+  const reconnectingRef = useRef<boolean>(false);
 
   const connect = useCallback(() => {
     // Clean up any existing connection
@@ -47,6 +50,8 @@ export function useWeatherSocket() {
     }
 
     isManualDisconnectRef.current = false;
+    reconnectingRef.current = true;
+    lastHeartbeatRef.current = Date.now();
 
     try {
       const eventSource = new EventSource('/api/weather');
@@ -54,6 +59,8 @@ export function useWeatherSocket() {
 
       eventSource.onopen = () => {
         log('Weather SSE connected');
+        reconnectingRef.current = false;
+        lastHeartbeatRef.current = Date.now();
         // Connection status will be set per station via status events
       };
 
@@ -84,10 +91,21 @@ export function useWeatherSocket() {
               );
             }
 
+            if (data.stationLabel) {
+              existing.weatherData = {
+                ...existing.weatherData,
+                stationLabel: data.stationLabel,
+              };
+            }
+
             // Update the entry with the new status
             switch (data.status) {
+              case 'connecting':
+                existing.connectionStatus = 'connecting';
+                break;
               case 'connected':
                 existing.connectionStatus = 'connected';
+                existing.lastUpdate = Date.now();
                 // Clear error for this station if it was previously in error state
                 setConnectionError((prev) => {
                   if (!prev) return null;
@@ -161,25 +179,35 @@ export function useWeatherSocket() {
 
           setStations((prev) => {
             const newStations = new Map(prev);
-            const existing = newStations.get(deviceId);
+            let existing = newStations.get(deviceId);
 
-            // Only update if we already have an entry for this device
-            // This prevents creating entries for devices we're not tracking
-            if (existing) {
-              existing.weatherData = {
-                ...existing.weatherData,
-                ...data,
-              };
-              existing.lastUpdate = Date.now();
-              newStations.set(deviceId, existing);
-            } else {
-              // Log but don't create entry for untracked devices
+            if (!existing) {
               log(
-                `Weather data received for untracked device ${deviceId}, ignoring`,
+                `Weather data received for new device ${deviceId}, creating entry`,
               );
+              existing = {
+                weatherData: {},
+                connectionStatus: 'connecting',
+                lastUpdate: null,
+              };
             }
+
+            existing.weatherData = {
+              ...existing.weatherData,
+              ...data,
+            };
+            existing.lastUpdate = Date.now();
+            if (
+              existing.connectionStatus === 'connecting' ||
+              existing.connectionStatus === 'disconnected'
+            ) {
+              existing.connectionStatus = 'connected';
+            }
+
+            newStations.set(deviceId, existing);
             return newStations;
           });
+          lastWeatherUpdateRef.current = Date.now();
         } catch (error) {
           logError('Error parsing weather data:', error);
         }
@@ -197,8 +225,13 @@ export function useWeatherSocket() {
         }
       });
 
+      eventSource.addEventListener('heartbeat', () => {
+        lastHeartbeatRef.current = Date.now();
+      });
+
       eventSource.onerror = (error) => {
         logError('Weather SSE error:', error);
+        reconnectingRef.current = false;
 
         // Check if the error is due to HTTP error response
         if (eventSource.readyState === EventSource.CLOSED) {
@@ -237,6 +270,7 @@ export function useWeatherSocket() {
       };
     } catch (error) {
       logError('Error creating EventSource:', error);
+      reconnectingRef.current = false;
       const errorMessage =
         error instanceof Error
           ? `Failed to establish connection: ${error.message}`
@@ -247,6 +281,7 @@ export function useWeatherSocket() {
 
   const disconnect = useCallback(() => {
     isManualDisconnectRef.current = true;
+    reconnectingRef.current = false;
 
     // Clear any pending reconnection
     if (reconnectTimeoutRef.current) {
@@ -280,6 +315,58 @@ export function useWeatherSocket() {
       }
     };
   }, [connect]);
+
+  // Heartbeat watchdog - force reconnect if stream stalls
+  useEffect(() => {
+    const heartbeatCheck = setInterval(() => {
+      if (isManualDisconnectRef.current) {
+        return;
+      }
+
+      const now = Date.now();
+      const heartbeatAge = now - lastHeartbeatRef.current;
+      const readyState = eventSourceRef.current?.readyState;
+
+      const isClosed = readyState === EventSource.CLOSED;
+      const isHeartbeatStale = heartbeatAge > 45000;
+
+      if ((isClosed || isHeartbeatStale) && !reconnectingRef.current) {
+        log(
+          `Heartbeat stale (${heartbeatAge}ms) or stream closed (${readyState}). Reconnecting SSE...`,
+        );
+        reconnectingRef.current = true;
+        connect();
+      }
+    }, 15000);
+
+    return () => clearInterval(heartbeatCheck);
+  }, [connect]);
+
+  // Detect stale weather updates even if SSE stays alive
+  useEffect(() => {
+    const dataFreshnessCheck = setInterval(() => {
+      if (isManualDisconnectRef.current) {
+        return;
+      }
+
+      if (stations.size === 0) {
+        return;
+      }
+
+      if (lastWeatherUpdateRef.current === 0) {
+        return;
+      }
+
+      const age = Date.now() - lastWeatherUpdateRef.current;
+      if (age > 120000 && !reconnectingRef.current) {
+        log(`No weather updates for ${age}ms. Reconnecting SSE.`);
+        reconnectingRef.current = true;
+        connect();
+      }
+    }, 60000);
+
+    return () => clearInterval(dataFreshnessCheck);
+  }, [stations.size, connect]);
 
   // Check if no stations are configured after initial connection
   useEffect(() => {

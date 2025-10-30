@@ -194,6 +194,7 @@ export type StationApiResponse = {
 };
 
 export type ObservationsApiResponse = {
+  type?: 'obs_st' | 'obs_air' | 'obs_sky' | 'rapid_wind';
   obs: Array<number[]>;
 };
 

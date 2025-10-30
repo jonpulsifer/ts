@@ -7,7 +7,7 @@ export const WEATHERFLOW_CONFIG = {
     INITIAL_DELAY: 1000, // 1 second
     MAX_DELAY: 30000, // 30 seconds
     BACKOFF_MULTIPLIER: 2,
-    MAX_RETRIES: 10, // Max retry attempts before giving up
+    MAX_RETRIES: Number.POSITIVE_INFINITY, // Unlimited retries for kiosk auto-healing
   },
   KEEPALIVE_INTERVAL: 5 * 60 * 1000, // 5 minutes
   IDLE_TIMEOUT: 10 * 60 * 1000, // 10 minutes (server-side timeout)
