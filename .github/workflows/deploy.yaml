@@ -164,6 +164,3 @@ jobs:
       - name: Update application revision and image to ${{ github.sha }}
         run: |
           argocd app set ${{ inputs.app }} --revision=${{ github.sha }} --kustomize-image=ghcr.io/jonpulsifer/does-not-exist=ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}:${{ github.sha }}
-      - name: Sync and wait for application to be healthy
-        run: |
-          argocd app wait ${{ inputs.app }} --timeout 600
