@@ -112,8 +112,37 @@ export async function loader() {
           const existingClient = websocketClients.get(token);
           if (existingClient?.isConnected()) {
             log('Reusing existing WebSocket for token');
-            // Send listen_start for any new devices
+            // Send status updates and fetch initial data for all devices
             for (const deviceId of deviceIds) {
+              const stationLabel = deviceToStation.get(deviceId) || '';
+
+              // Send status update to ensure entry exists
+              sendEvent('status', {
+                status: 'connected',
+                device_id: deviceId,
+                stationLabel,
+              });
+
+              // Fetch 24-hour min/max values
+              apiClient
+                .get24HourMinMax(deviceId, token)
+                .then((minMax24h) => {
+                  if (minMax24h) {
+                    sendEvent('weather-data', {
+                      device_id: deviceId,
+                      stationLabel,
+                      minMax24h,
+                    });
+                  }
+                })
+                .catch((error) => {
+                  logError(
+                    `Error fetching 24h min/max for device ${deviceId}:`,
+                    error,
+                  );
+                });
+
+              // Send listen_start for any new devices
               const message: ListenStartMessage = {
                 type: 'listen_start',
                 device_id: deviceId,
@@ -136,6 +165,14 @@ export async function loader() {
             for (const deviceId of deviceIds) {
               const stationLabel = deviceToStation.get(deviceId) || '';
 
+              // IMPORTANT: Send status update FIRST to create station entry
+              // This ensures entries exist before weather data arrives
+              sendEvent('status', {
+                status: 'connected',
+                device_id: deviceId,
+                stationLabel,
+              });
+
               // Fetch 24-hour min/max values
               apiClient
                 .get24HourMinMax(deviceId, token)
@@ -154,13 +191,6 @@ export async function loader() {
                     error,
                   );
                 });
-
-              // Send status update
-              sendEvent('status', {
-                status: 'connected',
-                device_id: deviceId,
-                stationLabel,
-              });
 
               // Send listen_start message
               const message: ListenStartMessage = {

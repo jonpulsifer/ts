@@ -161,23 +161,34 @@ export function useWeatherSocket() {
 
           setStations((prev) => {
             const newStations = new Map(prev);
-            const existing = newStations.get(deviceId);
+            let existing = newStations.get(deviceId);
 
-            // Only update if we already have an entry for this device
-            // This prevents creating entries for devices we're not tracking
-            if (existing) {
-              existing.weatherData = {
-                ...existing.weatherData,
-                ...data,
-              };
-              existing.lastUpdate = Date.now();
-              newStations.set(deviceId, existing);
-            } else {
-              // Log but don't create entry for untracked devices
+            // Auto-create entry if it doesn't exist (handles race conditions)
+            // This ensures data is never lost even if it arrives before status events
+            if (!existing) {
               log(
-                `Weather data received for untracked device ${deviceId}, ignoring`,
+                `Auto-creating station entry for device ${deviceId} from weather data`,
               );
+              existing = {
+                weatherData: {},
+                connectionStatus: 'connected', // Assume connected if we're receiving data
+                lastUpdate: null,
+              };
             }
+
+            // Merge weather data (preserve existing data)
+            existing.weatherData = {
+              ...existing.weatherData,
+              ...data,
+            };
+            existing.lastUpdate = Date.now();
+            
+            // Update connection status to connected if we have data
+            if (existing.connectionStatus !== 'connected') {
+              existing.connectionStatus = 'connected';
+            }
+            
+            newStations.set(deviceId, existing);
             return newStations;
           });
         } catch (error) {
@@ -281,7 +292,7 @@ export function useWeatherSocket() {
     };
   }, [connect]);
 
-  // Check if no stations are configured after initial connection
+  // Auto-healing: Check if stations have data and retry if needed
   useEffect(() => {
     if (stations.size === 0) {
       const timeout = setTimeout(() => {
@@ -294,8 +305,36 @@ export function useWeatherSocket() {
 
       return () => clearTimeout(timeout);
     }
-    setConnectionError(null);
-  }, [stations.size, connectionError]);
+
+    // Auto-healing: Check if stations have stale data or are disconnected
+    const healthCheckInterval = setInterval(() => {
+      const now = Date.now();
+      const staleThreshold = 120000; // 2 minutes without updates
+      let needsReconnect = false;
+
+      for (const [deviceId, station] of stations.entries()) {
+        const isStale =
+          station.lastUpdate === null ||
+          now - station.lastUpdate > staleThreshold;
+        const isDisconnected = station.connectionStatus === 'disconnected';
+        const hasNoData = !station.weatherData.timestamp;
+
+        if ((isStale || isDisconnected || hasNoData) && !connectionError) {
+          log(
+            `Station ${deviceId} health check failed: stale=${isStale}, disconnected=${isDisconnected}, noData=${hasNoData}`,
+          );
+          needsReconnect = true;
+        }
+      }
+
+      if (needsReconnect) {
+        log('Auto-healing: Reconnecting due to stale/disconnected stations');
+        connect();
+      }
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(healthCheckInterval);
+  }, [stations, connectionError, connect]);
 
   return {
     stations,
