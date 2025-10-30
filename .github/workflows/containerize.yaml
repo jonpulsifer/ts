@@ -1,5 +1,15 @@
 name: "🐳 Containerize"
 on:
+  workflow_call:
+    inputs:
+      app:
+        description: "App to containerize"
+        required: true
+        type: string
+    outputs:
+      image: ${{ jobs.build.outputs.image }}
+      digest: ${{ jobs.build.outputs.digest }}
+
   workflow_dispatch:
     inputs:
       app:
@@ -10,7 +20,7 @@ on:
           - request-headers
           - hub
 jobs:
-  build-and-push:
+  build:
     name: "📦 Build and Push"
     runs-on: ubuntu-latest
     permissions:
