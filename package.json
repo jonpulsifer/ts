@@ -9,8 +9,8 @@
     "build": "turbo build",
     "clean": "turbo clean",
     "dev": "turbo dev",
-    "lint": "pnpm biome check .",
-    "lint:fix": "pnpm biome check . --write",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
     "test": "turbo test"
   },
   "devDependencies": {

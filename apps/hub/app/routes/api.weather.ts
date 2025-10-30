@@ -1,15 +1,14 @@
 import { WeatherFlowApiClient } from '~/lib/weatherflow/api-client';
-import { WeatherFlowWebSocketClient } from '~/lib/weatherflow/websocket-client';
 import { WeatherMessageHandler } from '~/lib/weatherflow/message-handler';
 import type {
-  WeatherData,
-  WeatherEvent,
   AnyWebSocketMessage,
   ListenStartMessage,
 } from '~/lib/weatherflow/types';
+import { WeatherFlowWebSocketClient } from '~/lib/weatherflow/websocket-client';
 
 // Logging utility - only log in development
-const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
+const isDev =
+  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 const log = (...args: any[]) => {
   if (isDev) {
     console.log(...args);
@@ -48,7 +47,7 @@ export async function loader() {
   const apiClient = new WeatherFlowApiClient();
 
   // Pre-fetch all stations and devices to build complete mapping
-  const { deviceToStation, deviceToToken, tokenToStations, stationIdToStation } =
+  const { deviceToStation, tokenToStations, stationIdToStation } =
     await apiClient.fetchAllStationsAndDevices(configuredTokens);
 
   // Build tokenToDevices map - auto-discover all devices for each token
@@ -74,7 +73,7 @@ export async function loader() {
   }
 
   // Log final device list per token
-  for (const [token, devices] of tokenToDevices.entries()) {
+  for (const [, devices] of tokenToDevices.entries()) {
     log(`Final device list for token: ${devices.join(', ')}`);
   }
 
@@ -93,7 +92,8 @@ export async function loader() {
   const stream = new ReadableStream({
     start(controller) {
       const encoder = new TextEncoder();
-      const websocketClients: Map<string, WeatherFlowWebSocketClient> = new Map();
+      const websocketClients: Map<string, WeatherFlowWebSocketClient> =
+        new Map();
       const messageHandler = new WeatherMessageHandler();
 
       const sendEvent = (event: string, data: any) => {
@@ -110,8 +110,8 @@ export async function loader() {
         // If WebSocket client already exists for this token, reuse it
         if (websocketClients.has(token)) {
           const existingClient = websocketClients.get(token);
-          if (existingClient && existingClient.isConnected()) {
-            log(`Reusing existing WebSocket for token`);
+          if (existingClient?.isConnected()) {
+            log('Reusing existing WebSocket for token');
             // Send listen_start for any new devices
             for (const deviceId of deviceIds) {
               const message: ListenStartMessage = {
@@ -128,7 +128,9 @@ export async function loader() {
         // Create new WebSocket client
         const client = new WeatherFlowWebSocketClient(token, deviceIds, {
           onConnect: () => {
-            log(`Weather WebSocket connected for token (${deviceIds.length} devices)`);
+            log(
+              `Weather WebSocket connected for token (${deviceIds.length} devices)`,
+            );
 
             // Send listen_start for each device and fetch initial data
             for (const deviceId of deviceIds) {
@@ -147,7 +149,10 @@ export async function loader() {
                   }
                 })
                 .catch((error) => {
-                  logError(`Error fetching 24h min/max for device ${deviceId}:`, error);
+                  logError(
+                    `Error fetching 24h min/max for device ${deviceId}:`,
+                    error,
+                  );
                 });
 
               // Send status update
@@ -168,7 +173,9 @@ export async function loader() {
           },
 
           onDisconnect: (code, reason) => {
-            log(`WebSocket disconnected for token (code: ${code}, reason: ${reason})`);
+            log(
+              `WebSocket disconnected for token (code: ${code}, reason: ${reason})`,
+            );
 
             // Send disconnected status for all devices on this token
             for (const deviceId of deviceIds) {
@@ -185,7 +192,7 @@ export async function loader() {
           },
 
           onError: (error) => {
-            logError(`WebSocket error for token:`, error);
+            logError('WebSocket error for token:', error);
 
             // Send error status for all devices on this token
             for (const deviceId of deviceIds) {
@@ -202,24 +209,12 @@ export async function loader() {
           },
 
           onMessage: (message: AnyWebSocketMessage) => {
-            const deviceIdFromData = message.device_id;
-
-            // Handle system messages without device_id
-            if (!deviceIdFromData) {
-              if (message.type === 'connection_opened') {
-                log('WebSocket connection opened successfully');
-                // Update status to connected for all devices on this token
-                for (const deviceId of deviceIds) {
-                  const stationLabel = deviceToStation.get(deviceId) || '';
-                  sendEvent('status', {
-                    status: 'connected',
-                    device_id: deviceId,
-                    stationLabel,
-                  });
-                }
-              }
+            // Skip ack messages (they don't have device_id)
+            if (!message.device_id) {
               return;
             }
+
+            const deviceIdFromData = message.device_id;
 
             // Only process messages for devices we're explicitly tracking
             if (!deviceIds.includes(deviceIdFromData)) {
@@ -229,7 +224,10 @@ export async function loader() {
               return;
             }
 
-            log(`Received weather data for device ${deviceIdFromData}:`, message.type);
+            log(
+              `Received weather data for device ${deviceIdFromData}:`,
+              message.type,
+            );
 
             const stationLabel = deviceToStation.get(deviceIdFromData) || '';
 

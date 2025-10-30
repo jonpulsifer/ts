@@ -1,14 +1,13 @@
+import { WEATHERFLOW_CONFIG } from './config';
 import type {
+  AnyWebSocketMessage,
   ListenStartMessage,
   ListenStopMessage,
-  AnyWebSocketMessage,
-  WeatherData,
-  WeatherEvent,
 } from './types';
-import { WEATHERFLOW_CONFIG } from './config';
 
 // Logging utility - only log in development
-const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
+const isDev =
+  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 const log = (...args: any[]) => {
   if (isDev) {
     console.log(...args);
@@ -20,7 +19,12 @@ const logError = (...args: any[]) => {
   }
 };
 
-export type WebSocketState = 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error';
+export type WebSocketState =
+  | 'disconnected'
+  | 'connecting'
+  | 'connected'
+  | 'reconnecting'
+  | 'error';
 
 export interface WebSocketCallbacks {
   onConnect?: () => void;
@@ -39,13 +43,19 @@ export class WeatherFlowWebSocketClient {
   private deviceIds: number[];
   private state: WebSocketState = 'disconnected';
   private callbacks: WebSocketCallbacks;
-  private messageQueue: Array<{ message: ListenStartMessage | ListenStopMessage }> = [];
+  private messageQueue: Array<{
+    message: ListenStartMessage | ListenStopMessage;
+  }> = [];
   private reconnectAttempts = 0;
   private reconnectTimeout: NodeJS.Timeout | null = null;
   private keepaliveInterval: NodeJS.Timeout | null = null;
   private isManualClose = false;
 
-  constructor(token: string, deviceIds: number[], callbacks: WebSocketCallbacks = {}) {
+  constructor(
+    token: string,
+    deviceIds: number[],
+    callbacks: WebSocketCallbacks = {},
+  ) {
     this.token = token;
     this.deviceIds = deviceIds;
     this.callbacks = callbacks;
@@ -91,7 +101,9 @@ export class WeatherFlowWebSocketClient {
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
-        log(`Weather WebSocket connected for token (${this.deviceIds.length} devices)`);
+        log(
+          `Weather WebSocket connected for token (${this.deviceIds.length} devices)`,
+        );
         this.setState('connected');
         this.reconnectAttempts = 0;
         this.flushMessageQueue();
@@ -113,7 +125,9 @@ export class WeatherFlowWebSocketClient {
           `Weather WebSocket error for token (devices: ${this.deviceIds.join(', ')}):`,
           error,
         );
-        logError(`WebSocket state: ${this.ws?.readyState} (0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED)`);
+        logError(
+          `WebSocket state: ${this.ws?.readyState} (0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED)`,
+        );
         this.callbacks.onError?.(new Error('WebSocket connection error'));
       };
 
@@ -133,7 +147,9 @@ export class WeatherFlowWebSocketClient {
           this.reconnectAttempts < WEATHERFLOW_CONFIG.WS_RECONNECT.MAX_RETRIES
         ) {
           this.scheduleReconnect();
-        } else if (this.reconnectAttempts >= WEATHERFLOW_CONFIG.WS_RECONNECT.MAX_RETRIES) {
+        } else if (
+          this.reconnectAttempts >= WEATHERFLOW_CONFIG.WS_RECONNECT.MAX_RETRIES
+        ) {
           this.setState('error');
           logError('Max reconnection attempts reached');
         }
@@ -141,7 +157,9 @@ export class WeatherFlowWebSocketClient {
     } catch (error) {
       logError('Error creating weather WebSocket:', error);
       this.setState('error');
-      this.callbacks.onError?.(error instanceof Error ? error : new Error('Unknown error'));
+      this.callbacks.onError?.(
+        error instanceof Error ? error : new Error('Unknown error'),
+      );
     }
   }
 
@@ -155,7 +173,8 @@ export class WeatherFlowWebSocketClient {
 
     const delay = Math.min(
       WEATHERFLOW_CONFIG.WS_RECONNECT.INITIAL_DELAY *
-        Math.pow(WEATHERFLOW_CONFIG.WS_RECONNECT.BACKOFF_MULTIPLIER, this.reconnectAttempts),
+        WEATHERFLOW_CONFIG.WS_RECONNECT.BACKOFF_MULTIPLIER **
+          this.reconnectAttempts,
       WEATHERFLOW_CONFIG.WS_RECONNECT.MAX_DELAY,
     );
 
@@ -189,7 +208,7 @@ export class WeatherFlowWebSocketClient {
         this.ws.send(JSON.stringify(message));
         log(`Sent ${message.type} message for device ${message.device_id}`);
       } catch (error) {
-        logError(`Error sending message:`, error);
+        logError('Error sending message:', error);
         // Queue message for retry
         this.messageQueue.push({ message });
       }
@@ -213,9 +232,11 @@ export class WeatherFlowWebSocketClient {
       if (this.isConnected() && this.ws) {
         try {
           this.ws.send(JSON.stringify(item.message));
-          log(`Sent queued ${item.message.type} message for device ${item.message.device_id}`);
+          log(
+            `Sent queued ${item.message.type} message for device ${item.message.device_id}`,
+          );
         } catch (error) {
-          logError(`Error sending queued message:`, error);
+          logError('Error sending queued message:', error);
           // Re-queue failed messages
           this.messageQueue.push(item);
         }
@@ -292,7 +313,10 @@ export class WeatherFlowWebSocketClient {
         try {
           this.ws.send(JSON.stringify(message));
         } catch (error) {
-          logError(`Could not send listen_stop message for device ${deviceId}:`, error);
+          logError(
+            `Could not send listen_stop message for device ${deviceId}:`,
+            error,
+          );
         }
       }
     }
@@ -317,4 +341,3 @@ export class WeatherFlowWebSocketClient {
     this.callbacks = {};
   }
 }
-

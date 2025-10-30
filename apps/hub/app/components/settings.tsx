@@ -15,12 +15,25 @@ export default function Settings() {
   );
   const tokenId = useId();
   const deviceIdId = useId();
-  const { connectionStatus, connect, disconnect } = useWeatherSocket();
+  const { stations, connectionError, connect, disconnect } = useWeatherSocket();
+
+  // Calculate overall connection status from stations
+  const connectionStatus = (() => {
+    if (connectionError) return 'error';
+    if (stations.size === 0) return 'disconnected';
+    const statuses = Array.from(stations.values()).map(
+      (s) => s.connectionStatus,
+    );
+    if (statuses.every((s) => s === 'connected')) return 'connected';
+    if (statuses.some((s) => s === 'connected')) return 'connecting';
+    if (statuses.some((s) => s === 'error')) return 'error';
+    return 'disconnected';
+  })();
 
   const handleConnect = () => {
-    if (token && deviceId) {
-      connect(token, Number.parseInt(deviceId));
-    }
+    // connect() now takes no arguments - it connects to the SSE endpoint automatically
+    // Configuration is done via environment variables on the server side
+    connect();
   };
 
   return (

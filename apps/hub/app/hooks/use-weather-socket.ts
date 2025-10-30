@@ -2,15 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type {
-  WeatherData,
-  WeatherEvent,
   ConnectionStatus,
   StationData,
+  WeatherEvent,
 } from '~/lib/weatherflow/types';
 
 // Logging utility - only log in development
 // NODE_ENV is replaced at build time by Remix/Vite
-const isDev = 
+const isDev =
   (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') ||
   (typeof process !== 'undefined' && process.env?.NODE_ENV === 'dev') ||
   (typeof import.meta !== 'undefined' && import.meta.env?.DEV === true);
@@ -70,18 +69,21 @@ export function useWeatherSocket() {
           setStations((prev) => {
             const newStations = new Map(prev);
             let existing = newStations.get(deviceId);
-            
+
             // If we receive a status update from the server, the device is being tracked
             // Create an entry if we don't have one yet (for any status: connected, error, disconnected)
             if (!existing) {
               existing = {
                 weatherData: {},
-                connectionStatus: (data.status as ConnectionStatus) || 'disconnected',
+                connectionStatus:
+                  (data.status as ConnectionStatus) || 'disconnected',
                 lastUpdate: null,
               };
-              log(`Creating entry for device ${deviceId} (status: ${data.status})`);
+              log(
+                `Creating entry for device ${deviceId} (status: ${data.status})`,
+              );
             }
-            
+
             // Update the entry with the new status
             switch (data.status) {
               case 'connected':
@@ -119,8 +121,10 @@ export function useWeatherSocket() {
                     data.error.includes('environment variables') ||
                     data.error.includes('not configured') ||
                     data.error.includes('Missing') ||
-                    data.error.includes('Failed to create WebSocket connection');
-                  
+                    data.error.includes(
+                      'Failed to create WebSocket connection',
+                    );
+
                   if (isConfigError) {
                     setConnectionError((prev) => {
                       // Combine errors if multiple stations have errors
@@ -158,7 +162,7 @@ export function useWeatherSocket() {
           setStations((prev) => {
             const newStations = new Map(prev);
             const existing = newStations.get(deviceId);
-            
+
             // Only update if we already have an entry for this device
             // This prevents creating entries for devices we're not tracking
             if (existing) {
@@ -170,7 +174,9 @@ export function useWeatherSocket() {
               newStations.set(deviceId, existing);
             } else {
               // Log but don't create entry for untracked devices
-              log(`Weather data received for untracked device ${deviceId}, ignoring`);
+              log(
+                `Weather data received for untracked device ${deviceId}, ignoring`,
+              );
             }
             return newStations;
           });
@@ -193,7 +199,7 @@ export function useWeatherSocket() {
 
       eventSource.onerror = (error) => {
         logError('Weather SSE error:', error);
-        
+
         // Check if the error is due to HTTP error response
         if (eventSource.readyState === EventSource.CLOSED) {
           // Try to get more specific error if available
@@ -201,15 +207,22 @@ export function useWeatherSocket() {
             .then((response) => {
               if (!response.ok) {
                 return response.text().then((text) => {
-                  setConnectionError(text || `HTTP ${response.status}: Failed to connect to weather service`);
+                  setConnectionError(
+                    text ||
+                      `HTTP ${response.status}: Failed to connect to weather service`,
+                  );
                 });
               }
             })
             .catch(() => {
-              setConnectionError('Failed to connect to weather service. The server may be unavailable or misconfigured.');
+              setConnectionError(
+                'Failed to connect to weather service. The server may be unavailable or misconfigured.',
+              );
             });
         } else {
-          setConnectionError('Failed to connect to weather service. Check server logs.');
+          setConnectionError(
+            'Failed to connect to weather service. Check server logs.',
+          );
         }
 
         // Auto-reconnect after 5 seconds if not manually closed
@@ -280,9 +293,8 @@ export function useWeatherSocket() {
       }, 3000); // Wait 3 seconds before showing error
 
       return () => clearTimeout(timeout);
-    } else {
-      setConnectionError(null);
     }
+    setConnectionError(null);
   }, [stations.size, connectionError]);
 
   return {

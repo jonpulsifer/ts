@@ -38,10 +38,9 @@ export default function Dashboard() {
         }, 500);
 
         return () => clearTimeout(timeout);
-      } else {
-        // For transient errors, just show the error badge, not the modal
-        setShowError(false);
       }
+      // For transient errors, just show the error badge, not the modal
+      setShowError(false);
     } else {
       // Clear modal when error is cleared
       setShowError(false);
@@ -78,16 +77,21 @@ export default function Dashboard() {
   };
 
   // Convert stations Map to array for display
-  const stationArray = Array.from(stations.entries()).map(([deviceId, data]) => ({
-    deviceId,
-    ...data,
-  }));
+  const stationArray = Array.from(stations.entries()).map(
+    ([deviceId, data]) => ({
+      deviceId,
+      ...data,
+    }),
+  );
 
   return (
     <div className="h-screen w-full flex flex-col bg-gray-900">
       {/* Error Modal */}
       {showError && connectionError && (
-        <ErrorModal error={connectionError} onClose={() => setShowError(false)} />
+        <ErrorModal
+          error={connectionError}
+          onClose={() => setShowError(false)}
+        />
       )}
 
       {/* Header - Minimal padding */}
@@ -103,6 +107,7 @@ export default function Dashboard() {
           {/* Error indicator - clickable to reopen modal */}
           {connectionError && !showError && (
             <button
+              type="button"
               onClick={() => setShowError(true)}
               className="flex items-center gap-1 px-2 py-1 bg-red-900/50 hover:bg-red-900/70 rounded transition-colors"
               title="Click to view error details"
@@ -146,13 +151,13 @@ export default function Dashboard() {
           <div className="flex-1 flex flex-col items-center justify-center text-gray-500 gap-4">
             <AlertCircle className="w-16 h-16 text-red-400" />
             <div className="text-center">
-              <div className="text-2xl font-semibold">No stations configured</div>
+              <div className="text-2xl font-semibold">
+                No stations configured
+              </div>
               <div className="text-base text-gray-600 mt-2">
-                {connectionError ? (
-                  'Check error message above'
-                ) : (
-                  'Waiting for weather stations...'
-                )}
+                {connectionError
+                  ? 'Check error message above'
+                  : 'Waiting for weather stations...'}
               </div>
             </div>
           </div>

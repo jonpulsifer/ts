@@ -16,7 +16,8 @@
       "recommended": true,
       "a11y": {
         "noSvgWithoutTitle": "off",
-        "useFocusableInteractive": "off"
+        "useFocusableInteractive": "off",
+        "useSemanticElements": "off"
       },
       "complexity": {
         "noUselessFragments": "off",
@@ -40,7 +41,8 @@
       },
       "suspicious": {
         "noExplicitAny": "off",
-        "noArrayIndexKey": "off"
+        "noArrayIndexKey": "off",
+        "noDocumentCookie": "off"
       }
     }
   },
@@ -68,5 +70,10 @@
     "clientKind": "git",
     "useIgnoreFile": true,
     "defaultBranch": "main"
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
   }
 }

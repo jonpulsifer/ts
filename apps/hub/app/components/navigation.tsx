@@ -8,7 +8,20 @@ import { useWeatherSocket } from '~/hooks/use-weather-socket';
 export default function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { connectionStatus } = useWeatherSocket();
+  const { stations, connectionError } = useWeatherSocket();
+
+  // Calculate overall connection status from stations
+  const connectionStatus = (() => {
+    if (connectionError) return 'error';
+    if (stations.size === 0) return 'disconnected';
+    const statuses = Array.from(stations.values()).map(
+      (s) => s.connectionStatus,
+    );
+    if (statuses.every((s) => s === 'connected')) return 'connected';
+    if (statuses.some((s) => s === 'connected')) return 'connecting';
+    if (statuses.some((s) => s === 'error')) return 'error';
+    return 'disconnected';
+  })();
 
   return (
     <nav className="bg-white border-b border-slate-200 px-4 py-2">

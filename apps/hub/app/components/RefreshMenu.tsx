@@ -1,5 +1,5 @@
 import { RefreshCw, RotateCcw } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface RefreshMenuProps {
   onReconnect: () => void;
@@ -34,6 +34,7 @@ export function RefreshMenu({
   return (
     <div className="relative" ref={menuRef}>
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         disabled={isRefreshing}
         className="p-1 hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -49,6 +50,7 @@ export function RefreshMenu({
       {isOpen && (
         <div className="absolute right-0 top-full mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50 min-w-[180px]">
           <button
+            type="button"
             onClick={() => {
               onBrowserRefresh();
               setIsOpen(false);
@@ -59,6 +61,7 @@ export function RefreshMenu({
             <span>Browser Refresh</span>
           </button>
           <button
+            type="button"
             onClick={() => {
               onReconnect();
               setIsOpen(false);
@@ -73,4 +76,3 @@ export function RefreshMenu({
     </div>
   );
 }
-

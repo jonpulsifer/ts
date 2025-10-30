@@ -26,4 +26,3 @@ export const WEATHERFLOW_CONFIG = {
   // Observation time window
   MIN_MAX_WINDOW_HOURS: 24, // Hours to look back for min/max values
 } as const;
-

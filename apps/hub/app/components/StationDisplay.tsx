@@ -12,7 +12,7 @@ import {
   Wind,
   Zap,
 } from 'lucide-react';
-import type { WeatherData, ConnectionStatus } from '~/lib/weatherflow/types';
+import type { ConnectionStatus, WeatherData } from '~/lib/weatherflow/types';
 
 interface StationDisplayProps {
   stationLabel: string;
@@ -31,19 +31,23 @@ export function StationDisplay({
 }: StationDisplayProps) {
   const tempC = weatherData?.temperature;
   const feelsLike = weatherData?.feelsLike;
-  const windAvgKmh = weatherData?.windSpeed != null ? weatherData.windSpeed * 3.6 : undefined;
-  const windLullKmh = weatherData?.windLull != null ? weatherData.windLull * 3.6 : undefined;
-  const windGustKmh = weatherData?.windGust != null ? weatherData.windGust * 3.6 : undefined;
+  const windAvgKmh =
+    weatherData?.windSpeed != null ? weatherData.windSpeed * 3.6 : undefined;
+  const windLullKmh =
+    weatherData?.windLull != null ? weatherData.windLull * 3.6 : undefined;
+  const windGustKmh =
+    weatherData?.windGust != null ? weatherData.windGust * 3.6 : undefined;
   const windDirection = weatherData?.windDirection;
   const barometricTrend = weatherData?.barometricTrend || 'steady';
 
   // Determine if it's dark outside
   // Typically < 1000 lux means it's dark (twilight/dark), < 100 lux is very dark
   const isDark =
-    (weatherData?.illuminance !== undefined && weatherData.illuminance < 1000) ||
-    (weatherData?.uvIndex === undefined ||
-      weatherData.uvIndex === null ||
-      weatherData.uvIndex === 0);
+    (weatherData?.illuminance !== undefined &&
+      weatherData.illuminance < 1000) ||
+    weatherData?.uvIndex === undefined ||
+    weatherData.uvIndex === null ||
+    weatherData.uvIndex === 0;
 
   const getBarometricTrendIcon = (trend: string) => {
     switch (trend) {
@@ -151,7 +155,8 @@ export function StationDisplay({
             </div>
             <div className="flex flex-col items-end">
               <div className="text-lg font-bold text-white">
-                {weatherData?.humidity ? weatherData.humidity.toFixed(0) : '--'}%
+                {weatherData?.humidity ? weatherData.humidity.toFixed(0) : '--'}
+                %
               </div>
               {weatherData?.minMax24h &&
                 (weatherData.minMax24h.humidityMin !== undefined ||
@@ -185,7 +190,8 @@ export function StationDisplay({
               {weatherData?.minMax24h &&
                 weatherData.minMax24h.windSpeedMax !== undefined && (
                   <div className="text-xs text-gray-500">
-                    Max: {(weatherData.minMax24h.windSpeedMax * 3.6).toFixed(1)} km/h
+                    Max: {(weatherData.minMax24h.windSpeedMax * 3.6).toFixed(1)}{' '}
+                    km/h
                   </div>
                 )}
             </div>
@@ -202,7 +208,9 @@ export function StationDisplay({
             <div className="flex flex-col items-end">
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-white">
-                  {weatherData?.pressure ? weatherData.pressure.toFixed(0) : '--'}
+                  {weatherData?.pressure
+                    ? weatherData.pressure.toFixed(0)
+                    : '--'}
                 </span>
                 <span className="text-xs text-gray-500">mb</span>
                 {getBarometricTrendIcon(barometricTrend)}
@@ -236,7 +244,8 @@ export function StationDisplay({
               >
                 {isDark
                   ? "IT'S NIGHT TIME"
-                  : weatherData?.uvIndex !== undefined && weatherData.uvIndex !== null
+                  : weatherData?.uvIndex !== undefined &&
+                      weatherData.uvIndex !== null
                     ? weatherData.uvIndex.toFixed(1)
                     : "IT'S NIGHT TIME"}
               </div>
@@ -360,4 +369,3 @@ export function StationDisplay({
     </div>
   );
 }
-

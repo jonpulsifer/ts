@@ -1,13 +1,14 @@
+import { WEATHERFLOW_CONFIG } from './config';
 import type {
-  StationApiResponse,
   ObservationsApiResponse,
+  StationApiResponse,
   StationMapping,
   WeatherData,
 } from './types';
-import { WEATHERFLOW_CONFIG } from './config';
 
 // Logging utility - only log in development
-const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
+const isDev =
+  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 const log = (...args: any[]) => {
   if (isDev) {
     console.log(...args);
@@ -38,17 +39,14 @@ export class WeatherFlowApiClient {
     stationCache?: Map<number, string>,
   ): Promise<string> {
     // If cache is provided and has the device, use it
-    if (stationCache && stationCache.has(deviceId)) {
+    if (stationCache?.has(deviceId)) {
       return stationCache.get(deviceId)!;
     }
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/stations?token=${token}`,
-        {
-          signal: AbortSignal.timeout(WEATHERFLOW_CONFIG.API_TIMEOUT),
-        },
-      );
+      const response = await fetch(`${this.baseUrl}/stations?token=${token}`, {
+        signal: AbortSignal.timeout(WEATHERFLOW_CONFIG.API_TIMEOUT),
+      });
 
       if (response.ok) {
         const data = (await response.json()) as StationApiResponse;
@@ -60,7 +58,10 @@ export class WeatherFlowApiClient {
               for (const device of station.devices) {
                 if (device.device_id === deviceId) {
                   const stationName =
-                    station.public_name || station.name || station.station_name || '';
+                    station.public_name ||
+                    station.name ||
+                    station.station_name ||
+                    '';
                   if (stationCache) {
                     stationCache.set(deviceId, stationName);
                   }
@@ -71,7 +72,10 @@ export class WeatherFlowApiClient {
             // Also check direct device_id match on station object
             if (station.device_id === deviceId) {
               const stationName =
-                station.public_name || station.name || station.station_name || '';
+                station.public_name ||
+                station.name ||
+                station.station_name ||
+                '';
               if (stationCache) {
                 stationCache.set(deviceId, stationName);
               }
@@ -138,19 +142,24 @@ export class WeatherFlowApiClient {
                   if (tempMax === undefined || temp > tempMax) tempMax = temp;
                 }
                 if (humidity !== null && humidity !== undefined) {
-                  if (humidityMin === undefined || humidity < humidityMin) humidityMin = humidity;
-                  if (humidityMax === undefined || humidity > humidityMax) humidityMax = humidity;
+                  if (humidityMin === undefined || humidity < humidityMin)
+                    humidityMin = humidity;
+                  if (humidityMax === undefined || humidity > humidityMax)
+                    humidityMax = humidity;
                 }
                 if (windSpeed !== null && windSpeed !== undefined) {
                   if (windSpeedMax === undefined || windSpeed > windSpeedMax)
                     windSpeedMax = windSpeed;
                 }
                 if (pressure !== null && pressure !== undefined) {
-                  if (pressureMin === undefined || pressure < pressureMin) pressureMin = pressure;
-                  if (pressureMax === undefined || pressure > pressureMax) pressureMax = pressure;
+                  if (pressureMin === undefined || pressure < pressureMin)
+                    pressureMin = pressure;
+                  if (pressureMax === undefined || pressure > pressureMax)
+                    pressureMax = pressure;
                 }
                 if (uvIndex !== null && uvIndex !== undefined) {
-                  if (uvIndexMax === undefined || uvIndex > uvIndexMax) uvIndexMax = uvIndex;
+                  if (uvIndexMax === undefined || uvIndex > uvIndexMax)
+                    uvIndexMax = uvIndex;
                 }
               } else if (obs.length >= 8) {
                 // obs_air format: [time, pressure, temp, humidity, ...]
@@ -163,12 +172,16 @@ export class WeatherFlowApiClient {
                   if (tempMax === undefined || temp > tempMax) tempMax = temp;
                 }
                 if (humidity !== null && humidity !== undefined) {
-                  if (humidityMin === undefined || humidity < humidityMin) humidityMin = humidity;
-                  if (humidityMax === undefined || humidity > humidityMax) humidityMax = humidity;
+                  if (humidityMin === undefined || humidity < humidityMin)
+                    humidityMin = humidity;
+                  if (humidityMax === undefined || humidity > humidityMax)
+                    humidityMax = humidity;
                 }
                 if (pressure !== null && pressure !== undefined) {
-                  if (pressureMin === undefined || pressure < pressureMin) pressureMin = pressure;
-                  if (pressureMax === undefined || pressure > pressureMax) pressureMax = pressure;
+                  if (pressureMin === undefined || pressure < pressureMin)
+                    pressureMin = pressure;
+                  if (pressureMax === undefined || pressure > pressureMax)
+                    pressureMax = pressure;
                 }
               } else if (obs.length >= 17) {
                 // obs_sky format: [time, illuminance, uv, rain, windLull, windAvg, windGust, windDir, ...]
@@ -180,7 +193,8 @@ export class WeatherFlowApiClient {
                     windSpeedMax = windSpeed;
                 }
                 if (uvIndex !== null && uvIndex !== undefined) {
-                  if (uvIndexMax === undefined || uvIndex > uvIndexMax) uvIndexMax = uvIndex;
+                  if (uvIndexMax === undefined || uvIndex > uvIndexMax)
+                    uvIndexMax = uvIndex;
                 }
               }
             }
@@ -212,11 +226,14 @@ export class WeatherFlowApiClient {
     const deviceToStation = new Map<number, string>();
     const deviceToToken = new Map<number, string>();
     const tokenToStations = new Map<string, number[]>(); // token -> station_ids[]
-    const stationIdToStation = new Map<number, {
-      name: string;
-      deviceIds: number[];
-      token: string;
-    }>();
+    const stationIdToStation = new Map<
+      number,
+      {
+        name: string;
+        deviceIds: number[];
+        token: string;
+      }
+    >();
 
     for (const token of tokens) {
       try {
@@ -234,7 +251,10 @@ export class WeatherFlowApiClient {
             for (const station of data.stations) {
               const stationId = station.station_id;
               const stationName =
-                station.public_name || station.name || station.station_name || '';
+                station.public_name ||
+                station.name ||
+                station.station_name ||
+                '';
 
               const deviceIds: number[] = [];
 
@@ -243,8 +263,10 @@ export class WeatherFlowApiClient {
                 for (const device of station.devices) {
                   if (device.device_id) {
                     // Only include Tempest stations (ST), filter out base stations (HB)
-                    const deviceType = device.device_type || device.device_type_name || '';
-                    const isBaseStation = deviceType && deviceType.toUpperCase() === 'HB';
+                    const deviceType =
+                      device.device_type || device.device_type_name || '';
+                    const isBaseStation =
+                      deviceType && deviceType.toUpperCase() === 'HB';
 
                     if (isBaseStation) {
                       log(
@@ -275,7 +297,8 @@ export class WeatherFlowApiClient {
                   const stationDeviceType =
                     station.device_type || station.device_type_name || '';
                   const isBaseStation =
-                    stationDeviceType && stationDeviceType.toUpperCase() === 'HB';
+                    stationDeviceType &&
+                    stationDeviceType.toUpperCase() === 'HB';
 
                   if (isBaseStation) {
                     log(
@@ -318,11 +341,15 @@ export class WeatherFlowApiClient {
           }
         }
       } catch (error) {
-        logError(`Error fetching stations for token:`, error);
+        logError('Error fetching stations for token:', error);
       }
     }
 
-    return { deviceToStation, deviceToToken, tokenToStations, stationIdToStation };
+    return {
+      deviceToStation,
+      deviceToToken,
+      tokenToStations,
+      stationIdToStation,
+    };
   }
 }
-

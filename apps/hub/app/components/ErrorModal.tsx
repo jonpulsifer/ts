@@ -12,9 +12,12 @@ export function ErrorModal({ error, onClose }: ErrorModalProps) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <AlertCircle className="w-6 h-6 text-red-400 flex-shrink-0" />
-            <h2 className="text-xl font-bold text-white">Configuration Error</h2>
+            <h2 className="text-xl font-bold text-white">
+              Configuration Error
+            </h2>
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors"
             aria-label="Close"
@@ -29,10 +32,13 @@ export function ErrorModal({ error, onClose }: ErrorModalProps) {
           </div>
           <div className="space-y-1 text-xs font-mono text-gray-300">
             <div>TEMPESTWX_TOKENS (Secret, required)</div>
-            <div className="text-xs text-gray-500 mt-1">Comma-separated list of tokens</div>
+            <div className="text-xs text-gray-500 mt-1">
+              Comma-separated list of tokens
+            </div>
           </div>
         </div>
         <button
+          type="button"
           onClick={onClose}
           className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded transition-colors"
         >
@@ -42,4 +48,3 @@ export function ErrorModal({ error, onClose }: ErrorModalProps) {
     </div>
   );
 }
-

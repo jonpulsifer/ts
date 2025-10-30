@@ -1,18 +1,19 @@
+import { WEATHERFLOW_CONFIG } from './config';
 import type {
   AnyWebSocketMessage,
-  WeatherData,
-  WeatherEvent,
+  EvtPrecipMessage,
+  EvtStrikeMessage,
   ObsAirMessage,
   ObsSkyMessage,
   ObsStMessage,
   RapidWindMessage,
-  EvtStrikeMessage,
-  EvtPrecipMessage,
+  WeatherData,
+  WeatherEvent,
 } from './types';
-import { WEATHERFLOW_CONFIG } from './config';
 
 // Logging utility - only log in development
-const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
+const isDev =
+  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 const log = (...args: any[]) => {
   if (isDev) {
     console.log(...args);
@@ -93,11 +94,23 @@ export class WeatherMessageHandler {
   ): WeatherData | null {
     switch (message.type) {
       case 'obs_air':
-        return this.processObsAir(message as ObsAirMessage, deviceId, stationLabel);
+        return this.processObsAir(
+          message as ObsAirMessage,
+          deviceId,
+          stationLabel,
+        );
       case 'obs_sky':
-        return this.processObsSky(message as ObsSkyMessage, deviceId, stationLabel);
+        return this.processObsSky(
+          message as ObsSkyMessage,
+          deviceId,
+          stationLabel,
+        );
       case 'obs_st':
-        return this.processObsSt(message as ObsStMessage, deviceId, stationLabel);
+        return this.processObsSt(
+          message as ObsStMessage,
+          deviceId,
+          stationLabel,
+        );
       case 'rapid_wind':
         return this.processRapidWind(
           message as RapidWindMessage,
@@ -283,9 +296,17 @@ export class WeatherMessageHandler {
   ): WeatherEvent | null {
     switch (message.type) {
       case 'evt_strike':
-        return this.processEvtStrike(message as EvtStrikeMessage, deviceId, stationLabel);
+        return this.processEvtStrike(
+          message as EvtStrikeMessage,
+          deviceId,
+          stationLabel,
+        );
       case 'evt_precip':
-        return this.processEvtPrecip(message as EvtPrecipMessage, deviceId, stationLabel);
+        return this.processEvtPrecip(
+          message as EvtPrecipMessage,
+          deviceId,
+          stationLabel,
+        );
       default:
         return null;
     }
@@ -343,4 +364,3 @@ export class WeatherMessageHandler {
     this.pressureHistories.clear();
   }
 }
-
