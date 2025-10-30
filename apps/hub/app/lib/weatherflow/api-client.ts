@@ -1,6 +1,11 @@
 import { WEATHERFLOW_CONFIG } from './config';
 import type {
+  AnyWebSocketMessage,
   ObservationsApiResponse,
+  ObsAirMessage,
+  ObsSkyMessage,
+  ObsStMessage,
+  RapidWindMessage,
   StationApiResponse,
   StationMapping,
   WeatherData,
@@ -18,6 +23,12 @@ const logError = (...args: any[]) => {
   if (isDev) {
     console.error(...args);
   }
+};
+
+type ObservationsDeviceResponse = {
+  type?: string;
+  obs?: number[][];
+  ob?: number[];
 };
 
 /**
@@ -217,6 +228,104 @@ export class WeatherFlowApiClient {
     }
 
     return undefined;
+  }
+
+  /**
+   * Fetch the most recent observation for a device (best-effort)
+   */
+  async getLatestObservation(
+    deviceId: number,
+    token: string,
+  ): Promise<AnyWebSocketMessage | null> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/observations/device/${deviceId}?token=${token}&limit=1`,
+        {
+          signal: AbortSignal.timeout(WEATHERFLOW_CONFIG.API_TIMEOUT),
+        },
+      );
+
+      if (!response.ok) {
+        logError(
+          `Error fetching latest observation for device ${deviceId}: HTTP ${response.status}`,
+        );
+        return null;
+      }
+
+      const data = (await response.json()) as ObservationsDeviceResponse;
+      const { type } = data;
+
+      if (!type) {
+        log(
+          `Latest observation response missing type for device ${deviceId}, skipping bootstrap`,
+        );
+        return null;
+      }
+
+      if (type === 'obs_st') {
+        if (!Array.isArray(data.obs) || data.obs.length === 0) {
+          return null;
+        }
+        const message: ObsStMessage = {
+          type: 'obs_st',
+          device_id: deviceId,
+          obs: data.obs as ObsStMessage['obs'],
+        };
+        return message;
+      }
+
+      if (type === 'obs_sky') {
+        if (!Array.isArray(data.obs) || data.obs.length === 0) {
+          return null;
+        }
+        const message: ObsSkyMessage = {
+          type: 'obs_sky',
+          device_id: deviceId,
+          obs: data.obs as ObsSkyMessage['obs'],
+        };
+        return message;
+      }
+
+      if (type === 'obs_air') {
+        if (!Array.isArray(data.obs) || data.obs.length === 0) {
+          return null;
+        }
+        const message: ObsAirMessage = {
+          type: 'obs_air',
+          device_id: deviceId,
+          obs: data.obs as ObsAirMessage['obs'],
+        };
+        return message;
+      }
+
+      if (type === 'rapid_wind') {
+        let ob: RapidWindMessage['ob'] | undefined;
+        if (Array.isArray(data.obs) && Array.isArray(data.obs[0])) {
+          ob = data.obs[0] as RapidWindMessage['ob'];
+        } else if (Array.isArray(data.ob)) {
+          ob = data.ob as RapidWindMessage['ob'];
+        }
+
+        if (!ob) {
+          return null;
+        }
+
+        const message: RapidWindMessage = {
+          type: 'rapid_wind',
+          device_id: deviceId,
+          ob,
+        };
+        return message;
+      }
+
+      log(
+        `Unsupported latest observation type "${type}" for device ${deviceId}, skipping bootstrap`,
+      );
+      return null;
+    } catch (error) {
+      logError(`Error fetching latest observation for device ${deviceId}:`, error);
+      return null;
+    }
   }
 
   /**
