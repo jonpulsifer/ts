@@ -13,12 +13,14 @@ on:
 
 jobs:
   containerize:
+    name: "🐳 Containerize"
     uses: ./.github/workflows/containerize.yaml
     with:
       app: ${{ inputs.app }}
   
   attest:
     needs: [containerize]
+    name: "🔑 Attest"
     uses: ./.github/workflows/attest.yaml
     if: ${{ github.ref == 'refs/heads/main' }}
     with:
@@ -27,6 +29,7 @@ jobs:
 
   deploy:
     needs: [containerize]
+    name: "🐙 Deploy"
     runs-on: arc-ts
     environment:
       name: ${{ inputs.app }}

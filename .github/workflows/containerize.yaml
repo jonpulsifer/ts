@@ -6,6 +6,11 @@ on:
         description: "App to containerize"
         required: true
         type: string
+      registry:
+        description: "Registry to push to"
+        required: true
+        type: string
+        default: ghcr.io/${{ github.repository_owner }}
     outputs:
       image:
         description: "Container image name"
@@ -32,7 +37,7 @@ jobs:
       packages: write
       id-token: write
     outputs:
-      image: ${{ steps.docker-build.outputs.image }}
+      image: ${{ inputs.registry }}/${{ inputs.app }}
       digest: ${{ steps.docker-build.outputs.digest }}
     services:
       postgres:
@@ -92,7 +97,7 @@ jobs:
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5
         id: meta
         with:
-          images: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
+          images: ${{ inputs.registry }}/${{ inputs.app }}
           tags: |
             type=sha,enable=true,priority=100,prefix=,suffix=,format=long
           flavor: |
