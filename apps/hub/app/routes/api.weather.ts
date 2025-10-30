@@ -2,6 +2,7 @@ import { WeatherFlowApiClient } from '~/lib/weatherflow/api-client';
 import { WeatherMessageHandler } from '~/lib/weatherflow/message-handler';
 import type {
   AnyWebSocketMessage,
+  ConnectionStatus,
   ListenStartMessage,
 } from '~/lib/weatherflow/types';
 import { WeatherFlowWebSocketClient } from '~/lib/weatherflow/websocket-client';
@@ -115,6 +116,8 @@ export async function loader() {
     start(controller) {
       const encoder = new TextEncoder();
       messageHandler = new WeatherMessageHandler();
+      const lastPrefetch = new Map<number, number>();
+      const connectionMeta = new Map<string, { hasConnected: boolean }>();
 
       const sendEvent = (event: string, data: unknown) => {
         if (didCleanup) {
@@ -128,35 +131,74 @@ export async function loader() {
         }
       };
 
+      const getStationLabel = (deviceId: number) =>
+        deviceToStation.get(deviceId) || '';
+
+      const emitStatus = (
+        status: ConnectionStatus,
+        deviceId: number,
+        stationLabel: string,
+        extra?: Record<string, unknown>,
+      ) => {
+        sendEvent('status', {
+          status,
+          device_id: deviceId,
+          stationLabel,
+          ...(extra ?? {}),
+        });
+      };
+
       const prefetchForDevice = async (
         token: string,
         deviceId: number,
         stationLabel: string,
+        options: { force?: boolean } = {},
       ) => {
+        if (didCleanup) {
+          return;
+        }
+
         const handler = messageHandler;
         if (!handler) {
           return;
         }
 
+        const now = Date.now();
+        const { force = false } = options;
+        if (!force) {
+          const last = lastPrefetch.get(deviceId);
+          if (last && now - last < 30000) {
+            return;
+          }
+        }
+        lastPrefetch.set(deviceId, now);
+
         await Promise.allSettled([
           (async () => {
-            const latestMessage = await apiClient.getLatestObservation(
-              deviceId,
-              token,
-            );
+            try {
+              const latestMessage = await apiClient.getLatestObservation(
+                deviceId,
+                token,
+              );
 
-            if (!latestMessage) {
-              return;
-            }
+              if (!latestMessage) {
+                return;
+              }
 
-            const weatherData = handler.processObservation(
-              latestMessage,
-              deviceId,
-              stationLabel,
-            );
+              const weatherData = handler.processObservation(
+                latestMessage,
+                deviceId,
+                stationLabel,
+              );
 
-            if (weatherData) {
-              sendEvent('weather-data', weatherData);
+              if (weatherData) {
+                sendEvent('weather-data', weatherData);
+              }
+            } catch (error) {
+              logError(
+                `Error fetching latest observation for device ${deviceId}:`,
+                error,
+              );
             }
           })(),
           (async () => {
@@ -185,44 +227,64 @@ export async function loader() {
 
       const connectWebSocket = (token: string, deviceIds: number[]) => {
         let client = websocketClients.get(token);
+        let meta = connectionMeta.get(token);
+        if (!meta) {
+          meta = { hasConnected: false };
+          connectionMeta.set(token, meta);
+        }
+
+        const markDevices = (
+          status: ConnectionStatus,
+          extra?: Record<string, unknown>,
+        ) => {
+          for (const deviceId of deviceIds) {
+            const stationLabel = getStationLabel(deviceId);
+            emitStatus(status, deviceId, stationLabel, extra);
+          }
+        };
 
         if (!client) {
           client = new WeatherFlowWebSocketClient(token, deviceIds, {
             onConnect: () => {
+              const isReconnect = meta?.hasConnected ?? false;
               log(
                 `Weather WebSocket connected for token (${deviceIds.length} devices)`,
               );
+              meta ||= { hasConnected: false };
+              meta.hasConnected = true;
+              connectionMeta.set(token, meta);
+
+              for (const deviceId of deviceIds) {
+                const stationLabel = getStationLabel(deviceId);
+                emitStatus('connected', deviceId, stationLabel);
+                void prefetchForDevice(token, deviceId, stationLabel, {
+                  force: isReconnect,
+                });
+                const message: ListenStartMessage = {
+                  type: 'listen_start',
+                  device_id: deviceId,
+                  id: `${Date.now()}-${deviceId}`,
+                };
+                client?.send(message);
+              }
             },
 
             onDisconnect: (code, reason) => {
               log(
                 `WebSocket disconnected for token (code: ${code}, reason: ${reason})`,
               );
-
-              for (const deviceId of deviceIds) {
-                const stationLabel = deviceToStation.get(deviceId) || '';
-                sendEvent('status', {
-                  status: 'disconnected',
-                  device_id: deviceId,
-                  stationLabel,
-                });
-              }
-
-              websocketClients.delete(token);
+              markDevices('disconnected');
             },
 
             onError: (error) => {
               logError('WebSocket error for token:', error);
 
               for (const deviceId of deviceIds) {
-                const stationLabel = deviceToStation.get(deviceId) || '';
-                sendEvent('status', {
-                  status: 'error',
+                const stationLabel = getStationLabel(deviceId);
+                emitStatus('error', deviceId, stationLabel, {
                   error: stationLabel
                     ? `Failed to connect to ${stationLabel} (device ${deviceId}). WebSocket connection error. Check token validity and network connectivity.`
                     : `Failed to connect to device ${deviceId}. WebSocket connection error. Check token validity and network connectivity.`,
-                  device_id: deviceId,
-                  stationLabel,
                 });
               }
             },
@@ -251,7 +313,7 @@ export async function loader() {
                 message.type,
               );
 
-              const stationLabel = deviceToStation.get(deviceIdFromData) || '';
+              const stationLabel = getStationLabel(deviceIdFromData);
 
               const weatherData = handler.processObservation(
                 message,
@@ -259,11 +321,7 @@ export async function loader() {
                 stationLabel,
               );
               if (weatherData) {
-                sendEvent('status', {
-                  status: 'connected',
-                  device_id: deviceIdFromData,
-                  stationLabel,
-                });
+                emitStatus('connected', deviceIdFromData, stationLabel);
                 sendEvent('weather-data', weatherData);
               }
 
@@ -277,42 +335,31 @@ export async function loader() {
               }
 
               if (message.type === 'ack') {
-                sendEvent('status', {
-                  status: 'connected',
-                  device_id: deviceIdFromData,
-                  stationLabel,
-                });
+                emitStatus('connected', deviceIdFromData, stationLabel);
               }
             },
 
             onStateChange: (state) => {
               log(`WebSocket state changed for token: ${state}`);
+              if (state === 'connecting' || state === 'reconnecting') {
+                markDevices('connecting');
+              }
             },
           });
 
           websocketClients.set(token, client);
         }
 
-        client.connect();
+        markDevices('connecting');
 
         for (const deviceId of deviceIds) {
-          const stationLabel = deviceToStation.get(deviceId) || '';
-
-          sendEvent('status', {
-            status: 'connected',
-            device_id: deviceId,
-            stationLabel,
+          const stationLabel = getStationLabel(deviceId);
+          void prefetchForDevice(token, deviceId, stationLabel, {
+            force: !(meta?.hasConnected ?? false),
           });
-
-          void prefetchForDevice(token, deviceId, stationLabel);
-
-          const message: ListenStartMessage = {
-            type: 'listen_start',
-            device_id: deviceId,
-            id: `${Date.now()}-${deviceId}`,
-          };
-          client.send(message);
         }
+
+        client.connect();
       };
 
       for (const [token, deviceIds] of tokenToDevices.entries()) {
