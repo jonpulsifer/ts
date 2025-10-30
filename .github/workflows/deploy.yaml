@@ -18,6 +18,7 @@ jobs:
       app: ${{ inputs.app }}
   
   attest:
+    needs: [containerize]
     uses: ./.github/workflows/attest.yaml
     if: ${{ github.ref == 'refs/heads/main' }}
     with:
