@@ -1,4 +1,4 @@
-name: Attest
+name: "🔑 Attest"
 on:
   workflow_dispatch:
     inputs:

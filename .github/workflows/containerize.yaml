@@ -1,4 +1,4 @@
-name: Containerize
+name: "🐳 Containerize"
 on:
   workflow_dispatch:
     inputs:
