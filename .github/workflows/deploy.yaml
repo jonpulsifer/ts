@@ -21,8 +21,8 @@ jobs:
     uses: ./.github/actions/attest.yaml
     if: ${{ github.ref == 'refs/heads/main' }}
     with:
-      image: ${{ containerize.build-and-push.outputs.image }}
-      digest: ${{ containerize.build-and-push.outputs.digest }}
+      image: ${{ needs.containerize.build-and-push.outputs.image }}
+      digest: ${{ needs.containerize.build-and-push.outputs.digest }}
 
   deploy:
     needs: [containerize]
