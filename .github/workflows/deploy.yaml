@@ -120,7 +120,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true
           provenance: true
-
+  
+  attest:
+    needs: [containerize]
+    runs-on: ubuntu-latest
+    steps:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
