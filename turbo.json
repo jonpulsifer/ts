@@ -10,10 +10,10 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
     },
     "lint": {},
-    "//#lint:fix": {
+    "lint:fix": {
       "cache": false
     },
     "request-headers#build": {
