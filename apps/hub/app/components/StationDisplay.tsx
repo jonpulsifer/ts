@@ -1,4 +1,5 @@
 import {
+  AlertCircle,
   ArrowDown,
   ArrowRight,
   ArrowUp,
@@ -12,13 +13,20 @@ import {
   Wind,
   Zap,
 } from 'lucide-react';
-import type { ConnectionStatus, WeatherData } from '~/lib/weatherflow/types';
+import type {
+  ConnectionStatus,
+  WeatherData,
+  WebSocketState,
+} from '~/lib/weatherflow/types';
 
 interface StationDisplayProps {
   stationLabel: string;
   weatherData: WeatherData;
   connectionStatus: ConnectionStatus;
   lastUpdate: number | null;
+  websocketStatus?: WebSocketState;
+  websocketError?: string;
+  lastDataReceived?: number | null;
   isSingleStation?: boolean;
 }
 
@@ -27,6 +35,9 @@ export function StationDisplay({
   weatherData,
   connectionStatus,
   lastUpdate,
+  websocketStatus,
+  websocketError,
+  lastDataReceived,
   isSingleStation = false,
 }: StationDisplayProps) {
   const tempC = weatherData?.temperature;
@@ -84,6 +95,61 @@ export function StationDisplay({
     return `${directions[index]} ${degrees.toFixed(0)}°`;
   };
 
+  const getWebSocketStatusColor = (status?: WebSocketState): string => {
+    switch (status) {
+      case 'connected':
+        return 'text-green-400';
+      case 'connecting':
+      case 'reconnecting':
+        return 'text-yellow-400';
+      case 'error':
+        return 'text-red-400';
+      case 'disconnected':
+        return 'text-gray-400';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
+  const getWebSocketStatusLabel = (status?: WebSocketState): string => {
+    switch (status) {
+      case 'connected':
+        return 'Connected';
+      case 'connecting':
+        return 'Connecting...';
+      case 'reconnecting':
+        return 'Reconnecting...';
+      case 'error':
+        return 'Error';
+      case 'disconnected':
+        return 'Disconnected';
+      default:
+        return 'Unknown';
+    }
+  };
+
+  const formatTimeAgo = (timestamp: number | null | undefined): string => {
+    if (!timestamp) return 'Never';
+    const now = Date.now();
+    const diff = now - timestamp;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (seconds < 60) return `${seconds}s ago`;
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return new Date(timestamp).toLocaleDateString();
+  };
+
+  const hasNoData =
+    !weatherData.timestamp &&
+    (!lastDataReceived || Date.now() - lastDataReceived > 120000); // 2 minutes
+  const isStale =
+    lastDataReceived !== null &&
+    lastDataReceived !== undefined &&
+    Date.now() - lastDataReceived > 120000; // 2 minutes
+
   return (
     <div className="flex flex-col h-full border-r border-gray-700 last:border-r-0 flex-1 overflow-hidden">
       {/* Station Header */}
@@ -100,7 +166,18 @@ export function StationDisplay({
                     ? 'text-red-400'
                     : 'text-gray-400'
             }`}
+            title={`Connection: ${connectionStatus}, WebSocket: ${getWebSocketStatusLabel(websocketStatus)}`}
           />
+          {lastDataReceived && (
+            <span
+              className={`text-xs ${
+                isStale ? 'text-red-400' : 'text-gray-500'
+              }`}
+              title={`Last data: ${formatTimeAgo(lastDataReceived)}`}
+            >
+              {formatTimeAgo(lastDataReceived)}
+            </span>
+          )}
           {lastUpdate && (
             <span className="text-sm text-gray-500">
               {new Date(lastUpdate).toLocaleTimeString([], {
@@ -111,6 +188,34 @@ export function StationDisplay({
           )}
         </div>
       </div>
+
+      {/* WebSocket Status & Error Banner */}
+      {(hasNoData || websocketError || websocketStatus === 'error') && (
+        <div className="px-2 py-1 border-b border-gray-800 bg-red-900/20 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              {websocketError && (
+                <div className="text-xs text-red-400 font-semibold truncate">
+                  {websocketError}
+                </div>
+              )}
+              {hasNoData && !websocketError && (
+                <div className="text-xs text-yellow-400">
+                  No data received for {formatTimeAgo(lastDataReceived)}
+                </div>
+              )}
+              {websocketStatus && (
+                <div
+                  className={`text-xs ${getWebSocketStatusColor(websocketStatus)}`}
+                >
+                  WebSocket: {getWebSocketStatusLabel(websocketStatus)}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Weather Content */}
       <div className="flex-1 flex flex-col overflow-hidden min-h-0">

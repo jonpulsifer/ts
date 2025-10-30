@@ -46,7 +46,17 @@ export type StationData = {
   weatherData: WeatherData;
   connectionStatus: ConnectionStatus;
   lastUpdate: number | null;
+  websocketStatus?: WebSocketState;
+  websocketError?: string;
+  lastDataReceived?: number | null;
 };
+
+export type WebSocketState =
+  | 'disconnected'
+  | 'connecting'
+  | 'connected'
+  | 'reconnecting'
+  | 'error';
 
 // WebSocket message types from WeatherFlow API
 export type WebSocketMessage = {

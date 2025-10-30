@@ -1,30 +1,11 @@
+import { log, logError } from '~/lib/logger';
 import { WEATHERFLOW_CONFIG } from './config';
 import type {
   AnyWebSocketMessage,
   ListenStartMessage,
   ListenStopMessage,
+  WebSocketState,
 } from './types';
-
-// Logging utility - only log in development
-const isDev =
-  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
-const log = (...args: any[]) => {
-  if (isDev) {
-    console.log(...args);
-  }
-};
-const logError = (...args: any[]) => {
-  if (isDev) {
-    console.error(...args);
-  }
-};
-
-export type WebSocketState =
-  | 'disconnected'
-  | 'connecting'
-  | 'connected'
-  | 'reconnecting'
-  | 'error';
 
 export interface WebSocketCallbacks {
   onConnect?: () => void;

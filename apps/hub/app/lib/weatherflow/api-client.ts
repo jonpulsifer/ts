@@ -1,8 +1,9 @@
+import { log, logError } from '~/lib/logger';
 import { WEATHERFLOW_CONFIG } from './config';
 import type {
   AnyWebSocketMessage,
-  ObservationsApiResponse,
   ObsAirMessage,
+  ObservationsApiResponse,
   ObsSkyMessage,
   ObsStMessage,
   RapidWindMessage,
@@ -10,20 +11,6 @@ import type {
   StationMapping,
   WeatherData,
 } from './types';
-
-// Logging utility - only log in development
-const isDev =
-  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
-const log = (...args: any[]) => {
-  if (isDev) {
-    console.log(...args);
-  }
-};
-const logError = (...args: any[]) => {
-  if (isDev) {
-    console.error(...args);
-  }
-};
 
 type ObservationsDeviceResponse = {
   type?: string;
@@ -323,7 +310,10 @@ export class WeatherFlowApiClient {
       );
       return null;
     } catch (error) {
-      logError(`Error fetching latest observation for device ${deviceId}:`, error);
+      logError(
+        `Error fetching latest observation for device ${deviceId}:`,
+        error,
+      );
       return null;
     }
   }

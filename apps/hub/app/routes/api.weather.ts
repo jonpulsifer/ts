@@ -1,25 +1,13 @@
+import { log, logError, logInfo } from '~/lib/logger';
 import { WeatherFlowApiClient } from '~/lib/weatherflow/api-client';
 import { WeatherMessageHandler } from '~/lib/weatherflow/message-handler';
 import type {
   AnyWebSocketMessage,
   ConnectionStatus,
   ListenStartMessage,
+  WebSocketState,
 } from '~/lib/weatherflow/types';
 import { WeatherFlowWebSocketClient } from '~/lib/weatherflow/websocket-client';
-
-// Logging utility - only log in development
-const isDev =
-  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
-const log = (...args: any[]) => {
-  if (isDev) {
-    console.log(...args);
-  }
-};
-const logError = (...args: any[]) => {
-  if (isDev) {
-    console.error(...args);
-  }
-};
 
 export async function loader() {
   // Get credentials from server-side environment variables
@@ -118,6 +106,7 @@ export async function loader() {
       messageHandler = new WeatherMessageHandler();
       const lastPrefetch = new Map<number, number>();
       const connectionMeta = new Map<string, { hasConnected: boolean }>();
+      const lastDataReceived = new Map<number, number>(); // deviceId -> timestamp
 
       const sendEvent = (event: string, data: unknown) => {
         if (didCleanup) {
@@ -140,10 +129,20 @@ export async function loader() {
         stationLabel: string,
         extra?: Record<string, unknown>,
       ) => {
+        const client = websocketClients.get(
+          Array.from(tokenToDevices.entries()).find(([, devices]) =>
+            devices.includes(deviceId),
+          )?.[0] || '',
+        );
+        const websocketStatus = client?.getState();
+        const lastData = lastDataReceived.get(deviceId);
+
         sendEvent('status', {
           status,
           device_id: deviceId,
           stationLabel,
+          websocketStatus,
+          lastDataReceived: lastData || null,
           ...(extra ?? {}),
         });
       };
@@ -192,6 +191,8 @@ export async function loader() {
               );
 
               if (weatherData) {
+                // Update last data received timestamp for prefetched data
+                lastDataReceived.set(deviceId, Date.now());
                 sendEvent('weather-data', weatherData);
               }
             } catch (error) {
@@ -270,13 +271,40 @@ export async function loader() {
             },
 
             onDisconnect: (code, reason) => {
-              log(
-                `WebSocket disconnected for token (code: ${code}, reason: ${reason})`,
+              logError(
+                `WebSocket disconnected for token (code: ${code}, reason: ${reason || 'none'})`,
               );
-              markDevices('disconnected');
+              const disconnectReason =
+                code === 1000
+                  ? 'Normal closure'
+                  : code === 1001
+                    ? 'Going away'
+                    : code === 1002
+                      ? 'Protocol error'
+                      : code === 1003
+                        ? 'Unsupported data'
+                        : code === 1006
+                          ? 'Abnormal closure'
+                          : code === 1007
+                            ? 'Invalid data'
+                            : code === 1008
+                              ? 'Policy violation'
+                              : code === 1009
+                                ? 'Message too big'
+                                : code === 1011
+                                  ? 'Internal error'
+                                  : `Unknown (${code})`;
+              for (const deviceId of deviceIds) {
+                const stationLabel = getStationLabel(deviceId);
+                emitStatus('disconnected', deviceId, stationLabel, {
+                  websocketError: `Disconnected: ${disconnectReason}${reason ? ` - ${reason}` : ''}`,
+                });
+              }
             },
 
             onError: (error) => {
+              const errorMessage =
+                error instanceof Error ? error.message : String(error);
               logError('WebSocket error for token:', error);
 
               for (const deviceId of deviceIds) {
@@ -285,6 +313,7 @@ export async function loader() {
                   error: stationLabel
                     ? `Failed to connect to ${stationLabel} (device ${deviceId}). WebSocket connection error. Check token validity and network connectivity.`
                     : `Failed to connect to device ${deviceId}. WebSocket connection error. Check token validity and network connectivity.`,
+                  websocketError: errorMessage,
                 });
               }
             },
@@ -321,7 +350,12 @@ export async function loader() {
                 stationLabel,
               );
               if (weatherData) {
-                emitStatus('connected', deviceIdFromData, stationLabel);
+                // Update last data received timestamp
+                lastDataReceived.set(deviceIdFromData, Date.now());
+                emitStatus('connected', deviceIdFromData, stationLabel, {
+                  websocketStatus: 'connected',
+                  lastDataReceived: Date.now(),
+                });
                 sendEvent('weather-data', weatherData);
               }
 
@@ -339,10 +373,22 @@ export async function loader() {
               }
             },
 
-            onStateChange: (state) => {
-              log(`WebSocket state changed for token: ${state}`);
-              if (state === 'connecting' || state === 'reconnecting') {
-                markDevices('connecting');
+            onStateChange: (state: WebSocketState) => {
+              logInfo(`WebSocket state changed for token: ${state}`);
+              // Emit status updates for all devices when websocket state changes
+              for (const deviceId of deviceIds) {
+                const stationLabel = getStationLabel(deviceId);
+                const connectionStatus: ConnectionStatus =
+                  state === 'connected'
+                    ? 'connected'
+                    : state === 'error'
+                      ? 'error'
+                      : state === 'disconnected'
+                        ? 'disconnected'
+                        : 'connecting';
+                emitStatus(connectionStatus, deviceId, stationLabel, {
+                  websocketStatus: state,
+                });
               }
             },
           });

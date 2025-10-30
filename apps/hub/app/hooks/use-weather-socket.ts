@@ -1,28 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { log, logError, logInfo, logWarn } from '~/lib/logger';
 import type {
   ConnectionStatus,
   StationData,
   WeatherEvent,
 } from '~/lib/weatherflow/types';
-
-// Logging utility - only log in development
-// NODE_ENV is replaced at build time by Remix/Vite
-const isDev =
-  (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') ||
-  (typeof process !== 'undefined' && process.env?.NODE_ENV === 'dev') ||
-  (typeof import.meta !== 'undefined' && import.meta.env?.DEV === true);
-const log = (...args: any[]) => {
-  if (isDev) {
-    console.log(...args);
-  }
-};
-const logError = (...args: any[]) => {
-  if (isDev) {
-    console.error(...args);
-  }
-};
 
 export function useWeatherSocket() {
   const [stations, setStations] = useState<Map<number, StationData>>(new Map());
@@ -78,10 +62,24 @@ export function useWeatherSocket() {
                 connectionStatus:
                   (data.status as ConnectionStatus) || 'disconnected',
                 lastUpdate: null,
+                websocketStatus: data.websocketStatus,
+                websocketError: data.websocketError,
+                lastDataReceived: data.lastDataReceived || null,
               };
-              log(
-                `Creating entry for device ${deviceId} (status: ${data.status})`,
+              logInfo(
+                `Creating entry for device ${deviceId} (status: ${data.status}, websocket: ${data.websocketStatus || 'unknown'})`,
               );
+            }
+
+            // Update websocket status and related fields
+            if (data.websocketStatus !== undefined) {
+              existing.websocketStatus = data.websocketStatus;
+            }
+            if (data.websocketError !== undefined) {
+              existing.websocketError = data.websocketError;
+            }
+            if (data.lastDataReceived !== undefined) {
+              existing.lastDataReceived = data.lastDataReceived;
             }
 
             // Update the entry with the new status
@@ -108,6 +106,12 @@ export function useWeatherSocket() {
                 break;
               case 'disconnected':
                 existing.connectionStatus = 'disconnected';
+                // Log websocket disconnection details
+                if (data.websocketError) {
+                  logWarn(
+                    `Device ${deviceId} (${data.stationLabel || 'unknown'}) disconnected: ${data.websocketError}`,
+                  );
+                }
                 break;
               case 'error':
                 existing.connectionStatus = 'error';
@@ -135,10 +139,18 @@ export function useWeatherSocket() {
                     });
                   }
                 }
-                logError(
-                  `Weather service error for device ${deviceId}:`,
-                  data.error,
-                );
+                // Log websocket errors with details
+                if (data.websocketError) {
+                  logError(
+                    `WebSocket error for device ${deviceId} (${data.stationLabel || 'unknown'}): ${data.websocketError}`,
+                  );
+                }
+                if (data.error) {
+                  logError(
+                    `Weather service error for device ${deviceId}:`,
+                    data.error,
+                  );
+                }
                 break;
             }
 
@@ -166,13 +178,15 @@ export function useWeatherSocket() {
             // Auto-create entry if it doesn't exist (handles race conditions)
             // This ensures data is never lost even if it arrives before status events
             if (!existing) {
-              log(
+              logInfo(
                 `Auto-creating station entry for device ${deviceId} from weather data`,
               );
               existing = {
                 weatherData: {},
                 connectionStatus: 'connected', // Assume connected if we're receiving data
                 lastUpdate: null,
+                websocketStatus: 'connected',
+                lastDataReceived: Date.now(),
               };
             }
 
@@ -182,12 +196,16 @@ export function useWeatherSocket() {
               ...data,
             };
             existing.lastUpdate = Date.now();
-            
+            existing.lastDataReceived = Date.now();
+
             // Update connection status to connected if we have data
             if (existing.connectionStatus !== 'connected') {
               existing.connectionStatus = 'connected';
             }
-            
+            if (existing.websocketStatus !== 'connected') {
+              existing.websocketStatus = 'connected';
+            }
+
             newStations.set(deviceId, existing);
             return newStations;
           });

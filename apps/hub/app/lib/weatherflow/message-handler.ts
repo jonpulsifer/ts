@@ -1,3 +1,4 @@
+import { log } from '~/lib/logger';
 import { WEATHERFLOW_CONFIG } from './config';
 import type {
   AnyWebSocketMessage,
@@ -10,15 +11,6 @@ import type {
   WeatherData,
   WeatherEvent,
 } from './types';
-
-// Logging utility - only log in development
-const isDev =
-  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
-const log = (...args: any[]) => {
-  if (isDev) {
-    console.log(...args);
-  }
-};
 
 /**
  * Calculate humidex (feels like temperature)

@@ -144,6 +144,9 @@ export default function Dashboard() {
               weatherData={station.weatherData}
               connectionStatus={station.connectionStatus}
               lastUpdate={station.lastUpdate}
+              websocketStatus={station.websocketStatus}
+              websocketError={station.websocketError}
+              lastDataReceived={station.lastDataReceived}
               isSingleStation={stationArray.length === 1}
             />
           ))

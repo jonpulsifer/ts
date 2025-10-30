@@ -28,7 +28,7 @@ export function RefreshMenu({
         setIsExiting(false);
         alert('Exit request sent. Container should restart shortly.');
       }, 2000);
-    } catch (error) {
+    } catch (_error) {
       setIsExiting(false);
       alert('Failed to exit process. Please restart the container manually.');
     }
