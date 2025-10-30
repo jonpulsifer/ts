@@ -12,140 +12,16 @@ on:
 
 jobs:
   containerize:
-    name: containerize
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-    services:
-      postgres:
-        image: postgres:18@sha256:1ffc019dae94eca6b09a49ca67d37398951346de3c3d0cfe23d8d4ca33da83fb
-        env:
-          POSTGRES_PASSWORD: postgres
-        # options: >-
-        #   --health-cmd pg_isready
-        #   --health-interval 10s
-        #   --health-timeout 5s
-        #   --health-retries 5
-        ports:
-          - 5432:5432
-      redis:
-        image: redis:alpine@sha256:59b6e694653476de2c992937ebe1c64182af4728e54bb49e9b7a6c26614d8933
-        # options: >-
-        #   --health-cmd "redis-cli ping"
-        #   --health-interval 10s
-        #   --health-timeout 5s
-        #   --health-retries 5
-        ports:
-          - 6379:6379
-    steps:
-      - name: Check out code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-        with:
-          fetch-depth: 2
-
-      - name: Prepare db & env files
-        if: ${{ inputs.app == 'wishlist' }}
-        env:
-          PGPASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_MULTIPLE_DATABASES: wishlist
-        run: |
-          ./.github/scripts/create-multiple-postgresql-databases.sh
-          find . -type f -name '.env.example' -execdir cp -v {} .env \;
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
-        with:
-          driver-opts: |
-            network=host
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate Docker Meta
-        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5
-        id: meta
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
-          tags: |
-            type=sha,enable=true,priority=100,prefix=,suffix=,format=long
-          flavor: |
-            latest=true
-
-      - name: Get Dockerfile path
-        id: dockerfile
-        run: |
-          if [[ "${{ inputs.app }}" == "hub" ]]; then
-            echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
-          else
-            echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Compute platforms
-        id: platforms
-        run: |
-          if [[ "${{ inputs.app }}" == "hub" ]]; then
-            echo "value=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
-          else
-            echo "value=linux/amd64" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Build and push
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
-        id: docker-build
-        with:
-          build-args: |
-            APP=${{ inputs.app }}
-          secrets: |
-            TURBO_TEAM=${{ secrets.VERCEL_ID }}
-            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
-            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/${{ inputs.app }}
-            REDIS_URL=redis://localhost:6379
-          push: ${{ github.event_name != 'pull_request' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          file: ${{ steps.dockerfile.outputs.path }}
-          platforms: ${{ steps.platforms.outputs.value }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          sbom: true
-          provenance: true
+    uses: ./.github/actions/containerize.yaml
+    with:
+      app: ${{ inputs.app }}
   
   attest:
-    needs: [containerize]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
-        with:
-          project_id: trusted-builds
-          workload_identity_provider: projects/629296473058/locations/global/workloadIdentityPools/homelab/providers/github
-
-      - name: Attest
-        uses: jonpulsifer/attester-action@main
-        with:
-          projectId: trusted-builds
-          attestorId: provenance
-          imageName: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
-          imageDigest: ${{ steps.docker-build.outputs.digest }}
-          keyProject: trusted-builds
-          keyLocation: northamerica-northeast1
-          keyRing: keys
-          keyName: signer
-          keyVersion: 1
+    uses: ./.github/actions/attest.yaml
+    if: ${{ github.ref == 'refs/heads/main' }}
+    with:
+      image: ${{ jobs.containerize.outputs.image }}
+      digest: ${{ jobs.containerize.outputs.digest }}
 
   deploy:
     needs: [containerize]
