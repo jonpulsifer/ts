@@ -1,4 +1,4 @@
-import { log, logError, logInfo } from '~/lib/logger';
+import { log } from '~/lib/logger';
 import { WeatherFlowApiClient } from '~/lib/weatherflow/api-client';
 import { WeatherMessageHandler } from '~/lib/weatherflow/message-handler';
 import type {
@@ -52,7 +52,7 @@ export async function loader() {
         devices.push(...stationInfo.deviceIds);
       }
     }
-    log(
+    log.info(
       `Auto-discovered ${devices.length} device(s) for token from ${stationIds.length} station(s): ${devices.join(', ')}`,
     );
 
@@ -63,7 +63,7 @@ export async function loader() {
 
   // Log final device list per token
   for (const [, devices] of tokenToDevices.entries()) {
-    log(`Final device list for token: ${devices.join(', ')}`);
+    log.info(`Final device list for token: ${devices.join(', ')}`);
   }
 
   // Validate we have at least one device to connect to
@@ -96,7 +96,7 @@ export async function loader() {
     messageHandler?.clearAllHistories();
     messageHandler = null;
 
-    log('Stream cancelled, cleaned up WebSocket connections');
+    log.info('Stream cancelled, cleaned up WebSocket connections');
   };
 
   // Create a readable stream for Server-Sent Events
@@ -116,7 +116,7 @@ export async function loader() {
           const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
           controller.enqueue(encoder.encode(payload));
         } catch (error) {
-          logError('Error sending SSE event:', error);
+          log.error('Error sending SSE event:', error);
         }
       };
 
@@ -196,7 +196,7 @@ export async function loader() {
                 sendEvent('weather-data', weatherData);
               }
             } catch (error) {
-              logError(
+              log.error(
                 `Error fetching latest observation for device ${deviceId}:`,
                 error,
               );
@@ -217,7 +217,7 @@ export async function loader() {
                 });
               }
             } catch (error) {
-              logError(
+              log.error(
                 `Error fetching 24h min/max for device ${deviceId}:`,
                 error,
               );
@@ -244,11 +244,31 @@ export async function loader() {
           }
         };
 
+        // Check if existing client is in stuck state and needs to be rebuilt
+        if (client) {
+          const clientState = client.getState();
+          if (clientState === 'error' || clientState === 'reconnecting') {
+            log.warn(
+              `Existing websocket client for token is in stuck state (${clientState}), destroying and recreating`,
+            );
+            try {
+              client.destroy();
+            } catch (error) {
+              log.error('Error destroying stuck websocket client:', error);
+            }
+            websocketClients.delete(token);
+            connectionMeta.delete(token);
+            client = null;
+            meta = { hasConnected: false };
+            connectionMeta.set(token, meta);
+          }
+        }
+
         if (!client) {
           client = new WeatherFlowWebSocketClient(token, deviceIds, {
             onConnect: () => {
               const isReconnect = meta?.hasConnected ?? false;
-              log(
+              log.info(
                 `Weather WebSocket connected for token (${deviceIds.length} devices)`,
               );
               meta ||= { hasConnected: false };
@@ -257,7 +277,10 @@ export async function loader() {
 
               for (const deviceId of deviceIds) {
                 const stationLabel = getStationLabel(deviceId);
-                emitStatus('connected', deviceId, stationLabel);
+                emitStatus('connected', deviceId, stationLabel, {
+                  websocketStatus: 'connected',
+                  websocketError: null, // Clear any previous error
+                });
                 void prefetchForDevice(token, deviceId, stationLabel, {
                   force: isReconnect,
                 });
@@ -271,7 +294,7 @@ export async function loader() {
             },
 
             onDisconnect: (code, reason) => {
-              logError(
+              log.error(
                 `WebSocket disconnected for token (code: ${code}, reason: ${reason || 'none'})`,
               );
               const disconnectReason =
@@ -305,7 +328,7 @@ export async function loader() {
             onError: (error) => {
               const errorMessage =
                 error instanceof Error ? error.message : String(error);
-              logError('WebSocket error for token:', error);
+              log.error('WebSocket error for token:', error);
 
               for (const deviceId of deviceIds) {
                 const stationLabel = getStationLabel(deviceId);
@@ -331,13 +354,13 @@ export async function loader() {
               const deviceIdFromData = message.device_id;
 
               if (!deviceIds.includes(deviceIdFromData)) {
-                log(
+                log.debug(
                   `Ignoring message for untracked device ${deviceIdFromData} (tracking: ${deviceIds.join(', ')})`,
                 );
                 return;
               }
 
-              log(
+              log.debug(
                 `Received weather data for device ${deviceIdFromData}:`,
                 message.type,
               );
@@ -355,6 +378,7 @@ export async function loader() {
                 emitStatus('connected', deviceIdFromData, stationLabel, {
                   websocketStatus: 'connected',
                   lastDataReceived: Date.now(),
+                  websocketError: null, // Clear any previous error when data arrives
                 });
                 sendEvent('weather-data', weatherData);
               }
@@ -369,12 +393,15 @@ export async function loader() {
               }
 
               if (message.type === 'ack') {
-                emitStatus('connected', deviceIdFromData, stationLabel);
+                emitStatus('connected', deviceIdFromData, stationLabel, {
+                  websocketStatus: 'connected',
+                  websocketError: null, // Clear any previous error on ack
+                });
               }
             },
 
             onStateChange: (state: WebSocketState) => {
-              logInfo(`WebSocket state changed for token: ${state}`);
+              log.info(`WebSocket state changed for token: ${state}`);
               // Emit status updates for all devices when websocket state changes
               for (const deviceId of deviceIds) {
                 const stationLabel = getStationLabel(deviceId);

@@ -1,4 +1,4 @@
-import { log, logError } from '~/lib/logger';
+import { log } from '~/lib/logger';
 import { WEATHERFLOW_CONFIG } from './config';
 import type {
   AnyWebSocketMessage,
@@ -83,7 +83,7 @@ export class WeatherFlowApiClient {
         }
       }
     } catch (error) {
-      logError(`Error fetching station name for device ${deviceId}:`, error);
+      log.error(`Error fetching station name for device ${deviceId}:`, error);
     }
 
     // Fallback - return empty string to let UI handle it
@@ -211,7 +211,7 @@ export class WeatherFlowApiClient {
         }
       }
     } catch (error) {
-      logError(`Error fetching 24h min/max for device ${deviceId}:`, error);
+      log.error(`Error fetching 24h min/max for device ${deviceId}:`, error);
     }
 
     return undefined;
@@ -233,7 +233,7 @@ export class WeatherFlowApiClient {
       );
 
       if (!response.ok) {
-        logError(
+        log.error(
           `Error fetching latest observation for device ${deviceId}: HTTP ${response.status}`,
         );
         return null;
@@ -243,7 +243,7 @@ export class WeatherFlowApiClient {
       const { type } = data;
 
       if (!type) {
-        log(
+        log.debug(
           `Latest observation response missing type for device ${deviceId}, skipping bootstrap`,
         );
         return null;
@@ -305,12 +305,12 @@ export class WeatherFlowApiClient {
         return message;
       }
 
-      log(
+      log.debug(
         `Unsupported latest observation type "${type}" for device ${deviceId}, skipping bootstrap`,
       );
       return null;
     } catch (error) {
-      logError(
+      log.error(
         `Error fetching latest observation for device ${deviceId}:`,
         error,
       );
@@ -368,7 +368,7 @@ export class WeatherFlowApiClient {
                       deviceType && deviceType.toUpperCase() === 'HB';
 
                     if (isBaseStation) {
-                      log(
+                      log.debug(
                         `Skipping base station (HB) device ${device.device_id} for station ${stationName} (${stationId})`,
                       );
                       continue;
@@ -376,14 +376,14 @@ export class WeatherFlowApiClient {
 
                     // Include ST devices (Tempest stations) - they have serial_number
                     if (device.serial_number) {
-                      log(
+                      log.info(
                         `Found active Tempest device ${device.device_id} (type: ${deviceType || 'ST'}, serial: ${device.serial_number}) for station ${stationName} (${stationId})`,
                       );
                       deviceIds.push(device.device_id);
                       deviceToStation.set(device.device_id, stationName);
                       deviceToToken.set(device.device_id, token);
                     } else {
-                      log(
+                      log.debug(
                         `Skipping device ${device.device_id} (no serial_number - must be ST device with serial) for station ${stationName} (${stationId})`,
                       );
                     }
@@ -400,19 +400,19 @@ export class WeatherFlowApiClient {
                     stationDeviceType.toUpperCase() === 'HB';
 
                   if (isBaseStation) {
-                    log(
+                    log.debug(
                       `Skipping base station (HB) device ${station.device_id} for station ${stationName} (${stationId})`,
                     );
                   } else if (station.serial_number) {
                     // Only include if it has serial_number (ST device identifier)
-                    log(
+                    log.info(
                       `Found active Tempest device ${station.device_id} (type: ${stationDeviceType || 'ST'}, serial: ${station.serial_number}) for station ${stationName} (${stationId})`,
                     );
                     deviceIds.push(station.device_id);
                     deviceToStation.set(station.device_id, stationName);
                     deviceToToken.set(station.device_id, token);
                   } else {
-                    log(
+                    log.debug(
                       `Skipping device ${station.device_id} (no serial_number - must be ST device with serial) for station ${stationName} (${stationId})`,
                     );
                   }
@@ -433,14 +433,14 @@ export class WeatherFlowApiClient {
             // Store token -> stations mapping
             if (stationIdsForToken.length > 0) {
               tokenToStations.set(token, stationIdsForToken);
-              log(
+              log.info(
                 `Token has ${stationIdsForToken.length} station(s): ${stationIdsForToken.join(', ')}`,
               );
             }
           }
         }
       } catch (error) {
-        logError('Error fetching stations for token:', error);
+        log.error('Error fetching stations for token:', error);
       }
     }
 

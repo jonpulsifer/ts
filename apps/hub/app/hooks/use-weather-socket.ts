@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { log, logError, logInfo, logWarn } from '~/lib/logger';
+import { log } from '~/lib/logger';
 import type {
   ConnectionStatus,
   StationData,
@@ -37,7 +37,7 @@ export function useWeatherSocket() {
       eventSourceRef.current = eventSource;
 
       eventSource.onopen = () => {
-        log('Weather SSE connected');
+        log.info('Weather SSE connected');
         // Connection status will be set per station via status events
       };
 
@@ -45,7 +45,7 @@ export function useWeatherSocket() {
       eventSource.addEventListener('status', (event) => {
         try {
           const data = JSON.parse(event.data);
-          log('Status update:', data);
+          log.debug('Status update:', data);
 
           const deviceId = data.device_id;
           if (!deviceId) return;
@@ -66,7 +66,7 @@ export function useWeatherSocket() {
                 websocketError: data.websocketError,
                 lastDataReceived: data.lastDataReceived || null,
               };
-              logInfo(
+              log.info(
                 `Creating entry for device ${deviceId} (status: ${data.status}, websocket: ${data.websocketStatus || 'unknown'})`,
               );
             }
@@ -76,7 +76,9 @@ export function useWeatherSocket() {
               existing.websocketStatus = data.websocketStatus;
             }
             if (data.websocketError !== undefined) {
-              existing.websocketError = data.websocketError;
+              // Clear error if explicitly set to null, otherwise set the error message
+              existing.websocketError =
+                data.websocketError === null ? undefined : data.websocketError;
             }
             if (data.lastDataReceived !== undefined) {
               existing.lastDataReceived = data.lastDataReceived;
@@ -108,7 +110,7 @@ export function useWeatherSocket() {
                 existing.connectionStatus = 'disconnected';
                 // Log websocket disconnection details
                 if (data.websocketError) {
-                  logWarn(
+                  log.warn(
                     `Device ${deviceId} (${data.stationLabel || 'unknown'}) disconnected: ${data.websocketError}`,
                   );
                 }
@@ -141,12 +143,12 @@ export function useWeatherSocket() {
                 }
                 // Log websocket errors with details
                 if (data.websocketError) {
-                  logError(
+                  log.error(
                     `WebSocket error for device ${deviceId} (${data.stationLabel || 'unknown'}): ${data.websocketError}`,
                   );
                 }
                 if (data.error) {
-                  logError(
+                  log.error(
                     `Weather service error for device ${deviceId}:`,
                     data.error,
                   );
@@ -158,7 +160,7 @@ export function useWeatherSocket() {
             return newStations;
           });
         } catch (error) {
-          logError('Error parsing status event:', error);
+          log.error('Error parsing status event:', error);
         }
       });
 
@@ -166,7 +168,7 @@ export function useWeatherSocket() {
       eventSource.addEventListener('weather-data', (event) => {
         try {
           const data = JSON.parse(event.data);
-          log('Weather data received:', data);
+          log.debug('Weather data received:', data);
 
           const deviceId = data.device_id;
           if (!deviceId) return;
@@ -178,7 +180,7 @@ export function useWeatherSocket() {
             // Auto-create entry if it doesn't exist (handles race conditions)
             // This ensures data is never lost even if it arrives before status events
             if (!existing) {
-              logInfo(
+              log.info(
                 `Auto-creating station entry for device ${deviceId} from weather data`,
               );
               existing = {
@@ -210,7 +212,7 @@ export function useWeatherSocket() {
             return newStations;
           });
         } catch (error) {
-          logError('Error parsing weather data:', error);
+          log.error('Error parsing weather data:', error);
         }
       });
 
@@ -218,16 +220,16 @@ export function useWeatherSocket() {
       eventSource.addEventListener('weather-event', (event) => {
         try {
           const data = JSON.parse(event.data);
-          log('Weather event received:', data);
+          log.debug('Weather event received:', data);
 
           setEvents((prev) => [...prev, data]);
         } catch (error) {
-          logError('Error parsing weather event:', error);
+          log.error('Error parsing weather event:', error);
         }
       });
 
       eventSource.onerror = (error) => {
-        logError('Weather SSE error:', error);
+        log.error('Weather SSE error:', error);
 
         // Check if the error is due to HTTP error response
         if (eventSource.readyState === EventSource.CLOSED) {
@@ -256,7 +258,7 @@ export function useWeatherSocket() {
 
         // Auto-reconnect after 5 seconds if not manually closed
         if (!isManualDisconnectRef.current) {
-          log('Attempting to reconnect in 5 seconds...');
+          log.info('Attempting to reconnect in 5 seconds...');
           reconnectTimeoutRef.current = setTimeout(() => {
             if (!isManualDisconnectRef.current) {
               connect();
@@ -265,7 +267,7 @@ export function useWeatherSocket() {
         }
       };
     } catch (error) {
-      logError('Error creating EventSource:', error);
+      log.error('Error creating EventSource:', error);
       const errorMessage =
         error instanceof Error
           ? `Failed to establish connection: ${error.message}`
@@ -295,7 +297,7 @@ export function useWeatherSocket() {
   // Auto-connect on mount
   useEffect(() => {
     if (!isManualDisconnectRef.current) {
-      log('Auto-connecting to weather service');
+      log.info('Auto-connecting to weather service');
       connect();
     }
 
@@ -338,7 +340,7 @@ export function useWeatherSocket() {
         const hasNoData = !station.weatherData.timestamp;
 
         if ((isStale || isDisconnected || hasNoData) && !connectionError) {
-          log(
+          log.debug(
             `Station ${deviceId} health check failed: stale=${isStale}, disconnected=${isDisconnected}, noData=${hasNoData}`,
           );
           needsReconnect = true;
@@ -346,7 +348,9 @@ export function useWeatherSocket() {
       }
 
       if (needsReconnect) {
-        log('Auto-healing: Reconnecting due to stale/disconnected stations');
+        log.info(
+          'Auto-healing: Reconnecting due to stale/disconnected stations',
+        );
         connect();
       }
     }, 30000); // Check every 30 seconds

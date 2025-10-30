@@ -66,12 +66,12 @@ export class WeatherMessageHandler {
       const data = JSON.parse(rawData);
       // Basic validation - check for required type field
       if (!data || typeof data.type !== 'string') {
-        log('Invalid message: missing type field');
+        log.debug('Invalid message: missing type field');
         return null;
       }
       return data as AnyWebSocketMessage;
     } catch (error) {
-      log('Error parsing WebSocket message:', error);
+      log.error('Error parsing WebSocket message:', error);
       return null;
     }
   }

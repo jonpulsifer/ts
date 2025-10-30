@@ -1,4 +1,4 @@
-import { log, logError } from '~/lib/logger';
+import { log } from '~/lib/logger';
 import { WEATHERFLOW_CONFIG } from './config';
 import type {
   AnyWebSocketMessage,
@@ -6,6 +6,11 @@ import type {
   ListenStopMessage,
   WebSocketState,
 } from './types';
+
+// Maximum duration to stay in reconnecting state before forcing rebuild (120 seconds)
+const MAX_RECONNECTING_DURATION = 120000;
+// Delay before force rebuild after MAX_RETRIES hit (60 seconds)
+const FORCE_REBUILD_DELAY_AFTER_MAX_RETRIES = 60000;
 
 export interface WebSocketCallbacks {
   onConnect?: () => void;
@@ -31,6 +36,9 @@ export class WeatherFlowWebSocketClient {
   private reconnectTimeout: NodeJS.Timeout | null = null;
   private keepaliveInterval: NodeJS.Timeout | null = null;
   private isManualClose = false;
+  private reconnectingStartTime: number | null = null;
+  private stuckStateCheckInterval: NodeJS.Timeout | null = null;
+  private forceRebuildTimeout: NodeJS.Timeout | null = null;
 
   constructor(
     token: string,
@@ -60,8 +68,22 @@ export class WeatherFlowWebSocketClient {
    * Connect to WebSocket
    */
   connect(): void {
-    if (this.state === 'connected' || this.state === 'connecting') {
-      log('WebSocket already connected or connecting');
+    // If already connected, do nothing
+    if (this.state === 'connected') {
+      log.debug('WebSocket already connected');
+      return;
+    }
+
+    // If stuck in reconnecting or error state, force rebuild
+    if (this.state === 'reconnecting' || this.state === 'error') {
+      log.warn(`WebSocket in stuck state (${this.state}), forcing rebuild`);
+      this.forceReconnect();
+      return;
+    }
+
+    // If already connecting, do nothing
+    if (this.state === 'connecting') {
+      log.debug('WebSocket already connecting');
       return;
     }
 
@@ -76,13 +98,13 @@ export class WeatherFlowWebSocketClient {
   private connectInternal(): void {
     try {
       const wsUrl = `${WEATHERFLOW_CONFIG.WS_URL}?token=${this.token}`;
-      log(
+      log.debug(
         `Connecting WebSocket for token (devices: ${this.deviceIds.join(', ')}): ${wsUrl.substring(0, 50)}...`,
       );
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
-        log(
+        log.info(
           `Weather WebSocket connected for token (${this.deviceIds.length} devices)`,
         );
         this.setState('connected');
@@ -97,23 +119,23 @@ export class WeatherFlowWebSocketClient {
           const data = JSON.parse(event.data);
           this.callbacks.onMessage?.(data as AnyWebSocketMessage);
         } catch (error) {
-          logError('Error parsing WebSocket message:', error);
+          log.error('Error parsing WebSocket message:', error);
         }
       };
 
       this.ws.onerror = (error) => {
-        logError(
+        log.error(
           `Weather WebSocket error for token (devices: ${this.deviceIds.join(', ')}):`,
           error,
         );
-        logError(
+        log.error(
           `WebSocket state: ${this.ws?.readyState} (0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED)`,
         );
         this.callbacks.onError?.(new Error('WebSocket connection error'));
       };
 
       this.ws.onclose = (event) => {
-        log(
+        log.info(
           `Weather WebSocket closed for token (devices: ${this.deviceIds.join(', ')}):`,
           `code=${event.code}, reason=${event.reason || 'none'}, wasClean=${event.wasClean}`,
         );
@@ -132,11 +154,11 @@ export class WeatherFlowWebSocketClient {
           this.reconnectAttempts >= WEATHERFLOW_CONFIG.WS_RECONNECT.MAX_RETRIES
         ) {
           this.setState('error');
-          logError('Max reconnection attempts reached');
+          log.error('Max reconnection attempts reached');
         }
       };
     } catch (error) {
-      logError('Error creating weather WebSocket:', error);
+      log.error('Error creating weather WebSocket:', error);
       this.setState('error');
       this.callbacks.onError?.(
         error instanceof Error ? error : new Error('Unknown error'),
@@ -152,6 +174,18 @@ export class WeatherFlowWebSocketClient {
       clearTimeout(this.reconnectTimeout);
     }
 
+    // Check if we've been stuck reconnecting too long
+    if (
+      this.reconnectingStartTime !== null &&
+      Date.now() - this.reconnectingStartTime > MAX_RECONNECTING_DURATION
+    ) {
+      log.warn(
+        'Been reconnecting too long, forcing rebuild instead of scheduling another attempt',
+      );
+      this.forceReconnect();
+      return;
+    }
+
     const delay = Math.min(
       WEATHERFLOW_CONFIG.WS_RECONNECT.INITIAL_DELAY *
         WEATHERFLOW_CONFIG.WS_RECONNECT.BACKOFF_MULTIPLIER **
@@ -161,7 +195,9 @@ export class WeatherFlowWebSocketClient {
 
     this.reconnectAttempts++;
     this.setState('reconnecting');
-    log(`Scheduling reconnect attempt ${this.reconnectAttempts} in ${delay}ms`);
+    log.debug(
+      `Scheduling reconnect attempt ${this.reconnectAttempts} in ${delay}ms`,
+    );
 
     this.reconnectTimeout = setTimeout(() => {
       if (!this.isManualClose) {
@@ -176,7 +212,124 @@ export class WeatherFlowWebSocketClient {
   private setState(state: WebSocketState): void {
     if (this.state !== state) {
       this.state = state;
+
+      // Track when we enter reconnecting state
+      if (state === 'reconnecting') {
+        this.reconnectingStartTime = Date.now();
+        this.startStuckStateCheck();
+      } else if (state === 'connected') {
+        // Clear reconnecting tracking on successful connection
+        this.reconnectingStartTime = null;
+        this.stopStuckStateCheck();
+        this.clearForceRebuildTimeout();
+      } else if (state === 'error') {
+        // Schedule force rebuild after MAX_RETRIES hit
+        this.scheduleForceRebuildAfterMaxRetries();
+      }
+
       this.callbacks.onStateChange?.(state);
+    }
+  }
+
+  /**
+   * Force reconnect by completely tearing down and rebuilding the connection
+   */
+  forceReconnect(): void {
+    log.warn(
+      `Force reconnecting WebSocket for token (devices: ${this.deviceIds.join(', ')})`,
+    );
+
+    // Clear all timeouts and intervals
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+    this.stopStuckStateCheck();
+    this.clearForceRebuildTimeout();
+    this.stopKeepalive();
+
+    // Close existing websocket if present
+    if (this.ws) {
+      try {
+        // Remove event handlers to prevent callbacks during teardown
+        this.ws.onopen = null;
+        this.ws.onmessage = null;
+        this.ws.onerror = null;
+        this.ws.onclose = null;
+        this.ws.close();
+      } catch (error) {
+        log.error('Error closing websocket during force reconnect:', error);
+      }
+      this.ws = null;
+    }
+
+    // Reset all state
+    this.reconnectAttempts = 0;
+    this.reconnectingStartTime = null;
+    this.isManualClose = false;
+
+    // Start fresh connection
+    this.setState('connecting');
+    this.connectInternal();
+  }
+
+  /**
+   * Start checking if we're stuck in reconnecting state
+   */
+  private startStuckStateCheck(): void {
+    this.stopStuckStateCheck(); // Clear any existing check
+
+    this.stuckStateCheckInterval = setInterval(() => {
+      if (
+        this.state === 'reconnecting' &&
+        this.reconnectingStartTime !== null
+      ) {
+        const duration = Date.now() - this.reconnectingStartTime;
+        if (duration > MAX_RECONNECTING_DURATION) {
+          log.warn(
+            `WebSocket stuck in reconnecting state for ${duration}ms, forcing rebuild`,
+          );
+          this.forceReconnect();
+        }
+      }
+    }, 10000); // Check every 10 seconds
+  }
+
+  /**
+   * Stop checking for stuck state
+   */
+  private stopStuckStateCheck(): void {
+    if (this.stuckStateCheckInterval) {
+      clearInterval(this.stuckStateCheckInterval);
+      this.stuckStateCheckInterval = null;
+    }
+  }
+
+  /**
+   * Schedule force rebuild after MAX_RETRIES has been hit
+   */
+  private scheduleForceRebuildAfterMaxRetries(): void {
+    this.clearForceRebuildTimeout();
+
+    log.warn(
+      `Scheduling force rebuild in ${FORCE_REBUILD_DELAY_AFTER_MAX_RETRIES}ms after MAX_RETRIES reached`,
+    );
+
+    this.forceRebuildTimeout = setTimeout(() => {
+      if (this.state === 'error' && !this.isManualClose) {
+        log.warn('Force rebuilding websocket after MAX_RETRIES timeout');
+        this.forceReconnect();
+      }
+    }, FORCE_REBUILD_DELAY_AFTER_MAX_RETRIES);
+  }
+
+  /**
+   * Clear force rebuild timeout
+   */
+  private clearForceRebuildTimeout(): void {
+    if (this.forceRebuildTimeout) {
+      clearTimeout(this.forceRebuildTimeout);
+      this.forceRebuildTimeout = null;
     }
   }
 
@@ -187,9 +340,11 @@ export class WeatherFlowWebSocketClient {
     if (this.isConnected() && this.ws) {
       try {
         this.ws.send(JSON.stringify(message));
-        log(`Sent ${message.type} message for device ${message.device_id}`);
+        log.debug(
+          `Sent ${message.type} message for device ${message.device_id}`,
+        );
       } catch (error) {
-        logError('Error sending message:', error);
+        log.error('Error sending message:', error);
         // Queue message for retry
         this.messageQueue.push({ message });
       }
@@ -205,7 +360,7 @@ export class WeatherFlowWebSocketClient {
   private flushMessageQueue(): void {
     if (this.messageQueue.length === 0) return;
 
-    log(`Flushing ${this.messageQueue.length} queued messages`);
+    log.debug(`Flushing ${this.messageQueue.length} queued messages`);
     const queue = [...this.messageQueue];
     this.messageQueue = [];
 
@@ -213,11 +368,11 @@ export class WeatherFlowWebSocketClient {
       if (this.isConnected() && this.ws) {
         try {
           this.ws.send(JSON.stringify(item.message));
-          log(
+          log.debug(
             `Sent queued ${item.message.type} message for device ${item.message.device_id}`,
           );
         } catch (error) {
-          logError('Error sending queued message:', error);
+          log.error('Error sending queued message:', error);
           // Re-queue failed messages
           this.messageQueue.push(item);
         }
@@ -247,10 +402,10 @@ export class WeatherFlowWebSocketClient {
           try {
             this.ws.send(JSON.stringify(message));
           } catch (error) {
-            logError(`Error sending keepalive for device ${deviceId}:`, error);
+            log.error(`Error sending keepalive for device ${deviceId}:`, error);
           }
         }
-        log('Keepalive sent for all devices');
+        log.debug('Keepalive sent for all devices');
       } else {
         // Stop keepalive if not connected
         this.stopKeepalive();
@@ -274,13 +429,13 @@ export class WeatherFlowWebSocketClient {
   disconnect(): void {
     this.isManualClose = true;
 
-    // Clear reconnect timeout
+    // Clear all timeouts and intervals
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
     }
-
-    // Stop keepalive
+    this.stopStuckStateCheck();
+    this.clearForceRebuildTimeout();
     this.stopKeepalive();
 
     // Send listen_stop for all devices if connected
@@ -294,7 +449,7 @@ export class WeatherFlowWebSocketClient {
         try {
           this.ws.send(JSON.stringify(message));
         } catch (error) {
-          logError(
+          log.error(
             `Could not send listen_stop message for device ${deviceId}:`,
             error,
           );
@@ -311,6 +466,7 @@ export class WeatherFlowWebSocketClient {
     // Clear message queue
     this.messageQueue = [];
     this.reconnectAttempts = 0;
+    this.reconnectingStartTime = null;
     this.setState('disconnected');
   }
 

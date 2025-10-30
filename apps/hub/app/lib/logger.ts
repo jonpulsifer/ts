@@ -3,30 +3,45 @@
  * Works in both development and production.
  */
 
-/**
- * Log debug information
- */
-export function log(...args: unknown[]): void {
-  console.debug(...args);
+class Logger {
+  /**
+   * Log debug information
+   */
+  debug(...args: unknown[]): void {
+    console.debug(...args);
+  }
+
+  /**
+   * Log informational messages
+   */
+  info(...args: unknown[]): void {
+    console.info(...args);
+  }
+
+  /**
+   * Log warnings
+   */
+  warn(...args: unknown[]): void {
+    console.warn(...args);
+  }
+
+  /**
+   * Log errors (always logged, bubbles up errors properly)
+   */
+  error(...args: unknown[]): void {
+    console.error(...args);
+  }
+
+  /**
+   * Alias for debug (for backward compatibility)
+   */
+  log(...args: unknown[]): void {
+    this.debug(...args);
+  }
 }
 
-/**
- * Log informational messages
- */
-export function logInfo(...args: unknown[]): void {
-  console.info(...args);
-}
+// Export singleton instance
+export const log = new Logger();
 
-/**
- * Log warnings
- */
-export function logWarn(...args: unknown[]): void {
-  console.warn(...args);
-}
-
-/**
- * Log errors (always logged, bubbles up errors properly)
- */
-export function logError(...args: unknown[]): void {
-  console.error(...args);
-}
+// Export class for testing or custom instances if needed
+export { Logger };
