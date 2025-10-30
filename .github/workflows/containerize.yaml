@@ -7,8 +7,12 @@ on:
         required: true
         type: string
     outputs:
-      image: ${{ jobs.build.outputs.image }}
-      digest: ${{ jobs.build.outputs.digest }}
+      image:
+        description: "Container image name"
+        value: ${{ jobs.build.outputs.image }}
+      digest:
+        description: "Container image digest"
+        value: ${{ jobs.build.outputs.digest }}
 
   workflow_dispatch:
     inputs:
