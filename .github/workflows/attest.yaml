@@ -1,4 +1,7 @@
 name: "🔑 Attest"
+
+permissions:
+
 on:
   workflow_call:
     inputs:
