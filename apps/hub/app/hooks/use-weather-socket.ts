@@ -1,17 +1,25 @@
 'use client';
 
+/**
+ * Client-side hook for consuming weather data via Server-Sent Events (SSE).
+ *
+ * Architecture:
+ * - Client is a PASSIVE consumer - only receives data from server via SSE
+ * - Client CANNOT control server WebSocket connections to Tempest
+ * - Connection status reflects data availability, not WebSocket technical state
+ * - Server manages all WebSocket connections to Tempest independently
+ */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { log } from '~/lib/logger';
-import type {
-  ConnectionStatus,
-  StationData,
-  WeatherEvent,
-} from '~/lib/weatherflow/types';
+import type { StationData, WeatherEvent } from '~/lib/weatherflow/types';
 
 export function useWeatherSocket() {
   const [stations, setStations] = useState<Map<number, StationData>>(new Map());
   const [events, setEvents] = useState<WeatherEvent[]>([]);
   const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [sseStatus, setSseStatus] = useState<
+    'connected' | 'connecting' | 'disconnected'
+  >('disconnected');
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -31,6 +39,7 @@ export function useWeatherSocket() {
     }
 
     isManualDisconnectRef.current = false;
+    setSseStatus('connecting');
 
     try {
       const eventSource = new EventSource('/api/weather');
@@ -38,6 +47,7 @@ export function useWeatherSocket() {
 
       eventSource.onopen = () => {
         log.info('Weather SSE connected');
+        setSseStatus('connected');
         // Connection status will be set per station via status events
       };
 
@@ -55,28 +65,26 @@ export function useWeatherSocket() {
             let existing = newStations.get(deviceId);
 
             // If we receive a status update from the server, the device is being tracked
-            // Create an entry if we don't have one yet (for any status: connected, error, disconnected)
+            // Create an entry if we don't have one yet
             if (!existing) {
               existing = {
                 weatherData: {},
-                connectionStatus:
-                  (data.status as ConnectionStatus) || 'disconnected',
+                connectionStatus: 'disconnected',
                 lastUpdate: null,
-                websocketStatus: data.websocketStatus,
-                websocketError: data.websocketError,
+                websocketStatus: data.websocketStatus, // Keep for debugging only
+                websocketError: data.websocketError, // Keep for debugging only
                 lastDataReceived: data.lastDataReceived || null,
               };
               log.info(
-                `Creating entry for device ${deviceId} (status: ${data.status}, websocket: ${data.websocketStatus || 'unknown'})`,
+                `Creating entry for device ${deviceId} (status: ${data.status})`,
               );
             }
 
-            // Update websocket status and related fields
+            // Update websocket status and related fields (for debugging only, not UI display)
             if (data.websocketStatus !== undefined) {
               existing.websocketStatus = data.websocketStatus;
             }
             if (data.websocketError !== undefined) {
-              // Clear error if explicitly set to null, otherwise set the error message
               existing.websocketError =
                 data.websocketError === null ? undefined : data.websocketError;
             }
@@ -84,77 +92,51 @@ export function useWeatherSocket() {
               existing.lastDataReceived = data.lastDataReceived;
             }
 
-            // Update the entry with the new status
-            switch (data.status) {
-              case 'connected':
-                existing.connectionStatus = 'connected';
-                // Clear error for this station if it was previously in error state
-                setConnectionError((prev) => {
-                  if (!prev) return null;
-                  // Remove this station's error from the combined error message
-                  const stationError = data.stationLabel
-                    ? `${data.stationLabel}:`
-                    : `Device ${deviceId}:`;
-                  // If the error message contains this station's error, remove it
-                  if (prev.includes(stationError)) {
-                    const lines = prev.split('\n\n');
-                    const filtered = lines.filter(
-                      (line) => !line.includes(stationError),
-                    );
-                    return filtered.length > 0 ? filtered.join('\n\n') : null;
-                  }
-                  return prev;
-                });
-                break;
-              case 'disconnected':
-                existing.connectionStatus = 'disconnected';
-                // Log websocket disconnection details
-                if (data.websocketError) {
-                  log.warn(
-                    `Device ${deviceId} (${data.stationLabel || 'unknown'}) disconnected: ${data.websocketError}`,
-                  );
-                }
-                break;
-              case 'error':
-                existing.connectionStatus = 'error';
-                // Only set global error for configuration errors, not transient connection errors
-                if (data.error) {
-                  const errorMsg = data.stationLabel
-                    ? `${data.stationLabel}: ${data.error}`
-                    : data.error;
-                  // Only track errors that look like configuration errors (not transient WebSocket errors)
-                  const isConfigError =
-                    data.error.includes('environment variables') ||
-                    data.error.includes('not configured') ||
-                    data.error.includes('Missing') ||
-                    data.error.includes(
-                      'Failed to create WebSocket connection',
-                    );
+            // Simplified connection status: based on data availability, not WebSocket technical state
+            // 'connected' = has data available, 'disconnected' = no data, 'error' = configuration error only
+            if (data.status === 'error' && data.error) {
+              const errorMsg = data.stationLabel
+                ? `${data.stationLabel}: ${data.error}`
+                : data.error;
+              const isConfigError =
+                data.error.includes('environment variables') ||
+                data.error.includes('not configured') ||
+                data.error.includes('Missing') ||
+                data.error.includes('Failed to create WebSocket connection');
 
-                  if (isConfigError) {
-                    setConnectionError((prev) => {
-                      // Combine errors if multiple stations have errors
-                      if (prev && !prev.includes(errorMsg)) {
-                        return `${prev}\n\n${errorMsg}`;
-                      }
-                      return errorMsg;
-                    });
+              if (isConfigError) {
+                existing.connectionStatus = 'error';
+                setConnectionError((prev) => {
+                  if (prev && !prev.includes(errorMsg)) {
+                    return `${prev}\n\n${errorMsg}`;
                   }
-                }
-                // Log websocket errors with details
-                if (data.websocketError) {
-                  log.error(
-                    `WebSocket error for device ${deviceId} (${data.stationLabel || 'unknown'}): ${data.websocketError}`,
+                  return errorMsg;
+                });
+              }
+              // Don't update status for transient WebSocket errors - keep existing status
+            } else if (data.status === 'connected') {
+              // Only mark as connected if we have actual data, otherwise keep current status
+              // Status will be updated to 'connected' when weather data arrives
+              if (existing.weatherData.timestamp) {
+                existing.connectionStatus = 'connected';
+              }
+              // Clear error for this station if it was previously in error state
+              setConnectionError((prev) => {
+                if (!prev) return null;
+                const stationError = data.stationLabel
+                  ? `${data.stationLabel}:`
+                  : `Device ${deviceId}:`;
+                if (prev.includes(stationError)) {
+                  const lines = prev.split('\n\n');
+                  const filtered = lines.filter(
+                    (line) => !line.includes(stationError),
                   );
+                  return filtered.length > 0 ? filtered.join('\n\n') : null;
                 }
-                if (data.error) {
-                  log.error(
-                    `Weather service error for device ${deviceId}:`,
-                    data.error,
-                  );
-                }
-                break;
+                return prev;
+              });
             }
+            // Ignore 'disconnected' and 'connecting' status updates - UI reflects data availability
 
             newStations.set(deviceId, existing);
             return newStations;
@@ -200,13 +182,12 @@ export function useWeatherSocket() {
             existing.lastUpdate = Date.now();
             existing.lastDataReceived = Date.now();
 
-            // Update connection status to connected if we have data
-            if (existing.connectionStatus !== 'connected') {
-              existing.connectionStatus = 'connected';
-            }
-            if (existing.websocketStatus !== 'connected') {
-              existing.websocketStatus = 'connected';
-            }
+            // Update connection status to connected since we have data
+            // This is the primary way we determine connection status
+            existing.connectionStatus = 'connected';
+
+            // Update websocket status for debugging (not exposed to UI)
+            existing.websocketStatus = 'connected';
 
             newStations.set(deviceId, existing);
             return newStations;
@@ -230,6 +211,13 @@ export function useWeatherSocket() {
 
       eventSource.onerror = (error) => {
         log.error('Weather SSE error:', error);
+
+        // Update SSE status based on readyState
+        if (eventSource.readyState === EventSource.CLOSED) {
+          setSseStatus('disconnected');
+        } else if (eventSource.readyState === EventSource.CONNECTING) {
+          setSseStatus('connecting');
+        }
 
         // Check if the error is due to HTTP error response
         if (eventSource.readyState === EventSource.CLOSED) {
@@ -276,23 +264,8 @@ export function useWeatherSocket() {
     }
   }, []);
 
-  const disconnect = useCallback(() => {
-    isManualDisconnectRef.current = true;
-
-    // Clear any pending reconnection
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-      reconnectTimeoutRef.current = null;
-    }
-
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
-
-    setStations(new Map());
-    setConnectionError(null);
-  }, []);
+  // Note: Removed disconnect() - client shouldn't control server connections
+  // Client just passively receives data via SSE
 
   // Auto-connect on mount
   useEffect(() => {
@@ -303,6 +276,7 @@ export function useWeatherSocket() {
 
     return () => {
       isManualDisconnectRef.current = true;
+      setSseStatus('disconnected');
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
@@ -312,7 +286,7 @@ export function useWeatherSocket() {
     };
   }, [connect]);
 
-  // Auto-healing: Check if stations have data and retry if needed
+  // Check if stations are configured (show error if none after delay)
   useEffect(() => {
     if (stations.size === 0) {
       const timeout = setTimeout(() => {
@@ -325,44 +299,16 @@ export function useWeatherSocket() {
 
       return () => clearTimeout(timeout);
     }
+  }, [stations.size, connectionError]);
 
-    // Auto-healing: Check if stations have stale data or are disconnected
-    const healthCheckInterval = setInterval(() => {
-      const now = Date.now();
-      const staleThreshold = 120000; // 2 minutes without updates
-      let needsReconnect = false;
-
-      for (const [deviceId, station] of stations.entries()) {
-        const isStale =
-          station.lastUpdate === null ||
-          now - station.lastUpdate > staleThreshold;
-        const isDisconnected = station.connectionStatus === 'disconnected';
-        const hasNoData = !station.weatherData.timestamp;
-
-        if ((isStale || isDisconnected || hasNoData) && !connectionError) {
-          log.debug(
-            `Station ${deviceId} health check failed: stale=${isStale}, disconnected=${isDisconnected}, noData=${hasNoData}`,
-          );
-          needsReconnect = true;
-        }
-      }
-
-      if (needsReconnect) {
-        log.info(
-          'Auto-healing: Reconnecting due to stale/disconnected stations',
-        );
-        connect();
-      }
-    }, 30000); // Check every 30 seconds
-
-    return () => clearInterval(healthCheckInterval);
-  }, [stations, connectionError, connect]);
+  // Note: Removed auto-healing reconnect logic - client should not spam server
+  // Server manages its own WebSocket connections independently
 
   return {
     stations,
     events,
     connectionError,
-    connect,
-    disconnect,
+    sseStatus,
+    connect, // Only reconnects SSE, doesn't affect server WebSocket
   };
 }

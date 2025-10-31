@@ -39,6 +39,7 @@ export class WeatherFlowWebSocketClient {
   private reconnectingStartTime: number | null = null;
   private stuckStateCheckInterval: NodeJS.Timeout | null = null;
   private forceRebuildTimeout: NodeJS.Timeout | null = null;
+  private isHandlingError = false;
 
   constructor(
     token: string,
@@ -107,6 +108,7 @@ export class WeatherFlowWebSocketClient {
         log.info(
           `Weather WebSocket connected for token (${this.deviceIds.length} devices)`,
         );
+        this.isHandlingError = false; // Reset error handling flag on successful connection
         this.setState('connected');
         this.reconnectAttempts = 0;
         this.flushMessageQueue();
@@ -124,6 +126,12 @@ export class WeatherFlowWebSocketClient {
       };
 
       this.ws.onerror = (error) => {
+        // Prevent recursive calls if we're already handling an error
+        if (this.isHandlingError) {
+          return;
+        }
+
+        this.isHandlingError = true;
         log.error(
           `Weather WebSocket error for token (devices: ${this.deviceIds.join(', ')}):`,
           error,
@@ -132,6 +140,41 @@ export class WeatherFlowWebSocketClient {
           `WebSocket state: ${this.ws?.readyState} (0=CONNECTING, 1=OPEN, 2=CLOSING, 3=CLOSED)`,
         );
         this.callbacks.onError?.(new Error('WebSocket connection error'));
+
+        // If error occurs during connection attempt, schedule reconnect directly
+        // instead of closing (which would trigger another error event)
+        if (this.ws && this.ws.readyState === WebSocket.CONNECTING) {
+          log.warn(
+            'Connection error during CONNECTING state, scheduling reconnect',
+          );
+          // Remove handlers to prevent further events
+          this.ws.onerror = null;
+          this.ws.onopen = null;
+          this.ws.onmessage = null;
+
+          // Try to close gracefully, but don't wait for it
+          try {
+            this.ws.onclose = null; // Prevent onclose from interfering
+            this.ws.close();
+          } catch (_closeError) {
+            // Ignore close errors
+          }
+
+          this.ws = null;
+          this.setState('disconnected');
+
+          // Schedule reconnect if appropriate
+          if (
+            !this.isManualClose &&
+            this.reconnectAttempts < WEATHERFLOW_CONFIG.WS_RECONNECT.MAX_RETRIES
+          ) {
+            this.scheduleReconnect();
+          } else {
+            this.setState('error');
+          }
+        }
+
+        this.isHandlingError = false;
       };
 
       this.ws.onclose = (event) => {
@@ -267,6 +310,7 @@ export class WeatherFlowWebSocketClient {
     this.reconnectAttempts = 0;
     this.reconnectingStartTime = null;
     this.isManualClose = false;
+    this.isHandlingError = false; // Reset error handling flag
 
     // Start fresh connection
     this.setState('connecting');

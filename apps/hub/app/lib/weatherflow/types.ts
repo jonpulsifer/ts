@@ -44,10 +44,10 @@ export type ConnectionStatus =
 
 export type StationData = {
   weatherData: WeatherData;
-  connectionStatus: ConnectionStatus;
+  connectionStatus: ConnectionStatus; // Simplified: based on data availability, not WebSocket technical state
   lastUpdate: number | null;
-  websocketStatus?: WebSocketState;
-  websocketError?: string;
+  websocketStatus?: WebSocketState; // Internal/debugging only - not exposed to UI
+  websocketError?: string; // Internal/debugging only - not exposed to UI
   lastDataReceived?: number | null;
 };
 
