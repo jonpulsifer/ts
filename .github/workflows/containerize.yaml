@@ -45,7 +45,7 @@ jobs:
       digest: ${{ steps.docker-build.outputs.digest }}
     services:
       postgres:
-        image: postgres:18@sha256:1ffc019dae94eca6b09a49ca67d37398951346de3c3d0cfe23d8d4ca33da83fb
+        image: postgres:18@sha256:30ae0940332d5be3a872995b042ddc1e0ad7281aa793619878c8b60c1bc8e73e
         env:
           POSTGRES_PASSWORD: postgres
         # options: >-
