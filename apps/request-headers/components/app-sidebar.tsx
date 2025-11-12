@@ -7,6 +7,7 @@ import {
   Network,
   Send,
   Terminal,
+  Webhook,
 } from 'lucide-react';
 import type * as React from 'react';
 
@@ -27,6 +28,7 @@ const projects = [
   { name: 'Fetcher', url: '/fetcher', icon: Send },
   { name: 'Network Tools', url: '/network', icon: Network },
   { name: 'Request Headers', url: '/request-headers', icon: BookOpen },
+  { name: 'Webhook Testing', url: '/webhook', icon: Webhook },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
