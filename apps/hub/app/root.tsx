@@ -68,14 +68,85 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto bg-gray-900 text-white min-h-screen">
-      <h1 className="text-white text-2xl mb-4">{message}</h1>
-      <p className="text-gray-300 mb-4">{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto bg-gray-800 text-gray-300 rounded">
-          <code>{stack}</code>
-        </pre>
-      )}
+    <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-4">
+        <div className="bg-gray-900 border border-gray-800 rounded-lg shadow-xl overflow-hidden">
+          <div className="p-6 space-y-4">
+            <div className="flex items-center gap-3 text-red-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6"
+              >
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                <path d="M12 9v4" />
+                <path d="M12 17h.01" />
+              </svg>
+              <h1 className="text-xl font-semibold text-white">{message}</h1>
+            </div>
+            <p className="text-gray-400">{details}</p>
+            {stack && (
+              <div className="bg-gray-950 rounded p-3 overflow-x-auto">
+                <pre className="text-xs text-gray-500 font-mono">
+                  <code>{stack}</code>
+                </pre>
+              </div>
+            )}
+          </div>
+          <div className="bg-gray-900/50 p-4 border-t border-gray-800 flex gap-3">
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-md transition-colors text-sm font-medium"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                <path d="M8 16H3v5" />
+              </svg>
+              Reload
+            </button>
+            <a
+              href="/"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-white hover:bg-gray-100 text-gray-900 rounded-md transition-colors text-sm font-medium"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              Go Home
+            </a>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

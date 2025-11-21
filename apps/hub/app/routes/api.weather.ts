@@ -221,7 +221,7 @@ const ensureWebSocketConnections = () => {
         }
         globalWebSocketManager.clients.delete(token);
         globalWebSocketManager.connectionMeta.delete(token);
-        client = null;
+        client = undefined;
         meta = { hasConnected: false };
         globalWebSocketManager.connectionMeta.set(token, meta);
       }
