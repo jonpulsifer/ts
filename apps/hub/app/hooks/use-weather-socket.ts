@@ -92,6 +92,14 @@ export function useWeatherSocket() {
               existing.lastDataReceived = data.lastDataReceived;
             }
 
+            // Update station label if provided in status event
+            if (data.stationLabel) {
+              existing.weatherData = {
+                ...existing.weatherData,
+                stationLabel: data.stationLabel,
+              };
+            }
+
             // Simplified connection status: based on data availability, not WebSocket technical state
             // 'connected' = has data available, 'disconnected' = no data, 'error' = configuration error only
             if (data.status === 'error' && data.error) {
@@ -299,6 +307,17 @@ export function useWeatherSocket() {
 
       return () => clearTimeout(timeout);
     }
+    // If we have stations, clear the generic configuration error
+    setConnectionError((prev) => {
+      if (
+        prev?.includes(
+          'No weather stations configured. Please set TEMPESTWX_TOKENS',
+        )
+      ) {
+        return null;
+      }
+      return prev;
+    });
   }, [stations.size, connectionError]);
 
   // Note: Removed auto-healing reconnect logic - client should not spam server

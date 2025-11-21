@@ -112,6 +112,55 @@ export function StationDisplay({
   const wsStatus = websocketStatus || 'disconnected';
   const displaySseStatus = sseStatus || 'disconnected';
 
+  // Show skeleton if we are connecting/connected but have no data yet
+  const showSkeleton =
+    !isDiff &&
+    (displaySseStatus === 'connecting' || displaySseStatus === 'connected') &&
+    weatherData.temperature === undefined;
+
+  if (showSkeleton) {
+    return (
+      <div
+        className={`flex flex-col h-full border-r border-gray-700 last:border-r-0 overflow-hidden ${isDiff ? 'flex-[0.5]' : 'flex-1'}`}
+      >
+        {/* Header Skeleton */}
+        <div className="flex items-center justify-between px-2 py-1 border-b border-gray-700 flex-shrink-0 h-[2.25rem]">
+          <div className="flex items-center gap-2 w-full">
+            <div className="h-4 w-24 bg-gray-800 rounded animate-pulse" />
+          </div>
+          <div className="flex items-center gap-1.5 ml-auto">
+            <div className="h-3 w-10 bg-gray-800 rounded animate-pulse" />
+            <div className="h-3 w-10 bg-gray-800 rounded animate-pulse" />
+          </div>
+        </div>
+
+        {/* Content Skeleton */}
+        <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+          {/* Temperature Skeleton */}
+          <div className="flex flex-col items-center justify-center py-1 border-b border-gray-800 flex-shrink-0 h-24">
+            <div className="h-10 w-32 bg-gray-800 rounded animate-pulse mb-2" />
+            <div className="h-3 w-20 bg-gray-800 rounded animate-pulse" />
+          </div>
+
+          {/* Grid Skeleton */}
+          <div
+            className={`flex-1 overflow-hidden min-h-0 ${isSingleStation ? 'grid grid-cols-2' : 'flex flex-col'}`}
+          >
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className={`flex items-center justify-between px-2 py-0.5 border-b border-gray-800 ${isSingleStation ? 'border-r border-r-gray-800' : ''} flex-shrink-0 min-h-[1.75rem]`}
+              >
+                <div className="h-3 w-16 bg-gray-800 rounded animate-pulse" />
+                <div className="h-4 w-12 bg-gray-800 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`flex flex-col h-full border-r border-gray-700 last:border-r-0 overflow-hidden ${isDiff ? 'flex-[0.5]' : 'flex-1'}`}
@@ -194,7 +243,7 @@ export function StationDisplay({
                   : 'text-white'
               }`}
             >
-              {tempC !== undefined
+              {tempC != null
                 ? isDiff
                   ? `${tempC > 0 ? '+' : ''}${tempC.toFixed(1)}`
                   : tempC.toFixed(1)
@@ -208,22 +257,22 @@ export function StationDisplay({
                 Feels like {feelsLike.toFixed(1)}°
               </div>
             ) : weatherData?.minMax24h &&
-              (weatherData.minMax24h.tempMin !== undefined ||
-                weatherData.minMax24h.tempMax !== undefined) ? (
+              (weatherData.minMax24h.tempMin != null ||
+                weatherData.minMax24h.tempMax != null) ? (
               <div className="text-xs text-gray-500">
                 {isDiff
-                  ? weatherData.minMax24h.tempMin !== undefined &&
-                    weatherData.minMax24h.tempMax !== undefined
+                  ? weatherData.minMax24h.tempMin != null &&
+                    weatherData.minMax24h.tempMax != null
                     ? `${weatherData.minMax24h.tempMin > 0 ? '+' : ''}${weatherData.minMax24h.tempMin.toFixed(1)}° / ${weatherData.minMax24h.tempMax > 0 ? '+' : ''}${weatherData.minMax24h.tempMax.toFixed(1)}°`
-                    : weatherData.minMax24h.tempMax !== undefined
+                    : weatherData.minMax24h.tempMax != null
                       ? `${weatherData.minMax24h.tempMax > 0 ? '+' : ''}${weatherData.minMax24h.tempMax.toFixed(1)}°`
-                      : weatherData.minMax24h.tempMin !== undefined
+                      : weatherData.minMax24h.tempMin != null
                         ? `${weatherData.minMax24h.tempMin > 0 ? '+' : ''}${weatherData.minMax24h.tempMin.toFixed(1)}°`
                         : '-- --'
-                  : weatherData.minMax24h.tempMin !== undefined &&
-                      weatherData.minMax24h.tempMax !== undefined
+                  : weatherData.minMax24h.tempMin != null &&
+                      weatherData.minMax24h.tempMax != null
                     ? `${weatherData.minMax24h.tempMin.toFixed(1)}° / ${weatherData.minMax24h.tempMax.toFixed(1)}°`
-                    : weatherData.minMax24h.tempMax !== undefined
+                    : weatherData.minMax24h.tempMax != null
                       ? `Max: ${weatherData.minMax24h.tempMax.toFixed(1)}°`
                       : `Min: ${weatherData.minMax24h.tempMin?.toFixed(1)}°`}
               </div>
@@ -257,7 +306,7 @@ export function StationDisplay({
                     : 'text-white'
                 }`}
               >
-                {weatherData?.humidity !== undefined
+                {weatherData?.humidity != null
                   ? isDiff
                     ? `${weatherData.humidity > 0 ? '+' : ''}${weatherData.humidity.toFixed(0)}`
                     : weatherData.humidity.toFixed(0)
@@ -265,31 +314,31 @@ export function StationDisplay({
                 %
               </div>
               {(weatherData?.minMax24h &&
-                (weatherData.minMax24h.humidityMin !== undefined ||
-                  weatherData.minMax24h.humidityMax !== undefined)) ||
+                (weatherData.minMax24h.humidityMin != null ||
+                  weatherData.minMax24h.humidityMax != null)) ||
               isDiff ? (
                 <div className="text-xs text-gray-500">
                   {isDiff
                     ? weatherData.minMax24h &&
-                      weatherData.minMax24h.humidityMin !== undefined &&
-                      weatherData.minMax24h.humidityMax !== undefined
+                      weatherData.minMax24h.humidityMin != null &&
+                      weatherData.minMax24h.humidityMax != null
                       ? `${weatherData.minMax24h.humidityMin > 0 ? '+' : ''}${weatherData.minMax24h.humidityMin.toFixed(0)}-${weatherData.minMax24h.humidityMax > 0 ? '+' : ''}${weatherData.minMax24h.humidityMax.toFixed(0)}%`
                       : weatherData.minMax24h &&
-                          weatherData.minMax24h.humidityMax !== undefined
+                          weatherData.minMax24h.humidityMax != null
                         ? `${weatherData.minMax24h.humidityMax > 0 ? '+' : ''}${weatherData.minMax24h.humidityMax.toFixed(0)}%`
                         : weatherData.minMax24h &&
-                            weatherData.minMax24h.humidityMin !== undefined
+                            weatherData.minMax24h.humidityMin != null
                           ? `${weatherData.minMax24h.humidityMin > 0 ? '+' : ''}${weatherData.minMax24h.humidityMin.toFixed(0)}%`
                           : '-- --'
                     : weatherData.minMax24h &&
-                        weatherData.minMax24h.humidityMin !== undefined &&
-                        weatherData.minMax24h.humidityMax !== undefined
+                        weatherData.minMax24h.humidityMin != null &&
+                        weatherData.minMax24h.humidityMax != null
                       ? `${weatherData.minMax24h.humidityMin.toFixed(0)}-${weatherData.minMax24h.humidityMax.toFixed(0)}%`
                       : weatherData.minMax24h &&
-                          weatherData.minMax24h.humidityMax !== undefined
+                          weatherData.minMax24h.humidityMax != null
                         ? `Max: ${weatherData.minMax24h.humidityMax.toFixed(0)}%`
                         : weatherData.minMax24h &&
-                            weatherData.minMax24h.humidityMin !== undefined
+                            weatherData.minMax24h.humidityMin != null
                           ? `Min: ${weatherData.minMax24h.humidityMin.toFixed(0)}%`
                           : '-- --'}
                 </div>
@@ -328,16 +377,16 @@ export function StationDisplay({
                     : 'Windless'}
               </div>
               {(weatherData?.minMax24h &&
-                weatherData.minMax24h.windSpeedMax !== undefined) ||
+                weatherData.minMax24h.windSpeedMax != null) ||
               isDiff ? (
                 <div className="text-xs text-gray-500">
                   {isDiff
                     ? weatherData.minMax24h &&
-                      weatherData.minMax24h.windSpeedMax !== undefined
+                      weatherData.minMax24h.windSpeedMax != null
                       ? `${weatherData.minMax24h.windSpeedMax > 0 ? '+' : ''}${(weatherData.minMax24h.windSpeedMax * 3.6).toFixed(1)} km/h`
                       : '-- --'
                     : weatherData.minMax24h &&
-                        weatherData.minMax24h.windSpeedMax !== undefined
+                        weatherData.minMax24h.windSpeedMax != null
                       ? `Max: ${(weatherData.minMax24h.windSpeedMax * 3.6).toFixed(1)} km/h`
                       : '-- --'}
                 </div>
@@ -368,7 +417,7 @@ export function StationDisplay({
                       : 'text-white'
                   }`}
                 >
-                  {weatherData?.pressure !== undefined
+                  {weatherData?.pressure != null
                     ? isDiff
                       ? `${weatherData.pressure > 0 ? '+' : ''}${weatherData.pressure.toFixed(0)}`
                       : weatherData.pressure.toFixed(0)
@@ -378,31 +427,31 @@ export function StationDisplay({
                 {!isDiff && getBarometricTrendIcon(barometricTrend)}
               </div>
               {(weatherData?.minMax24h &&
-                (weatherData.minMax24h.pressureMin !== undefined ||
-                  weatherData.minMax24h.pressureMax !== undefined)) ||
+                (weatherData.minMax24h.pressureMin != null ||
+                  weatherData.minMax24h.pressureMax != null)) ||
               isDiff ? (
                 <div className="text-xs text-gray-500">
                   {isDiff
                     ? weatherData.minMax24h &&
-                      weatherData.minMax24h.pressureMin !== undefined &&
-                      weatherData.minMax24h.pressureMax !== undefined
+                      weatherData.minMax24h.pressureMin != null &&
+                      weatherData.minMax24h.pressureMax != null
                       ? `${weatherData.minMax24h.pressureMin > 0 ? '+' : ''}${weatherData.minMax24h.pressureMin.toFixed(0)}-${weatherData.minMax24h.pressureMax > 0 ? '+' : ''}${weatherData.minMax24h.pressureMax.toFixed(0)} mb`
                       : weatherData.minMax24h &&
-                          weatherData.minMax24h.pressureMax !== undefined
+                          weatherData.minMax24h.pressureMax != null
                         ? `${weatherData.minMax24h.pressureMax > 0 ? '+' : ''}${weatherData.minMax24h.pressureMax.toFixed(0)} mb`
                         : weatherData.minMax24h &&
-                            weatherData.minMax24h.pressureMin !== undefined
+                            weatherData.minMax24h.pressureMin != null
                           ? `${weatherData.minMax24h.pressureMin > 0 ? '+' : ''}${weatherData.minMax24h.pressureMin.toFixed(0)} mb`
                           : '-- --'
                     : weatherData.minMax24h &&
-                        weatherData.minMax24h.pressureMin !== undefined &&
-                        weatherData.minMax24h.pressureMax !== undefined
+                        weatherData.minMax24h.pressureMin != null &&
+                        weatherData.minMax24h.pressureMax != null
                       ? `${weatherData.minMax24h.pressureMin.toFixed(0)}-${weatherData.minMax24h.pressureMax.toFixed(0)} mb`
                       : weatherData.minMax24h &&
-                          weatherData.minMax24h.pressureMax !== undefined
+                          weatherData.minMax24h.pressureMax != null
                         ? `Max: ${weatherData.minMax24h.pressureMax.toFixed(0)} mb`
                         : weatherData.minMax24h &&
-                            weatherData.minMax24h.pressureMin !== undefined
+                            weatherData.minMax24h.pressureMin != null
                           ? `Min: ${weatherData.minMax24h.pressureMin.toFixed(0)} mb`
                           : '-- --'}
                 </div>
@@ -482,16 +531,16 @@ export function StationDisplay({
                   : '--'}
               </div>
               {(weatherData?.minMax24h &&
-                weatherData.minMax24h.uvIndexMax !== undefined) ||
+                weatherData.minMax24h.uvIndexMax != null) ||
               isDiff ? (
                 <div className="text-xs text-gray-500">
                   {isDiff
                     ? weatherData.minMax24h &&
-                      weatherData.minMax24h.uvIndexMax !== undefined
+                      weatherData.minMax24h.uvIndexMax != null
                       ? `${weatherData.minMax24h.uvIndexMax > 0 ? '+' : ''}${weatherData.minMax24h.uvIndexMax.toFixed(1)}`
                       : '-- --'
                     : weatherData.minMax24h &&
-                        weatherData.minMax24h.uvIndexMax !== undefined
+                        weatherData.minMax24h.uvIndexMax != null
                       ? `Max: ${weatherData.minMax24h.uvIndexMax.toFixed(1)}`
                       : '-- --'}
                 </div>

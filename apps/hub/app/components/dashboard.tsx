@@ -132,103 +132,89 @@ export default function Dashboard() {
                 // Calculate differences (left - right)
                 const diffData = {
                   temperature:
-                    left.temperature !== undefined &&
-                    right.temperature !== undefined
+                    left.temperature != null && right.temperature != null
                       ? left.temperature - right.temperature
                       : undefined,
                   humidity:
-                    left.humidity !== undefined && right.humidity !== undefined
+                    left.humidity != null && right.humidity != null
                       ? left.humidity - right.humidity
                       : undefined,
                   windSpeed:
-                    left.windSpeed !== undefined &&
-                    right.windSpeed !== undefined
+                    left.windSpeed != null && right.windSpeed != null
                       ? left.windSpeed - right.windSpeed // Keep in m/s, StationDisplay will convert
                       : undefined,
                   windLull:
-                    left.windLull !== undefined && right.windLull !== undefined
+                    left.windLull != null && right.windLull != null
                       ? left.windLull - right.windLull // Keep in m/s, StationDisplay will convert
                       : undefined,
                   windGust:
-                    left.windGust !== undefined && right.windGust !== undefined
+                    left.windGust != null && right.windGust != null
                       ? left.windGust - right.windGust // Keep in m/s, StationDisplay will convert
                       : undefined,
                   pressure:
-                    left.pressure !== undefined && right.pressure !== undefined
+                    left.pressure != null && right.pressure != null
                       ? left.pressure - right.pressure
                       : undefined,
                   uvIndex:
-                    left.uvIndex !== undefined &&
-                    left.uvIndex !== null &&
-                    right.uvIndex !== undefined &&
-                    right.uvIndex !== null
+                    left.uvIndex != null && right.uvIndex != null
                       ? left.uvIndex - right.uvIndex
                       : undefined,
                   solarRadiation:
-                    left.solarRadiation !== undefined &&
-                    left.solarRadiation !== null &&
-                    right.solarRadiation !== undefined &&
-                    right.solarRadiation !== null
+                    left.solarRadiation != null && right.solarRadiation != null
                       ? left.solarRadiation - right.solarRadiation
                       : undefined,
                   illuminance:
-                    left.illuminance !== undefined &&
-                    left.illuminance !== null &&
-                    right.illuminance !== undefined &&
-                    right.illuminance !== null
+                    left.illuminance != null && right.illuminance != null
                       ? left.illuminance - right.illuminance
                       : undefined,
                   rainTotal:
-                    left.rainTotal !== undefined &&
-                    left.rainTotal !== null &&
-                    right.rainTotal !== undefined &&
-                    right.rainTotal !== null
+                    left.rainTotal != null && right.rainTotal != null
                       ? left.rainTotal - right.rainTotal
                       : undefined,
                   minMax24h: {
                     tempMin:
-                      left.minMax24h?.tempMin !== undefined &&
-                      right.minMax24h?.tempMin !== undefined
+                      left.minMax24h?.tempMin != null &&
+                      right.minMax24h?.tempMin != null
                         ? left.minMax24h.tempMin - right.minMax24h.tempMin
                         : undefined,
                     tempMax:
-                      left.minMax24h?.tempMax !== undefined &&
-                      right.minMax24h?.tempMax !== undefined
+                      left.minMax24h?.tempMax != null &&
+                      right.minMax24h?.tempMax != null
                         ? left.minMax24h.tempMax - right.minMax24h.tempMax
                         : undefined,
                     humidityMin:
-                      left.minMax24h?.humidityMin !== undefined &&
-                      right.minMax24h?.humidityMin !== undefined
+                      left.minMax24h?.humidityMin != null &&
+                      right.minMax24h?.humidityMin != null
                         ? left.minMax24h.humidityMin -
                           right.minMax24h.humidityMin
                         : undefined,
                     humidityMax:
-                      left.minMax24h?.humidityMax !== undefined &&
-                      right.minMax24h?.humidityMax !== undefined
+                      left.minMax24h?.humidityMax != null &&
+                      right.minMax24h?.humidityMax != null
                         ? left.minMax24h.humidityMax -
                           right.minMax24h.humidityMax
                         : undefined,
                     windSpeedMax:
-                      left.minMax24h?.windSpeedMax !== undefined &&
-                      right.minMax24h?.windSpeedMax !== undefined
+                      left.minMax24h?.windSpeedMax != null &&
+                      right.minMax24h?.windSpeedMax != null
                         ? left.minMax24h.windSpeedMax -
                           right.minMax24h.windSpeedMax // Keep in m/s, StationDisplay will convert
                         : undefined,
                     pressureMin:
-                      left.minMax24h?.pressureMin !== undefined &&
-                      right.minMax24h?.pressureMin !== undefined
+                      left.minMax24h?.pressureMin != null &&
+                      right.minMax24h?.pressureMin != null
                         ? left.minMax24h.pressureMin -
                           right.minMax24h.pressureMin
                         : undefined,
                     pressureMax:
-                      left.minMax24h?.pressureMax !== undefined &&
-                      right.minMax24h?.pressureMax !== undefined
+                      left.minMax24h?.pressureMax != null &&
+                      right.minMax24h?.pressureMax != null
                         ? left.minMax24h.pressureMax -
                           right.minMax24h.pressureMax
                         : undefined,
                     uvIndexMax:
-                      left.minMax24h?.uvIndexMax !== undefined &&
-                      right.minMax24h?.uvIndexMax !== undefined
+                      left.minMax24h?.uvIndexMax != null &&
+                      right.minMax24h?.uvIndexMax != null
                         ? left.minMax24h.uvIndexMax - right.minMax24h.uvIndexMax
                         : undefined,
                   },
@@ -286,17 +272,55 @@ export default function Dashboard() {
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-gray-500 gap-4">
-            <AlertCircle className="w-16 h-16 text-red-400" />
-            <div className="text-center">
-              <div className="text-2xl font-semibold">
-                No stations configured
-              </div>
-              <div className="text-base text-gray-600 mt-2">
-                {connectionError
-                  ? 'Check error message above'
-                  : 'Waiting for weather stations...'}
-              </div>
-            </div>
+            {connectionError ? (
+              <>
+                <AlertCircle className="w-16 h-16 text-red-400" />
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-red-400">
+                    Connection Error
+                  </div>
+                  <div className="text-base text-gray-400 mt-2">
+                    {connectionError}
+                  </div>
+                </div>
+              </>
+            ) : sseStatus === 'connecting' ? (
+              <>
+                <div className="w-16 h-16 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-blue-400">
+                    Connecting...
+                  </div>
+                  <div className="text-base text-gray-500 mt-2">
+                    Establishing connection to weather server
+                  </div>
+                </div>
+              </>
+            ) : sseStatus === 'connected' ? (
+              <>
+                <div className="w-16 h-16 border-4 border-green-400/30 border-t-green-400 rounded-full animate-spin" />
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-green-400">
+                    Waiting for Data
+                  </div>
+                  <div className="text-base text-gray-500 mt-2">
+                    Connected. Waiting for first weather observation...
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <AlertCircle className="w-16 h-16 text-gray-600" />
+                <div className="text-center">
+                  <div className="text-2xl font-semibold text-gray-500">
+                    No Stations Available
+                  </div>
+                  <div className="text-base text-gray-600 mt-2">
+                    Waiting for weather stations to report in...
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
