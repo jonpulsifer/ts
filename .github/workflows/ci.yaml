@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build and Test
     timeout-minutes: 10
-    runs-on: ubuntu-latest
+    runs-on: arc-ts
     env:
       NODE_ENV: test
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
