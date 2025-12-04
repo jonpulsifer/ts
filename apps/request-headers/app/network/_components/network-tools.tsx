@@ -10,6 +10,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -121,81 +122,118 @@ export default function NetworkTools() {
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Network Tools</CardTitle>
-        <CardDescription>
-          Perform network diagnostics and lookups
+    <Card className="w-full border-2 shadow-lg">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl">Network Diagnostics</CardTitle>
+        <CardDescription className="mt-1">
+          Perform DNS lookups, WHOIS queries, ping tests, and SSL certificate
+          inspections
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <form action={handleSubmit} className="space-y-4">
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor={toolId}>Tool</Label>
-            <Select
-              name="tool"
-              value={tool}
-              onValueChange={(value: Tool) => setTool(value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select tool" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dns">DNS Lookup</SelectItem>
-                <SelectItem value="whois">WHOIS Lookup</SelectItem>
-                <SelectItem value="ping">Ping</SelectItem>
-                <SelectItem value="ssl">SSL Certificate Info</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-1 flex flex-col space-y-2">
+              <Label htmlFor={toolId}>Tool</Label>
+              <Select
+                name="tool"
+                value={tool}
+                onValueChange={(value: Tool) => setTool(value)}
+              >
+                <SelectTrigger id={toolId}>
+                  <SelectValue placeholder="Select tool" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="dns">DNS Lookup</SelectItem>
+                  <SelectItem value="whois">WHOIS Lookup</SelectItem>
+                  <SelectItem value="ping">Ping</SelectItem>
+                  <SelectItem value="ssl">SSL Certificate Info</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="md:col-span-3 flex flex-col space-y-2">
+              <Label htmlFor={targetId}>Target Domain/IP</Label>
+              <Input
+                id={targetId}
+                name="target"
+                placeholder="example.com or 8.8.8.8"
+                required
+                className="font-mono"
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor={targetId}>Target Domain/IP</Label>
-            <Input
-              id={targetId}
-              name="target"
-              placeholder="example.com"
-              required
-            />
-          </div>
-
-          <Button type="submit">Run Tool</Button>
+          <Button type="submit" size="lg" className="w-full md:w-auto">
+            Run Tool
+          </Button>
         </form>
 
         {state && (
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">Latest Result:</h3>
+          <div className="mt-4 p-4 rounded-lg border-2 bg-muted/30">
+            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              Latest Result
+              <Badge variant="outline">{tool.toUpperCase()}</Badge>
+            </h3>
             {renderResult(state, tool)}
           </div>
         )}
 
         {history.length > 0 && (
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold">History</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">History</h3>
+              <Badge variant="secondary">{history.length} queries</Badge>
+            </div>
             <Accordion type="single" collapsible className="w-full">
               {history.map((item) => (
-                <AccordionItem key={item.id} value={item.id}>
-                  <AccordionTrigger>
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-primary/10 text-primary font-medium">
+                <AccordionItem
+                  key={item.id}
+                  value={item.id}
+                  className="border rounded-lg mb-2 px-4 hover:bg-muted/50 transition-colors"
+                >
+                  <AccordionTrigger className="hover:no-underline py-4">
+                    <div className="flex items-center gap-4 flex-1 text-left">
+                      <Badge variant="outline" className="font-semibold">
                         {item.tool.toUpperCase()}
+                      </Badge>
+                      <span className="font-medium font-mono">
+                        {item.target}
                       </span>
-                      <span className="font-medium">{item.target}</span>
-                      <span className="flex items-center gap-1 text-muted-foreground">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground ml-auto">
                         <Clock className="h-3 w-3" />
-                        {formatDistanceToNow(item.timestamp, {
-                          addSuffix: true,
-                        })}
-                      </span>
+                        <span>{item.duration}ms</span>
+                        <span>•</span>
+                        <span>
+                          {formatDistanceToNow(item.timestamp, {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2">
-                      <div className="text-sm text-muted-foreground">
-                        Duration: {item.duration}ms
+                  <AccordionContent className="pt-4 pb-6">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="space-y-1">
+                          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                            Duration
+                          </div>
+                          <div className="font-mono bg-muted/50 p-2 rounded border">
+                            {item.duration}ms
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                            Target
+                          </div>
+                          <div className="font-mono bg-muted/50 p-2 rounded border">
+                            {item.target}
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">Results:</div>
+                      <div className="space-y-2">
+                        <div className="text-sm font-semibold">Results:</div>
                         {renderResult(item.result, item.tool)}
                       </div>
                     </div>

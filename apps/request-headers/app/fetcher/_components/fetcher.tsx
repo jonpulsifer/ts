@@ -1,14 +1,16 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
-import { Clock, Loader2 } from 'lucide-react';
+import { CheckCircle2, Clock, Copy, Loader2, XCircle } from 'lucide-react';
 import { useId, useState } from 'react';
+import { toast } from 'sonner';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -25,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -49,6 +53,14 @@ export default function ApiTester() {
   const [body, setBody] = useState('');
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<RequestHistory[]>([]);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    toast.success('Copied to clipboard');
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +95,7 @@ export default function ApiTester() {
       };
 
       setHistory((prev) => [historyItem, ...prev]);
+      toast.success(`Request successful (${res.status})`);
     } catch (error) {
       const endTime = performance.now();
       const historyItem: RequestHistory = {
@@ -96,39 +109,64 @@ export default function ApiTester() {
         duration: Math.round(endTime - startTime),
       };
       setHistory((prev) => [historyItem, ...prev]);
+      toast.error(`Request failed: ${(error as Error).message}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>API Tester</CardTitle>
-        <CardDescription>
-          Test API endpoints with different HTTP methods
+    <Card className="w-full border-2 shadow-lg">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl">API Request Builder</CardTitle>
+        <CardDescription className="mt-1">
+          Build and test API requests with custom methods, headers, and body
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor={urlId}>API Endpoint URL</Label>
-            <Select
-              value={url}
-              onValueChange={(value: string) => setUrl(value)}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-3 flex flex-col space-y-2">
+              <Label htmlFor={urlId}>Endpoint URL</Label>
+              <Input
+                id={urlId}
+                type="url"
+                placeholder="https://api.example.com/endpoint"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="font-mono"
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Label htmlFor={methodId}>Method</Label>
+              <Select
+                value={method}
+                onValueChange={(value: HttpMethod) => setMethod(value)}
+              >
+                <SelectTrigger id={methodId}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="GET">GET</SelectItem>
+                  <SelectItem value="POST">POST</SelectItem>
+                  <SelectItem value="PUT">PUT</SelectItem>
+                  <SelectItem value="DELETE">DELETE</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setUrl('https://jsonplaceholder.typicode.com/posts');
+                setMethod('GET');
+              }}
             >
-              <SelectTrigger id={urlId}>
-                <SelectValue placeholder="Select API endpoint" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="https://jsonplaceholder.typicode.com/posts">
-                  https://jsonplaceholder.typicode.com/posts
-                </SelectItem>
-                <SelectItem value="https://jsonplaceholder.typicode.com/posts/1">
-                  https://jsonplaceholder.typicode.com/posts/1
-                </SelectItem>
-              </SelectContent>
-            </Select>
+              Quick Fill
+            </Button>
           </div>
           <div className="flex flex-col space-y-2">
             <Label htmlFor={methodId}>HTTP Method</Label>
@@ -155,15 +193,21 @@ export default function ApiTester() {
                 placeholder='{"key": "value"}'
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
-                rows={4}
+                rows={6}
+                className="font-mono"
               />
             </div>
           )}
-          <Button type="submit" disabled={loading}>
+          <Button
+            type="submit"
+            disabled={loading || !url}
+            size="lg"
+            className="w-full md:w-auto"
+          >
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sending...
+                Sending Request...
               </>
             ) : (
               'Send Request'
@@ -171,58 +215,134 @@ export default function ApiTester() {
           </Button>
         </form>
 
+        {history.length > 0 && <Separator />}
+
         {history.length > 0 && (
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Request History</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Request History</h3>
+              <Badge variant="secondary">{history.length} requests</Badge>
+            </div>
             <Accordion type="single" collapsible className="w-full">
-              {history.map((item) => (
-                <AccordionItem key={item.id} value={item.id}>
-                  <AccordionTrigger>
-                    <div className="flex items-center gap-2 text-sm">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-xs ${
-                          item.status >= 200 && item.status < 300
-                            ? 'bg-green-500/10 text-green-500'
-                            : 'bg-red-500/10 text-red-500'
-                        }`}
-                      >
-                        {item.status || 'ERROR'}
-                      </span>
-                      <span className="font-mono">{item.method}</span>
-                      <span className="truncate max-w-[300px]">{item.url}</span>
-                      <span className="flex items-center gap-1 text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        {formatDistanceToNow(item.timestamp, {
-                          addSuffix: true,
-                        })}
-                      </span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2">
-                      <div className="text-sm text-muted-foreground">
-                        Duration: {item.duration}ms
+              {history.map((item) => {
+                const isSuccess = item.status >= 200 && item.status < 300;
+                return (
+                  <AccordionItem
+                    key={item.id}
+                    value={item.id}
+                    className="border rounded-lg mb-2 px-4 hover:bg-muted/50 transition-colors"
+                  >
+                    <AccordionTrigger className="hover:no-underline py-4">
+                      <div className="flex items-center gap-4 flex-1 text-left">
+                        <div className="flex items-center gap-2">
+                          {isSuccess ? (
+                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          ) : (
+                            <XCircle className="h-5 w-5 text-red-600" />
+                          )}
+                          <Badge
+                            variant={isSuccess ? 'default' : 'destructive'}
+                            className="font-semibold"
+                          >
+                            {item.status || 'ERROR'}
+                          </Badge>
+                        </div>
+                        <Badge variant="outline" className="font-mono">
+                          {item.method}
+                        </Badge>
+                        <span className="text-sm font-mono flex-1 truncate">
+                          {item.url}
+                        </span>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>{item.duration}ms</span>
+                          <span>•</span>
+                          <span>
+                            {formatDistanceToNow(item.timestamp, {
+                              addSuffix: true,
+                            })}
+                          </span>
+                        </div>
                       </div>
-                      {item.body && (
-                        <div className="space-y-1">
-                          <div className="text-sm font-medium">
-                            Request Body:
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4 pb-6">
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div className="space-y-1">
+                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                              Status
+                            </div>
+                            <div className="font-mono bg-muted/50 p-2 rounded border">
+                              {item.status || 'ERROR'}
+                            </div>
                           </div>
-                          <pre className="bg-muted p-2 rounded-md text-sm">
-                            {item.body}
+                          <div className="space-y-1">
+                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                              Duration
+                            </div>
+                            <div className="font-mono bg-muted/50 p-2 rounded border">
+                              {item.duration}ms
+                            </div>
+                          </div>
+                        </div>
+                        {item.body && (
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="text-sm font-semibold">
+                                Request Body
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  copyToClipboard(item.body!, `body-${item.id}`)
+                                }
+                                className="h-8 w-8 p-0"
+                              >
+                                {copiedId === `body-${item.id}` ? (
+                                  <Check className="h-4 w-4 text-green-600" />
+                                ) : (
+                                  <Copy className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+                            <pre className="bg-muted/50 p-4 rounded-lg text-sm border font-mono">
+                              {item.body}
+                            </pre>
+                          </div>
+                        )}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm font-semibold">
+                              Response
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                copyToClipboard(
+                                  JSON.stringify(item.response, null, 2),
+                                  `response-${item.id}`,
+                                )
+                              }
+                              className="h-8 w-8 p-0"
+                            >
+                              {copiedId === `response-${item.id}` ? (
+                                <Check className="h-4 w-4 text-green-600" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                          <pre className="bg-muted/50 p-4 rounded-lg text-sm overflow-auto max-h-96 border font-mono">
+                            {JSON.stringify(item.response, null, 2)}
                           </pre>
                         </div>
-                      )}
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">Response:</div>
-                        <pre className="bg-muted p-2 rounded-md text-sm overflow-auto max-h-96">
-                          {JSON.stringify(item.response, null, 2)}
-                        </pre>
                       </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
             </Accordion>
           </div>
         )}

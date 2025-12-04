@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Toaster } from 'sonner';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
@@ -18,8 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Request Headers',
-  description: 'My little next.js playground',
+  title: 'Request Headers - Developer Tools',
+  description:
+    'Modern developer tools for testing APIs, inspecting headers, webhooks, and network diagnostics',
 };
 
 export default function RootLayout({
@@ -33,9 +35,10 @@ export default function RootLayout({
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <main className="p-4">{children}</main>
+            <main className="flex-1 overflow-auto">{children}</main>
           </SidebarInset>
         </SidebarProvider>
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

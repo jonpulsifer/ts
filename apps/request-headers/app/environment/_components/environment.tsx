@@ -1,11 +1,10 @@
 'use client';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Check, Copy, Search } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -13,6 +12,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type EnvironmentProps = {
@@ -20,6 +28,10 @@ type EnvironmentProps = {
 };
 
 export default function Environment({ serverEnv }: EnvironmentProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('server');
+
   const MY_NEXTJS_BUNDLED_ENVIRONMENT_VARIABLES = [
     'NEXT_PUBLIC_ENVIRONMENT_VARIABLE',
   ];
@@ -47,42 +59,107 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
     ),
   );
 
-  const renderObject = (obj: Record<string, string>) => (
-    <Accordion type="single" collapsible className="w-full">
-      {Object.entries(obj).map(([key, value]) => (
-        <AccordionItem key={key} value={key}>
-          <AccordionTrigger>{key}</AccordionTrigger>
-          <AccordionContent>
-            <pre className="whitespace-pre-wrap break-all">{value}</pre>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
+  const currentEnv = activeTab === 'server' ? serverEnv : clientEnv;
+
+  const filteredEnv = Object.entries(currentEnv).filter(
+    ([key, value]) =>
+      key.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      value.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const copyToClipboard = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    toast.success('Copied to clipboard');
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Environment Variables</CardTitle>
-        <CardDescription>
-          View server and client environment variables
+    <Card className="w-full border-2 shadow-lg">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl">Environment Variables</CardTitle>
+        <CardDescription className="mt-1">
+          Inspect server and client-side environment variables
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="server">
-          <TabsList>
-            <TabsTrigger value="server">Server Environment</TabsTrigger>
-            <TabsTrigger value="client">Client Environment</TabsTrigger>
+      <CardContent className="space-y-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="server">
+              Server
+              <Badge variant="secondary" className="ml-2">
+                {Object.keys(serverEnv).length}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="client">
+              Client
+              <Badge variant="secondary" className="ml-2">
+                {Object.keys(clientEnv).length}
+              </Badge>
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="server">
-            <h3 className="text-lg font-semibold mb-2">
-              Server Environment Variables
-            </h3>
-            {renderObject(serverEnv)}
-          </TabsContent>
-          <TabsContent value="client">
-            <h3 className="text-lg font-semibold mb-2">Client Environment</h3>
-            {renderObject(clientEnv)}
+          <TabsContent value={activeTab} className="space-y-4 mt-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search environment variables..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+
+            {filteredEnv.length === 0 ? (
+              <div className="py-12 text-center">
+                <p className="text-sm text-muted-foreground">
+                  No environment variables match your search
+                </p>
+              </div>
+            ) : (
+              <div className="rounded-lg border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[250px]">Variable Name</TableHead>
+                      <TableHead>Value</TableHead>
+                      <TableHead className="w-[100px] text-right">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredEnv.map(([key, value]) => (
+                      <TableRow key={key} className="group">
+                        <TableCell className="font-medium font-mono text-sm">
+                          {key}
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-2xl">
+                            <pre className="whitespace-pre-wrap break-all text-sm font-mono bg-muted/50 p-2 rounded border">
+                              {value || '(empty)'}
+                            </pre>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(value, key)}
+                            className="h-8 w-8 p-0"
+                          >
+                            {copiedKey === key ? (
+                              <Check className="h-4 w-4 text-green-600" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </CardContent>
