@@ -2,13 +2,15 @@ import { headers } from 'next/headers';
 import { Suspense } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
+import { sanitizeHeaders } from '@/lib/sanitize-headers';
 import RequestHeaders from './_components/request-headers';
 
 export default async function RequestHeadersPage() {
   const headersList = await headers();
-  const requestHeaders = Object.fromEntries(
+  const rawHeaders = Object.fromEntries(
     Array.from(headersList.entries()).sort(([a], [b]) => a.localeCompare(b)),
   );
+  const requestHeaders = sanitizeHeaders(rawHeaders);
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

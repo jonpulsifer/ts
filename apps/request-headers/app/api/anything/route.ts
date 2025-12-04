@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { headers } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
+import { sanitizeHeaders } from '@/lib/sanitize-headers';
 import { webhookStore } from '@/lib/webhook-store';
 
 export const runtime = 'nodejs';
@@ -40,11 +41,14 @@ async function handleRequest(
 ): Promise<NextResponse> {
   try {
     const headersList = await headers();
-    const requestHeaders: Record<string, string> = {};
+    const rawHeaders: Record<string, string> = {};
 
     for (const [key, value] of headersList.entries()) {
-      requestHeaders[key] = value;
+      rawHeaders[key] = value;
     }
+
+    // Sanitize headers to remove sensitive tokens
+    const requestHeaders = sanitizeHeaders(rawHeaders);
 
     // Get query parameters
     const query: Record<string, string | string[]> = {};

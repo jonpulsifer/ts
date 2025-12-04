@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { sanitizeHeaders } from '@/lib/sanitize-headers';
 import type { WebhookRequest } from '@/lib/webhook-store';
 
 export default function WebhookDisplay() {
@@ -308,7 +309,11 @@ export default function WebhookDisplay() {
                             size="sm"
                             onClick={() =>
                               copyToClipboard(
-                                JSON.stringify(webhook.headers, null, 2),
+                                JSON.stringify(
+                                  sanitizeHeaders(webhook.headers),
+                                  null,
+                                  2,
+                                ),
                                 `headers-${webhook.id}`,
                               )
                             }
@@ -322,7 +327,11 @@ export default function WebhookDisplay() {
                           </Button>
                         </div>
                         <pre className="bg-muted/50 p-4 rounded-lg text-sm overflow-auto max-h-64 border font-mono">
-                          {JSON.stringify(webhook.headers, null, 2)}
+                          {JSON.stringify(
+                            sanitizeHeaders(webhook.headers),
+                            null,
+                            2,
+                          )}
                         </pre>
                       </div>
 
@@ -370,7 +379,14 @@ export default function WebhookDisplay() {
                             size="sm"
                             onClick={() =>
                               copyToClipboard(
-                                JSON.stringify(webhook, null, 2),
+                                JSON.stringify(
+                                  {
+                                    ...webhook,
+                                    headers: sanitizeHeaders(webhook.headers),
+                                  },
+                                  null,
+                                  2,
+                                ),
                                 `full-${webhook.id}`,
                               )
                             }
@@ -384,7 +400,14 @@ export default function WebhookDisplay() {
                           </Button>
                         </div>
                         <pre className="bg-muted/50 p-4 rounded-lg text-sm overflow-auto max-h-96 border font-mono">
-                          {JSON.stringify(webhook, null, 2)}
+                          {JSON.stringify(
+                            {
+                              ...webhook,
+                              headers: sanitizeHeaders(webhook.headers),
+                            },
+                            null,
+                            2,
+                          )}
                         </pre>
                       </div>
                     </div>

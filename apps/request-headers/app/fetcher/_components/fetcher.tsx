@@ -1,7 +1,14 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
-import { Check, CheckCircle2, Clock, Copy, Loader2, XCircle } from 'lucide-react';
+import {
+  Check,
+  CheckCircle2,
+  Clock,
+  Copy,
+  Loader2,
+  XCircle,
+} from 'lucide-react';
 import { useId, useState } from 'react';
 import { toast } from 'sonner';
 import {
