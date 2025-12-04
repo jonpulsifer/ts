@@ -6,16 +6,13 @@ import { PageHeader } from '@/components/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
 import GcpAuth from './_components/gcp-auth';
 
-const GCP_WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER =
-  process.env.GCP_WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER || '629296473058';
-const GCP_WORKLOAD_IDENTITY_POOL_ID =
-  process.env.GCP_WORKLOAD_IDENTITY_POOL_ID || 'homelab';
-const GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID =
-  process.env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID || 'vercel';
+const GCP_WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER = '629296473058';
+const GCP_WORKLOAD_IDENTITY_POOL_ID = 'homelab';
+const GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID = 'vercel';
 const BIGQUERY_PROJECT_ID = 'firebees';
+const IS_VERCEL = !!process.env.VERCEL;
 
 async function getWorkloadIdentityClient() {
-  // Production: Use OIDC token with subject from sub claim
   const audience = `//iam.googleapis.com/projects/${GCP_WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${GCP_WORKLOAD_IDENTITY_POOL_ID}/providers/${GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID}`;
   const authClientConfig = {
     type: 'external_account' as const,
@@ -32,9 +29,7 @@ async function getWorkloadIdentityClient() {
 }
 
 export default async function GcpPage() {
-  const isVercel = !!process.env.VERCEL;
-
-  const authClient = isVercel ? await getWorkloadIdentityClient() : undefined;
+  const authClient = IS_VERCEL ? await getWorkloadIdentityClient() : undefined;
 
   const bigquery = new BigQuery({
     projectId: BIGQUERY_PROJECT_ID,
@@ -60,7 +55,7 @@ export default async function GcpPage() {
         description="Test Google Cloud Platform authentication using Workload Identity Federation"
       />
       <Suspense fallback={<Skeleton className="w-full h-[500px]" />}>
-        <GcpAuth isVercel={isVercel} bigQuery={bigQuery} />
+        <GcpAuth isVercel={IS_VERCEL} bigQuery={bigQuery} />
       </Suspense>
     </div>
   );
