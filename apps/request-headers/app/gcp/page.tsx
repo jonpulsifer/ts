@@ -41,7 +41,7 @@ export default async function GcpPage() {
   const [job] = await bigquery.createQueryJob({ query });
   const [rows] = await job.getQueryResults();
 
-  const bigQuery = {
+  const results = {
     success: true,
     rows,
     query,
@@ -55,7 +55,7 @@ export default async function GcpPage() {
         description="Test Google Cloud Platform authentication using Workload Identity Federation"
       />
       <Suspense fallback={<Skeleton className="w-full h-[500px]" />}>
-        <GcpAuth isVercel={IS_VERCEL} bigQuery={bigQuery} />
+        <GcpAuth isVercel={IS_VERCEL} bigQuery={results} />
       </Suspense>
     </div>
   );
