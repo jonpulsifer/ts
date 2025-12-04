@@ -2,6 +2,7 @@
 
 import {
   BookOpen,
+  Cloud,
   FlaskConical,
   Home,
   Network,
@@ -29,6 +30,7 @@ const projects = [
   { name: 'Network Tools', url: '/network', icon: Network },
   { name: 'Request Headers', url: '/request-headers', icon: BookOpen },
   { name: 'Webhook Testing', url: '/webhook', icon: Webhook },
+  { name: 'GCP Auth', url: '/gcp', icon: Cloud },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
