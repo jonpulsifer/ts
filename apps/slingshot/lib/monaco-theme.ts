@@ -26,18 +26,18 @@ export const slingshotDraculaTheme = {
     { token: 'key', foreground: '8b5cf6' }, // Violet accent for JSON keys
   ],
   colors: {
-    'editor.background': '#1e1e2e',
+    'editor.background': '#00000000', // Transparent to match card background
     'editor.foreground': '#f8f8f2',
-    'editor.lineHighlightBackground': '#282a36',
-    'editor.selectionBackground': '#44475a',
-    'editor.inactiveSelectionBackground': '#3a3a4a',
+    'editor.lineHighlightBackground': '#282a3620', // More subtle
+    'editor.selectionBackground': '#44475a40',
+    'editor.inactiveSelectionBackground': '#3a3a4a40',
     'editorCursor.foreground': '#f8f8f2',
     'editorWhitespace.foreground': '#3b3b4d',
     'editorIndentGuide.background': '#3b3b4d',
     'editorIndentGuide.activeBackground': '#4a4a5c',
     'editorLineNumber.foreground': '#6272a4',
     'editorLineNumber.activeForeground': '#bd93f9',
-    'editorGutter.background': '#1e1e2e',
+    'editorGutter.background': '#00000000', // Transparent gutter
     'editorWidget.background': '#282a36',
     'editorWidget.border': '#44475a',
     'editorSuggestWidget.background': '#282a36',
