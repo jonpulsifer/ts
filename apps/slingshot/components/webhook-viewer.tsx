@@ -132,11 +132,14 @@ export function WebhookViewer({
   const handleSelectWebhook = useCallback(
     (webhook: Webhook) => {
       setSelectedWebhook(webhook);
-      const params = new URLSearchParams(searchParams.toString());
+      // Use history.replaceState to update URL without triggering Next.js navigation/server requests
+      // This ensures instant UI updates and works offline
+      const params = new URLSearchParams(window.location.search);
       params.set('webhook', webhook.id);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState(null, '', newUrl);
     },
-    [searchParams, router, pathname],
+    [],
   );
 
   useEffect(() => {

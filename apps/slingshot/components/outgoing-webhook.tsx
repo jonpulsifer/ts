@@ -1,6 +1,6 @@
 'use client';
 
-import { Link, Loader2, Plus, Send, Trash2 } from 'lucide-react';
+import { Cloud, Laptop, Link, Loader2, Plus, Send, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { sendOutgoingWebhookAction } from '@/lib/actions';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { saveOutgoingWebhookAction, sendOutgoingWebhookAction } from '@/lib/actions';
 import type { Webhook } from '@/lib/types';
 
 interface HeaderPair {
@@ -99,6 +100,8 @@ export function OutgoingWebhook({
       bodyPairs.map((b) => (b.id === id ? { ...b, [field]: value } : b)),
     );
   };
+
+  const [fetchMode, setFetchMode] = useState<'server' | 'client'>('server');
 
   // Populate form when webhookToResend is provided
   useEffect(() => {
@@ -209,20 +212,47 @@ export function OutgoingWebhook({
         }
       }
 
-      // Send webhook via server action (validates domain in production)
-      const result = await sendOutgoingWebhookAction(projectSlug, {
-        method,
-        url,
-        headers: parsedHeaders,
-        body: bodyString,
-      });
+      if (fetchMode === 'client') {
+        // Client-side fetch
+        const response = await fetch(url, options);
+        const text = await response.text();
 
-      toast.success(
-        `Webhook sent! Status: ${result.status} ${result.statusText}`,
-        {
-          description: result.responseBody?.slice(0, 100),
-        },
-      );
+        toast.success(
+          `Webhook sent via Client! Status: ${response.status} ${response.statusText}`,
+          {
+            description: text.slice(0, 100),
+          },
+        );
+
+        // Try to save to history (fire and forget, best effort)
+        try {
+          await saveOutgoingWebhookAction(projectSlug, {
+            method,
+            url,
+            headers: parsedHeaders,
+            body: bodyString,
+            responseStatus: response.status,
+            responseBody: text,
+          });
+        } catch (e) {
+          console.error('Failed to save client webhook history:', e);
+        }
+      } else {
+        // Server-side fetch (via Server Action)
+        const result = await sendOutgoingWebhookAction(projectSlug, {
+          method,
+          url,
+          headers: parsedHeaders,
+          body: bodyString,
+        });
+
+        toast.success(
+          `Webhook sent! Status: ${result.status} ${result.statusText}`,
+          {
+            description: result.responseBody?.slice(0, 100),
+          },
+        );
+      }
 
       // Clear the resend webhook after successful send
       if (onResendComplete) {
@@ -244,6 +274,26 @@ export function OutgoingWebhook({
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <Label>Fetch Mode</Label>
+        <Tabs
+          value={fetchMode}
+          onValueChange={(v) => setFetchMode(v as 'server' | 'client')}
+          className="w-fit"
+        >
+          <TabsList className="grid w-full grid-cols-2 h-8">
+            <TabsTrigger value="server" className="text-xs gap-2">
+              <Cloud className="h-3 w-3" />
+              Server
+            </TabsTrigger>
+            <TabsTrigger value="client" className="text-xs gap-2">
+              <Laptop className="h-3 w-3" />
+              Client
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="method">HTTP Method</Label>
