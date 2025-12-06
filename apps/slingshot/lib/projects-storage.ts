@@ -48,7 +48,9 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
       error?.message?.includes('Permission') ||
       error?.message?.includes('access') ||
       error?.message?.includes('denied') ||
-      error?.message?.includes('Anonymous caller')
+      error?.message?.includes('Anonymous caller') ||
+      error?.message?.includes('GCS client not available') ||
+      error?.message?.includes('URL is required')
     ) {
       return {};
     }

@@ -35,13 +35,31 @@ export async function getStorageClient(): Promise<Storage> {
     return storageClient;
   }
 
-  const authClient = IS_VERCEL ? await getWorkloadIdentityClient() : undefined;
+  try {
+    const authClient = IS_VERCEL
+      ? await getWorkloadIdentityClient()
+      : undefined;
 
-  storageClient = new Storage({
-    authClient: authClient as any,
-  });
+    storageClient = new Storage({
+      authClient: authClient as any,
+    });
 
-  return storageClient;
+    return storageClient;
+  } catch (error: any) {
+    // During build time or when credentials aren't available, throw a more descriptive error
+    // that can be caught by calling code
+    if (
+      error?.message?.includes('URL is required') ||
+      error?.message?.includes('credentials') ||
+      error?.message?.includes('authentication') ||
+      (!IS_VERCEL && !process.env.GOOGLE_APPLICATION_CREDENTIALS)
+    ) {
+      throw new Error(
+        'GCS client not available: authentication credentials required',
+      );
+    }
+    throw error;
+  }
 }
 
 export async function getBucket() {
