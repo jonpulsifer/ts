@@ -2,9 +2,9 @@ import { Storage } from '@google-cloud/storage';
 import { getVercelOidcToken } from '@vercel/oidc';
 import { ExternalAccountClient } from 'google-auth-library';
 
-export const GCP_WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER = '629296473058';
-export const GCP_WORKLOAD_IDENTITY_POOL_ID = 'homelab';
-export const GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID = 'vercel';
+const GCP_WORKLOAD_IDENTITY_POOL_PROJECT_NUMBER = '629296473058';
+const GCP_WORKLOAD_IDENTITY_POOL_ID = 'homelab';
+const GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID = 'vercel';
 const BUCKET_NAME = 'homelab-ng-free';
 
 const IS_VERCEL = !!process.env.VERCEL;
@@ -65,42 +65,4 @@ export async function getStorageClient(): Promise<Storage> {
 export async function getBucket() {
   const storage = await getStorageClient();
   return storage.bucket(BUCKET_NAME);
-}
-
-/**
- * Get the auth client for Workload Identity Federation
- * Returns undefined if not on Vercel
- */
-export async function getAuthClient(): Promise<
-  ExternalAccountClient | undefined
-> {
-  if (!IS_VERCEL) {
-    return undefined;
-  }
-  return await getWorkloadIdentityClient();
-}
-
-/**
- * Get the subject token for Workload Identity Federation.
- * This is only available when running on Vercel.
- */
-export async function getSubjectToken(): Promise<string | null> {
-  if (!IS_VERCEL) {
-    return null;
-  }
-  try {
-    return await getVercelOidcToken();
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Get the audience for Workload Identity Federation.
- */
-export function getAudience(): string | null {
-  if (!IS_VERCEL) {
-    return null;
-  }
-  return getWorkloadIdentityAudience();
 }

@@ -3,8 +3,18 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { clearWebhooksAction, getWebhooksAction } from '@/lib/actions';
+import useSWR from 'swr';
+import {
+  clearWebhooksAction,
+  pollWebhooksAction,
+} from '@/lib/actions';
 import type { Webhook } from '@/lib/types';
+import {
+  clearCachedWebhooks,
+  getCachedEtag,
+  getCachedWebhooks,
+  setCachedWebhooks,
+} from '@/lib/webhook-cache';
 import { WebhookDetail } from './webhook-detail';
 import { WebhookList } from './webhook-list';
 
@@ -25,41 +35,101 @@ export function WebhookViewer({
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const [webhooks, setWebhooks] = useState<Webhook[]>(initialWebhooks);
-  const [isConnected, setIsConnected] = useState(false);
+  
+  // Local state to manage webhooks (combining initial, cached, and SWR updates)
+  const [webhooks, setWebhooks] = useState<Webhook[]>(() => {
+    if (typeof window !== 'undefined') {
+      const cached = getCachedWebhooks(projectSlug);
+      if (cached && cached.length > 0) {
+        return cached;
+      }
+    }
+    return initialWebhooks;
+  });
 
   // Get webhook ID from query string
   const webhookIdFromQuery = searchParams.get('webhook');
 
-  // Find initial selected webhook from query string or default to first
   const getInitialSelectedWebhook = useCallback(() => {
+    // First check localStorage cache
+    if (typeof window !== 'undefined') {
+      const cached = getCachedWebhooks(projectSlug);
+      if (cached && cached.length > 0) {
+        if (webhookIdFromQuery) {
+          const found = cached.find((w) => w.id === webhookIdFromQuery);
+          if (found) return found;
+        }
+        return cached[0] || null;
+      }
+    }
+    // Fallback to initialWebhooks
     if (webhookIdFromQuery && initialWebhooks.length > 0) {
       const found = initialWebhooks.find((w) => w.id === webhookIdFromQuery);
       if (found) return found;
     }
     return initialWebhooks[0] || null;
-  }, [webhookIdFromQuery, initialWebhooks]);
+  }, [webhookIdFromQuery, initialWebhooks, projectSlug]);
 
   const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(
     getInitialSelectedWebhook(),
   );
 
+  // SWR for polling updates
+  // Only runs on client
+  const { data: pollResult, mutate, error: swrError } = useSWR(
+    mounted ? ['webhooks', projectSlug] : null,
+    async () => {
+      const currentEtag = getCachedEtag(projectSlug);
+      return pollWebhooksAction(projectSlug, currentEtag);
+    },
+    {
+      refreshInterval: 2000, // Poll every 2 seconds
+      revalidateOnFocus: true,
+      dedupingInterval: 1000,
+    }
+  );
+
+  // Handle SWR updates
+  useEffect(() => {
+    if (pollResult?.changed && pollResult.webhooks) {
+      console.log(`[SWR] Received update for ${projectSlug}`);
+      setWebhooks(pollResult.webhooks);
+      setCachedWebhooks(projectSlug, pollResult.webhooks, pollResult.etag);
+
+      // Select new webhook if none selected or if it's the newest one
+      if (pollResult.webhooks.length > 0) {
+        // If nothing selected, select first
+        if (!selectedWebhook) {
+           setSelectedWebhook(pollResult.webhooks[0]);
+        }
+        // If query param is set, respect it, otherwise maybe auto-select?
+        // Let's stick to existing behavior: if a new webhook comes in and we're just viewing the list (no specific selection or viewing the top one), we might want to show it.
+        // But typically we don't change selection unless user does it or it's the first load.
+        // The SSE implementation auto-selected if !selectedWebhook && !webhookIdFromQuery
+        else if (!webhookIdFromQuery && selectedWebhook.id === webhooks[0]?.id && pollResult.webhooks[0].id !== selectedWebhook.id) {
+           // If we were looking at the top one, switch to the new top one?
+           // Actually, let's just update the list. The user can click.
+           // Exception: if we have NO selection, select the first.
+        }
+      }
+    }
+  }, [pollResult, projectSlug, selectedWebhook, webhookIdFromQuery, webhooks]);
+
   // Update selected webhook when query string changes
   useEffect(() => {
-    if (webhookIdFromQuery && webhooks.length > 0) {
+    if (webhookIdFromQuery) {
       const found = webhooks.find((w) => w.id === webhookIdFromQuery);
       if (found && found.id !== selectedWebhook?.id) {
         setSelectedWebhook(found);
       }
     } else if (!webhookIdFromQuery && selectedWebhook && webhooks.length > 0) {
-      // If query string is removed, select first webhook if none selected
       if (!webhooks.some((w) => w.id === selectedWebhook.id)) {
         setSelectedWebhook(webhooks[0] || null);
       }
     }
   }, [webhookIdFromQuery, webhooks, selectedWebhook]);
 
-  // Update URL when webhook is selected (without reload)
+  // Update URL when webhook is selected
   const handleSelectWebhook = useCallback(
     (webhook: Webhook) => {
       setSelectedWebhook(webhook);
@@ -72,173 +142,17 @@ export function WebhookViewer({
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (initialWebhooks.length > 0) {
+      setCachedWebhooks(projectSlug, initialWebhooks);
+    }
+  }, [projectSlug, initialWebhooks]);
 
-  // Refresh webhooks when refreshTrigger changes
+  // Manual refresh
   useEffect(() => {
     if (refreshTrigger !== undefined && refreshTrigger > 0) {
-      const fetchWebhooks = async () => {
-        try {
-          const data = await getWebhooksAction(projectSlug);
-          const updatedWebhooks = data.webhooks || [];
-          setWebhooks(updatedWebhooks);
-          // Only auto-select newest if no webhook is currently selected
-          if (updatedWebhooks.length > 0 && !selectedWebhook) {
-            setSelectedWebhook(updatedWebhooks[0]);
-          }
-        } catch (error) {
-          console.error('Failed to refresh webhooks:', error);
-        }
-      };
-      fetchWebhooks();
+      mutate();
     }
-  }, [refreshTrigger, projectSlug, selectedWebhook]);
-
-  // SSE connection for real-time updates (only on project pages)
-  useEffect(() => {
-    // Only connect if we have a valid project slug
-    if (!projectSlug) {
-      return;
-    }
-
-    let eventSource: EventSource | null = null;
-    let reconnectTimeout: NodeJS.Timeout;
-    let reconnectAttempts = 0;
-    const maxReconnectAttempts = 5;
-
-    const connect = () => {
-      try {
-        eventSource = new EventSource(`/api/stream/${projectSlug}`);
-
-        eventSource.onopen = () => {
-          setIsConnected(true);
-          reconnectAttempts = 0; // Reset on successful connection
-        };
-
-        eventSource.onmessage = (event) => {
-          if (event.data.startsWith(':')) {
-            // Comment/heartbeat, ignore
-            return;
-          }
-
-          try {
-            const newWebhook: Webhook = JSON.parse(event.data);
-
-            // Add new webhook to the list
-            setWebhooks((prev) => {
-              // Check if webhook already exists (avoid duplicates)
-              if (prev.some((w) => w.id === newWebhook.id)) {
-                return prev;
-              }
-              return [newWebhook, ...prev];
-            });
-
-            // Auto-select the newest webhook only if no webhook is currently selected and no query param
-            if (!selectedWebhook && !webhookIdFromQuery) {
-              setSelectedWebhook(newWebhook);
-              // Update URL to include the new webhook
-              const params = new URLSearchParams();
-              params.set('webhook', newWebhook.id);
-              router.replace(`${pathname}?${params.toString()}`, {
-                scroll: false,
-              });
-            }
-          } catch (error) {
-            console.error('Failed to parse webhook event:', error);
-          }
-        };
-
-        eventSource.onerror = () => {
-          setIsConnected(false);
-          eventSource?.close();
-
-          // Exponential backoff for reconnection, with max attempts
-          if (reconnectAttempts < maxReconnectAttempts) {
-            const delay = Math.min(3000 * 2 ** reconnectAttempts, 30000); // Max 30s
-            reconnectAttempts++;
-            reconnectTimeout = setTimeout(() => {
-              connect();
-            }, delay);
-          } else {
-            console.warn(
-              'Max SSE reconnection attempts reached. Falling back to polling.',
-            );
-          }
-        };
-      } catch (error) {
-        console.error('Failed to connect to SSE:', error);
-        setIsConnected(false);
-      }
-    };
-
-    connect();
-
-    return () => {
-      if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout);
-      }
-      eventSource?.close();
-      setIsConnected(false);
-    };
-    // Only reconnect if projectSlug changes, not when selectedWebhook changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectSlug]);
-
-  // Poll for updates as fallback (every 2 seconds)
-  useEffect(() => {
-    // Skip polling if connected to SSE
-    if (isConnected) return;
-
-    const pollInterval = setInterval(async () => {
-      try {
-        const data = await getWebhooksAction(projectSlug);
-        const updatedWebhooks = data.webhooks || [];
-        setWebhooks(updatedWebhooks);
-
-        // Preserve selected webhook if it still exists, otherwise select based on query or newest
-        if (selectedWebhook) {
-          const stillExists = updatedWebhooks.some(
-            (w: Webhook) => w.id === selectedWebhook.id,
-          );
-          if (!stillExists) {
-            if (webhookIdFromQuery) {
-              const found = updatedWebhooks.find(
-                (w) => w.id === webhookIdFromQuery,
-              );
-              if (found) {
-                setSelectedWebhook(found);
-              } else if (updatedWebhooks.length > 0) {
-                setSelectedWebhook(updatedWebhooks[0]);
-                router.replace(pathname, { scroll: false });
-              }
-            } else if (updatedWebhooks.length > 0) {
-              setSelectedWebhook(updatedWebhooks[0]);
-            }
-          }
-        } else if (updatedWebhooks.length > 0) {
-          if (webhookIdFromQuery) {
-            const found = updatedWebhooks.find(
-              (w) => w.id === webhookIdFromQuery,
-            );
-            setSelectedWebhook(found || updatedWebhooks[0]);
-          } else {
-            setSelectedWebhook(updatedWebhooks[0]);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to poll webhooks:', error);
-      }
-    }, 2000);
-
-    return () => clearInterval(pollInterval);
-  }, [
-    isConnected,
-    projectSlug,
-    selectedWebhook,
-    webhookIdFromQuery,
-    router,
-    pathname,
-  ]);
+  }, [refreshTrigger, mutate]);
 
   const handleClearHistory = useCallback(async () => {
     if (!confirm('Are you sure you want to clear all webhook history?')) {
@@ -249,10 +163,12 @@ export function WebhookViewer({
       await clearWebhooksAction(projectSlug);
       setWebhooks([]);
       setSelectedWebhook(null);
+      clearCachedWebhooks(projectSlug);
+      mutate(); // Trigger re-fetch/update
     } catch (error) {
       console.error('Failed to clear history:', error);
     }
-  }, [projectSlug]);
+  }, [projectSlug, mutate]);
 
   if (!mounted) {
     return (
@@ -264,7 +180,7 @@ export function WebhookViewer({
               selectedWebhook={selectedWebhook}
               onSelectWebhook={handleSelectWebhook}
               onClearHistory={handleClearHistory}
-              isConnected={isConnected}
+              isConnected={true} // SWR is "connected" in terms of polling
               projectSlug={projectSlug}
             />
           </div>
@@ -285,7 +201,7 @@ export function WebhookViewer({
             selectedWebhook={selectedWebhook}
             onSelectWebhook={handleSelectWebhook}
             onClearHistory={handleClearHistory}
-            isConnected={isConnected}
+            isConnected={!swrError}
             projectSlug={projectSlug}
           />
         </Panel>

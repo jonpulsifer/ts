@@ -1,9 +1,9 @@
 'use client';
 
 import {
-  Activity,
   BookOpen,
   Cloud,
+  Database,
   Home,
   Plus,
   Terminal,
@@ -110,14 +110,16 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
           !pathname.startsWith('/projects') &&
           !pathname.startsWith('/request-headers') &&
           !pathname.startsWith('/environment') &&
-          !pathname.startsWith('/gcp')
+          !pathname.startsWith('/gcp') &&
+          !pathname.startsWith('/cache')
         ? pathname.split('/')[1]
         : null;
 
   const developerTools = [
     { name: 'Environment', url: '/environment', icon: Terminal },
     { name: 'Request Headers', url: '/request-headers', icon: BookOpen },
-    { name: 'Google Cloud Authentication', url: '/gcp', icon: Cloud },
+    { name: 'Google Cloud Storage', url: '/gcp', icon: Cloud },
+    { name: 'Cache Management', url: '/cache', icon: Database },
   ];
 
   const handleDeleteClick = (e: React.MouseEvent, project: Project) => {
@@ -175,9 +177,10 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
               size="lg"
               asChild
               tooltip="Slingshot - Webhook Testing Platform"
+              className={isCollapsed ? "justify-center" : ""}
             >
               <a href="/" className="group">
-                <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/50 transition-all group-hover:scale-105">
+                <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-sm shadow-violet-500/20 transition-all group-hover:scale-105">
                   <Webhook className="size-5" />
                 </div>
                 {!isCollapsed && (
@@ -195,13 +198,16 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <div className="flex items-center justify-between px-2 py-1.5">
+          <div className={cn(
+            "flex items-center px-2 py-1.5",
+            isCollapsed ? "justify-center" : "justify-between"
+          )}>
             {!isCollapsed && (
               <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Navigation
               </SidebarGroupLabel>
             )}
-            <SidebarTrigger className="ml-auto" />
+            <SidebarTrigger className={isCollapsed ? "" : "ml-auto"} />
           </div>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -353,23 +359,6 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
             )}
           </SidebarMenu>
         </SidebarGroup>
-
-        {!isCollapsed && optimisticProjects.length > 0 && (
-          <SidebarGroup className="mt-auto border-t border-sidebar-border pt-4">
-            <div className="px-2 py-1.5">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Activity className="size-3" />
-                <span>
-                  {optimisticProjects.length}{' '}
-                  {optimisticProjects.length === 1 ? 'project' : 'projects'}
-                </span>
-                {isPending && (
-                  <span className="text-xs opacity-50">(updating...)</span>
-                )}
-              </div>
-            </div>
-          </SidebarGroup>
-        )}
       </SidebarContent>
 
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

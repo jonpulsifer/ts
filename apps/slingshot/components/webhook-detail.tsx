@@ -2,10 +2,11 @@
 
 import { Copy, FileJson, Send } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { Webhook } from '@/lib/types';
 
 // Format time consistently (client-side only to avoid hydration issues)
@@ -98,9 +99,9 @@ export function WebhookDetail({ webhook, onResend }: WebhookDetailProps) {
 
   if (!webhook) {
     return (
-      <div className="h-full flex items-center justify-center bg-primary/10">
+      <div className="h-full flex items-center justify-center bg-muted/20">
         <div className="text-center">
-          <FileJson className="h-20 w-20 text-primary mx-auto mb-4 drop-shadow-[0_0_12px_rgba(139,92,246,0.8)]" />
+          <FileJson className="h-20 w-20 text-primary mx-auto mb-4 drop-shadow-[0_0_6px_rgba(139,92,246,0.4)]" />
           <p className="text-foreground font-semibold text-lg">
             Select a webhook to view details
           </p>
@@ -108,6 +109,92 @@ export function WebhookDetail({ webhook, onResend }: WebhookDetailProps) {
       </div>
     );
   }
+
+  return <WebhookDetailContent webhook={webhook} onResend={onResend} />;
+}
+
+function WebhookDetailSkeleton() {
+  return (
+    <div className="h-full flex flex-col">
+      <div className="p-6 border-b border-border/50 space-y-4 bg-muted/20">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-6 w-16" />
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-10 w-24" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-9 w-24" />
+            <Skeleton className="h-9 w-24" />
+          </div>
+        </div>
+      </div>
+      <div className="flex-1 p-6">
+        <div className="space-y-4">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WebhookDetailContent({
+  webhook,
+  onResend,
+}: {
+  webhook: Webhook;
+  onResend?: (webhook: Webhook) => void;
+}) {
+  const [activeTab, setActiveTab] = useState<
+    'headers' | 'body' | 'response' | 'raw'
+  >('headers');
+  const [_copied, setCopied] = useState(false);
+  const [time, setTime] = useState<string>('');
+  const [date, setDate] = useState<string>('');
+  const [mounted, setMounted] = useState(false);
+
+  const formattedBody = useMemo(() => {
+    if (!webhook?.body) return null;
+
+    try {
+      const parsed = JSON.parse(webhook.body);
+      return JSON.stringify(parsed, null, 2);
+    } catch {
+      return webhook.body;
+    }
+  }, [webhook?.body]);
+
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Update time/date on client side to avoid hydration issues
+  useEffect(() => {
+    setMounted(true);
+    if (webhook) {
+      setTime(formatTime(webhook.timestamp));
+      setDate(formatDate(webhook.timestamp));
+    }
+  }, [webhook]);
+
+  const handleCopyAsCurl = () => {
+    if (!webhook) return;
+
+    const headers = Object.entries(webhook.headers)
+      .map(([key, value]) => `  -H '${key}: ${value}'`)
+      .join(' \\\n');
+
+    const body = webhook.body
+      ? `  -d '${webhook.body.replace(/'/g, "'\\''")}'`
+      : '';
+
+    const curl = `curl -X ${webhook.method} '${webhook.url}' \\\n${headers}${body ? ` \\\n${body}` : ''}`;
+
+    handleCopy(curl);
+  };
 
   return (
     <div className="h-full flex flex-col">

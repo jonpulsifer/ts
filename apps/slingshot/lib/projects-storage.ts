@@ -16,20 +16,26 @@ export interface ProjectMapping {
  * Returns empty object if GCS operation fails
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
+  console.log('[GCS] getProjectMappings called');
   try {
     const bucket = await getBucket();
     const file = bucket.file('project_mappings.json');
 
+    console.log('[GCS] Checking if project_mappings.json exists');
     const [exists] = await file.exists();
     if (!exists) {
+      console.log('[GCS] project_mappings.json does not exist');
       return {};
     }
 
+    console.log('[GCS] Downloading project_mappings.json');
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as ProjectMapping;
+    console.log(`[GCS] Retrieved ${Object.keys(data).length} project mappings`);
     return data;
-  } catch {
+  } catch (error) {
     // Return empty mappings if GCS operation fails (e.g., during build)
+    console.error('[GCS] Error getting project mappings:', error);
     return {};
   }
 }
@@ -40,15 +46,19 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
 export async function saveProjectMappings(
   mappings: ProjectMapping,
 ): Promise<void> {
+  const projectCount = Object.keys(mappings).length;
+  console.log(`[GCS] saveProjectMappings called (${projectCount} projects)`);
   const bucket = await getBucket();
   const file = bucket.file('project_mappings.json');
 
+  console.log('[GCS] Saving project_mappings.json');
   await file.save(JSON.stringify(mappings), {
     contentType: 'application/json',
     metadata: {
       cacheControl: 'no-cache',
     },
   });
+  console.log('[GCS] Successfully saved project_mappings.json');
 }
 
 /**
@@ -63,6 +73,7 @@ export async function projectExists(slug: string): Promise<boolean> {
  * Create a new project (slug is the ID)
  */
 export async function createProject(slug: string): Promise<{ slug: string }> {
+  console.log(`[GCS] createProject called for slug: ${slug}`);
   const mappings = await getProjectMappings();
 
   if (mappings[slug]) {
@@ -148,6 +159,7 @@ export async function getAllProjects(): Promise<
  * Delete a project by slug
  */
 export async function deleteProject(slug: string): Promise<void> {
+  console.log(`[GCS] deleteProject called for slug: ${slug}`);
   const mappings = await getProjectMappings();
 
   if (!mappings[slug]) {

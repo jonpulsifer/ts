@@ -1,6 +1,7 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Circle, GitCompare, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -116,7 +117,7 @@ export function WebhookList({
           </Badge>
           <div className="flex items-center gap-1.5">
             <Circle
-              className={`h-2 w-2 ${isConnected ? 'fill-green-400 text-green-400 drop-shadow-[0_0_4px_rgba(74,222,128,0.6)]' : 'fill-gray-500 text-gray-500'}`}
+              className={`h-2 w-2 ${isConnected ? 'fill-green-400 text-green-400 drop-shadow-[0_0_3px_rgba(74,222,128,0.4)]' : 'fill-gray-500 text-gray-500'}`}
             />
             <span className="text-xs text-muted-foreground font-medium">
               {isConnected ? 'Live' : 'Disconnected'}
@@ -136,8 +137,8 @@ export function WebhookList({
       </div>
       <ScrollArea className="flex-1 min-h-0">
         {webhooks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4 bg-primary/10">
-            <Circle className="h-20 w-20 text-primary mb-4 drop-shadow-[0_0_12px_rgba(139,92,246,0.8)] fill-primary/30" />
+          <div className="flex flex-col items-center justify-center py-16 px-4 bg-muted/20">
+            <Circle className="h-20 w-20 text-primary mb-4 drop-shadow-[0_0_6px_rgba(139,92,246,0.4)] fill-primary/50" />
             <h3 className="text-xl font-bold mb-2 text-foreground">
               No Webhooks Yet
             </h3>
@@ -147,124 +148,135 @@ export function WebhookList({
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-border/30">
-            {webhooks.map((webhook, index) => {
-              const methodColors: Record<string, string> = {
-                GET: 'border-l-blue-500',
-                POST: 'border-l-green-500',
-                PUT: 'border-l-yellow-500',
-                PATCH: 'border-l-orange-500',
-                DELETE: 'border-l-red-500',
-              };
-              const leftBorderColor =
-                methodColors[webhook.method] || 'border-l-gray-500';
+          <div className="relative">
+            <AnimatePresence initial={false}>
+              {webhooks.map((webhook, index) => {
+                const methodColors: Record<string, string> = {
+                  GET: 'border-l-blue-500',
+                  POST: 'border-l-green-500',
+                  PUT: 'border-l-yellow-500',
+                  PATCH: 'border-l-orange-500',
+                  DELETE: 'border-l-red-500',
+                };
+                const leftBorderColor =
+                  methodColors[webhook.method] || 'border-l-gray-500';
 
-              return (
-                <div
-                  key={webhook.id}
-                  className={`group relative transition-all ${
-                    selectedWebhook?.id === webhook.id
-                      ? `bg-primary/5 ${leftBorderColor} border-l-2`
-                      : `hover:bg-muted/20 ${leftBorderColor} border-l-2 border-l-transparent hover:border-l-2`
-                  }`}
-                >
-                  <div className="w-full p-4 group">
-                    <div className="flex items-start justify-between gap-3">
-                      <button
-                        type="button"
-                        onClick={() => onSelectWebhook(webhook)}
-                        className="flex-1 min-w-0 text-left"
-                      >
-                        <div className="flex items-center gap-3 mb-2">
-                          <Badge
-                            className={`text-xs font-semibold ${getMethodColor(webhook.method)}`}
-                          >
-                            {webhook.method}
-                          </Badge>
-                          <Badge
-                            variant="outline"
-                            className={`text-xs ${
-                              webhook.direction === 'incoming'
-                                ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-                                : 'bg-purple-500/10 text-purple-400 border-purple-500/30'
-                            }`}
-                          >
-                            {webhook.direction === 'incoming'
-                              ? 'Incoming'
-                              : 'Outgoing'}
-                          </Badge>
-                          <RelativeTime timestamp={webhook.timestamp} />
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                          <span className="font-medium">
-                            {Object.keys(webhook.headers).length} headers
-                          </span>
-                          {webhook.body && (
-                            <>
-                              <span>•</span>
-                              <span>{new Blob([webhook.body]).size} bytes</span>
-                            </>
-                          )}
-                          {webhook.direction === 'outgoing' &&
-                            webhook.responseStatus && (
+                return (
+                  <motion.div
+                    key={webhook.id}
+                    initial={{ opacity: 0, height: 0, y: -20 }}
+                    animate={{ opacity: 1, height: 'auto', y: 0 }}
+                    exit={{ opacity: 0, height: 0, x: -20 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 500,
+                      damping: 30,
+                      opacity: { duration: 0.2 },
+                    }}
+                    className={`group relative transition-colors border-b border-border/30 ${
+                      selectedWebhook?.id === webhook.id
+                        ? `bg-primary/5 ${leftBorderColor} border-l-2`
+                        : `hover:bg-muted/20 ${leftBorderColor} border-l-2 border-l-transparent hover:border-l-2`
+                    }`}
+                  >
+                    <div className="w-full p-4 group">
+                      <div className="flex items-start justify-between gap-3">
+                        <button
+                          type="button"
+                          onClick={() => onSelectWebhook(webhook)}
+                          className="flex-1 min-w-0 text-left"
+                        >
+                          <div className="flex items-center gap-3 mb-2">
+                            <Badge
+                              className={`text-xs font-semibold ${getMethodColor(webhook.method)}`}
+                            >
+                              {webhook.method}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className={`text-xs ${
+                                webhook.direction === 'incoming'
+                                  ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+                                  : 'bg-purple-500/10 text-purple-400 border-purple-500/30'
+                              }`}
+                            >
+                              {webhook.direction === 'incoming'
+                                ? 'Incoming'
+                                : 'Outgoing'}
+                            </Badge>
+                            <RelativeTime timestamp={webhook.timestamp} />
+                          </div>
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                            <span className="font-medium">
+                              {Object.keys(webhook.headers).length} headers
+                            </span>
+                            {webhook.body && (
                               <>
                                 <span>•</span>
-                                <span
-                                  className={`font-medium ${
-                                    webhook.responseStatus >= 200 &&
-                                    webhook.responseStatus < 300
-                                      ? 'text-green-400'
-                                      : webhook.responseStatus >= 400
-                                        ? 'text-red-400'
-                                        : 'text-yellow-400'
-                                  }`}
-                                >
-                                  {webhook.responseStatus}
-                                </span>
+                                <span>{new Blob([webhook.body]).size} bytes</span>
                               </>
                             )}
-                          <span>•</span>
-                          <TimeDisplay timestamp={webhook.timestamp} />
-                          <span>•</span>
-                          <span className="text-xs text-muted-foreground font-mono">
-                            #{webhooks.length - index}
-                          </span>
+                            {webhook.direction === 'outgoing' &&
+                              webhook.responseStatus && (
+                                <>
+                                  <span>•</span>
+                                  <span
+                                    className={`font-medium ${
+                                      webhook.responseStatus >= 200 &&
+                                      webhook.responseStatus < 300
+                                        ? 'text-green-400'
+                                        : webhook.responseStatus >= 400
+                                          ? 'text-red-400'
+                                          : 'text-yellow-400'
+                                    }`}
+                                  >
+                                    {webhook.responseStatus}
+                                  </span>
+                                </>
+                              )}
+                            <span>•</span>
+                            <TimeDisplay timestamp={webhook.timestamp} />
+                            <span>•</span>
+                            <span className="text-xs text-muted-foreground font-mono">
+                              #{webhooks.length - index}
+                            </span>
+                          </div>
+                          <div
+                            className="text-xs text-muted-foreground font-mono truncate"
+                            title={webhook.url}
+                          >
+                            {webhook.url}
+                          </div>
+                        </button>
+                        <div className="flex items-center gap-1 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
+                          <CopyButton
+                            text={`${typeof window !== 'undefined' ? window.location.origin : ''}/${projectSlug}?webhook=${webhook.id}`}
+                            size="sm"
+                            variant="outline"
+                            title="Copy link to webhook"
+                          />
+                          {selectedWebhook &&
+                            selectedWebhook.id !== webhook.id && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 w-8 p-0 hover:bg-primary/10"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCompare(webhook);
+                                }}
+                                title="Compare with selected webhook"
+                              >
+                                <GitCompare className="h-4 w-4" />
+                              </Button>
+                            )}
                         </div>
-                        <div
-                          className="text-xs text-muted-foreground font-mono truncate"
-                          title={webhook.url}
-                        >
-                          {webhook.url}
-                        </div>
-                      </button>
-                      <div className="flex items-center gap-1 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
-                        <CopyButton
-                          text={`${typeof window !== 'undefined' ? window.location.origin : ''}/${projectSlug}?webhook=${webhook.id}`}
-                          size="sm"
-                          variant="outline"
-                          title="Copy link to webhook"
-                        />
-                        {selectedWebhook &&
-                          selectedWebhook.id !== webhook.id && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 w-8 p-0 hover:bg-primary/10"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleCompare(webhook);
-                              }}
-                              title="Compare with selected webhook"
-                            >
-                              <GitCompare className="h-4 w-4" />
-                            </Button>
-                          )}
                       </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
           </div>
         )}
       </ScrollArea>

@@ -93,7 +93,7 @@ async function handleWebhook(request: NextRequest, slug: string) {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       // Always fetch fresh data on each attempt
-      const { data: history } = await getWebhooks(slug);
+      const { data: history } = await getWebhooks(slug, 'server');
       const existingWebhooks = history?.webhooks || [];
 
       // Check if webhook already exists (avoid duplicates from retries)

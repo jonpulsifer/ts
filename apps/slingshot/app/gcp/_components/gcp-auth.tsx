@@ -30,57 +30,17 @@ type StorageData = {
   error?: string;
 };
 
-type PrincipalInfo = {
-  principal: string;
-  projectId: string;
-  type: string;
-  subject?: string;
-};
-
 type GcpAuthProps = {
-  principalInfo: PrincipalInfo;
   storageData: StorageData;
   bucketName?: string;
 };
 
 export default function GcpAuth({
-  principalInfo,
   storageData,
   bucketName,
 }: GcpAuthProps) {
   return (
     <div className="space-y-6">
-      <Card className="w-full border-2 shadow-lg">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-2xl">Authentication Method</CardTitle>
-          <CardDescription className="mt-1">
-            {principalInfo.type}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Principal
-              </div>
-              <p className="text-sm font-mono bg-gradient-to-r from-muted to-muted/50 p-4 rounded-lg border break-all">
-                {principalInfo.principal}
-              </p>
-            </div>
-            {principalInfo.projectId && (
-              <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Project ID
-                </div>
-                <p className="text-sm font-mono bg-muted/50 p-2 rounded border">
-                  {principalInfo.projectId}
-                </p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
       <Card className="w-full border-2 shadow-lg">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">

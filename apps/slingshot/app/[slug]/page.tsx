@@ -22,8 +22,8 @@ export default async function ProjectPage({
         <PageHeader title="Not Found" description="This endpoint is reserved" />
         <Card className="border border-border/50 bg-card">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="rounded-full bg-primary/10 p-6 mb-4">
-              <Webhook className="h-16 w-16 text-primary drop-shadow-[0_0_12px_rgba(139,92,246,0.8)]" />
+            <div className="rounded-full bg-muted/50 p-6 mb-4">
+              <Webhook className="h-16 w-16 text-primary drop-shadow-[0_0_6px_rgba(139,92,246,0.4)]" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
               Invalid Endpoint
@@ -52,8 +52,8 @@ export default async function ProjectPage({
         <PageHeader title={slug} description="Project not found" />
         <Card className="border border-border/50 bg-card">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="rounded-full bg-primary/10 p-6 mb-4">
-              <Webhook className="h-16 w-16 text-primary drop-shadow-[0_0_12px_rgba(139,92,246,0.8)]" />
+            <div className="rounded-full bg-muted/50 p-6 mb-4">
+              <Webhook className="h-16 w-16 text-primary drop-shadow-[0_0_6px_rgba(139,92,246,0.4)]" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
               Webhook Project Not Found
@@ -77,7 +77,7 @@ export default async function ProjectPage({
   }
 
   // Fetch initial webhooks (slug is the project ID)
-  const { data: history } = await getWebhooks(slug);
+  const { data: history } = await getWebhooks(slug, 'server');
   const initialWebhooks = history?.webhooks || [];
 
   // Generate webhook URL based on slug

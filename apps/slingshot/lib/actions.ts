@@ -97,11 +97,13 @@ export async function sendTestWebhookAction(
 
 /**
  * Get webhooks for a project (slug is the ID)
+ * Server action - always fetches from GCS
+ * Use getWebhooksWithCache() on the client instead
  */
 export async function getWebhooksAction(slug: string) {
   try {
     const { getWebhooks } = await import('./storage');
-    const { data: history } = await getWebhooks(slug);
+    const { data: history } = await getWebhooks(slug, 'client');
     return {
       webhooks: history?.webhooks || [],
       maxSize: history?.maxSize || 100,
@@ -110,6 +112,85 @@ export async function getWebhooksAction(slug: string) {
     console.error('Failed to fetch webhooks:', error);
     throw new Error('Failed to fetch webhooks');
   }
+}
+
+/**
+ * Poll for new webhooks (optimized with metadata check)
+ */
+export async function pollWebhooksAction(
+  slug: string,
+  currentEtag?: string | null,
+) {
+  try {
+    const { checkWebhooksChanged, getWebhooks } = await import('./storage');
+
+    // Check metadata first
+    const { changed, etag: newEtag } = await checkWebhooksChanged(
+      slug,
+      'client',
+    );
+
+    // If not changed or ETag matches, return no change
+    if (!changed || (currentEtag && newEtag === currentEtag)) {
+      return { changed: false };
+    }
+
+    // If changed, fetch full data
+    const { data: history, etag } = await getWebhooks(slug, 'client');
+    return {
+      changed: true,
+      webhooks: history?.webhooks || [],
+      etag: etag || undefined,
+    };
+  } catch (error) {
+    console.error('Failed to poll webhooks:', error);
+    return { changed: false };
+  }
+}
+
+/**
+ * Get webhooks with localStorage cache check (client-side only)
+ * Uses cache if available and not expired - NO GCS requests for cached data
+ * Only fetches from GCS if cache is missing/expired
+ */
+export async function getWebhooksWithCache(slug: string) {
+  // Only run on client
+  if (typeof window === 'undefined') {
+    return getWebhooksAction(slug);
+  }
+
+  const { getCachedWebhooks, setCachedWebhooks } = await import(
+    './webhook-cache'
+  );
+
+  // Check cache first - if it exists and is valid, use it immediately
+  // NO metadata check - trust the cache until it expires
+  const cached = getCachedWebhooks(slug);
+  if (cached && cached.length > 0) {
+    console.log(
+      `[Client] Using cached webhooks for ${slug} (${cached.length} webhooks, no GCS request)`,
+    );
+    return {
+      webhooks: cached,
+      maxSize: 100, // Default, cache doesn't store this
+    };
+  }
+
+  // Cache miss or expired, fetch from server
+  console.log(`[Client] Cache miss/expired for ${slug}, fetching from GCS`);
+  const { getWebhooks } = await import('./storage');
+  const { data: history, etag } = await getWebhooks(slug, 'client');
+  const result = {
+    webhooks: history?.webhooks || [],
+    maxSize: history?.maxSize || 100,
+  };
+
+  // Update cache with fresh data and etag
+  if (result.webhooks.length > 0) {
+    setCachedWebhooks(slug, result.webhooks, etag || undefined);
+  }
+
+  return result;
 }
 
 /**
@@ -174,7 +255,7 @@ export async function sendOutgoingWebhookAction(
     };
 
     // Get existing webhooks
-    const { data: history } = await getWebhooks(slug);
+    const { data: history } = await getWebhooks(slug, 'server');
     const existingWebhooks = history?.webhooks || [];
 
     // Add new webhook to the front
@@ -238,7 +319,7 @@ export async function saveOutgoingWebhookAction(
     };
 
     // Get existing webhooks
-    const { data: history } = await getWebhooks(slug);
+    const { data: history } = await getWebhooks(slug, 'server');
     const existingWebhooks = history?.webhooks || [];
 
     // Add new webhook to the front

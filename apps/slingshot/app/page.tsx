@@ -141,7 +141,7 @@ export default async function Home() {
             </CardHeader>
             <CardContent>
               {allProjects.length === 0 ? (
-                <div className="text-center py-8 bg-primary/10 rounded-lg">
+                <div className="text-center py-8 bg-muted/50 rounded-lg">
                   <Webhook className="h-16 w-16 text-primary mx-auto mb-3" />
                   <p className="font-semibold text-foreground mb-1">
                     No projects yet
