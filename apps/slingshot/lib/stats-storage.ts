@@ -1,9 +1,4 @@
-import {
-  getBucket,
-  isGcsAuthError,
-  isGcsNotFoundError,
-  isGcsUnavailableError,
-} from './gcs-client';
+import { getBucket, isGcsUnavailableError } from './gcs-client';
 
 export interface ProjectStats {
   webhookCount: number;
@@ -33,7 +28,7 @@ const DEFAULT_STATS: StatsData = {
 
 /**
  * Get stats from storage
- * Returns default stats if GCS is unavailable or file doesn't exist
+ * Returns default stats if GCS operation fails
  */
 export async function getStats(): Promise<StatsData> {
   try {
@@ -48,16 +43,9 @@ export async function getStats(): Promise<StatsData> {
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as StatsData;
     return data;
-  } catch (error) {
-    // Return default stats if GCS is unavailable, file not found, or auth errors
-    if (
-      isGcsUnavailableError(error) ||
-      isGcsNotFoundError(error) ||
-      isGcsAuthError(error)
-    ) {
-      return DEFAULT_STATS;
-    }
-    throw error;
+  } catch {
+    // Return default stats if GCS operation fails (e.g., during build)
+    return DEFAULT_STATS;
   }
 }
 
@@ -76,12 +64,8 @@ export async function saveStats(stats: StatsData): Promise<void> {
         cacheControl: 'no-cache',
       },
     });
-  } catch (error) {
-    // Silently fail if GCS unavailable - stats are not critical
-    if (isGcsUnavailableError(error) || isGcsAuthError(error)) {
-      return;
-    }
-    throw error;
+  } catch {
+    // Silently fail - stats are not critical
   }
 }
 
@@ -148,10 +132,9 @@ export async function updateProjectCount(count: number): Promise<void> {
     await saveStats(stats);
   } catch (error) {
     // Silently fail if GCS unavailable - stats are not critical
-    if (isGcsUnavailableError(error) || isGcsAuthError(error)) {
-      return;
+    if (!isGcsUnavailableError(error)) {
+      throw error;
     }
-    throw error;
   }
 }
 

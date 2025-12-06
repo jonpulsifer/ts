@@ -1,9 +1,4 @@
-import {
-  getBucket,
-  isGcsAuthError,
-  isGcsNotFoundError,
-  isGcsUnavailableError,
-} from './gcs-client';
+import { getBucket, isGcsUnavailableError } from './gcs-client';
 import { updateProjectCount } from './stats-storage';
 
 /**
@@ -18,7 +13,7 @@ export interface ProjectMapping {
 
 /**
  * Get project mappings from storage
- * Returns empty object if GCS is unavailable or file doesn't exist
+ * Returns empty object if GCS operation fails
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
   try {
@@ -33,22 +28,14 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as ProjectMapping;
     return data;
-  } catch (error) {
-    // Return empty mappings if GCS is unavailable, file not found, or auth errors
-    if (
-      isGcsUnavailableError(error) ||
-      isGcsNotFoundError(error) ||
-      isGcsAuthError(error)
-    ) {
-      return {};
-    }
-    throw error;
+  } catch {
+    // Return empty mappings if GCS operation fails (e.g., during build)
+    return {};
   }
 }
 
 /**
  * Save project mappings to storage
- * @throws {GcsUnavailableError} if GCS is not available
  */
 export async function saveProjectMappings(
   mappings: ProjectMapping,
@@ -96,7 +83,6 @@ export async function createProject(slug: string): Promise<{ slug: string }> {
     if (!isGcsUnavailableError(error)) {
       throw error;
     }
-    // Silently ignore if GCS unavailable - stats update is not critical
   }
 
   return { slug };
@@ -153,7 +139,6 @@ export async function getAllProjects(): Promise<
     if (!isGcsUnavailableError(error)) {
       throw error;
     }
-    // Silently ignore if GCS unavailable - stats update is not critical
   }
 
   return sortedProjects;
@@ -184,12 +169,12 @@ export async function deleteProject(slug: string): Promise<void> {
     if (!isGcsUnavailableError(error)) {
       throw error;
     }
-    // Silently ignore if GCS unavailable - stats update is not critical
   }
 }
 
 /**
  * Ensure default project exists
+ * During build/prerender, if GCS write fails, just return the slug
  */
 export async function ensureDefaultProject(): Promise<{ slug: string }> {
   const mappings = await getProjectMappings();
@@ -199,6 +184,12 @@ export async function ensureDefaultProject(): Promise<{ slug: string }> {
     return { slug: defaultSlug };
   }
 
-  // Create default project
-  return await createProject(defaultSlug);
+  // Try to create default project, but if it fails (e.g., during build), just return the slug
+  try {
+    return await createProject(defaultSlug);
+  } catch {
+    // If GCS operation fails (e.g., during build/prerender), just return the slug
+    // The project will be created at runtime when GCS is available
+    return { slug: defaultSlug };
+  }
 }

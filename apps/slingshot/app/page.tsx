@@ -16,7 +16,7 @@ import { ensureDefaultProject, getAllProjects } from '@/lib/projects-storage';
 import { getGlobalStats, getProjectStats } from '@/lib/stats-storage';
 
 export default async function Home() {
-  // Ensure default project exists
+  // Ensure default project exists (handles GCS unavailability gracefully)
   await ensureDefaultProject();
   const projects = await getAllProjects();
   const globalStats = await getGlobalStats();

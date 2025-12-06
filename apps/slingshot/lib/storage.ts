@@ -1,4 +1,4 @@
-import { getBucket, isGcsAuthError, isGcsNotFoundError } from './gcs-client';
+import { getBucket } from './gcs-client';
 import { resetProjectStats } from './stats-storage';
 import type { Webhook, WebhookHistory } from './types';
 
@@ -38,12 +38,9 @@ export async function getWebhooks(
     const etag = metadata.etag || null;
 
     return { data, etag };
-  } catch (error) {
-    // Handle file not found and auth errors - return null data
-    if (isGcsNotFoundError(error) || isGcsAuthError(error)) {
-      return { data: null, etag: null };
-    }
-    throw error;
+  } catch {
+    // Return null data if GCS operation fails (e.g., during build)
+    return { data: null, etag: null };
   }
 }
 
@@ -89,11 +86,8 @@ export async function clearWebhooks(slug: string): Promise<void> {
 
   try {
     await file.delete();
-  } catch (error) {
-    // Ignore 404 errors (file doesn't exist)
-    if (!isGcsNotFoundError(error)) {
-      throw error;
-    }
+  } catch {
+    // Ignore errors (file might not exist)
   }
 
   // Reset stats for this project
