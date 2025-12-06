@@ -1,4 +1,4 @@
-import { head, put } from '@vercel/blob';
+import { getBucket } from './gcs-client';
 
 export interface ProjectStats {
   webhookCount: number;
@@ -21,9 +21,12 @@ export interface StatsData {
  * Get stats from storage
  */
 export async function getStats(): Promise<StatsData> {
+  const bucket = await getBucket();
+  const file = bucket.file('stats.json');
+
   try {
-    const blob = await head('stats.json');
-    if (!blob) {
+    const [exists] = await file.exists();
+    if (!exists) {
       return {
         projects: {},
         global: {
@@ -34,33 +37,17 @@ export async function getStats(): Promise<StatsData> {
       };
     }
 
-    const response = await fetch(blob.url, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      return {
-        projects: {},
-        global: {
-          totalProjects: 0,
-          totalWebhooks: 0,
-          updatedAt: Date.now(),
-        },
-      };
-    }
-
-    const data = await response.json();
-    return data as StatsData;
+    const [contents] = await file.download();
+    const data = JSON.parse(contents.toString('utf-8')) as StatsData;
+    return data;
   } catch (error: any) {
-    // Handle blob not found errors - return default stats
+    // Handle file not found errors - return default stats
     if (
-      error?.status === 404 ||
+      error?.code === 404 ||
       error?.statusCode === 404 ||
       error?.message?.includes('404') ||
       error?.message?.includes('not found') ||
-      error?.message?.includes('does not exist') ||
-      error?.message?.includes('BlobNotFoundError') ||
-      error?.name === 'BlobNotFoundError'
+      error?.message?.includes('does not exist')
     ) {
       return {
         projects: {},
@@ -79,10 +66,14 @@ export async function getStats(): Promise<StatsData> {
  * Save stats to storage
  */
 export async function saveStats(stats: StatsData): Promise<void> {
-  await put('stats.json', JSON.stringify(stats), {
-    access: 'public',
-    addRandomSuffix: false,
-    cacheControlMaxAge: 0,
+  const bucket = await getBucket();
+  const file = bucket.file('stats.json');
+
+  await file.save(JSON.stringify(stats), {
+    contentType: 'application/json',
+    metadata: {
+      cacheControl: 'no-cache',
+    },
   });
 }
 

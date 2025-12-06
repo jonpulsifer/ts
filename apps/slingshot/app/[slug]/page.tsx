@@ -80,8 +80,8 @@ export default async function ProjectPage({
   const initialWebhooks = history?.webhooks || [];
 
   // Generate webhook URL based on slug
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-  const webhookUrl = `${baseUrl}/api/${slug}`;
+  const { BASE_URL } = await import('@/lib/base-url');
+  const webhookUrl = `${BASE_URL}/api/${slug}`;
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

@@ -51,8 +51,7 @@
         "^build"
       ],
       "env": [
-        "BLOB_READ_WRITE_TOKEN",
-        "EDGE_CONFIG"
+        "NEXT_PUBLIC_BASE_URL"
       ],
       "outputs": [
         ".next/**",

@@ -1,37 +1,28 @@
-import { del, head, put } from '@vercel/blob';
+import { getBucket } from './gcs-client';
 import { resetProjectStats } from './stats-storage';
 import type { Webhook, WebhookHistory } from './types';
 
 const MAX_WEBHOOKS = 100;
 
 /**
- * Get webhooks from storage (Vercel Blob)
+ * Get webhooks from storage (Google Cloud Storage)
  * slug is used as the project ID
  */
 export async function getWebhooks(
   slug: string,
 ): Promise<{ data: WebhookHistory | null; etag: string | null }> {
   const key = `projects/${slug}/webhooks.json`;
+  const bucket = await getBucket();
+  const file = bucket.file(key);
 
   try {
-    const blob = await head(key);
-
-    if (!blob) {
+    const [exists] = await file.exists();
+    if (!exists) {
       return { data: null, etag: null };
     }
 
-    const response = await fetch(blob.url, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        return { data: null, etag: null };
-      }
-      throw new Error(`Failed to fetch webhooks: ${response.statusText}`);
-    }
-
-    const data = (await response.json()) as WebhookHistory;
+    const [contents] = await file.download();
+    const data = JSON.parse(contents.toString('utf-8')) as WebhookHistory;
 
     // Migrate: ensure all webhooks have direction field (default to 'incoming' for legacy webhooks)
     if (data?.webhooks) {
@@ -41,19 +32,19 @@ export async function getWebhooks(
       }));
     }
 
-    // Use the blob URL or hash as a simple etag substitute
-    const etag = blob.url.split('/').pop() || null;
+    // Get metadata for etag
+    const [metadata] = await file.getMetadata();
+    const etag = metadata.etag || null;
+
     return { data, etag };
   } catch (error: any) {
-    // Handle blob not found errors - return null data
+    // Handle file not found errors - return null data
     if (
-      error?.status === 404 ||
+      error?.code === 404 ||
       error?.statusCode === 404 ||
       error?.message?.includes('404') ||
       error?.message?.includes('not found') ||
-      error?.message?.includes('does not exist') ||
-      error?.message?.includes('BlobNotFoundError') ||
-      error?.name === 'BlobNotFoundError'
+      error?.message?.includes('does not exist')
     ) {
       return { data: null, etag: null };
     }
@@ -77,15 +68,19 @@ export async function saveWebhooks(
   };
 
   const key = `projects/${slug}/webhooks.json`;
+  const bucket = await getBucket();
+  const file = bucket.file(key);
 
-  const blob = await put(key, JSON.stringify(data), {
-    access: 'public',
-    addRandomSuffix: false,
-    cacheControlMaxAge: 0,
+  await file.save(JSON.stringify(data), {
+    contentType: 'application/json',
+    metadata: {
+      cacheControl: 'no-cache',
+    },
   });
 
-  // Use URL hash as etag substitute
-  return blob.url.split('/').pop() || '';
+  // Get metadata for etag
+  const [metadata] = await file.getMetadata();
+  return metadata.etag || '';
 }
 
 /**
@@ -94,7 +89,17 @@ export async function saveWebhooks(
  */
 export async function clearWebhooks(slug: string): Promise<void> {
   const key = `projects/${slug}/webhooks.json`;
-  await del(key);
+  const bucket = await getBucket();
+  const file = bucket.file(key);
+
+  try {
+    await file.delete();
+  } catch (error: any) {
+    // Ignore 404 errors (file doesn't exist)
+    if (error?.code !== 404 && error?.statusCode !== 404) {
+      throw error;
+    }
+  }
 
   // Reset stats for this project
   await resetProjectStats(slug);

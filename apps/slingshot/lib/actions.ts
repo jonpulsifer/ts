@@ -2,22 +2,21 @@
 
 import { revalidatePath } from 'next/cache';
 import { createProject, getAllProjects } from './projects-storage';
+import { slugSchema } from './slug-schema';
 import type { Webhook } from './types';
 
 export async function createProjectAction(slug: string) {
-  if (!slug || typeof slug !== 'string') {
-    throw new Error('Slug is required');
+  // Validate using Zod
+  const validationResult = slugSchema.safeParse(slug);
+  if (!validationResult.success) {
+    const firstError = validationResult.error.errors[0];
+    throw new Error(firstError?.message || 'Invalid slug format');
   }
 
-  // Validate slug format: lowercase letters, numbers, hyphens only, 1-32 characters, cannot start or end with dash
-  if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(slug) || slug.length > 32) {
-    throw new Error(
-      'Invalid slug format. Use only lowercase letters, numbers, and hyphens (1-32 characters). Cannot start or end with a dash.',
-    );
-  }
+  const validatedSlug = validationResult.data;
 
   try {
-    const project = await createProject(slug);
+    const project = await createProject(validatedSlug);
 
     // Revalidate the home page and layout (for sidebar)
     revalidatePath('/');

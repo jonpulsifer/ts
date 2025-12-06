@@ -1,4 +1,4 @@
-import { head, put } from '@vercel/blob';
+import { getBucket } from './gcs-client';
 import { updateProjectCount } from './stats-storage';
 
 /**
@@ -15,32 +15,26 @@ export interface ProjectMapping {
  * Get project mappings from storage
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
+  const bucket = await getBucket();
+  const file = bucket.file('project_mappings.json');
+
   try {
-    const blob = await head('project_mappings.json');
-    if (!blob) {
+    const [exists] = await file.exists();
+    if (!exists) {
       return {};
     }
 
-    const response = await fetch(blob.url, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      return {};
-    }
-
-    const data = await response.json();
-    return data as ProjectMapping;
+    const [contents] = await file.download();
+    const data = JSON.parse(contents.toString('utf-8')) as ProjectMapping;
+    return data;
   } catch (error: any) {
-    // Handle blob not found errors - return empty mappings
+    // Handle file not found errors - return empty mappings
     if (
-      error?.status === 404 ||
+      error?.code === 404 ||
       error?.statusCode === 404 ||
       error?.message?.includes('404') ||
       error?.message?.includes('not found') ||
-      error?.message?.includes('does not exist') ||
-      error?.message?.includes('BlobNotFoundError') ||
-      error?.name === 'BlobNotFoundError'
+      error?.message?.includes('does not exist')
     ) {
       return {};
     }
@@ -54,10 +48,14 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
 export async function saveProjectMappings(
   mappings: ProjectMapping,
 ): Promise<void> {
-  await put('project_mappings.json', JSON.stringify(mappings), {
-    access: 'public',
-    addRandomSuffix: false,
-    cacheControlMaxAge: 0,
+  const bucket = await getBucket();
+  const file = bucket.file('project_mappings.json');
+
+  await file.save(JSON.stringify(mappings), {
+    contentType: 'application/json',
+    metadata: {
+      cacheControl: 'no-cache',
+    },
   });
 }
 
