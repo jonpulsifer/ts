@@ -40,9 +40,14 @@ type PrincipalInfo = {
 type GcpAuthProps = {
   principalInfo: PrincipalInfo;
   storageData: StorageData;
+  bucketName?: string;
 };
 
-export default function GcpAuth({ principalInfo, storageData }: GcpAuthProps) {
+export default function GcpAuth({
+  principalInfo,
+  storageData,
+  bucketName,
+}: GcpAuthProps) {
   return (
     <div className="space-y-6">
       <Card className="w-full border-2 shadow-lg">
@@ -96,9 +101,11 @@ export default function GcpAuth({ principalInfo, storageData }: GcpAuthProps) {
           {storageData.success && storageData.files ? (
             <>
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Bucket: homelab-ng-free
-                </div>
+                {bucketName && (
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Bucket: {bucketName}
+                  </div>
+                )}
                 <p className="text-sm text-muted-foreground">
                   Showing up to 20 files from the storage bucket
                 </p>

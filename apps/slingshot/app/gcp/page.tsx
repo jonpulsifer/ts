@@ -231,8 +231,10 @@ export default async function GcpPage() {
     error?: string;
   };
 
+  let bucketName: string | undefined;
   try {
     const bucket = await getBucket();
+    bucketName = bucket.name;
 
     // List files from the bucket (limit to 20 for display)
     const [files] = await bucket.getFiles({ maxResults: 20 });
@@ -280,7 +282,11 @@ export default async function GcpPage() {
         description="Test Google Cloud Platform authentication and view authenticated principal information"
       />
       <Suspense fallback={<Skeleton className="w-full h-[500px]" />}>
-        <GcpAuth principalInfo={principalInfo} storageData={results} />
+        <GcpAuth
+          principalInfo={principalInfo}
+          storageData={results}
+          bucketName={bucketName}
+        />
       </Suspense>
     </div>
   );
