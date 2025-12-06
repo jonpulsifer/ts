@@ -11,6 +11,28 @@ const SENSITIVE_HEADERS = [
 
 const SENSITIVE_HEADER_PLACEHOLDER = '🤡';
 
+const SENSITIVE_ENV_VARS = [
+  'VERCEL_OIDC_TOKEN',
+  'GITHUB_TOKEN',
+  'GITLAB_TOKEN',
+  'BITBUCKET_TOKEN',
+  'AZURE_DEVOPS_TOKEN',
+  'AWS_SECRET_ACCESS_KEY',
+  'AWS_ACCESS_KEY_ID',
+  'DATABASE_URL',
+  'DATABASE_PASSWORD',
+  'DB_PASSWORD',
+  'SECRET',
+  'SECRET_KEY',
+  'API_KEY',
+  'PRIVATE_KEY',
+  'ACCESS_TOKEN',
+  'REFRESH_TOKEN',
+  'PASSWORD',
+] as const;
+
+const SENSITIVE_ENV_PLACEHOLDER = '🤡';
+
 /**
  * Sanitizes headers by replacing sensitive header values with a placeholder
  * @param headers - Record of header key-value pairs
@@ -29,6 +51,48 @@ export function sanitizeHeaders(
       )
     ) {
       sanitized[key] = SENSITIVE_HEADER_PLACEHOLDER.toLowerCase();
+    } else {
+      sanitized[key] = value;
+    }
+  }
+
+  return sanitized;
+}
+
+/**
+ * Sanitizes environment variables by replacing sensitive variable values with a placeholder
+ * @param envVars - Record of environment variable key-value pairs
+ * @returns Sanitized environment variables with sensitive values replaced
+ */
+export function sanitizeEnvVars(
+  envVars: Record<string, string>,
+): Record<string, string> {
+  const sanitized: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(envVars)) {
+    const upperKey = key.toUpperCase();
+
+    // Check if the key matches any sensitive environment variable (case-insensitive)
+    const isSensitive = SENSITIVE_ENV_VARS.some(
+      (sensitiveKey) => upperKey === sensitiveKey.toUpperCase(),
+    );
+
+    // Also check for common patterns (contains sensitive keywords as whole words or suffixes)
+    // This catches things like API_TOKEN, MY_SECRET, DB_PASSWORD, etc.
+    const containsSensitivePattern =
+      upperKey.endsWith('_TOKEN') ||
+      upperKey.includes('_TOKEN_') ||
+      upperKey.endsWith('_SECRET') ||
+      upperKey.includes('_SECRET_') ||
+      upperKey.endsWith('_PASSWORD') ||
+      upperKey.includes('_PASSWORD_') ||
+      (upperKey.endsWith('_KEY') && !upperKey.includes('PUBLIC')) ||
+      (upperKey.includes('_KEY_') && !upperKey.includes('PUBLIC')) ||
+      upperKey.endsWith('_PRIVATE_KEY') ||
+      upperKey.includes('_PRIVATE_KEY_');
+
+    if (isSensitive || containsSensitivePattern) {
+      sanitized[key] = SENSITIVE_ENV_PLACEHOLDER;
     } else {
       sanitized[key] = value;
     }

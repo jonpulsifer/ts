@@ -1,4 +1,5 @@
 import { PageHeader } from '@/components/page-header';
+import { sanitizeEnvVars } from '@/lib/sanitize-headers';
 import Environment from './_components/environment';
 
 export default async function EnvironmentPage() {
@@ -45,13 +46,16 @@ export default async function EnvironmentPage() {
     Object.entries(serverEnv).sort(([a], [b]) => a.localeCompare(b)),
   );
 
+  // Sanitize sensitive environment variables
+  const sanitizedServerEnv = sanitizeEnvVars(sortedServerEnv);
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <PageHeader
         title="Environment Variables"
         description="View server and client environment variables"
       />
-      <Environment serverEnv={sortedServerEnv} />
+      <Environment serverEnv={sanitizedServerEnv} />
     </div>
   );
 }

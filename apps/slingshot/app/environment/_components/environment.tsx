@@ -22,6 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { sanitizeEnvVars } from '@/lib/sanitize-headers';
 
 type EnvironmentProps = {
   serverEnv: Record<string, string>;
@@ -58,12 +59,15 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
   // This includes:
   // - Variables starting with NEXT_PUBLIC_* (automatically exposed)
   // - Variables defined in next.config.ts env config (explicitly exposed)
-  const clientEnv: Record<string, string> = {};
+  const rawClientEnv: Record<string, string> = {};
   for (const [key, value] of Object.entries(process.env)) {
     if (value && value.trim() !== '') {
-      clientEnv[key] = value;
+      rawClientEnv[key] = value;
     }
   }
+
+  // Sanitize sensitive environment variables
+  const clientEnv = sanitizeEnvVars(rawClientEnv);
 
   const currentEnv = activeTab === 'server' ? serverEnv : clientEnv;
 
