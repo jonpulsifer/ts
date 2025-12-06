@@ -6,18 +6,29 @@
     "npm_package_version",
     "npm_package_name"
   ],
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "build/**"
+      ]
     },
     "lint": {},
     "lint:fix": {
       "cache": false
     },
     "request-headers#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "env": [
         "NODE_IP",
         "NODE_NAME",
@@ -29,17 +40,42 @@
         "NEXT_PUBLIC_VERCEL_ENV",
         "NEXT_PUBLIC_SOME_VARIABLE"
       ],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ]
+    },
+    "slingshot:build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "BLOB_READ_WRITE_TOKEN",
+        "EDGE_TOKEN"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "build/**"
+      ]
     },
     "test": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "inputs": [
         "src/**/*.tsx",
         "src/**/*.ts",
         "test/**/*.ts",
         "test/**/*.tsx"
       ],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ]
     },
     "dev": {
       "cache": false,
