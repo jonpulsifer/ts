@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -9,7 +9,13 @@
     "lineWidth": 80,
     "attributePosition": "auto"
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -62,7 +68,11 @@
   "overrides": [
     {
       "includes": ["**/*.html"],
-      "javascript": { "formatter": { "trailingCommas": "none" } }
+      "javascript": {
+        "formatter": {
+          "trailingCommas": "none"
+        }
+      }
     }
   ],
   "vcs": {

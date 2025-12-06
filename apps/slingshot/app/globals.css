@@ -1,0 +1,236 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Light mode (fallback) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  /* Violet theme: rgb(109, 40, 217) */
+  --primary: rgb(109 40 217);
+  --primary-foreground: rgb(255 255 255);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: rgb(245 243 255);
+  --muted-foreground: 109 40 217;
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: rgb(109 40 217);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: rgb(109 40 217);
+  --sidebar-primary-foreground: rgb(255 255 255);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: rgb(109 40 217);
+}
+
+.dark {
+  /* Rich dark background with subtle violet tint */
+  --background: oklch(0.11 0.015 270);
+  --foreground: oklch(0.98 0.005 270);
+
+  /* Elevated cards with violet glow */
+  --card: oklch(0.15 0.02 270);
+  --card-foreground: oklch(0.98 0.005 270);
+
+  --popover: oklch(0.15 0.02 270);
+  --popover-foreground: oklch(0.98 0.005 270);
+
+  /* Vibrant violet primary */
+  --primary: rgb(139 92 246);
+  /* Lighter violet for dark mode */
+  --primary-foreground: rgb(255 255 255);
+
+  /* Rich secondary with violet accent */
+  --secondary: oklch(0.22 0.03 270);
+  --secondary-foreground: oklch(0.95 0.01 270);
+
+  /* Muted with violet undertone */
+  --muted: oklch(0.18 0.02 270);
+  --muted-foreground: oklch(0.65 0.03 270);
+
+  /* Accent with violet */
+  --accent: oklch(0.25 0.04 270);
+  --accent-foreground: oklch(0.98 0.005 270);
+
+  --destructive: oklch(0.65 0.22 25);
+  /* Softer borders - reduced contrast for easier on eyes */
+  --border: oklch(0.2 0.015 270 / 0.15);
+  --input: oklch(0.2 0.02 270);
+  --ring: rgb(139 92 246);
+
+  /* Vibrant chart colors */
+  --chart-1: oklch(0.65 0.2 280);
+  --chart-2: oklch(0.7 0.18 260);
+  --chart-3: oklch(0.75 0.15 240);
+  --chart-4: oklch(0.6 0.25 300);
+  --chart-5: oklch(0.55 0.22 320);
+
+  /* Sidebar with rich dark violet */
+  --sidebar: oklch(0.12 0.018 270);
+  --sidebar-foreground: oklch(0.95 0.01 270);
+  --sidebar-primary: rgb(139 92 246);
+  --sidebar-primary-foreground: rgb(255 255 255);
+  --sidebar-accent: oklch(0.22 0.03 270);
+  --sidebar-accent-foreground: oklch(0.98 0.005 270);
+  --sidebar-border: oklch(0.2 0.015 270 / 0.15);
+  --sidebar-ring: rgb(139 92 246);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Smooth transitions */
+  * {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+}
+
+@layer utilities {
+  /* Glow effects */
+  .glow-primary {
+    box-shadow:
+      0 0 20px rgba(139, 92, 246, 0.3),
+      0 0 40px rgba(139, 92, 246, 0.1);
+  }
+
+  .glow-primary-sm {
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-violet {
+    background: linear-gradient(
+      135deg,
+      rgb(109, 40, 217) 0%,
+      rgb(139, 92, 246) 50%,
+      rgb(168, 85, 247) 100%
+    );
+  }
+
+  .bg-gradient-card {
+    background: linear-gradient(
+      135deg,
+      oklch(0.15 0.02 270) 0%,
+      oklch(0.18 0.025 275) 100%
+    );
+  }
+
+  /* Animated gradient */
+  @keyframes gradient-shift {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    background: oklch(0.15 0.02 270 / 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid oklch(0.25 0.02 270 / 0.3);
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.15);
+  }
+}
+
+/* Monaco Editor diff decorations */
+.monaco-editor .bg-red-500\/10 {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.monaco-editor .bg-green-500\/10 {
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.monaco-editor .bg-red-500\/20 {
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+.monaco-editor .bg-green-500\/20 {
+  background-color: rgba(34, 197, 94, 0.2);
+}
