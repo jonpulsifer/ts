@@ -359,8 +359,8 @@ importers:
         specifier: 3.4.0
         version: 3.4.0
       zod:
-        specifier: ^3.23.8
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.1.13
     devDependencies:
       '@biomejs/biome':
         specifier: 2.3.8
@@ -3922,9 +3922,6 @@ packages:
   zimmerframe@1.1.4:
     resolution: {integrity: sha512-B58NGBEoc8Y9MWWCQGl/gq9xBCe4IiKM0a2x7GZdQKOW5Exr8S1W24J6OgM1njK8xCRGvAJIL/MxXHf6SkmQKQ==}
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
-
   zod@4.1.13:
     resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
 
@@ -7368,7 +7365,5 @@ snapshots:
 
   zimmerframe@1.1.4:
     optional: true
-
-  zod@3.25.76: {}
 
   zod@4.1.13: {}
