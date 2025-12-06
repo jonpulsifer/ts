@@ -62,7 +62,9 @@ export async function getWebhooks(
       }));
     }
 
-    console.log(`[GCS] Retrieved ${data.webhooks?.length || 0} webhooks from ${key}`);
+    console.log(
+      `[GCS] Retrieved ${data.webhooks?.length || 0} webhooks from ${key}`,
+    );
 
     // Get metadata for etag if not provided
     let etag = knownEtag || null;
@@ -100,7 +102,9 @@ export async function saveWebhooks(
   };
 
   const key = `projects/${slug}/webhooks.json`;
-  console.log(`[GCS] saveWebhooks called for project: ${slug}, saving ${trimmedWebhooks.length} webhooks`);
+  console.log(
+    `[GCS] saveWebhooks called for project: ${slug}, saving ${trimmedWebhooks.length} webhooks`,
+  );
 
   const bucket = await getBucket();
   const file = bucket.file(key);

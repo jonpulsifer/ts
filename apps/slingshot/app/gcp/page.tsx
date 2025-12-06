@@ -8,7 +8,6 @@ import GcpAuth from './_components/gcp-auth';
 export const dynamic = 'force-dynamic';
 
 export default async function GcpPage() {
-
   let results: {
     success: boolean;
     files?: Array<{

@@ -41,7 +41,7 @@ export function CreateProjectForm({ onSuccess }: CreateProjectFormProps = {}) {
 
       toast.success('Webhook project created successfully');
       // Server action already revalidates the layout, so sidebar will update automatically
-      
+
       // Call onSuccess callback if provided, otherwise redirect
       if (onSuccess) {
         onSuccess(result.slug);

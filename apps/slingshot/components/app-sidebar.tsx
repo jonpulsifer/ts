@@ -12,6 +12,7 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useOptimistic, useState, useTransition } from 'react';
 import { toast } from 'sonner';
+import { CreateProjectModal } from '@/components/create-project-modal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -36,9 +37,8 @@ import {
 } from '@/components/ui/sidebar';
 import { deleteProjectAction, getAllProjectsAction } from '@/lib/actions';
 import type { Project } from '@/lib/types';
-import { clearCachedWebhooks } from '@/lib/webhook-cache';
 import { cn } from '@/lib/utils';
-import { CreateProjectModal } from '@/components/create-project-modal';
+import { clearCachedWebhooks } from '@/lib/webhook-cache';
 
 interface AppSidebarProps {
   projects: Project[];
@@ -149,10 +149,10 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
 
     try {
       await deleteProjectAction(slugToDelete);
-      
+
       // Clear the cache for the deleted project
       clearCachedWebhooks(slugToDelete);
-      
+
       toast.success(`Webhook project "${slugToDelete}" deleted`);
 
       // If we're on the deleted project's page, redirect home
@@ -182,7 +182,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
               size="lg"
               asChild
               tooltip="Slingshot - Webhook Testing Platform"
-              className={isCollapsed ? "justify-center" : ""}
+              className={isCollapsed ? 'justify-center' : ''}
             >
               <a href="/" className="group">
                 <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-sm shadow-violet-500/20 transition-all group-hover:scale-105">
@@ -203,16 +203,18 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <div className={cn(
-            "flex items-center px-2 py-1.5",
-            isCollapsed ? "justify-center" : "justify-between"
-          )}>
+          <div
+            className={cn(
+              'flex items-center px-2 py-1.5',
+              isCollapsed ? 'justify-center' : 'justify-between',
+            )}
+          >
             {!isCollapsed && (
               <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Navigation
               </SidebarGroupLabel>
             )}
-            <SidebarTrigger className={isCollapsed ? "" : "ml-auto"} />
+            <SidebarTrigger className={isCollapsed ? '' : 'ml-auto'} />
           </div>
           <SidebarMenu>
             <SidebarMenuItem>

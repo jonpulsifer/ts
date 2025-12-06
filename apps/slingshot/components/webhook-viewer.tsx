@@ -4,10 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useSWR from 'swr';
-import {
-  clearWebhooksAction,
-  pollWebhooksAction,
-} from '@/lib/actions';
+import { clearWebhooksAction, pollWebhooksAction } from '@/lib/actions';
 import type { Webhook } from '@/lib/types';
 import {
   clearCachedWebhooks,
@@ -41,9 +38,7 @@ export function WebhookViewer({
 
   // Try to hydrate from cache immediately (even if stale) for instant UI.
   const cachedEntry =
-    typeof window !== 'undefined'
-      ? getCachedWebhooksEntry(projectSlug)
-      : null;
+    typeof window !== 'undefined' ? getCachedWebhooksEntry(projectSlug) : null;
   const initialList =
     cachedEntry?.webhooks && cachedEntry.webhooks.length > 0
       ? cachedEntry.webhooks
@@ -65,7 +60,11 @@ export function WebhookViewer({
   });
 
   // SWR for polling updates (metadata only when unchanged)
-  const { data: pollResult, mutate, error: swrError } = useSWR(
+  const {
+    data: pollResult,
+    mutate,
+    error: swrError,
+  } = useSWR(
     ['webhooks', projectSlug],
     async () => {
       const currentEtag = getCachedEtag(projectSlug);
@@ -105,16 +104,21 @@ export function WebhookViewer({
       if (pollResult.webhooks.length > 0) {
         // If nothing selected, select first
         if (!selectedWebhook) {
-           setSelectedWebhook(pollResult.webhooks[0]);
+          setSelectedWebhook(pollResult.webhooks[0]);
         }
         // If query param is set, respect it, otherwise maybe auto-select?
         // Let's stick to existing behavior: if a new webhook comes in and we're just viewing the list (no specific selection or viewing the top one), we might want to show it.
         // But typically we don't change selection unless user does it or it's the first load.
         // The SSE implementation auto-selected if !selectedWebhook && !webhookIdFromQuery
-        else if (selectedWebhook && !webhookIdFromQuery && selectedWebhook.id === webhooks[0]?.id && pollResult.webhooks[0].id !== selectedWebhook.id) {
-           // If we were looking at the top one, switch to the new top one?
-           // Actually, let's just update the list. The user can click.
-           // Exception: if we have NO selection, select the first.
+        else if (
+          selectedWebhook &&
+          !webhookIdFromQuery &&
+          selectedWebhook.id === webhooks[0]?.id &&
+          pollResult.webhooks[0].id !== selectedWebhook.id
+        ) {
+          // If we were looking at the top one, switch to the new top one?
+          // Actually, let's just update the list. The user can click.
+          // Exception: if we have NO selection, select the first.
         }
       }
     }
@@ -135,25 +139,22 @@ export function WebhookViewer({
   }, [webhookIdFromQuery, webhooks, selectedWebhook]);
 
   // Update URL when webhook is selected
-  const handleSelectWebhook = useCallback(
-    (webhook: Webhook) => {
-      setSelectedWebhook(webhook);
+  const handleSelectWebhook = useCallback((webhook: Webhook) => {
+    setSelectedWebhook(webhook);
 
-      // Clear pending update
-      if (urlUpdateTimeoutRef.current) {
-        cancelAnimationFrame(urlUpdateTimeoutRef.current);
-      }
+    // Clear pending update
+    if (urlUpdateTimeoutRef.current) {
+      cancelAnimationFrame(urlUpdateTimeoutRef.current);
+    }
 
-      // Lightweight URL update so rapid clicks stay instant
-      urlUpdateTimeoutRef.current = requestAnimationFrame(() => {
-        const params = new URLSearchParams(window.location.search);
-        params.set('webhook', webhook.id);
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState(null, '', newUrl);
-      });
-    },
-    [],
-  );
+    // Lightweight URL update so rapid clicks stay instant
+    urlUpdateTimeoutRef.current = requestAnimationFrame(() => {
+      const params = new URLSearchParams(window.location.search);
+      params.set('webhook', webhook.id);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState(null, '', newUrl);
+    });
+  }, []);
 
   // Clean up any pending URL update on unmount
   useEffect(

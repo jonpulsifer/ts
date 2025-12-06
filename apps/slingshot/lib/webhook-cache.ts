@@ -27,10 +27,10 @@ export function getCachedWebhooks(projectSlug: string): Webhook[] | null {
   try {
     const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
     const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
-    
+
     const cached = localStorage.getItem(cacheKey);
     const timestampStr = localStorage.getItem(timestampKey);
-    
+
     if (!cached || !timestampStr) {
       return null;
     }
@@ -102,7 +102,7 @@ export function setCachedWebhooks(
     const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
     const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
     const etagKey = `${CACHE_ETAG_PREFIX}${projectSlug}`;
-    
+
     const data: CachedWebhooks = {
       webhooks,
       timestamp: Date.now(),
@@ -156,7 +156,7 @@ export function getCachedEtag(projectSlug: string): string | null {
   try {
     const etagKey = `${CACHE_ETAG_PREFIX}${projectSlug}`;
     return localStorage.getItem(etagKey);
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }
@@ -211,7 +211,9 @@ function clearOldCacheEntries(): void {
     }
 
     // Remove expired entries
-    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    keysToRemove.forEach((key) => {
+      localStorage.removeItem(key);
+    });
   } catch (error) {
     console.error('Failed to clear old cache entries:', error);
   }
@@ -262,12 +264,14 @@ export function getAllCacheEntries(): {
       if (key?.startsWith(CACHE_PREFIX)) {
         const slug = key.replace(CACHE_PREFIX, '');
         const cachedStr = localStorage.getItem(key);
-        const timestampStr = localStorage.getItem(`${CACHE_TIMESTAMP_PREFIX}${slug}`);
-        
+        const timestampStr = localStorage.getItem(
+          `${CACHE_TIMESTAMP_PREFIX}${slug}`,
+        );
+
         if (cachedStr && timestampStr) {
           const timestamp = Number.parseInt(timestampStr, 10);
           const data: CachedWebhooks = JSON.parse(cachedStr);
-          
+
           entries.push({
             slug,
             timestamp,
@@ -309,11 +313,12 @@ export function clearAllCachedWebhooks(): void {
     }
 
     // Remove all cache entries
-    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    keysToRemove.forEach((key) => {
+      localStorage.removeItem(key);
+    });
     console.log(`[Cache] Cleared ${keysToRemove.length} cache entries`);
   } catch (error) {
     console.error('Failed to clear all cached webhooks:', error);
     throw error;
   }
 }
-

@@ -155,9 +155,7 @@ export async function pollWebhooksAction(
     const { checkWebhooksChanged, getWebhooks } = await import('./storage');
 
     // Check metadata first
-    const { changed, etag: newEtag } = await checkWebhooksChanged(
-      slug,
-    );
+    const { changed, etag: newEtag } = await checkWebhooksChanged(slug);
 
     // If not changed or ETag matches, return no change
     if (!changed || (currentEtag && newEtag === currentEtag)) {
@@ -260,8 +258,10 @@ export async function sendOutgoingWebhookAction(
     ) {
       try {
         JSON.parse(parsed.body);
-      } catch (e) {
-        throw new Error('Body must be valid JSON when Content-Type is application/json');
+      } catch (_e) {
+        throw new Error(
+          'Body must be valid JSON when Content-Type is application/json',
+        );
       }
     }
 
@@ -281,10 +281,7 @@ export async function sendOutgoingWebhookAction(
       headers: parsed.headers,
     };
 
-    if (
-      parsed.body &&
-      ['POST', 'PUT', 'PATCH'].includes(parsed.method)
-    ) {
+    if (parsed.body && ['POST', 'PUT', 'PATCH'].includes(parsed.method)) {
       options.body = parsed.body;
     }
 
@@ -427,13 +424,13 @@ export async function deleteProjectAction(slug: string) {
     const { deleteProject } = await import('./projects-storage');
     const { clearWebhooks } = await import('./storage');
     const { removeProjectStats } = await import('./stats-storage');
-    
+
     // Delete the project from mappings
     await deleteProject(slug);
-    
+
     // Delete webhooks file from GCS (source of truth)
     await clearWebhooks(slug);
-    
+
     // Remove project stats
     await removeProjectStats(slug);
 

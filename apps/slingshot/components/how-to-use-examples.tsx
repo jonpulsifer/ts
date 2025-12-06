@@ -1,10 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { Send, Check, Loader2, ExternalLink, Plus } from 'lucide-react';
+import { Check, ExternalLink, Loader2, Plus, Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { CodeBlock } from '@/components/code-block';
+import { CreateProjectModal } from '@/components/create-project-modal';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -12,10 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { CreateProjectModal } from '@/components/create-project-modal';
 import { sendTestWebhookAction } from '@/lib/actions';
 
 interface HowToUseExamplesProps {
@@ -37,47 +37,44 @@ export function HowToUseExamples({
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const endpointUrl = `${baseUrl}/api/${selectedProject}`;
 
-  const httpieExample = method === 'POST'
-    ? `http post ${endpointUrl} \\
+  const httpieExample =
+    method === 'POST'
+      ? `http post ${endpointUrl} \\
   X-Test:true count:=3 message='hello world'`
-    : `http get ${endpointUrl} \\
+      : `http get ${endpointUrl} \\
   X-Test:true`;
 
-  const curlExample = method === 'POST' 
-    ? `curl -X POST ${endpointUrl} \\
+  const curlExample =
+    method === 'POST'
+      ? `curl -X POST ${endpointUrl} \\
   -H 'Content-Type: application/json' \\
   -d '{"message":"hello world","count":3,"flag":true}'`
-    : `curl -X GET ${endpointUrl} \\
+      : `curl -X GET ${endpointUrl} \\
   -H 'X-Test: true'`;
 
   const handleSend = async () => {
     setIsSending(true);
     setLastSent(false);
-    
+
     try {
-      const body = method === 'POST' 
-        ? JSON.stringify({ message: 'hello world', count: 3, flag: true })
-        : undefined;
+      const body =
+        method === 'POST'
+          ? JSON.stringify({ message: 'hello world', count: 3, flag: true })
+          : undefined;
 
       const result = await sendTestWebhookAction(endpointUrl, method, body);
-      
-      toast.success(
-        `Webhook sent successfully!`,
-        {
-          description: `Status: ${result.status} ${result.statusText}`,
-          duration: 3000,
-        }
-      );
-      
+
+      toast.success('Webhook sent successfully!', {
+        description: `Status: ${result.status} ${result.statusText}`,
+        duration: 3000,
+      });
+
       setLastSent(true);
       setTimeout(() => setLastSent(false), 2000);
     } catch (error) {
-      toast.error(
-        `Failed to send webhook`,
-        {
-          description: error instanceof Error ? error.message : 'Unknown error',
-        }
-      );
+      toast.error('Failed to send webhook', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
     } finally {
       setIsSending(false);
     }
@@ -96,17 +93,24 @@ export function HowToUseExamples({
                 Try it now!
               </h3>
               <p className="text-sm text-muted-foreground">
-                Send a test webhook to see it appear in your project in real-time
+                Send a test webhook to see it appear in your project in
+                real-time
               </p>
             </div>
 
             {/* Controls */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="flex items-center gap-3 flex-wrap">
-                <Label htmlFor="project-select" className="text-sm font-medium text-foreground">
+                <Label
+                  htmlFor="project-select"
+                  className="text-sm font-medium text-foreground"
+                >
                   Project:
                 </Label>
-                <Select value={selectedProject} onValueChange={setSelectedProject}>
+                <Select
+                  value={selectedProject}
+                  onValueChange={setSelectedProject}
+                >
                   <SelectTrigger id="project-select" className="w-[200px]">
                     <SelectValue />
                   </SelectTrigger>
@@ -118,7 +122,10 @@ export function HowToUseExamples({
                     ))}
                   </SelectContent>
                 </Select>
-                <Select value={method} onValueChange={(v) => setMethod(v as 'GET' | 'POST')}>
+                <Select
+                  value={method}
+                  onValueChange={(v) => setMethod(v as 'GET' | 'POST')}
+                >
                   <SelectTrigger className="w-[100px]">
                     <SelectValue />
                   </SelectTrigger>
@@ -196,4 +203,3 @@ export function HowToUseExamples({
     </div>
   );
 }
-

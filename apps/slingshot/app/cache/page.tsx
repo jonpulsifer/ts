@@ -1,7 +1,7 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
-import { Trash2, Database } from 'lucide-react';
+import { Database, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/page-header';
@@ -62,7 +62,7 @@ export default function CachePage() {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+    return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
   };
 
   if (!mounted) {
@@ -115,7 +115,9 @@ export default function CachePage() {
                 <TableBody>
                   {entries.map((entry) => (
                     <TableRow key={entry.slug}>
-                      <TableCell className="font-medium">{entry.slug}</TableCell>
+                      <TableCell className="font-medium">
+                        {entry.slug}
+                      </TableCell>
                       <TableCell>{entry.count}</TableCell>
                       <TableCell>{formatBytes(entry.size)}</TableCell>
                       <TableCell>
@@ -144,4 +146,3 @@ export default function CachePage() {
     </div>
   );
 }
-

@@ -1,5 +1,6 @@
 'use client';
 
+import * as Diff3 from 'node-diff3';
 import { useMemo } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -13,7 +14,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Webhook } from '@/lib/types';
-import * as Diff3 from 'node-diff3';
 
 interface CommonPart {
   common: string[];
@@ -61,13 +61,19 @@ export function WebhookDiff({
 
     for (const part of comm) {
       if ('common' in part) {
-        part.common.forEach((line: string) => diff.push(` ${line}`));
+        part.common.forEach((line: string) => {
+          diff.push(` ${line}`);
+        });
       } else {
         if (part.buffer1) {
-          part.buffer1.forEach((line: string) => diff.push(`-${line}`));
+          part.buffer1.forEach((line: string) => {
+            diff.push(`-${line}`);
+          });
         }
         if (part.buffer2) {
-          part.buffer2.forEach((line: string) => diff.push(`+${line}`));
+          part.buffer2.forEach((line: string) => {
+            diff.push(`+${line}`);
+          });
         }
       }
     }
@@ -179,14 +185,20 @@ export function WebhookDiff({
                         let currentLine = 0;
                         let isDiff = false;
 
-                        for (const part of (Diff3.diffComm(oldValue.split('\n'), newValue.split('\n')) as unknown as Diff3Part[])) {
+                        for (const part of Diff3.diffComm(
+                          oldValue.split('\n'),
+                          newValue.split('\n'),
+                        ) as unknown as Diff3Part[]) {
                           if ('common' in part) {
                             if (currentLine + part.common.length > lineIndex) {
                               break;
                             }
                             currentLine += part.common.length;
                           } else if (part.buffer1) {
-                            if (currentLine <= lineIndex && lineIndex < currentLine + part.buffer1.length) {
+                            if (
+                              currentLine <= lineIndex &&
+                              lineIndex < currentLine + part.buffer1.length
+                            ) {
                               isDiff = true;
                               break;
                             }
@@ -196,7 +208,11 @@ export function WebhookDiff({
 
                         if (isDiff) {
                           return {
-                            style: { background: 'rgba(239, 68, 68, 0.15)', display: 'block', width: '100%' },
+                            style: {
+                              background: 'rgba(239, 68, 68, 0.15)',
+                              display: 'block',
+                              width: '100%',
+                            },
                           };
                         }
                         return { style: { display: 'block' } };
@@ -232,14 +248,20 @@ export function WebhookDiff({
                         let currentLine = 0;
                         let isDiff = false;
 
-                        for (const part of (Diff3.diffComm(oldValue.split('\n'), newValue.split('\n')) as unknown as Diff3Part[])) {
+                        for (const part of Diff3.diffComm(
+                          oldValue.split('\n'),
+                          newValue.split('\n'),
+                        ) as unknown as Diff3Part[]) {
                           if ('common' in part) {
                             if (currentLine + part.common.length > lineIndex) {
                               break;
                             }
                             currentLine += part.common.length;
                           } else if (part.buffer2) {
-                            if (currentLine <= lineIndex && lineIndex < currentLine + part.buffer2.length) {
+                            if (
+                              currentLine <= lineIndex &&
+                              lineIndex < currentLine + part.buffer2.length
+                            ) {
                               isDiff = true;
                               break;
                             }
@@ -249,7 +271,11 @@ export function WebhookDiff({
 
                         if (isDiff) {
                           return {
-                            style: { background: 'rgba(34, 197, 94, 0.15)', display: 'block', width: '100%' },
+                            style: {
+                              background: 'rgba(34, 197, 94, 0.15)',
+                              display: 'block',
+                              width: '100%',
+                            },
                           };
                         }
                         return { style: { display: 'block' } };
@@ -295,12 +321,20 @@ export function WebhookDiff({
                       const line = unifiedDiff.split('\n')[lineNumber - 1];
                       if (line?.startsWith('-')) {
                         return {
-                          style: { background: 'rgba(239, 68, 68, 0.15)', display: 'block', width: '100%' },
+                          style: {
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            display: 'block',
+                            width: '100%',
+                          },
                         };
                       }
                       if (line?.startsWith('+')) {
                         return {
-                          style: { background: 'rgba(34, 197, 94, 0.15)', display: 'block', width: '100%' },
+                          style: {
+                            background: 'rgba(34, 197, 94, 0.15)',
+                            display: 'block',
+                            width: '100%',
+                          },
                         };
                       }
                       return { style: { display: 'block' } };

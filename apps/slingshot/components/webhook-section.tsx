@@ -1,8 +1,8 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Download, Send } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import useMeasure from 'react-use-measure';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -26,8 +26,8 @@ export function WebhookSection({
   projectSlug,
   webhookUrl,
   initialWebhooks,
-  initialEtag,
-  initialMaxSize,
+  initialEtag: _initialEtag,
+  initialMaxSize: _initialMaxSize,
 }: WebhookSectionProps) {
   const [activeTab, setActiveTab] = useState('incoming');
   const [webhookToResend, setWebhookToResend] = useState<Webhook | null>(null);
@@ -66,9 +66,9 @@ export function WebhookSection({
         >
           <div className="border-b border-border/50 px-6 pt-4">
             <TabsList className="grid w-full max-w-md grid-cols-2 relative bg-muted/50 p-1">
-              <div 
-                className="absolute inset-0 bg-background/50 rounded-lg" 
-                aria-hidden="true" 
+              <div
+                className="absolute inset-0 bg-background/50 rounded-lg"
+                aria-hidden="true"
               />
               {['incoming', 'outgoing'].map((tab) => {
                 const isActive = activeTab === tab;
@@ -82,11 +82,19 @@ export function WebhookSection({
                       <motion.div
                         layoutId="activeTab"
                         className="absolute inset-0 bg-primary rounded-sm shadow-sm"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        transition={{
+                          type: 'spring',
+                          bounce: 0.2,
+                          duration: 0.6,
+                        }}
                       />
                     )}
                     <span className="relative z-10 flex items-center gap-2">
-                      {tab === 'incoming' ? <Download className="h-4 w-4" /> : <Send className="h-4 w-4" />}
+                      {tab === 'incoming' ? (
+                        <Download className="h-4 w-4" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </span>
                   </TabsTrigger>
@@ -97,7 +105,7 @@ export function WebhookSection({
 
           <motion.div
             animate={{ height: bounds.height || 'auto' }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
             <div ref={elementRef}>
@@ -108,10 +116,14 @@ export function WebhookSection({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    transition={{ duration: 0.2, ease: 'easeInOut' }}
                     className="p-6 space-y-6"
                   >
-                    <TabsContent value="incoming" forceMount className="m-0 focus-visible:ring-0 focus-visible:outline-none mt-0">
+                    <TabsContent
+                      value="incoming"
+                      forceMount
+                      className="m-0 focus-visible:ring-0 focus-visible:outline-none mt-0"
+                    >
                       <div>
                         <h2 className="text-xl font-semibold text-foreground mb-1">
                           Incoming Webhook Endpoint
@@ -176,10 +188,14 @@ export function WebhookSection({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    transition={{ duration: 0.2, ease: 'easeInOut' }}
                     className="p-6"
                   >
-                    <TabsContent value="outgoing" forceMount className="m-0 focus-visible:ring-0 focus-visible:outline-none mt-0">
+                    <TabsContent
+                      value="outgoing"
+                      forceMount
+                      className="m-0 focus-visible:ring-0 focus-visible:outline-none mt-0"
+                    >
                       <div className="mb-4">
                         <h2 className="text-xl font-semibold text-foreground mb-1">
                           Send Outgoing Webhook

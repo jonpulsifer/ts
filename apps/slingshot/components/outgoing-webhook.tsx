@@ -1,9 +1,18 @@
 'use client';
 
-import { Cloud, Info, Laptop, Link, Loader2, Plus, Send, Trash2 } from 'lucide-react';
+import {
+  Cloud,
+  Info,
+  Laptop,
+  Link,
+  Loader2,
+  Plus,
+  Send,
+  Trash2,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { z } from 'zod';
 import { toast } from 'sonner';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,7 +31,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { saveOutgoingWebhookAction, sendOutgoingWebhookAction } from '@/lib/actions';
+import {
+  saveOutgoingWebhookAction,
+  sendOutgoingWebhookAction,
+} from '@/lib/actions';
 import type { Webhook } from '@/lib/types';
 
 interface HeaderPair {
@@ -115,7 +127,10 @@ export function OutgoingWebhook({
 
   const [fetchMode, setFetchMode] = useState<'server' | 'client'>('server');
 
-  const headersRawSchema = z.record(z.union([z.string(), z.number(), z.boolean()]));
+  const headersRawSchema = z.record(
+    z.string(),
+    z.union([z.string(), z.number(), z.boolean()]),
+  );
   const headersStringSchema = z.record(z.string(), z.string());
   const bodySchema = z.any();
 
@@ -142,9 +157,12 @@ export function OutgoingWebhook({
       );
       return true;
     } catch (error) {
-      toast.error('To switch to Fields, headers must be a JSON object of string values', {
-        description: error instanceof Error ? error.message : undefined,
-      });
+      toast.error(
+        'To switch to Fields, headers must be a JSON object of string values',
+        {
+          description: error instanceof Error ? error.message : undefined,
+        },
+      );
       return false;
     }
   };
@@ -276,7 +294,9 @@ export function OutgoingWebhook({
         });
       } else {
         try {
-          const validated = headersRawSchema.parse(JSON.parse(rawHeaders || '{}'));
+          const validated = headersRawSchema.parse(
+            JSON.parse(rawHeaders || '{}'),
+          );
           const normalized: Record<string, string> = {};
           Object.entries(validated).forEach(([k, v]) => {
             if (k.trim()) normalized[k] = String(v);
@@ -480,7 +500,8 @@ export function OutgoingWebhook({
                 <TooltipContent className="max-w-xs">
                   <p className="text-xs">
                     Use Raw JSON to send non-string header values (bools/ints).
-                    To switch back to Fields, the JSON must be an object with string values.
+                    To switch back to Fields, the JSON must be an object with
+                    string values.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -500,10 +521,7 @@ export function OutgoingWebhook({
             className="h-8"
           >
             <TabsList className="grid grid-cols-2 h-8">
-              <TabsTrigger
-                value="pairs"
-                className="text-xs"
-              >
+              <TabsTrigger value="pairs" className="text-xs">
                 Fields
               </TabsTrigger>
               <TabsTrigger value="raw" className="text-xs">
@@ -519,7 +537,9 @@ export function OutgoingWebhook({
                 <Input
                   placeholder="Header name"
                   value={header.key}
-                  onChange={(e) => updateHeader(header.id, 'key', e.target.value)}
+                  onChange={(e) =>
+                    updateHeader(header.id, 'key', e.target.value)
+                  }
                   className="font-mono"
                 />
                 <Input
@@ -575,32 +595,30 @@ export function OutgoingWebhook({
                   </TooltipTrigger>
                   <TooltipContent className="max-w-xs">
                     <p className="text-xs">
-                      Fields mode builds a JSON object from string pairs. Use Raw JSON to send
-                      any valid JSON (including numbers/booleans/arrays). To switch back to Fields,
-                      the JSON must be an object; values will be stringified.
+                      Fields mode builds a JSON object from string pairs. Use
+                      Raw JSON to send any valid JSON (including
+                      numbers/booleans/arrays). To switch back to Fields, the
+                      JSON must be an object; values will be stringified.
                     </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
             <Tabs
-            value={bodyMode}
-            onValueChange={(value) => {
-              if (value === 'raw') {
-                syncBodyToRaw();
-                setBodyMode('raw');
-              } else {
-                const ok = tryConvertBodyToPairs();
-                if (ok) setBodyMode('pairs');
-              }
-            }}
+              value={bodyMode}
+              onValueChange={(value) => {
+                if (value === 'raw') {
+                  syncBodyToRaw();
+                  setBodyMode('raw');
+                } else {
+                  const ok = tryConvertBodyToPairs();
+                  if (ok) setBodyMode('pairs');
+                }
+              }}
               className="h-8"
             >
               <TabsList className="grid grid-cols-2 h-8">
-              <TabsTrigger
-                value="pairs"
-                className="text-xs"
-              >
+                <TabsTrigger value="pairs" className="text-xs">
                   Fields
                 </TabsTrigger>
                 <TabsTrigger value="raw" className="text-xs">

@@ -37,7 +37,11 @@ let pendingUpdateCount = 0;
 /**
  * Check if stats file has changed (using metadata only, no download)
  */
-export async function checkStatsChanged(): Promise<{ changed: boolean; etag: string | null; updated: number | null }> {
+export async function checkStatsChanged(): Promise<{
+  changed: boolean;
+  etag: string | null;
+  updated: number | null;
+}> {
   try {
     const bucket = await getBucket();
     const file = bucket.file('stats.json');
@@ -54,7 +58,7 @@ export async function checkStatsChanged(): Promise<{ changed: boolean; etag: str
     if (error.code === 404) {
       return { changed: false, etag: null, updated: null };
     }
-    console.error(`[GCS] Error checking stats metadata:`, error);
+    console.error('[GCS] Error checking stats metadata:', error);
     return { changed: false, etag: null, updated: null };
   }
 }
@@ -63,7 +67,9 @@ export async function checkStatsChanged(): Promise<{ changed: boolean; etag: str
  * Get stats from storage
  * Returns default stats if GCS operation fails
  */
-export async function getStats(knownEtag?: string | null): Promise<{ data: StatsData; etag: string | null }> {
+export async function getStats(
+  knownEtag?: string | null,
+): Promise<{ data: StatsData; etag: string | null }> {
   console.log('[GCS] getStats called');
   try {
     const bucket = await getBucket();
@@ -72,7 +78,7 @@ export async function getStats(knownEtag?: string | null): Promise<{ data: Stats
     console.log('[GCS] Downloading stats.json');
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as StatsData;
-    
+
     // Get metadata for etag if not provided
     let etag = knownEtag || null;
     if (!etag) {
@@ -81,7 +87,9 @@ export async function getStats(knownEtag?: string | null): Promise<{ data: Stats
       etag = metadata.etag || null;
     }
 
-    console.log(`[GCS] Retrieved stats for ${Object.keys(data.projects).length} projects`);
+    console.log(
+      `[GCS] Retrieved stats for ${Object.keys(data.projects).length} projects`,
+    );
     return { data, etag };
   } catch (error: any) {
     // Return default stats if GCS operation fails (e.g., during build)
@@ -99,7 +107,9 @@ export async function getStats(knownEtag?: string | null): Promise<{ data: Stats
  * Silently fails if GCS is unavailable (non-critical operation)
  */
 async function saveStatsImmediate(stats: StatsData): Promise<void> {
-  console.log(`[GCS] saveStatsImmediate called (${Object.keys(stats.projects).length} projects)`);
+  console.log(
+    `[GCS] saveStatsImmediate called (${Object.keys(stats.projects).length} projects)`,
+  );
   try {
     const bucket = await getBucket();
     const file = bucket.file('stats.json');
@@ -130,7 +140,9 @@ export async function saveStats(stats: StatsData): Promise<void> {
 
   // If we've accumulated enough updates, save immediately
   if (pendingUpdateCount >= MAX_PENDING_UPDATES) {
-    console.log(`[GCS] saveStats: ${pendingUpdateCount} pending updates, saving immediately`);
+    console.log(
+      `[GCS] saveStats: ${pendingUpdateCount} pending updates, saving immediately`,
+    );
     await flushPendingStats();
     return;
   }
@@ -144,7 +156,9 @@ export async function saveStats(stats: StatsData): Promise<void> {
     await flushPendingStats();
   }, SAVE_DEBOUNCE_MS);
 
-  console.log(`[GCS] saveStats: Debounced (${pendingUpdateCount} pending updates, will save in ${SAVE_DEBOUNCE_MS}ms)`);
+  console.log(
+    `[GCS] saveStats: Debounced (${pendingUpdateCount} pending updates, will save in ${SAVE_DEBOUNCE_MS}ms)`,
+  );
 }
 
 /**

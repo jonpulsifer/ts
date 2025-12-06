@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { CreateProjectForm } from '@/components/create-project-form';
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { CreateProjectForm } from '@/components/create-project-form';
 
 interface CreateProjectModalProps {
   open: boolean;
@@ -43,4 +43,3 @@ export function CreateProjectModal({
     </Dialog>
   );
 }
-

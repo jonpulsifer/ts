@@ -35,10 +35,7 @@ type GcpAuthProps = {
   bucketName?: string;
 };
 
-export default function GcpAuth({
-  storageData,
-  bucketName,
-}: GcpAuthProps) {
+export default function GcpAuth({ storageData, bucketName }: GcpAuthProps) {
   return (
     <div className="space-y-6">
       <Card className="w-full border-2 shadow-lg">

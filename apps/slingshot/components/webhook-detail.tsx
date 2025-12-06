@@ -1,9 +1,9 @@
 'use client';
 
 import { Copy, FileJson, Send } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { Webhook } from '@/lib/types';
 
 // Format time consistently (client-side only to avoid hydration issues)
@@ -82,7 +83,7 @@ export function WebhookDetail({ webhook, onResend }: WebhookDetailProps) {
   return <WebhookDetailContent webhook={webhook} onResend={onResend} />;
 }
 
-function WebhookDetailSkeleton() {
+function _WebhookDetailSkeleton() {
   return (
     <div className="h-full flex flex-col">
       <div className="p-6 border-b border-border/50 space-y-4 bg-muted/20">
@@ -145,7 +146,9 @@ function WebhookDetailContent({
     const headerPart = Object.entries(webhook.headers)
       .map(([k, v]) => `${k}:'${v.replace(/'/g, "\\'")}'`)
       .join(' ');
-    const bodyPart = webhook.body ? ` <<< '${webhook.body.replace(/'/g, "\\'")}'` : '';
+    const bodyPart = webhook.body
+      ? ` <<< '${webhook.body.replace(/'/g, "\\'")}'`
+      : '';
     return `http ${method} '${url}' ${headerPart}${bodyPart ? ` ${bodyPart}` : ''}`.trim();
   };
 
@@ -346,34 +349,40 @@ ${webhook.body || ''}`;
         </div>
       </div>
 
-          <div className="flex-1 overflow-hidden relative group/editor">
-            {(activeTab === 'body' || activeTab === 'response' || activeTab === 'raw') && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="absolute top-4 right-8 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
-                onClick={() => {
-                  let text = '';
-                  if (activeTab === 'body' && webhook.body) {
-                     text = formattedBody || webhook.body;
-                  } else if (activeTab === 'response' && webhook.responseBody) {
-                    try {
-                      text = JSON.stringify(JSON.parse(webhook.responseBody), null, 2);
-                    } catch {
-                      text = webhook.responseBody;
-                    }
-                  } else if (activeTab === 'raw') {
-                    text = JSON.stringify(webhook, null, 2);
-                  }
-                  if (text) handleCopy(text, 'Content copied');
-                }}
-              >
-                <Copy className="h-4 w-4" />
-                Copy
-              </Button>
-            )}
+      <div className="flex-1 overflow-hidden relative group/editor">
+        {(activeTab === 'body' ||
+          activeTab === 'response' ||
+          activeTab === 'raw') && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="absolute top-4 right-8 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
+            onClick={() => {
+              let text = '';
+              if (activeTab === 'body' && webhook.body) {
+                text = formattedBody || webhook.body;
+              } else if (activeTab === 'response' && webhook.responseBody) {
+                try {
+                  text = JSON.stringify(
+                    JSON.parse(webhook.responseBody),
+                    null,
+                    2,
+                  );
+                } catch {
+                  text = webhook.responseBody;
+                }
+              } else if (activeTab === 'raw') {
+                text = JSON.stringify(webhook, null, 2);
+              }
+              if (text) handleCopy(text, 'Content copied');
+            }}
+          >
+            <Copy className="h-4 w-4" />
+            Copy
+          </Button>
+        )}
 
-            {activeTab === 'headers' && (
+        {activeTab === 'headers' && (
           <ScrollArea className="h-full">
             <div className="p-6 space-y-2">
               {Object.entries(webhook.headers).map(([key, value]) => (
@@ -401,29 +410,29 @@ ${webhook.body || ''}`;
           </ScrollArea>
         )}
 
-        {activeTab === 'body' && webhook.body && (
-          renderCodeBlock(formattedBody || webhook.body)
-        )}
+        {activeTab === 'body' &&
+          webhook.body &&
+          renderCodeBlock(formattedBody || webhook.body)}
 
         {activeTab === 'response' &&
           webhook.direction === 'outgoing' &&
-          webhook.responseBody && (
-            renderCodeBlock(
-              (() => {
-                try {
-                  return JSON.stringify(
-                    JSON.parse(webhook.responseBody),
-                    null,
-                    2,
-                  );
-                } catch {
-                  return webhook.responseBody;
-                }
-              })(),
-            )
+          webhook.responseBody &&
+          renderCodeBlock(
+            (() => {
+              try {
+                return JSON.stringify(
+                  JSON.parse(webhook.responseBody),
+                  null,
+                  2,
+                );
+              } catch {
+                return webhook.responseBody;
+              }
+            })(),
           )}
 
-        {activeTab === 'raw' && renderCodeBlock(JSON.stringify(webhook, null, 2))}
+        {activeTab === 'raw' &&
+          renderCodeBlock(JSON.stringify(webhook, null, 2))}
       </div>
     </div>
   );

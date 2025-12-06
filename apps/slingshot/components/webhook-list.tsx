@@ -42,15 +42,17 @@ interface WebhookListProps {
 // Client-side only component for relative time to avoid hydration issues
 function RelativeTime({ timestamp }: { timestamp: number }) {
   // Use formatted time string directly to avoid client-side ticks for list performance
-  const relativeTime = formatDistanceToNow(new Date(timestamp), { addSuffix: true });
-  
+  const relativeTime = formatDistanceToNow(new Date(timestamp), {
+    addSuffix: true,
+  });
+
   return (
     <span className="text-sm font-medium text-foreground">{relativeTime}</span>
   );
 }
 
 // Client-side only time display to avoid hydration issues
-function TimeDisplay({ timestamp }: { timestamp: number }) {
+function _TimeDisplay({ timestamp }: { timestamp: number }) {
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState('');
 
@@ -132,22 +134,21 @@ const WebhookListItem = memo(function WebhookListItem({
               >
                 {webhook.direction === 'incoming' ? 'Incoming' : 'Outgoing'}
               </Badge>
-              {webhook.direction === 'outgoing' &&
-                webhook.responseStatus && (
-                  <Badge
-                    variant="outline"
-                    className={`text-xs font-medium tabular-nums border bg-transparent ${
-                      webhook.responseStatus >= 200 &&
-                      webhook.responseStatus < 300
-                        ? 'text-green-400 border-green-500/30'
-                        : webhook.responseStatus >= 400
-                          ? 'text-red-400 border-red-500/30'
-                          : 'text-yellow-400 border-yellow-500/30'
-                    }`}
-                  >
-                    {webhook.responseStatus}
-                  </Badge>
-                )}
+              {webhook.direction === 'outgoing' && webhook.responseStatus && (
+                <Badge
+                  variant="outline"
+                  className={`text-xs font-medium tabular-nums border bg-transparent ${
+                    webhook.responseStatus >= 200 &&
+                    webhook.responseStatus < 300
+                      ? 'text-green-400 border-green-500/30'
+                      : webhook.responseStatus >= 400
+                        ? 'text-red-400 border-red-500/30'
+                        : 'text-yellow-400 border-yellow-500/30'
+                  }`}
+                >
+                  {webhook.responseStatus}
+                </Badge>
+              )}
               {webhook.duration !== undefined && (
                 <Badge
                   variant="outline"
@@ -184,7 +185,10 @@ const WebhookListItem = memo(function WebhookListItem({
                   </span>
                 </div>
               )}
-              <div className="flex items-center gap-1.5 ml-auto" title="Webhook ID">
+              <div
+                className="flex items-center gap-1.5 ml-auto"
+                title="Webhook ID"
+              >
                 <Hash className="h-3 w-3 opacity-70" />
                 <span className="font-mono tabular-nums">
                   {webhook.id.slice(0, 8)}
@@ -289,7 +293,7 @@ export function WebhookList({
           </div>
         ) : (
           <div className="relative">
-            {webhooks.map((webhook, index) => (
+            {webhooks.map((webhook, _index) => (
               <WebhookListItem
                 key={webhook.id}
                 webhook={webhook}
