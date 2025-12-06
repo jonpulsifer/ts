@@ -38,6 +38,7 @@ export function WebhookViewer({
   
   // Local state to manage webhooks (combining initial, cached, and SWR updates)
   const [webhooks, setWebhooks] = useState<Webhook[]>(() => {
+    // Try to hydrate from cache immediately
     if (typeof window !== 'undefined') {
       const cached = getCachedWebhooks(projectSlug);
       if (cached && cached.length > 0) {
@@ -47,38 +48,12 @@ export function WebhookViewer({
     return initialWebhooks;
   });
 
-  // Get webhook ID from query string
-  const webhookIdFromQuery = searchParams.get('webhook');
-
-  const getInitialSelectedWebhook = useCallback(() => {
-    // First check localStorage cache
-    if (typeof window !== 'undefined') {
-      const cached = getCachedWebhooks(projectSlug);
-      if (cached && cached.length > 0) {
-        if (webhookIdFromQuery) {
-          const found = cached.find((w) => w.id === webhookIdFromQuery);
-          if (found) return found;
-        }
-        return cached[0] || null;
-      }
-    }
-    // Fallback to initialWebhooks
-    if (webhookIdFromQuery && initialWebhooks.length > 0) {
-      const found = initialWebhooks.find((w) => w.id === webhookIdFromQuery);
-      if (found) return found;
-    }
-    return initialWebhooks[0] || null;
-  }, [webhookIdFromQuery, initialWebhooks, projectSlug]);
-
-  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(
-    getInitialSelectedWebhook(),
-  );
-
   // SWR for polling updates
   // Only runs on client
   const { data: pollResult, mutate, error: swrError } = useSWR(
     mounted ? ['webhooks', projectSlug] : null,
     async () => {
+      // Always use cached etag to support conditional fetching
       const currentEtag = getCachedEtag(projectSlug);
       return pollWebhooksAction(projectSlug, currentEtag);
     },
@@ -86,6 +61,12 @@ export function WebhookViewer({
       refreshInterval: 2000, // Poll every 2 seconds
       revalidateOnFocus: true,
       dedupingInterval: 1000,
+      // Ensure we don't overwrite with stale data if we have cached data
+      fallbackData: {
+        changed: false,
+        webhooks: webhooks.length > 0 ? webhooks : undefined,
+        etag: undefined,
+      },
     }
   );
 
@@ -105,7 +86,7 @@ export function WebhookViewer({
         // Let's stick to existing behavior: if a new webhook comes in and we're just viewing the list (no specific selection or viewing the top one), we might want to show it.
         // But typically we don't change selection unless user does it or it's the first load.
         // The SSE implementation auto-selected if !selectedWebhook && !webhookIdFromQuery
-        else if (!webhookIdFromQuery && selectedWebhook.id === webhooks[0]?.id && pollResult.webhooks[0].id !== selectedWebhook.id) {
+        else if (selectedWebhook && !webhookIdFromQuery && selectedWebhook.id === webhooks[0]?.id && pollResult.webhooks[0].id !== selectedWebhook.id) {
            // If we were looking at the top one, switch to the new top one?
            // Actually, let's just update the list. The user can click.
            // Exception: if we have NO selection, select the first.

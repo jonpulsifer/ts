@@ -1,4 +1,4 @@
-import { Webhook } from 'lucide-react';
+import { Webhook as WebhookIcon } from 'lucide-react';
 import Link from 'next/link';
 import { CreateProjectButton } from '@/components/create-project-button';
 import { PageHeader } from '@/components/page-header';
@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { WebhookSection } from '@/components/webhook-section';
 import { projectExists } from '@/lib/projects-storage';
-import { getWebhooks } from '@/lib/storage';
+
+import type { Webhook } from '@/lib/types';
 
 export default async function ProjectPage({
   params,
@@ -23,7 +24,7 @@ export default async function ProjectPage({
         <Card className="border border-border/50 bg-card">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <div className="rounded-full bg-muted/50 p-6 mb-4">
-              <Webhook className="h-16 w-16 text-primary drop-shadow-[0_0_6px_rgba(139,92,246,0.4)]" />
+              <WebhookIcon className="h-16 w-16 text-primary drop-shadow-[0_0_6px_rgba(139,92,246,0.4)]" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
               Invalid Endpoint
@@ -53,7 +54,7 @@ export default async function ProjectPage({
         <Card className="border border-border/50 bg-card">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <div className="rounded-full bg-muted/50 p-6 mb-4">
-              <Webhook className="h-16 w-16 text-primary drop-shadow-[0_0_6px_rgba(139,92,246,0.4)]" />
+              <WebhookIcon className="h-16 w-16 text-primary drop-shadow-[0_0_6px_rgba(139,92,246,0.4)]" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
               Webhook Project Not Found
@@ -77,8 +78,9 @@ export default async function ProjectPage({
   }
 
   // Fetch initial webhooks (slug is the project ID)
-  const { data: history } = await getWebhooks(slug, 'server');
-  const initialWebhooks = history?.webhooks || [];
+  // We intentionally DON'T wait for GCS here to allow instant navigation
+  // The client component will pick up from localStorage or fetch via SWR
+  const initialWebhooks: Webhook[] = [];
 
   // Generate webhook URL based on slug
   const { BASE_URL } = await import('@/lib/base-url');
