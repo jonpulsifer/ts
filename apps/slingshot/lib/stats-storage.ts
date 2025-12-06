@@ -1,15 +1,4 @@
-import { promises as fs } from 'node:fs';
-import { join } from 'node:path';
 import { head, put } from '@vercel/blob';
-
-const DATA_DIR = join(process.cwd(), '.data');
-const STATS_FILE = join(DATA_DIR, 'stats.json');
-
-/**
- * Check if we're in development mode (local file system)
- */
-const isDevelopment =
-  process.env.NODE_ENV === 'development' || !process.env.VERCEL;
 
 export interface ProjectStats {
   webhookCount: number;
@@ -29,91 +18,60 @@ export interface StatsData {
 }
 
 /**
- * Ensure data directory exists
- */
-async function ensureDataDir() {
-  if (isDevelopment) {
-    try {
-      await fs.mkdir(DATA_DIR, { recursive: true });
-    } catch (_error) {
-      // Directory might already exist
-    }
-  }
-}
-
-/**
  * Get stats from storage
  */
 export async function getStats(): Promise<StatsData> {
-  if (isDevelopment) {
-    await ensureDataDir();
-
-    try {
-      const content = await fs.readFile(STATS_FILE, 'utf-8');
-      return JSON.parse(content) as StatsData;
-    } catch (error: any) {
-      if (error.code === 'ENOENT') {
-        return {
-          projects: {},
-          global: {
-            totalProjects: 0,
-            totalWebhooks: 0,
-            updatedAt: Date.now(),
-          },
-        };
-      }
-      throw error;
+  try {
+    const blob = await head('stats.json');
+    if (!blob) {
+      return {
+        projects: {},
+        global: {
+          totalProjects: 0,
+          totalWebhooks: 0,
+          updatedAt: Date.now(),
+        },
+      };
     }
-  } else {
-    // Production: Use Vercel Blob
-    try {
-      const blob = await head('stats.json');
-      if (!blob) {
-        return {
-          projects: {},
-          global: {
-            totalProjects: 0,
-            totalWebhooks: 0,
-            updatedAt: Date.now(),
-          },
-        };
-      }
 
-      const response = await fetch(blob.url, {
-        cache: 'no-store',
-      });
+    const response = await fetch(blob.url, {
+      cache: 'no-store',
+    });
 
-      if (!response.ok) {
-        return {
-          projects: {},
-          global: {
-            totalProjects: 0,
-            totalWebhooks: 0,
-            updatedAt: Date.now(),
-          },
-        };
-      }
-
-      const data = await response.json();
-      return data as StatsData;
-    } catch (error: any) {
-      if (
-        error?.status === 404 ||
-        error?.message?.includes('404') ||
-        error?.message?.includes('not found') ||
-        error?.message?.includes('BlobNotFoundError')
-      ) {
-        return {
-          projects: {},
-          global: {
-            totalProjects: 0,
-            totalWebhooks: 0,
-            updatedAt: Date.now(),
-          },
-        };
-      }
-      throw error;
+    if (!response.ok) {
+      return {
+        projects: {},
+        global: {
+          totalProjects: 0,
+          totalWebhooks: 0,
+          updatedAt: Date.now(),
+        },
+      };
     }
+
+    const data = await response.json();
+    return data as StatsData;
+  } catch (error: any) {
+    // Handle blob not found errors - return default stats
+    if (
+      error?.status === 404 ||
+      error?.statusCode === 404 ||
+      error?.message?.includes('404') ||
+      error?.message?.includes('not found') ||
+      error?.message?.includes('does not exist') ||
+      error?.message?.includes('BlobNotFoundError') ||
+      error?.name === 'BlobNotFoundError'
+    ) {
+      return {
+        projects: {},
+        global: {
+          totalProjects: 0,
+          totalWebhooks: 0,
+          updatedAt: Date.now(),
+        },
+      };
+    }
+    throw error;
   }
 }
 
@@ -121,16 +79,11 @@ export async function getStats(): Promise<StatsData> {
  * Save stats to storage
  */
 export async function saveStats(stats: StatsData): Promise<void> {
-  if (isDevelopment) {
-    await ensureDataDir();
-    await fs.writeFile(STATS_FILE, JSON.stringify(stats, null, 2), 'utf-8');
-  } else {
-    await put('stats.json', JSON.stringify(stats), {
-      access: 'public',
-      addRandomSuffix: false,
-      cacheControlMaxAge: 0,
-    });
-  }
+  await put('stats.json', JSON.stringify(stats), {
+    access: 'public',
+    addRandomSuffix: false,
+    cacheControlMaxAge: 0,
+  });
 }
 
 /**

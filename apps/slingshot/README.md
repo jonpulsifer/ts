@@ -47,28 +47,17 @@ A modern, serverless webhook testing platform built with Next.js 16, Vercel Blob
 pnpm install
 ```
 
-2. Set up environment variables (optional for local development):
+2. Set up environment variables:
 
 Create a `.env.local` file:
 
 ```env
-# Only needed for production/Vercel deployment
+# Required: Vercel Blob token from [Vercel Dashboard](https://vercel.com/dashboard/stores)
 BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-# Optional: Use NanoID instead of slug as project ID (default: false in dev)
+# Optional: Use NanoID instead of slug as project ID (default: false)
 USE_NANOID=false
 ```
-
-**Local Development:**
-- Files are automatically saved to `.data/` folder on disk
-- No Vercel Blob token needed
-- Uses slug as project ID by default (cleaner URLs)
-- Set `USE_NANOID=true` to use NanoID instead
-
-**Production:**
-- Requires `BLOB_READ_WRITE_TOKEN` from [Vercel Dashboard](https://vercel.com/dashboard/stores)
-- Uses Vercel Blob for storage
-- Always uses NanoID for project IDs
 
 3. Run the development server:
 
@@ -78,12 +67,7 @@ pnpm dev
 
 4. Open [http://localhost:3000](http://localhost:3000)
 
-### Local Development Features
-
-- **File-based storage**: All data saved to `.data/` folder (gitignored)
-- **Slug-based URLs**: Projects use their slug as the ID (e.g., `/p/my-project`)
-- **No external dependencies**: Works offline without Vercel Blob
-- **Easy debugging**: JSON files can be inspected directly
+**Note:** This application requires Vercel Blob storage. Make sure you have `BLOB_READ_WRITE_TOKEN` configured in your environment variables.
 
 ## Usage
 

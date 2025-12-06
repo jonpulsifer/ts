@@ -1,16 +1,5 @@
-import { promises as fs } from 'node:fs';
-import { join } from 'node:path';
 import { head, put } from '@vercel/blob';
 import { updateProjectCount } from './stats-storage';
-
-const DATA_DIR = join(process.cwd(), '.data');
-const PROJECT_MAPPINGS_FILE = join(DATA_DIR, 'project_mappings.json');
-
-/**
- * Check if we're in development mode (local file system)
- */
-const isDevelopment =
-  process.env.NODE_ENV === 'development' || !process.env.VERCEL;
 
 /**
  * Simplified project storage - slug is the ID
@@ -23,63 +12,39 @@ export interface ProjectMapping {
 }
 
 /**
- * Ensure data directory exists
- */
-async function ensureDataDir() {
-  if (isDevelopment) {
-    try {
-      await fs.mkdir(DATA_DIR, { recursive: true });
-    } catch (_error) {
-      // Directory might already exist
-    }
-  }
-}
-
-/**
  * Get project mappings from storage
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
-  if (isDevelopment) {
-    await ensureDataDir();
-
-    try {
-      const content = await fs.readFile(PROJECT_MAPPINGS_FILE, 'utf-8');
-      return JSON.parse(content) as ProjectMapping;
-    } catch (error: any) {
-      if (error.code === 'ENOENT') {
-        return {};
-      }
-      throw error;
+  try {
+    const blob = await head('project_mappings.json');
+    if (!blob) {
+      return {};
     }
-  } else {
-    // Production: Use Vercel Blob
-    try {
-      const blob = await head('project_mappings.json');
-      if (!blob) {
-        return {};
-      }
 
-      const response = await fetch(blob.url, {
-        cache: 'no-store',
-      });
+    const response = await fetch(blob.url, {
+      cache: 'no-store',
+    });
 
-      if (!response.ok) {
-        return {};
-      }
-
-      const data = await response.json();
-      return data as ProjectMapping;
-    } catch (error: any) {
-      if (
-        error?.status === 404 ||
-        error?.message?.includes('404') ||
-        error?.message?.includes('not found') ||
-        error?.message?.includes('BlobNotFoundError')
-      ) {
-        return {};
-      }
-      throw error;
+    if (!response.ok) {
+      return {};
     }
+
+    const data = await response.json();
+    return data as ProjectMapping;
+  } catch (error: any) {
+    // Handle blob not found errors - return empty mappings
+    if (
+      error?.status === 404 ||
+      error?.statusCode === 404 ||
+      error?.message?.includes('404') ||
+      error?.message?.includes('not found') ||
+      error?.message?.includes('does not exist') ||
+      error?.message?.includes('BlobNotFoundError') ||
+      error?.name === 'BlobNotFoundError'
+    ) {
+      return {};
+    }
+    throw error;
   }
 }
 
@@ -89,20 +54,11 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
 export async function saveProjectMappings(
   mappings: ProjectMapping,
 ): Promise<void> {
-  if (isDevelopment) {
-    await ensureDataDir();
-    await fs.writeFile(
-      PROJECT_MAPPINGS_FILE,
-      JSON.stringify(mappings, null, 2),
-      'utf-8',
-    );
-  } else {
-    await put('project_mappings.json', JSON.stringify(mappings), {
-      access: 'public',
-      addRandomSuffix: false,
-      cacheControlMaxAge: 0,
-    });
-  }
+  await put('project_mappings.json', JSON.stringify(mappings), {
+    access: 'public',
+    addRandomSuffix: false,
+    cacheControlMaxAge: 0,
+  });
 }
 
 /**
