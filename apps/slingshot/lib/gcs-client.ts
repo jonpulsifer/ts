@@ -26,8 +26,11 @@ function getWorkloadIdentityAudience(): string {
 async function getWorkloadIdentityClient(): Promise<ExternalAccountClient> {
   try {
     const audience = getWorkloadIdentityAudience();
-    console.log('[GCS] Creating Workload Identity client with audience:', audience);
-    
+    console.log(
+      '[GCS] Creating Workload Identity client with audience:',
+      audience,
+    );
+
     // Test that we can get a token before creating the client
     try {
       const testToken = await getVercelOidcToken();
@@ -73,17 +76,19 @@ export async function getStorageClient(): Promise<Storage> {
   if (storageClient && storageClientAuthInitialized) {
     return storageClient;
   }
-  
+
   // Reset if we had a client but auth wasn't initialized (shouldn't happen, but safety check)
   if (storageClient && !storageClientAuthInitialized) {
-    console.warn('[GCS] Resetting Storage client - previous instance was not properly authenticated');
+    console.warn(
+      '[GCS] Resetting Storage client - previous instance was not properly authenticated',
+    );
     storageClient = null;
   }
 
   console.log(`[GCS] Initializing Storage client (IS_VERCEL=${IS_VERCEL})`);
 
   let authClient: ExternalAccountClient | undefined;
-  
+
   if (IS_VERCEL) {
     try {
       authClient = await getWorkloadIdentityClient();
@@ -109,7 +114,7 @@ export async function getStorageClient(): Promise<Storage> {
   storageClient = new Storage({
     authClient: authClient as any,
   });
-  
+
   storageClientAuthInitialized = true;
   console.log('[GCS] Storage client initialized successfully');
   return storageClient;
