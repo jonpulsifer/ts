@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { generateProjectId } from '@/lib/nanoid';
 import { projectExists } from '@/lib/projects-storage';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { sanitizeHeaders } from '@/lib/sanitize-headers';
 import { incrementWebhookCount } from '@/lib/stats-storage';
 import { getWebhooks, saveWebhooks } from '@/lib/storage';
 import type { Webhook } from '@/lib/types';
@@ -44,10 +45,12 @@ async function handleWebhook(request: NextRequest, slug: string) {
   // Get request metadata
   const method = request.method;
   const url = request.url;
-  const headers: Record<string, string> = {};
+  const rawHeaders: Record<string, string> = {};
   request.headers.forEach((value, key) => {
-    headers[key] = value;
+    rawHeaders[key] = value;
   });
+  // Sanitize headers to remove sensitive tokens
+  const headers = sanitizeHeaders(rawHeaders);
 
   // Read body with size limit
   let body: string | null = null;

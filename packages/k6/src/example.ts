@@ -26,7 +26,7 @@ export const options: Options = {
 };
 
 export default () => {
-  const res = http.get('https://request-headers.lolwtf.ca/api/headers');
+  const res = http.get('https://slingshot.lolwtf.ca/api/headers');
 
   check(res, {
     'status is 200': () => res.status === 200,

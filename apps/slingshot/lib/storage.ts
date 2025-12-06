@@ -12,7 +12,7 @@ export async function getWebhooks(
   slug: string,
 ): Promise<{ data: WebhookHistory | null; etag: string | null }> {
   const key = `projects/${slug}/webhooks.json`;
-  
+
   try {
     const bucket = await getBucket();
     const file = bucket.file(key);

@@ -1,74 +1,212 @@
-# ts
+# TypeScript Monorepo
 
-A personal TypeScript monorepo
+A personal monorepo containing TypeScript applications and shared packages, managed with Turborepo and pnpm.
 
-## What's inside?
+## Overview
 
-This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes the following packages/apps:
+This repository uses [Turborepo](https://turbo.build/) for build orchestration and [pnpm](https://pnpm.io/) for package management. It follows a monorepo structure with applications in `apps/` and shared packages in `packages/`.
 
-### Apps and Packages
+## Tech Stack
 
-- `authme`: A [Next.js](https://nextjs.org) app that uses JWTs to authenticate users. It is deployed at [https://authme.vercel.app](https://authme.vercel.app)
-- `hub`: A [Next.js](https://nextjs.org) app that runs on two different Raspberry Pis. It is deployed on Kubernetes inside my home lab.
-- `nested`: A [NestJS](https://nestjs.com/) learning project.
-- `request-headers`: A [Next.js](https://nextjs.org) app that returns request headers. It is deployed at [https://request-headers.vercel.app](https://request-headers.vercel.app)
-- `remixed`: A [Remix](https://remix.run/) application integrated with Tailwind CSS for enhanced styling.
-- `rosie`: A chatbot built with [Bolt for JavaScript](https://slack.dev/bolt-js/) for Slack integrations.
-- `ui`: A React component library shared by both `hub` and `remixed` applications.
-- `wishlist`: A [Next.js](https://nextjs.org) app that is my family's Christmas wishlist. It is deployed on Vercel.
+- **Package Manager**: [pnpm](https://pnpm.io/) (v10.24.0)
+- **Build System**: [Turborepo](https://turbo.build/) (v2.6.3)
+- **Linting & Formatting**: [Biome](https://biomejs.dev/) (v2.3.8)
+- **Node.js**: >=22.x
+- **TypeScript**: Shared configuration via `@repo/typescript-config`
 
-### Utilities
+## Applications
 
-This turborepo has some additional tools already set up for you:
+### [Slingshot](./apps/slingshot/)
 
-- [pnpm](https://pnpm.io/) for package management
-- [turbo](https://turbo.build/repo/docs) for building and testing
-- [biome](https://biomejs.dev/) for code linting and formatting
+**Webhook Testing Platform** - A modern, serverless webhook testing and debugging platform.
 
-### Build
+- **Framework**: Next.js 16 (App Router, React Server Components)
+- **Storage**: Google Cloud Storage with Workload Identity Federation
+- **Features**:
+  - Real-time webhook streaming via Server-Sent Events
+  - Full request inspection (headers, body, metadata)
+  - JSON viewing and diffing with Monaco Editor
+  - Client-side webhook replay (SSRF-safe)
+  - Rate limiting (5 requests/second)
+  - Optimistic locking with ETag-based concurrency control
 
-To build all apps and packages, run the following command:
+**Deployment**: Vercel (serverless) with Google Cloud Storage backend
+
+### [Hub](./apps/hub/)
+
+**TempestWx Weather Hub** - A weather station dashboard for Raspberry Pi displays.
+
+- **Framework**: React Router 7
+- **Styling**: Tailwind CSS
+- **Build Tool**: Vite
+- **Features**:
+  - Real-time weather data from TempestWx API
+  - Station display with detailed metrics
+  - Dashboard overview
+  - Kiosk mode optimized for Raspberry Pi 4
+
+**Deployment**: Kubernetes in home lab (runs on Raspberry Pi devices)
+
+## Packages
+
+### [@repo/typescript-config](./packages/typescript-config/)
+
+Shared TypeScript configuration used across all applications and packages in the monorepo.
+
+### [k6-scripts](./packages/k6/)
+
+Load testing scripts using [k6](https://k6.io/), a modern load testing tool written in Go with a JavaScript API.
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js**: >=22.x
+- **pnpm**: v10.24.0 (specified in `packageManager` field)
+- **Git**: For cloning the repository
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd ts
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+### Development
+
+Run all applications in development mode:
+
+```bash
+pnpm dev
+```
+
+This will start all apps concurrently using Turborepo's task orchestration.
+
+To run a specific app:
+
+```bash
+pnpm --filter slingshot dev
+pnpm --filter hub dev
+```
+
+### Building
+
+Build all applications and packages:
+
+```bash
+pnpm build
+```
+
+Build a specific app:
+
+```bash
+pnpm --filter slingshot build
+```
+
+### Linting
+
+Lint all code:
+
+```bash
+pnpm lint
+```
+
+Auto-fix linting issues:
+
+```bash
+pnpm lint:fix
+```
+
+### Testing
+
+Run all tests:
+
+```bash
+pnpm test
+```
+
+### Cleaning
+
+Remove all build artifacts:
+
+```bash
+pnpm clean
+```
+
+## Project Structure
 
 ```
-cd my-turborepo
-pnpm run build
+ts/
+├── apps/
+│   ├── slingshot/          # Webhook testing platform
+│   └── hub/                # Weather dashboard
+├── packages/
+│   ├── typescript-config/  # Shared TS config
+│   └── k6/                 # Load testing scripts
+├── turbo.json              # Turborepo configuration
+├── pnpm-workspace.yaml     # pnpm workspace configuration
+├── biome.json              # Biome linting/formatting config
+└── package.json            # Root package.json
 ```
 
-### Develop
+## CI/CD
 
-To develop all apps and packages, run the following command:
+The repository uses GitHub Actions for continuous integration and deployment:
 
-```
-cd my-turborepo
-pnpm run dev
-```
+- **CI**: Runs linting, type checking, and tests on pull requests
+- **Containerization**: Builds Docker images for applications
+- **Deployment**: Automated deployments to Vercel (Slingshot) and Kubernetes (Hub)
+- **Attestation**: Generates SLSA attestations for container images
 
-### Remote Caching
+See `.github/workflows/` for workflow definitions.
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## Remote Caching
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+Turborepo supports remote caching to share build artifacts across machines and CI/CD pipelines.
 
-```
-cd my-turborepo
-pnpm dlx turbo login
-```
+### Setup
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+1. Authenticate with Vercel:
+   ```bash
+   pnpm dlx turbo login
+   ```
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
+2. Link your repository to remote cache:
+   ```bash
+   pnpm dlx turbo link
+   ```
 
-```
-pnpm dlx turbo link
-```
+Remote caching is automatically enabled once linked and will speed up builds in CI/CD and across team members' machines.
+
+## Environment Variables
+
+Each application may require specific environment variables. See individual app READMEs for details:
+
+- [Slingshot Environment Setup](./apps/slingshot/README.md#getting-started)
+- [Hub Environment Setup](./apps/hub/README.md#getting-started)
+
+## Contributing
+
+This is a personal repository, but contributions and suggestions are welcome. Please ensure:
+
+1. Code follows the Biome linting rules
+2. All tests pass
+3. TypeScript types are correct (no `any` types without justification)
+
+## License
+
+MIT
 
 ## Useful Links
 
-Learn more about the power of Turborepo:
-
-- [Pipelines](https://turborepo.org/docs/core-concepts/pipelines)
-- [Caching](https://turborepo.org/docs/core-concepts/caching)
-- [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching)
-- [Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)
-- [Configuration Options](https://turborepo.org/docs/reference/configuration)
-- [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
+- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [pnpm Documentation](https://pnpm.io/motivation)
+- [Biome Documentation](https://biomejs.dev/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Router Documentation](https://reactrouter.com/)

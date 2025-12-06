@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { saveOutgoingWebhookAction } from '@/lib/actions';
+import { sendOutgoingWebhookAction } from '@/lib/actions';
 import type { Webhook } from '@/lib/types';
 
 interface HeaderPair {
@@ -209,28 +209,18 @@ export function OutgoingWebhook({
         }
       }
 
-      const response = await fetch(url, options);
-      const responseText = await response.text();
-
-      // Save the outgoing webhook
-      try {
-        await saveOutgoingWebhookAction(projectSlug, {
-          method,
-          url,
-          headers: parsedHeaders,
-          body: bodyString,
-          responseStatus: response.status,
-          responseBody: responseText.slice(0, 10000), // Limit response body size
-        });
-      } catch (error) {
-        console.error('Failed to save outgoing webhook:', error);
-        // Don't fail the whole operation if saving fails
-      }
+      // Send webhook via server action (validates domain in production)
+      const result = await sendOutgoingWebhookAction(projectSlug, {
+        method,
+        url,
+        headers: parsedHeaders,
+        body: bodyString,
+      });
 
       toast.success(
-        `Webhook sent! Status: ${response.status} ${response.statusText}`,
+        `Webhook sent! Status: ${result.status} ${result.statusText}`,
         {
-          description: responseText.slice(0, 100),
+          description: result.responseBody?.slice(0, 100),
         },
       );
 

@@ -1,8 +1,17 @@
 'use client';
 
-import { Activity, Home, Plus, Trash2, Webhook } from 'lucide-react';
+import {
+  Activity,
+  BookOpen,
+  Cloud,
+  Home,
+  Plus,
+  Terminal,
+  Trash2,
+  Webhook,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useOptimistic, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,7 +35,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { deleteProjectAction } from '@/lib/actions';
+import { deleteProjectAction, getAllProjectsAction } from '@/lib/actions';
 import type { Project } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -38,19 +47,58 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { state } = useSidebar();
-  const [projects, _setProjects] = useState(initialProjects);
+  const [isPending, startTransition] = useTransition();
+
+  // Use optimistic updates for projects list
+  type OptimisticAction =
+    | { action: 'delete'; slug: string }
+    | { action: 'add'; project: Project }
+    | Project[]; // For syncing with server state
+
+  const [optimisticProjects, setOptimisticProjects] = useOptimistic(
+    initialProjects,
+    (state: Project[], action: OptimisticAction): Project[] => {
+      // Handle array sync (from server)
+      if (Array.isArray(action)) {
+        return action;
+      }
+
+      // Handle delete action
+      if ('action' in action && action.action === 'delete') {
+        return state.filter((p) => p.slug !== action.slug);
+      }
+
+      // Handle add action or direct project object
+      const projectToAdd =
+        'action' in action && action.action === 'add'
+          ? action.project
+          : (action as Project);
+
+      // Check if already exists to avoid duplicates
+      const exists = state.some((p) => p.slug === projectToAdd.slug);
+      if (exists) {
+        return state;
+      }
+
+      // Add new project and maintain sort order (slingshot first, then alphabetical)
+      const newState = [...state, projectToAdd];
+      const slingshot = newState.find((p) => p.slug === 'slingshot');
+      const others = newState
+        .filter((p) => p.slug !== 'slingshot')
+        .sort((a, b) => a.slug.localeCompare(b.slug));
+      return slingshot ? [slingshot, ...others] : others;
+    },
+  );
+
+  // Sync optimistic state with server state when initialProjects changes
+  useEffect(() => {
+    startTransition(() => {
+      setOptimisticProjects(initialProjects);
+    });
+  }, [initialProjects, setOptimisticProjects, startTransition]);
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  // Refresh projects list periodically using router.refresh()
-  useEffect(() => {
-    const interval = setInterval(() => {
-      router.refresh();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [router]);
 
   const isHome = pathname === '/';
   const currentSlug =
@@ -59,15 +107,24 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
       : pathname.startsWith('/') &&
           pathname !== '/health' &&
           !pathname.startsWith('/api') &&
-          !pathname.startsWith('/projects')
+          !pathname.startsWith('/projects') &&
+          !pathname.startsWith('/request-headers') &&
+          !pathname.startsWith('/environment') &&
+          !pathname.startsWith('/gcp')
         ? pathname.split('/')[1]
         : null;
+
+  const developerTools = [
+    { name: 'Environment', url: '/environment', icon: Terminal },
+    { name: 'Request Headers', url: '/request-headers', icon: BookOpen },
+    { name: 'Google Cloud Authentication', url: '/gcp', icon: Cloud },
+  ];
 
   const handleDeleteClick = (e: React.MouseEvent, project: Project) => {
     e.preventDefault();
     e.stopPropagation();
     if (project.slug === 'slingshot') {
-      toast.error('Cannot delete the default project');
+      toast.error('Cannot delete the default webhook project');
       return;
     }
     setProjectToDelete(project);
@@ -77,23 +134,33 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
   const handleDeleteConfirm = async () => {
     if (!projectToDelete) return;
 
-    setIsDeleting(true);
+    const slugToDelete = projectToDelete.slug;
+
+    // Optimistically update UI
+    startTransition(() => {
+      setOptimisticProjects({ action: 'delete', slug: slugToDelete });
+    });
+
+    setDeleteDialogOpen(false);
+    setProjectToDelete(null);
+
     try {
-      await deleteProjectAction(projectToDelete.slug);
-      toast.success(`Project "${projectToDelete.slug}" deleted`);
-      setDeleteDialogOpen(false);
-      setProjectToDelete(null);
+      await deleteProjectAction(slugToDelete);
+      toast.success(`Webhook project "${slugToDelete}" deleted`);
 
       // If we're on the deleted project's page, redirect home
-      if (currentSlug === projectToDelete.slug) {
+      if (currentSlug === slugToDelete) {
         router.push('/');
       }
 
-      router.refresh();
+      // Fetch fresh projects list from server
+      const { projects: freshProjects } = await getAllProjectsAction();
+      setOptimisticProjects(freshProjects);
     } catch (error: any) {
+      // Revert optimistic update on error
+      const { projects: freshProjects } = await getAllProjectsAction();
+      setOptimisticProjects(freshProjects);
       toast.error(error.message || 'Failed to delete project');
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -107,7 +174,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
             <SidebarMenuButton
               size="lg"
               asChild
-              tooltip="Slingshot - Webhook Playground"
+              tooltip="Slingshot - Webhook Testing Platform"
             >
               <a href="/" className="group">
                 <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/50 transition-all group-hover:scale-105">
@@ -117,7 +184,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-bold">Slingshot</span>
                     <span className="truncate text-xs text-muted-foreground">
-                      Webhook Playground
+                      Webhook Testing Platform
                     </span>
                   </div>
                 )}
@@ -160,7 +227,42 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
           <div className="flex items-center justify-between px-2 py-1.5">
             {!isCollapsed && (
               <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Projects
+                Developer Tools
+              </SidebarGroupLabel>
+            )}
+          </div>
+          <SidebarMenu>
+            {developerTools.map((tool) => {
+              const isActive =
+                pathname === tool.url ||
+                (tool.url !== '/' && pathname.startsWith(tool.url));
+              return (
+                <SidebarMenuItem key={tool.name}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={tool.name}
+                    className={cn(
+                      'transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                      isActive &&
+                        'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm',
+                    )}
+                  >
+                    <a href={tool.url}>
+                      <tool.icon className="size-4" />
+                      {!isCollapsed && <span>{tool.name}</span>}
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <div className="flex items-center justify-between px-2 py-1.5">
+            {!isCollapsed && (
+              <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                WEBHOOK PROJECTS
               </SidebarGroupLabel>
             )}
             {!isCollapsed && (
@@ -169,14 +271,14 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                 size="sm"
                 className="h-6 w-6 p-0 ml-auto"
                 onClick={() => router.push('/')}
-                title="Create new project"
+                title="Create new webhook project"
               >
                 <Plus className="size-3" />
               </Button>
             )}
           </div>
           <SidebarMenu>
-            {projects.length === 0 ? (
+            {optimisticProjects.length === 0 ? (
               <SidebarMenuItem>
                 {!isCollapsed && (
                   <div className="px-2 py-1.5 text-xs text-muted-foreground">
@@ -186,7 +288,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
               </SidebarMenuItem>
             ) : (
               <>
-                {projects.map((project) => {
+                {optimisticProjects.map((project) => {
                   const isActive = currentSlug === project.slug;
                   const canDelete = project.slug !== 'slingshot';
                   return (
@@ -227,7 +329,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                               'hover:bg-destructive/10 hover:text-destructive',
                             )}
                             onClick={(e) => handleDeleteClick(e, project)}
-                            title={`Delete ${project.slug}`}
+                            title={`Delete webhook project ${project.slug}`}
                           >
                             <Trash2 className="size-3" />
                           </Button>
@@ -239,7 +341,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                 {isCollapsed && (
                   <SidebarMenuItem>
                     <SidebarMenuButton
-                      tooltip="Create new project"
+                      tooltip="Create new webhook project"
                       onClick={() => router.push('/')}
                       className="transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     >
@@ -252,15 +354,18 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
           </SidebarMenu>
         </SidebarGroup>
 
-        {!isCollapsed && projects.length > 0 && (
+        {!isCollapsed && optimisticProjects.length > 0 && (
           <SidebarGroup className="mt-auto border-t border-sidebar-border pt-4">
             <div className="px-2 py-1.5">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Activity className="size-3" />
                 <span>
-                  {projects.length}{' '}
-                  {projects.length === 1 ? 'project' : 'projects'}
+                  {optimisticProjects.length}{' '}
+                  {optimisticProjects.length === 1 ? 'project' : 'projects'}
                 </span>
+                {isPending && (
+                  <span className="text-xs opacity-50">(updating...)</span>
+                )}
               </div>
             </div>
           </SidebarGroup>
@@ -270,11 +375,11 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Project</DialogTitle>
+            <DialogTitle>Delete Webhook Project</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{projectToDelete?.slug}"? This
-              action cannot be undone. All webhook history for this project will
-              be permanently deleted.
+              Are you sure you want to delete the webhook project "
+              {projectToDelete?.slug}"? This action cannot be undone. All
+              webhook history for this project will be permanently deleted.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -284,16 +389,16 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                 setDeleteDialogOpen(false);
                 setProjectToDelete(null);
               }}
-              disabled={isDeleting}
+              disabled={isPending}
             >
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={handleDeleteConfirm}
-              disabled={isDeleting}
+              disabled={isPending}
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isPending ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

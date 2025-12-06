@@ -1,13 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: &app hub
+namespace: &app slingshot
 
-namePrefix: hub-
+namePrefix: slingshot-
 
 # images:
 #   - name: jonpulsifer/does-not-exist
-#     newName: ghcr.io/jonpulsifer/hub
+#     newName: ghcr.io/jonpulsifer/slingshot
 #     newTag: latest
 
 labels:
@@ -22,7 +22,7 @@ resources:
 
 replicas:
   - name: app
-    count: 1
+    count: 2
 
 patches:
   - path: env.yaml
@@ -31,3 +31,4 @@ patches:
 
 transformers:
   - http-route-prefixer.yaml
+

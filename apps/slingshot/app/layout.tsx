@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Slingshot - Webhook Playground',
+  title: 'Slingshot - Webhook Testing Platform',
   description:
     'Catch webhooks in the wild • Inspect, debug, and replay with ease',
 };

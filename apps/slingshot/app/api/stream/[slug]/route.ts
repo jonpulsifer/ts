@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { projectExists } from '@/lib/projects-storage';
+import { sanitizeHeaders } from '@/lib/sanitize-headers';
 import { getWebhooks } from '@/lib/storage';
 
 /**
@@ -27,6 +28,7 @@ export async function GET(
       const encoder = new TextEncoder();
       let lastWebhookId: string | null = null;
       let isActive = true;
+      let lastHeartbeat = Date.now();
 
       // Send initial connection message
       controller.enqueue(encoder.encode(': connected\n\n'));
@@ -58,7 +60,12 @@ export async function GET(
                   : [latestWebhook];
 
               for (const webhook of newWebhooks.reverse()) {
-                const data = `data: ${JSON.stringify(webhook)}\n\n`;
+                // Sanitize headers before sending via SSE (defense in depth)
+                const sanitizedWebhook = {
+                  ...webhook,
+                  headers: sanitizeHeaders(webhook.headers),
+                };
+                const data = `data: ${JSON.stringify(sanitizedWebhook)}\n\n`;
                 controller.enqueue(encoder.encode(data));
               }
 
@@ -66,9 +73,11 @@ export async function GET(
             }
           }
 
-          // Send heartbeat every 15 seconds
-          if (Date.now() % 15000 < 500) {
+          // Send heartbeat every 15 seconds (properly implemented)
+          const now = Date.now();
+          if (now - lastHeartbeat >= 15000) {
             controller.enqueue(encoder.encode(': heartbeat\n\n'));
+            lastHeartbeat = now;
           }
         } catch (error) {
           console.error('Error polling webhooks:', error);

@@ -25,11 +25,12 @@
     "lint:fix": {
       "cache": false
     },
-    "request-headers#build": {
+    "slingshot#build": {
       "dependsOn": [
         "^build"
       ],
       "env": [
+        "NEXT_PUBLIC_BASE_URL",
         "NODE_IP",
         "NODE_NAME",
         "POD_IP",
@@ -38,20 +39,9 @@
         "POD_CHANGE_ME",
         "NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA",
         "NEXT_PUBLIC_VERCEL_ENV",
-        "NEXT_PUBLIC_SOME_VARIABLE"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
-    },
-    "slingshot#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "env": [
-        "NEXT_PUBLIC_BASE_URL"
+        "NEXT_PUBLIC_SOME_VARIABLE",
+        "NEXT_PUBLIC_ENVIRONMENT_VARIABLE",
+        "WEBHOOK_ALLOWED_OUTGOING_DOMAINS"
       ],
       "outputs": [
         ".next/**",

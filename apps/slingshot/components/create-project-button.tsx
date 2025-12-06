@@ -19,9 +19,9 @@ export function CreateProjectButton({ slug }: CreateProjectButtonProps) {
     setIsCreating(true);
     try {
       const _result = await createProjectAction(slug);
-      toast.success(`Project "${slug}" created!`);
+      toast.success(`Webhook project "${slug}" created!`);
+      // Server action already revalidates the layout, so sidebar will update automatically
       router.push(`/${slug}`);
-      router.refresh();
     } catch (error: any) {
       toast.error(error.message || 'Failed to create project');
     } finally {
@@ -32,7 +32,7 @@ export function CreateProjectButton({ slug }: CreateProjectButtonProps) {
   return (
     <Button onClick={handleCreate} disabled={isCreating}>
       <Plus className="h-4 w-4 mr-2" />
-      {isCreating ? 'Creating...' : 'Create Project'}
+      {isCreating ? 'Creating...' : 'Create Webhook Project'}
     </Button>
   );
 }

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createProject, getAllProjects } from './projects-storage';
+import { sanitizeHeaders } from './sanitize-headers';
 import { slugSchema } from './slug-schema';
 import type { Webhook } from './types';
 
@@ -9,7 +10,7 @@ export async function createProjectAction(slug: string) {
   // Validate using Zod
   const validationResult = slugSchema.safeParse(slug);
   if (!validationResult.success) {
-    const firstError = validationResult.error.errors[0];
+    const firstError = validationResult.error.issues[0];
     throw new Error(firstError?.message || 'Invalid slug format');
   }
 
@@ -49,12 +50,15 @@ export async function getAllProjectsAction() {
 
 /**
  * Send a test webhook to self (for example/demo purposes)
+ * Note: This sends to the project's own endpoint, so domain validation is not needed
  */
 export async function sendTestWebhookAction(
   webhookUrl: string,
   method = 'POST',
   body?: string,
 ) {
+  'use server';
+
   try {
     const options: RequestInit = {
       method,
@@ -102,7 +106,98 @@ export async function getWebhooksAction(slug: string) {
 }
 
 /**
+ * Send an outgoing webhook with domain validation (slug is the project ID)
+ */
+export async function sendOutgoingWebhookAction(
+  slug: string,
+  webhookData: {
+    method: string;
+    url: string;
+    headers: Record<string, string>;
+    body: string | null;
+  },
+) {
+  'use server';
+
+  try {
+    // Validate domain before sending
+    const { validateOutgoingDomain } = await import(
+      './validate-outgoing-domain'
+    );
+    const validation = validateOutgoingDomain(webhookData.url);
+
+    if (!validation.allowed) {
+      throw new Error(validation.error || 'Domain not allowed');
+    }
+
+    // Send the webhook
+    const options: RequestInit = {
+      method: webhookData.method,
+      headers: webhookData.headers,
+    };
+
+    if (
+      webhookData.body &&
+      ['POST', 'PUT', 'PATCH'].includes(webhookData.method)
+    ) {
+      options.body = webhookData.body;
+    }
+
+    const response = await fetch(webhookData.url, options);
+    const responseText = await response.text();
+
+    // Save the outgoing webhook
+    const { getWebhooks, saveWebhooks } = await import('./storage');
+    const { incrementWebhookCount } = await import('./stats-storage');
+    const { generateProjectId } = await import('./nanoid');
+
+    // Sanitize headers before storing
+    const sanitizedHeaders = sanitizeHeaders(webhookData.headers || {});
+
+    const webhook: Webhook = {
+      id: generateProjectId(),
+      method: webhookData.method,
+      url: webhookData.url,
+      headers: sanitizedHeaders,
+      body: webhookData.body || null,
+      timestamp: Date.now(),
+      direction: 'outgoing',
+      responseStatus: response.status,
+      responseBody: responseText.slice(0, 10000), // Limit response body size
+    };
+
+    // Get existing webhooks
+    const { data: history } = await getWebhooks(slug);
+    const existingWebhooks = history?.webhooks || [];
+
+    // Add new webhook to the front
+    const updatedWebhooks = [webhook, ...existingWebhooks];
+
+    await saveWebhooks(slug, updatedWebhooks);
+
+    // Update stats
+    await incrementWebhookCount(slug, webhook.timestamp);
+
+    return {
+      success: true,
+      webhookId: webhook.id,
+      status: response.status,
+      statusText: response.statusText,
+      responseBody: responseText.slice(0, 200), // Limit response body for return
+    };
+  } catch (error) {
+    console.error('Failed to send outgoing webhook:', error);
+    throw new Error(
+      error instanceof Error
+        ? error.message
+        : 'Failed to send outgoing webhook',
+    );
+  }
+}
+
+/**
  * Save an outgoing webhook (slug is the project ID)
+ * @deprecated Use sendOutgoingWebhookAction instead
  */
 export async function saveOutgoingWebhookAction(
   slug: string,
@@ -120,11 +215,14 @@ export async function saveOutgoingWebhookAction(
     const { incrementWebhookCount } = await import('./stats-storage');
     const { generateProjectId } = await import('./nanoid');
 
+    // Sanitize headers before storing
+    const sanitizedHeaders = sanitizeHeaders(webhookData.headers || {});
+
     const webhook: Webhook = {
       id: generateProjectId(),
       method: webhookData.method,
       url: webhookData.url,
-      headers: webhookData.headers || {},
+      headers: sanitizedHeaders,
       body: webhookData.body || null,
       timestamp: Date.now(),
       direction: 'outgoing',

@@ -1,6 +1,7 @@
-import { Activity, ArrowRight, Webhook } from 'lucide-react';
+import { Activity, ArrowRight, Code, Webhook } from 'lucide-react';
 import Link from 'next/link';
 
+import { CopyExampleUrlButton } from '@/components/copy-example-url-button';
 import { CreateProjectForm } from '@/components/create-project-form';
 import { PageHeader } from '@/components/page-header';
 import {
@@ -10,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { BASE_URL } from '@/lib/base-url';
 import { ensureDefaultProject, getAllProjects } from '@/lib/projects-storage';
 import { getGlobalStats, getProjectStats } from '@/lib/stats-storage';
 
@@ -44,8 +46,72 @@ export default async function Home() {
     <div className="flex flex-1 flex-col gap-6 p-6">
       <PageHeader
         title="Slingshot"
-        description="Catch webhooks in the wild • Inspect, debug, and replay with ease"
+        description="A webhook testing platform • Catch, inspect, debug, and replay webhooks"
       />
+
+      {/* What is Slingshot Section */}
+      <Card className="border border-border/50 bg-card">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+            <Webhook className="h-5 w-5 text-primary" />
+            What is Slingshot?
+          </CardTitle>
+          <CardDescription>
+            Slingshot is a webhook testing and debugging platform that helps you
+            capture, inspect, and test webhooks from any service.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <h3 className="font-semibold text-sm flex items-center gap-2">
+                <Code className="h-4 w-4 text-primary" />
+                How it works
+              </h3>
+              <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                <li>
+                  Create a webhook project (each project gets a unique endpoint)
+                </li>
+                <li>
+                  Configure your service to send webhooks to your project URL
+                </li>
+                <li>
+                  View incoming webhooks in real-time with full request details
+                </li>
+                <li>Inspect headers, body, and metadata</li>
+                <li>Resend webhooks to test your endpoints</li>
+              </ol>
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-semibold text-sm flex items-center gap-2">
+                <Webhook className="h-4 w-4 text-primary" />
+                Features
+              </h3>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>Real-time webhook streaming via Server-Sent Events</li>
+                <li>Full request inspection (headers, body, IP, timestamp)</li>
+                <li>JSON viewing and diffing with Monaco Editor</li>
+                <li>One-click cURL export</li>
+                <li>Client-side webhook replay (SSRF-safe)</li>
+                <li>
+                  Supports all HTTP methods (GET, POST, PUT, DELETE, etc.)
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="pt-2 border-t border-border/50">
+            <div className="flex items-start gap-2">
+              <div className="text-sm font-semibold text-foreground mt-0.5">
+                Example webhook URL:
+              </div>
+              <code className="flex-1 bg-muted/50 px-3 py-1.5 rounded text-sm font-mono border border-border/50">
+                {BASE_URL}/api/my-project
+              </code>
+              <CopyExampleUrlButton url={`${BASE_URL}/api/my-project`} />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* First Column: Create Project + Projects (2/3 width on large, full width on small) */}
@@ -54,10 +120,10 @@ export default async function Home() {
           <Card className="border border-border/50 bg-card">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">
-                Create Project
+                Create Webhook Project
               </CardTitle>
               <CardDescription className="text-xs">
-                Add a new webhook endpoint
+                Create a new project to receive webhooks at a unique endpoint
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -68,8 +134,10 @@ export default async function Home() {
           {/* Projects List */}
           <Card className="border border-border/50 bg-card">
             <CardHeader>
-              <CardTitle>Projects</CardTitle>
-              <CardDescription>All your webhook endpoints</CardDescription>
+              <CardTitle>Webhook Projects</CardTitle>
+              <CardDescription>
+                All your webhook testing projects
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {allProjects.length === 0 ? (
@@ -79,7 +147,8 @@ export default async function Home() {
                     No projects yet
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Create your first project to get started
+                    Create your first webhook project to start receiving and
+                    testing webhooks
                   </p>
                 </div>
               ) : (
@@ -131,7 +200,7 @@ export default async function Home() {
             <Card className="border border-border/50 bg-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 lg:p-6">
                 <CardTitle className="text-xs font-medium lg:text-sm">
-                  Total Projects
+                  Webhook Projects
                 </CardTitle>
                 <Webhook className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
               </CardHeader>
@@ -140,7 +209,7 @@ export default async function Home() {
                   {globalStats.totalProjects || projects.length}
                 </div>
                 <p className="text-[10px] lg:text-xs text-muted-foreground">
-                  Active endpoints
+                  Active webhook endpoints
                 </p>
               </CardContent>
             </Card>

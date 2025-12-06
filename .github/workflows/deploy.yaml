@@ -8,7 +8,7 @@ on:
         required: true
         type: choice
         options:
-          - request-headers
+          - slingshot
           - hub
 
 jobs:

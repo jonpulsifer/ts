@@ -94,10 +94,17 @@ export function WebhookViewer({
     }
   }, [refreshTrigger, projectSlug, selectedWebhook]);
 
-  // SSE connection for real-time updates
+  // SSE connection for real-time updates (only on project pages)
   useEffect(() => {
+    // Only connect if we have a valid project slug
+    if (!projectSlug) {
+      return;
+    }
+
     let eventSource: EventSource | null = null;
     let reconnectTimeout: NodeJS.Timeout;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
 
     const connect = () => {
       try {
@@ -105,6 +112,7 @@ export function WebhookViewer({
 
         eventSource.onopen = () => {
           setIsConnected(true);
+          reconnectAttempts = 0; // Reset on successful connection
         };
 
         eventSource.onmessage = (event) => {
@@ -144,10 +152,18 @@ export function WebhookViewer({
           setIsConnected(false);
           eventSource?.close();
 
-          // Reconnect after 3 seconds
-          reconnectTimeout = setTimeout(() => {
-            connect();
-          }, 3000);
+          // Exponential backoff for reconnection, with max attempts
+          if (reconnectAttempts < maxReconnectAttempts) {
+            const delay = Math.min(3000 * 2 ** reconnectAttempts, 30000); // Max 30s
+            reconnectAttempts++;
+            reconnectTimeout = setTimeout(() => {
+              connect();
+            }, delay);
+          } else {
+            console.warn(
+              'Max SSE reconnection attempts reached. Falling back to polling.',
+            );
+          }
         };
       } catch (error) {
         console.error('Failed to connect to SSE:', error);
@@ -162,7 +178,10 @@ export function WebhookViewer({
         clearTimeout(reconnectTimeout);
       }
       eventSource?.close();
+      setIsConnected(false);
     };
+    // Only reconnect if projectSlug changes, not when selectedWebhook changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectSlug]);
 
   // Poll for updates as fallback (every 2 seconds)

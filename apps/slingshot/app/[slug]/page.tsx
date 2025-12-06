@@ -56,11 +56,12 @@ export default async function ProjectPage({
               <Webhook className="h-16 w-16 text-primary drop-shadow-[0_0_12px_rgba(139,92,246,0.8)]" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
-              Project Not Found
+              Webhook Project Not Found
             </h3>
             <p className="text-sm text-muted-foreground text-center max-w-md mb-6">
-              The project <code className="bg-muted px-1 rounded">{slug}</code>{' '}
-              does not exist. Create it to start receiving webhooks at{' '}
+              The webhook project{' '}
+              <code className="bg-muted px-1 rounded">{slug}</code> does not
+              exist. Create it to start receiving webhooks at{' '}
               <code className="bg-muted px-1 rounded">/api/{slug}</code>.
             </p>
             <div className="flex gap-3">
@@ -85,7 +86,10 @@ export default async function ProjectPage({
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <PageHeader title={slug} description={`Webhook endpoint for ${slug}`} />
+      <PageHeader
+        title={slug}
+        description={`Webhook project • Endpoint: /api/${slug}`}
+      />
 
       <WebhookSection
         projectSlug={slug}
