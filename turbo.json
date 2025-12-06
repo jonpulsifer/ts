@@ -46,7 +46,7 @@
         "dist/**"
       ]
     },
-    "slingshot:build": {
+    "slingshot#build": {
       "dependsOn": [
         "^build"
       ],
