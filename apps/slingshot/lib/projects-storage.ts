@@ -15,10 +15,10 @@ export interface ProjectMapping {
  * Get project mappings from storage
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
-  const bucket = await getBucket();
-  const file = bucket.file('project_mappings.json');
-
   try {
+    const bucket = await getBucket();
+    const file = bucket.file('project_mappings.json');
+
     const [exists] = await file.exists();
     if (!exists) {
       return {};
@@ -35,6 +35,20 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
       error?.message?.includes('404') ||
       error?.message?.includes('not found') ||
       error?.message?.includes('does not exist')
+    ) {
+      return {};
+    }
+    // Handle auth/permission errors - return empty mappings
+    // This can happen during build when GCS auth isn't available
+    if (
+      error?.code === 401 ||
+      error?.code === 403 ||
+      error?.statusCode === 401 ||
+      error?.statusCode === 403 ||
+      error?.message?.includes('Permission') ||
+      error?.message?.includes('access') ||
+      error?.message?.includes('denied') ||
+      error?.message?.includes('Anonymous caller')
     ) {
       return {};
     }

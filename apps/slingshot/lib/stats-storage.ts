@@ -21,10 +21,10 @@ export interface StatsData {
  * Get stats from storage
  */
 export async function getStats(): Promise<StatsData> {
-  const bucket = await getBucket();
-  const file = bucket.file('stats.json');
-
   try {
+    const bucket = await getBucket();
+    const file = bucket.file('stats.json');
+
     const [exists] = await file.exists();
     if (!exists) {
       return {
@@ -48,6 +48,27 @@ export async function getStats(): Promise<StatsData> {
       error?.message?.includes('404') ||
       error?.message?.includes('not found') ||
       error?.message?.includes('does not exist')
+    ) {
+      return {
+        projects: {},
+        global: {
+          totalProjects: 0,
+          totalWebhooks: 0,
+          updatedAt: Date.now(),
+        },
+      };
+    }
+    // Handle auth/permission errors - return default stats
+    // This can happen during build when GCS auth isn't available
+    if (
+      error?.code === 401 ||
+      error?.code === 403 ||
+      error?.statusCode === 401 ||
+      error?.statusCode === 403 ||
+      error?.message?.includes('Permission') ||
+      error?.message?.includes('access') ||
+      error?.message?.includes('denied') ||
+      error?.message?.includes('Anonymous caller')
     ) {
       return {
         projects: {},

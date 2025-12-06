@@ -12,10 +12,11 @@ export async function getWebhooks(
   slug: string,
 ): Promise<{ data: WebhookHistory | null; etag: string | null }> {
   const key = `projects/${slug}/webhooks.json`;
-  const bucket = await getBucket();
-  const file = bucket.file(key);
-
+  
   try {
+    const bucket = await getBucket();
+    const file = bucket.file(key);
+
     const [exists] = await file.exists();
     if (!exists) {
       return { data: null, etag: null };
@@ -45,6 +46,20 @@ export async function getWebhooks(
       error?.message?.includes('404') ||
       error?.message?.includes('not found') ||
       error?.message?.includes('does not exist')
+    ) {
+      return { data: null, etag: null };
+    }
+    // Handle auth/permission errors - return null data
+    // This can happen during build when GCS auth isn't available
+    if (
+      error?.code === 401 ||
+      error?.code === 403 ||
+      error?.statusCode === 401 ||
+      error?.statusCode === 403 ||
+      error?.message?.includes('Permission') ||
+      error?.message?.includes('access') ||
+      error?.message?.includes('denied') ||
+      error?.message?.includes('Anonymous caller')
     ) {
       return { data: null, etag: null };
     }
