@@ -10,6 +10,9 @@ import {
 } from '@/lib/gcs-client';
 import GcpAuth from './_components/gcp-auth';
 
+// Force dynamic rendering since this page requires runtime GCP authentication
+export const dynamic = 'force-dynamic';
+
 async function getPrincipalInfo() {
   try {
     const authClient = await getAuthClient();
