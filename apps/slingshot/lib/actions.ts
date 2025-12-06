@@ -27,14 +27,21 @@ export async function createProjectAction(slug: string) {
       success: true,
       slug: project.slug,
     };
-  } catch (error: any) {
-    if (
-      error.message?.includes('already exists') ||
-      error.message?.includes('Slug already exists')
-    ) {
-      throw new Error('Slug already exists');
+  } catch (error) {
+    console.error('Failed to create project:', error);
+
+    // Normalize "already exists" errors
+    if (error instanceof Error) {
+      if (
+        error.message.includes('already exists') ||
+        error.message.includes('Slug already exists')
+      ) {
+        throw new Error('Slug already exists');
+      }
     }
-    throw new Error('Failed to create project');
+
+    // Re-throw the original error
+    throw error;
   }
 }
 
