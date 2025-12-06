@@ -13,6 +13,7 @@ interface CachedWebhooks {
   webhooks: Webhook[];
   timestamp: number;
   etag?: string;
+  maxSize?: number;
 }
 
 /**
@@ -53,12 +54,45 @@ export function getCachedWebhooks(projectSlug: string): Webhook[] | null {
 }
 
 /**
+ * Get full cache entry (including etag) without clearing on expiry.
+ * Consumers can decide whether to treat stale data as a soft-hit for instant UI.
+ */
+export function getCachedWebhooksEntry(
+  projectSlug: string,
+): (CachedWebhooks & { stale: boolean }) | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
+    const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
+    const cached = localStorage.getItem(cacheKey);
+    const timestampStr = localStorage.getItem(timestampKey);
+
+    if (!cached || !timestampStr) {
+      return null;
+    }
+
+    const timestamp = Number.parseInt(timestampStr, 10);
+    const data: CachedWebhooks = JSON.parse(cached);
+    const stale = Date.now() - timestamp > CACHE_MAX_AGE;
+
+    return { ...data, stale };
+  } catch (error) {
+    console.error('Failed to read webhook cache entry:', error);
+    return null;
+  }
+}
+
+/**
  * Set cached webhooks for a project
  */
 export function setCachedWebhooks(
   projectSlug: string,
   webhooks: Webhook[],
   etag?: string,
+  maxSize?: number,
 ): void {
   if (typeof window === 'undefined') {
     return;
@@ -73,6 +107,7 @@ export function setCachedWebhooks(
       webhooks,
       timestamp: Date.now(),
       etag,
+      maxSize,
     };
 
     localStorage.setItem(cacheKey, JSON.stringify(data));
@@ -94,6 +129,7 @@ export function setCachedWebhooks(
           webhooks,
           timestamp: Date.now(),
           etag,
+          maxSize,
         };
         localStorage.setItem(cacheKey, JSON.stringify(data));
         localStorage.setItem(timestampKey, Date.now().toString());

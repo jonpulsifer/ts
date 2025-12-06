@@ -1,8 +1,6 @@
 import { Code, Webhook } from 'lucide-react';
 
-import { CopyExampleUrlButton } from '@/components/copy-example-url-button';
-import { CreateProjectForm } from '@/components/create-project-form';
-import { Dashboard } from '@/components/dashboard';
+import { HowToUseExamples } from '@/components/how-to-use-examples';
 import { PageHeader } from '@/components/page-header';
 import {
   Card,
@@ -13,39 +11,25 @@ import {
 } from '@/components/ui/card';
 import { BASE_URL } from '@/lib/base-url';
 import { ensureDefaultProject, getAllProjects } from '@/lib/projects-storage';
-import { getGlobalStats, getProjectStats } from '@/lib/stats-storage';
 
 export default async function Home() {
   // Ensure default project exists (handles GCS unavailability gracefully)
   await ensureDefaultProject();
   const projects = await getAllProjects();
-  const globalStats = await getGlobalStats();
-
-  // Get stats for each project
-  const projectStats = await Promise.all(
-    projects.map(async (project) => {
-      const stats = await getProjectStats(project.slug);
-
-      return {
-        ...project,
-        webhookCount: stats?.webhookCount || 0,
-        lastWebhook: stats?.lastWebhookTimestamp || null,
-      };
-    }),
-  );
+  const defaultProject = projects[0]?.slug || 'slingshot';
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
       <PageHeader
-        title="Slingshot"
-        description="A webhook testing platform • Catch, inspect, debug, and replay webhooks"
+        title="Quick Start"
+        description="Get started with Slingshot • Catch, inspect, debug, and replay webhooks"
       />
 
       {/* What is Slingshot Section */}
       <Card className="border border-border/50 bg-card">
         <CardHeader>
-          <CardTitle className="text-xl font-semibold flex items-center gap-2">
-            <Webhook className="h-5 w-5 text-primary" />
+          <CardTitle className="text-2xl font-bold flex items-center gap-2">
+            <Webhook className="h-6 w-6 text-primary" />
             What is Slingshot?
           </CardTitle>
           <CardDescription>
@@ -91,44 +75,14 @@ export default async function Home() {
               </ul>
             </div>
           </div>
-          <div className="pt-2 border-t border-border/50">
-            <div className="flex items-start gap-2">
-              <div className="text-sm font-semibold text-foreground mt-0.5">
-                Example webhook URL:
-              </div>
-              <code className="flex-1 bg-muted/50 px-3 py-1.5 rounded text-sm font-mono border border-border/50">
-                {BASE_URL}/api/my-project
-              </code>
-              <CopyExampleUrlButton url={`${BASE_URL}/api/my-project`} />
-            </div>
-          </div>
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* First Column: Create Project + Projects (2/3 width on large, full width on small) */}
-        <div className="lg:col-span-2 space-y-6 order-1 lg:order-1">
-          {/* Create Project Form */}
-          <Card className="border border-border/50 bg-card">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">
-                Create Webhook Project
-              </CardTitle>
-              <CardDescription className="text-xs">
-                Create a new project to receive webhooks at a unique endpoint
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <CreateProjectForm />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      <Dashboard
-        initialProjects={projects}
-        initialGlobalStats={globalStats}
-        initialProjectStats={projectStats}
+      {/* Interactive Examples */}
+      <HowToUseExamples
+        baseUrl={BASE_URL}
+        projects={projects}
+        defaultProject={defaultProject}
       />
     </div>
   );

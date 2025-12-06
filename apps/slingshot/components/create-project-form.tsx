@@ -10,7 +10,11 @@ import { createProjectAction } from '@/lib/actions';
 import { BASE_URL } from '@/lib/base-url';
 import { slugSchema } from '@/lib/slug-schema';
 
-export function CreateProjectForm() {
+interface CreateProjectFormProps {
+  onSuccess?: (slug: string) => void;
+}
+
+export function CreateProjectForm({ onSuccess }: CreateProjectFormProps = {}) {
   const router = useRouter();
   const [slug, setSlug] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +41,13 @@ export function CreateProjectForm() {
 
       toast.success('Webhook project created successfully');
       // Server action already revalidates the layout, so sidebar will update automatically
-      // Redirect to the project page
-      router.push(`/${result.slug}`);
+      
+      // Call onSuccess callback if provided, otherwise redirect
+      if (onSuccess) {
+        onSuccess(result.slug);
+      } else {
+        router.push(`/${result.slug}`);
+      }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to create project';

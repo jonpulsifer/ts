@@ -103,7 +103,7 @@ export async function pollStatsAction(currentEtag?: string | null) {
     const { checkStatsChanged, getStats } = await import('./stats-storage');
 
     // Check metadata first
-    const { changed, etag: newEtag } = await checkStatsChanged('client');
+    const { changed, etag: newEtag } = await checkStatsChanged();
 
     // If not changed or ETag matches, return no change
     if (!changed || (currentEtag && newEtag === currentEtag)) {
@@ -111,7 +111,7 @@ export async function pollStatsAction(currentEtag?: string | null) {
     }
 
     // If changed, fetch full data
-    const { data, etag } = await getStats();
+    const { data, etag } = await getStats(newEtag);
     return {
       changed: true,
       stats: data,
@@ -131,10 +131,12 @@ export async function pollStatsAction(currentEtag?: string | null) {
 export async function getWebhooksAction(slug: string) {
   try {
     const { getWebhooks } = await import('./storage');
-    const { data: history } = await getWebhooks(slug, 'client');
+    const { data: history, etag } = await getWebhooks(slug);
     return {
       webhooks: history?.webhooks || [],
       maxSize: history?.maxSize || 100,
+      // expose etag so the client can avoid redundant downloads
+      etag: etag || null,
     };
   } catch (error) {
     console.error('Failed to fetch webhooks:', error);
@@ -155,7 +157,6 @@ export async function pollWebhooksAction(
     // Check metadata first
     const { changed, etag: newEtag } = await checkWebhooksChanged(
       slug,
-      'client',
     );
 
     // If not changed or ETag matches, return no change
@@ -164,7 +165,7 @@ export async function pollWebhooksAction(
     }
 
     // If changed, fetch full data
-    const { data: history, etag } = await getWebhooks(slug, 'client');
+    const { data: history, etag } = await getWebhooks(slug, newEtag);
     return {
       changed: true,
       webhooks: history?.webhooks || [],
@@ -207,16 +208,16 @@ export async function getWebhooksWithCache(slug: string) {
   // Cache miss or expired, fetch from server
   console.log(`[Client] Cache miss/expired for ${slug}, fetching from GCS`);
   const { getWebhooks } = await import('./storage');
-  const { data: history, etag } = await getWebhooks(slug, 'client');
+  const { data: history, etag } = await getWebhooks(slug);
   const result = {
     webhooks: history?.webhooks || [],
     maxSize: history?.maxSize || 100,
+    etag: etag || null,
   };
 
-  // Update cache with fresh data and etag
-  if (result.webhooks.length > 0) {
-    setCachedWebhooks(slug, result.webhooks, etag || undefined);
-  }
+  // Update cache with fresh data and etag (even if empty) so future requests
+  // can skip downloads when the ETag matches.
+  setCachedWebhooks(slug, result.webhooks, etag || undefined, result.maxSize);
 
   return result;
 }
@@ -236,11 +237,39 @@ export async function sendOutgoingWebhookAction(
   'use server';
 
   try {
+    const { z } = await import('zod');
+    const schema = z.object({
+      method: z.string(),
+      url: z.string().url(),
+      headers: z.record(z.string(), z.string()),
+      body: z.string().nullable(),
+    });
+    const parsed = schema.parse(webhookData);
+
+    // If JSON body is present, ensure it is valid JSON when content-type is JSON
+    if (
+      parsed.body &&
+      Object.entries(parsed.headers).some(([k, v]) => {
+        const key = k.toLowerCase();
+        return (
+          key === 'content-type' &&
+          typeof v === 'string' &&
+          v.toLowerCase().includes('application/json')
+        );
+      })
+    ) {
+      try {
+        JSON.parse(parsed.body);
+      } catch (e) {
+        throw new Error('Body must be valid JSON when Content-Type is application/json');
+      }
+    }
+
     // Validate domain before sending
     const { validateOutgoingDomain } = await import(
       './validate-outgoing-domain'
     );
-    const validation = validateOutgoingDomain(webhookData.url);
+    const validation = validateOutgoingDomain(parsed.url);
 
     if (!validation.allowed) {
       throw new Error(validation.error || 'Domain not allowed');
@@ -248,18 +277,22 @@ export async function sendOutgoingWebhookAction(
 
     // Send the webhook
     const options: RequestInit = {
-      method: webhookData.method,
-      headers: webhookData.headers,
+      method: parsed.method,
+      headers: parsed.headers,
     };
 
     if (
-      webhookData.body &&
-      ['POST', 'PUT', 'PATCH'].includes(webhookData.method)
+      parsed.body &&
+      ['POST', 'PUT', 'PATCH'].includes(parsed.method)
     ) {
-      options.body = webhookData.body;
+      options.body = parsed.body;
     }
 
-    const response = await fetch(webhookData.url, options);
+    const startTime = Date.now();
+    const response = await fetch(parsed.url, options);
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+
     const responseText = await response.text();
 
     // Save the outgoing webhook
@@ -268,22 +301,23 @@ export async function sendOutgoingWebhookAction(
     const { generateProjectId } = await import('./nanoid');
 
     // Sanitize headers before storing
-    const sanitizedHeaders = sanitizeHeaders(webhookData.headers || {});
+    const sanitizedHeaders = sanitizeHeaders(parsed.headers || {});
 
     const webhook: Webhook = {
       id: generateProjectId(),
-      method: webhookData.method,
-      url: webhookData.url,
+      method: parsed.method,
+      url: parsed.url,
       headers: sanitizedHeaders,
-      body: webhookData.body || null,
+      body: parsed.body || null,
       timestamp: Date.now(),
       direction: 'outgoing',
       responseStatus: response.status,
       responseBody: responseText.slice(0, 10000), // Limit response body size
+      duration,
     };
 
     // Get existing webhooks
-    const { data: history } = await getWebhooks(slug, 'server');
+    const { data: history } = await getWebhooks(slug);
     const existingWebhooks = history?.webhooks || [];
 
     // Add new webhook to the front
@@ -347,7 +381,7 @@ export async function saveOutgoingWebhookAction(
     };
 
     // Get existing webhooks
-    const { data: history } = await getWebhooks(slug, 'server');
+    const { data: history } = await getWebhooks(slug);
     const existingWebhooks = history?.webhooks || [];
 
     // Add new webhook to the front
@@ -370,6 +404,7 @@ export async function saveOutgoingWebhookAction(
 
 /**
  * Clear all webhooks for a project (slug is the project ID)
+ * Note: Client components should call clearCachedWebhooks after this action
  */
 export async function clearWebhooksAction(slug: string) {
   try {
@@ -384,11 +419,23 @@ export async function clearWebhooksAction(slug: string) {
 
 /**
  * Delete a project
+ * Deletes the project from mappings, removes webhooks from GCS, and removes stats
+ * Note: Client components should call clearCachedWebhooks after this action
  */
 export async function deleteProjectAction(slug: string) {
   try {
     const { deleteProject } = await import('./projects-storage');
+    const { clearWebhooks } = await import('./storage');
+    const { removeProjectStats } = await import('./stats-storage');
+    
+    // Delete the project from mappings
     await deleteProject(slug);
+    
+    // Delete webhooks file from GCS (source of truth)
+    await clearWebhooks(slug);
+    
+    // Remove project stats
+    await removeProjectStats(slug);
 
     // Revalidate paths and layout (for sidebar)
     revalidatePath('/');

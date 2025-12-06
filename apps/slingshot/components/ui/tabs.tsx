@@ -1,6 +1,7 @@
 'use client';
 
 import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { motion } from 'framer-motion';
 import type * as React from 'react';
 
 import { cn } from '@/lib/utils';
@@ -52,6 +53,7 @@ function TabsTrigger({
 
 function TabsContent({
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Content>) {
   return (
@@ -59,7 +61,20 @@ function TabsContent({
       data-slot="tabs-content"
       className={cn('flex-1 outline-none', className)}
       {...props}
-    />
+      asChild
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -8, scale: 0.98 }}
+        transition={{
+          duration: 0.2,
+          ease: 'easeOut',
+        }}
+      >
+        {children}
+      </motion.div>
+    </TabsPrimitive.Content>
   );
 }
 

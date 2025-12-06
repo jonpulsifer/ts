@@ -4,7 +4,6 @@ import {
   BookOpen,
   Cloud,
   Database,
-  Home,
   Plus,
   Terminal,
   Trash2,
@@ -37,7 +36,9 @@ import {
 } from '@/components/ui/sidebar';
 import { deleteProjectAction, getAllProjectsAction } from '@/lib/actions';
 import type { Project } from '@/lib/types';
+import { clearCachedWebhooks } from '@/lib/webhook-cache';
 import { cn } from '@/lib/utils';
+import { CreateProjectModal } from '@/components/create-project-modal';
 
 interface AppSidebarProps {
   projects: Project[];
@@ -99,8 +100,8 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
-  const isHome = pathname === '/';
   const currentSlug =
     pathname === '/'
       ? null
@@ -148,6 +149,10 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
 
     try {
       await deleteProjectAction(slugToDelete);
+      
+      // Clear the cache for the deleted project
+      clearCachedWebhooks(slugToDelete);
+      
       toast.success(`Webhook project "${slugToDelete}" deleted`);
 
       // If we're on the deleted project's page, redirect home
@@ -213,16 +218,16 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                tooltip="Home"
+                tooltip="Quick Start"
                 className={cn(
                   'transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                  isHome &&
+                  pathname === '/' &&
                     'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm',
                 )}
               >
                 <a href="/">
-                  <Home className="size-4" />
-                  {!isCollapsed && <span>Home</span>}
+                  <BookOpen className="size-4" />
+                  {!isCollapsed && <span>Quick Start</span>}
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -233,7 +238,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
           <div className="flex items-center justify-between px-2 py-1.5">
             {!isCollapsed && (
               <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Developer Tools
+                Other Tools
               </SidebarGroupLabel>
             )}
           </div>
@@ -276,7 +281,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                 variant="ghost"
                 size="sm"
                 className="h-6 w-6 p-0 ml-auto"
-                onClick={() => router.push('/')}
+                onClick={() => setCreateModalOpen(true)}
                 title="Create new webhook project"
               >
                 <Plus className="size-3" />
@@ -348,7 +353,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       tooltip="Create new webhook project"
-                      onClick={() => router.push('/')}
+                      onClick={() => setCreateModalOpen(true)}
                       className="transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     >
                       <Plus className="size-4" />
@@ -392,6 +397,11 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <CreateProjectModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+      />
     </Sidebar>
   );
 }

@@ -1,12 +1,19 @@
 'use client';
 
 import { Copy, FileJson, Send } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
 import type { Webhook } from '@/lib/types';
 
 // Format time consistently (client-side only to avoid hydration issues)
@@ -29,17 +36,29 @@ function formatDate(timestamp: number): string {
   return `${month} ${day}, ${year}`;
 }
 
-// Dynamically import Monaco Editor (no SSR)
-const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
-  ssr: false,
-  loading: () => (
-    <div className="h-full flex items-center justify-center text-muted-foreground">
-      Loading editor...
-    </div>
-  ),
-});
+const codeStyle = {
+  ...dracula,
+  'pre[class*="language-"]': {
+    ...(dracula['pre[class*="language-"]'] as object),
+    background: 'transparent',
+    margin: 0,
+  },
+  'code[class*="language-"]': {
+    ...(dracula['code[class*="language-"]'] as object),
+    background: 'transparent',
+  },
+};
 
-import { slingshotDraculaTheme } from '@/lib/monaco-theme';
+const codeCustomStyle = {
+  background: 'transparent',
+  height: '100%',
+  margin: 0,
+  padding: '16px',
+  fontSize: 14,
+  lineHeight: '22px',
+  borderRadius: 0,
+  fontFamily: 'var(--font-geist-mono), "Courier New", monospace',
+};
 
 interface WebhookDetailProps {
   webhook: Webhook | null;
@@ -47,56 +66,6 @@ interface WebhookDetailProps {
 }
 
 export function WebhookDetail({ webhook, onResend }: WebhookDetailProps) {
-  const [activeTab, setActiveTab] = useState<
-    'headers' | 'body' | 'response' | 'raw'
-  >('headers');
-  const [_copied, setCopied] = useState(false);
-  const [time, setTime] = useState<string>('');
-  const [date, setDate] = useState<string>('');
-  const [mounted, setMounted] = useState(false);
-
-  const formattedBody = useMemo(() => {
-    if (!webhook?.body) return null;
-
-    try {
-      const parsed = JSON.parse(webhook.body);
-      return JSON.stringify(parsed, null, 2);
-    } catch {
-      return webhook.body;
-    }
-  }, [webhook?.body]);
-
-  const handleCopy = async (text: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  // Update time/date on client side to avoid hydration issues
-  useEffect(() => {
-    setMounted(true);
-    if (webhook) {
-      setTime(formatTime(webhook.timestamp));
-      setDate(formatDate(webhook.timestamp));
-    }
-  }, [webhook]);
-
-  const handleCopyAsCurl = () => {
-    if (!webhook) return;
-
-    const headers = Object.entries(webhook.headers)
-      .map(([key, value]) => `  -H '${key}: ${value}'`)
-      .join(' \\\n');
-
-    const body = webhook.body
-      ? `  -d '${webhook.body.replace(/'/g, "'\\''")}'`
-      : '';
-
-    const curl = `curl -X ${webhook.method} '${webhook.url}' \\\n${headers}${body ? ` \\\n${body}` : ''}`;
-
-    handleCopy(curl);
-  };
-
   if (!webhook) {
     return (
       <div className="h-full flex items-center justify-center bg-muted/20">
@@ -149,10 +118,73 @@ function WebhookDetailContent({
   const [activeTab, setActiveTab] = useState<
     'headers' | 'body' | 'response' | 'raw'
   >('headers');
-  const [_copied, setCopied] = useState(false);
   const [time, setTime] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [mounted, setMounted] = useState(false);
+
+  const handleCopy = async (text: string, label?: string) => {
+    await navigator.clipboard.writeText(text);
+    toast.success(label ? `${label} copied` : 'Copied to clipboard');
+  };
+
+  const buildCurl = () => {
+    const headers = Object.entries(webhook.headers)
+      .map(([key, value]) => `  -H '${key}: ${value}'`)
+      .join(' \\\n');
+
+    const body = webhook.body
+      ? `  -d '${webhook.body.replace(/'/g, "'\\''")}'`
+      : '';
+
+    return `curl -X ${webhook.method} '${webhook.url}' \\\n${headers}${body ? ` \\\n${body}` : ''}`;
+  };
+
+  const buildHttpie = () => {
+    const url = webhook.url;
+    const method = webhook.method.toLowerCase();
+    const headerPart = Object.entries(webhook.headers)
+      .map(([k, v]) => `${k}:'${v.replace(/'/g, "\\'")}'`)
+      .join(' ');
+    const bodyPart = webhook.body ? ` <<< '${webhook.body.replace(/'/g, "\\'")}'` : '';
+    return `http ${method} '${url}' ${headerPart}${bodyPart ? ` ${bodyPart}` : ''}`.trim();
+  };
+
+  const buildBurpRequest = () => {
+    try {
+      const url = new URL(webhook.url);
+      const path = url.pathname + (url.search || '');
+      const headers = Object.entries(webhook.headers)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join('\n');
+      return `${webhook.method} ${path} HTTP/1.1
+Host: ${url.host}
+${headers}
+
+${webhook.body || ''}`;
+    } catch {
+      return null;
+    }
+  };
+
+  const renderCodeBlock = (value: string, language = 'json') => (
+    <ScrollArea className="h-full">
+      <SyntaxHighlighter
+        language={language}
+        style={codeStyle}
+        customStyle={codeCustomStyle}
+        showLineNumbers
+        wrapLongLines
+        lineNumberStyle={{ minWidth: '2ch', color: '#6272a4', opacity: 0.8 }}
+        codeTagProps={{
+          style: {
+            fontFamily: 'var(--font-geist-mono), "Courier New", monospace',
+          },
+        }}
+      >
+        {value}
+      </SyntaxHighlighter>
+    </ScrollArea>
+  );
 
   const formattedBody = useMemo(() => {
     if (!webhook?.body) return null;
@@ -165,12 +197,6 @@ function WebhookDetailContent({
     }
   }, [webhook?.body]);
 
-  const handleCopy = async (text: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   // Update time/date on client side to avoid hydration issues
   useEffect(() => {
     setMounted(true);
@@ -179,22 +205,6 @@ function WebhookDetailContent({
       setDate(formatDate(webhook.timestamp));
     }
   }, [webhook]);
-
-  const handleCopyAsCurl = () => {
-    if (!webhook) return;
-
-    const headers = Object.entries(webhook.headers)
-      .map(([key, value]) => `  -H '${key}: ${value}'`)
-      .join(' \\\n');
-
-    const body = webhook.body
-      ? `  -d '${webhook.body.replace(/'/g, "'\\''")}'`
-      : '';
-
-    const curl = `curl -X ${webhook.method} '${webhook.url}' \\\n${headers}${body ? ` \\\n${body}` : ''}`;
-
-    handleCopy(curl);
-  };
 
   return (
     <div className="h-full flex flex-col">
@@ -241,15 +251,53 @@ function WebhookDetailContent({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopyAsCurl}
-              className="gap-2"
-            >
-              <Copy className="h-4 w-4" />
-              Copy as cURL
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const cmd = buildHttpie();
+                  if (cmd) handleCopy(cmd, 'HTTPie command');
+                }}
+                className="gap-2"
+              >
+                <Copy className="h-4 w-4" />
+                Copy as HTTPie
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="px-2">
+                    ▾
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const cmd = buildCurl();
+                      if (cmd) handleCopy(cmd, 'cURL command');
+                    }}
+                  >
+                    Copy as cURL
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const cmd = buildHttpie();
+                      if (cmd) handleCopy(cmd, 'HTTPie command');
+                    }}
+                  >
+                    Copy as HTTPie
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const req = buildBurpRequest();
+                      if (req) handleCopy(req, 'Burp request');
+                    }}
+                  >
+                    Copy for Burp
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             {onResend && (
               <Button
                 variant="default"
@@ -298,8 +346,34 @@ function WebhookDetailContent({
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        {activeTab === 'headers' && (
+          <div className="flex-1 overflow-hidden relative group/editor">
+            {(activeTab === 'body' || activeTab === 'response' || activeTab === 'raw') && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="absolute top-4 right-8 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
+                onClick={() => {
+                  let text = '';
+                  if (activeTab === 'body' && webhook.body) {
+                     text = formattedBody || webhook.body;
+                  } else if (activeTab === 'response' && webhook.responseBody) {
+                    try {
+                      text = JSON.stringify(JSON.parse(webhook.responseBody), null, 2);
+                    } catch {
+                      text = webhook.responseBody;
+                    }
+                  } else if (activeTab === 'raw') {
+                    text = JSON.stringify(webhook, null, 2);
+                  }
+                  if (text) handleCopy(text, 'Content copied');
+                }}
+              >
+                <Copy className="h-4 w-4" />
+                Copy
+              </Button>
+            )}
+
+            {activeTab === 'headers' && (
           <ScrollArea className="h-full">
             <div className="p-6 space-y-2">
               {Object.entries(webhook.headers).map(([key, value]) => (
@@ -328,39 +402,14 @@ function WebhookDetailContent({
         )}
 
         {activeTab === 'body' && webhook.body && (
-          <MonacoEditor
-            height="100%"
-            language="json"
-            value={formattedBody || webhook.body}
-            theme="slingshot-dark"
-            options={{
-              readOnly: true,
-              minimap: { enabled: false },
-              fontSize: 14,
-              wordWrap: 'on',
-              lineNumbers: 'on',
-              scrollBeyondLastLine: false,
-              fontFamily: 'var(--font-geist-mono), "Courier New", monospace',
-              lineHeight: 22,
-              padding: { top: 12, bottom: 12 },
-              renderLineHighlight: 'gutter',
-            }}
-            beforeMount={(monaco) => {
-              monaco.editor.defineTheme(
-                'slingshot-dark',
-                slingshotDraculaTheme,
-              );
-            }}
-          />
+          renderCodeBlock(formattedBody || webhook.body)
         )}
 
         {activeTab === 'response' &&
           webhook.direction === 'outgoing' &&
           webhook.responseBody && (
-            <MonacoEditor
-              height="100%"
-              language="json"
-              value={(() => {
+            renderCodeBlock(
+              (() => {
                 try {
                   return JSON.stringify(
                     JSON.parse(webhook.responseBody),
@@ -370,55 +419,11 @@ function WebhookDetailContent({
                 } catch {
                   return webhook.responseBody;
                 }
-              })()}
-              theme="slingshot-dark"
-              options={{
-                readOnly: true,
-                minimap: { enabled: false },
-                fontSize: 14,
-                wordWrap: 'on',
-                lineNumbers: 'on',
-                scrollBeyondLastLine: false,
-                fontFamily: 'var(--font-geist-mono), "Courier New", monospace',
-                lineHeight: 22,
-                padding: { top: 12, bottom: 12 },
-                renderLineHighlight: 'gutter',
-              }}
-              beforeMount={(monaco) => {
-                monaco.editor.defineTheme(
-                  'slingshot-dark',
-                  slingshotDraculaTheme,
-                );
-              }}
-            />
+              })(),
+            )
           )}
 
-        {activeTab === 'raw' && (
-          <MonacoEditor
-            height="100%"
-            language="json"
-            value={JSON.stringify(webhook, null, 2)}
-            theme="slingshot-dark"
-            options={{
-              readOnly: true,
-              minimap: { enabled: false },
-              fontSize: 14,
-              wordWrap: 'on',
-              lineNumbers: 'on',
-              scrollBeyondLastLine: false,
-              fontFamily: 'var(--font-geist-mono), "Courier New", monospace',
-              lineHeight: 22,
-              padding: { top: 12, bottom: 12 },
-              renderLineHighlight: 'gutter',
-            }}
-            beforeMount={(monaco) => {
-              monaco.editor.defineTheme(
-                'slingshot-dark',
-                slingshotDraculaTheme,
-              );
-            }}
-          />
-        )}
+        {activeTab === 'raw' && renderCodeBlock(JSON.stringify(webhook, null, 2))}
       </div>
     </div>
   );

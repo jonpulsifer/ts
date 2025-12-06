@@ -16,6 +16,7 @@ interface CopyButtonProps {
     | 'ghost'
     | 'link';
   title?: string;
+  className?: string;
 }
 
 export function CopyButton({
@@ -23,6 +24,7 @@ export function CopyButton({
   size = 'sm',
   variant = 'outline',
   title,
+  className,
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
@@ -38,7 +40,7 @@ export function CopyButton({
       variant={variant}
       size={size}
       onClick={handleCopy}
-      className="shrink-0"
+      className={className || 'shrink-0'}
       title={title}
     >
       {copied ? (

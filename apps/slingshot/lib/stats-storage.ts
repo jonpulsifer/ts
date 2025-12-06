@@ -37,19 +37,12 @@ let pendingUpdateCount = 0;
 /**
  * Check if stats file has changed (using metadata only, no download)
  */
-export async function checkStatsChanged(
-  source: 'client' | 'server' = 'server',
-): Promise<{ changed: boolean; etag: string | null; updated: number | null }> {
+export async function checkStatsChanged(): Promise<{ changed: boolean; etag: string | null; updated: number | null }> {
   try {
     const bucket = await getBucket();
     const file = bucket.file('stats.json');
 
-    const [exists] = await file.exists();
-    if (!exists) {
-      return { changed: false, etag: null, updated: null };
-    }
-
-    // Only get metadata, don't download
+    // Only get metadata, don't download (throws 404 if not found)
     const [metadata] = await file.getMetadata();
     const etag = metadata.etag || null;
     const updated = metadata.updated
@@ -57,8 +50,11 @@ export async function checkStatsChanged(
       : null;
 
     return { changed: true, etag, updated };
-  } catch (error) {
-    console.error(`[GCS] Error checking stats metadata (source: ${source}):`, error);
+  } catch (error: any) {
+    if (error.code === 404) {
+      return { changed: false, etag: null, updated: null };
+    }
+    console.error(`[GCS] Error checking stats metadata:`, error);
     return { changed: false, etag: null, updated: null };
   }
 }
@@ -67,32 +63,33 @@ export async function checkStatsChanged(
  * Get stats from storage
  * Returns default stats if GCS operation fails
  */
-export async function getStats(): Promise<{ data: StatsData; etag: string | null }> {
+export async function getStats(knownEtag?: string | null): Promise<{ data: StatsData; etag: string | null }> {
   console.log('[GCS] getStats called');
   try {
     const bucket = await getBucket();
     const file = bucket.file('stats.json');
 
-    console.log('[GCS] Checking if stats.json exists');
-    const [exists] = await file.exists();
-    if (!exists) {
-      console.log('[GCS] stats.json does not exist, returning default stats');
-      return { data: DEFAULT_STATS, etag: null };
-    }
-
     console.log('[GCS] Downloading stats.json');
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as StatsData;
     
-    console.log('[GCS] Getting metadata for stats.json');
-    const [metadata] = await file.getMetadata();
-    const etag = metadata.etag || null;
+    // Get metadata for etag if not provided
+    let etag = knownEtag || null;
+    if (!etag) {
+      console.log('[GCS] Getting metadata for stats.json');
+      const [metadata] = await file.getMetadata();
+      etag = metadata.etag || null;
+    }
 
     console.log(`[GCS] Retrieved stats for ${Object.keys(data.projects).length} projects`);
     return { data, etag };
-  } catch (error) {
+  } catch (error: any) {
     // Return default stats if GCS operation fails (e.g., during build)
-    console.error('[GCS] Error getting stats:', error);
+    if (error.code !== 404) {
+      console.error('[GCS] Error getting stats:', error);
+    } else {
+      console.log('[GCS] stats.json does not exist, returning default stats');
+    }
     return { data: DEFAULT_STATS, etag: null };
   }
 }
@@ -265,6 +262,29 @@ export async function getProjectStats(
 ): Promise<ProjectStats | null> {
   const { data: stats } = await getStats();
   return stats.projects[slug] || null;
+}
+
+/**
+ * Remove project stats when a project is deleted
+ */
+export async function removeProjectStats(slug: string): Promise<void> {
+  console.log(`[GCS] removeProjectStats called for project: ${slug}`);
+  const { data: stats } = await getStats();
+
+  if (stats.projects[slug]) {
+    const oldCount = stats.projects[slug].webhookCount;
+    delete stats.projects[slug];
+
+    stats.global.totalWebhooks = Math.max(
+      0,
+      stats.global.totalWebhooks - oldCount,
+    );
+    stats.global.updatedAt = Date.now();
+
+    await saveStats(stats);
+    // Flush immediately for critical operations
+    await flushStats();
+  }
 }
 
 /**

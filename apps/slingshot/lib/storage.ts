@@ -10,7 +10,6 @@ const MAX_WEBHOOKS = 100;
  */
 export async function checkWebhooksChanged(
   slug: string,
-  source: 'client' | 'server' = 'server',
 ): Promise<{ changed: boolean; etag: string | null; updated: number | null }> {
   const key = `projects/${slug}/webhooks.json`;
 
@@ -18,12 +17,7 @@ export async function checkWebhooksChanged(
     const bucket = await getBucket();
     const file = bucket.file(key);
 
-    const [exists] = await file.exists();
-    if (!exists) {
-      return { changed: false, etag: null, updated: null };
-    }
-
-    // Only get metadata, don't download
+    // Only get metadata, don't download (this will throw 404 if file doesn't exist)
     const [metadata] = await file.getMetadata();
     const etag = metadata.etag || null;
     const updated = metadata.updated
@@ -31,8 +25,11 @@ export async function checkWebhooksChanged(
       : null;
 
     return { changed: true, etag, updated };
-  } catch (error) {
-    console.error(`[GCS] Error checking webhooks metadata for ${slug} (source: ${source}):`, error);
+  } catch (error: any) {
+    if (error.code === 404) {
+      return { changed: false, etag: null, updated: null };
+    }
+    console.error(`[GCS] Error checking webhooks metadata for ${slug}:`, error);
     return { changed: false, etag: null, updated: null };
   }
 }
@@ -43,24 +40,17 @@ export async function checkWebhooksChanged(
  */
 export async function getWebhooks(
   slug: string,
-  source: 'client' | 'server' = 'server',
+  knownEtag?: string | null,
 ): Promise<{ data: WebhookHistory | null; etag: string | null }> {
   const key = `projects/${slug}/webhooks.json`;
 
-  console.log(`[GCS] getWebhooks called for project: ${slug} (source: ${source})`);
+  console.log(`[GCS] getWebhooks called for project: ${slug}`);
 
   try {
     const bucket = await getBucket();
     const file = bucket.file(key);
 
-    console.log(`[GCS] Checking if file exists: ${key} (source: ${source})`);
-    const [exists] = await file.exists();
-    if (!exists) {
-      console.log(`[GCS] File does not exist: ${key} (source: ${source})`);
-      return { data: null, etag: null };
-    }
-
-    console.log(`[GCS] Downloading file: ${key} (source: ${source})`);
+    console.log(`[GCS] Downloading file: ${key}`);
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as WebhookHistory;
 
@@ -72,17 +62,24 @@ export async function getWebhooks(
       }));
     }
 
-    console.log(`[GCS] Retrieved ${data.webhooks?.length || 0} webhooks from ${key} (source: ${source})`);
+    console.log(`[GCS] Retrieved ${data.webhooks?.length || 0} webhooks from ${key}`);
 
-    // Get metadata for etag
-    console.log(`[GCS] Getting metadata for: ${key} (source: ${source})`);
-    const [metadata] = await file.getMetadata();
-    const etag = metadata.etag || null;
+    // Get metadata for etag if not provided
+    let etag = knownEtag || null;
+    if (!etag) {
+      console.log(`[GCS] Getting metadata for: ${key}`);
+      const [metadata] = await file.getMetadata();
+      etag = metadata.etag || null;
+    }
 
     return { data, etag };
-  } catch (error) {
-    // Return null data if GCS operation fails (e.g., during build)
-    console.error(`[GCS] Error getting webhooks for ${slug} (source: ${source}):`, error);
+  } catch (error: any) {
+    // Return null data if GCS operation fails (e.g., during build or file not found)
+    if (error.code !== 404) {
+      console.error(`[GCS] Error getting webhooks for ${slug}:`, error);
+    } else {
+      console.log(`[GCS] File does not exist: ${key}`);
+    }
     return { data: null, etag: null };
   }
 }

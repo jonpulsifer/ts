@@ -13,6 +13,18 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Webhook } from '@/lib/types';
+import * as Diff3 from 'node-diff3';
+
+interface CommonPart {
+  common: string[];
+}
+
+interface DiffPart {
+  buffer1: string[];
+  buffer2: string[];
+}
+
+type Diff3Part = CommonPart | DiffPart;
 
 interface WebhookDiffProps {
   webhookA: Webhook | null;
@@ -45,20 +57,17 @@ export function WebhookDiff({
     const newLines = newValue.split('\n');
     const diff: string[] = [];
 
-    // Simple line-by-line diff
-    const maxLines = Math.max(oldLines.length, newLines.length);
-    for (let i = 0; i < maxLines; i++) {
-      const oldLine = oldLines[i] || '';
-      const newLine = newLines[i] || '';
+    const comm = Diff3.diffComm(oldLines, newLines) as unknown as Diff3Part[];
 
-      if (oldLine === newLine) {
-        diff.push(` ${oldLine}`);
+    for (const part of comm) {
+      if ('common' in part) {
+        part.common.forEach((line: string) => diff.push(` ${line}`));
       } else {
-        if (oldLine) {
-          diff.push(`-${oldLine}`);
+        if (part.buffer1) {
+          part.buffer1.forEach((line: string) => diff.push(`-${line}`));
         }
-        if (newLine) {
-          diff.push(`+${newLine}`);
+        if (part.buffer2) {
+          part.buffer2.forEach((line: string) => diff.push(`+${line}`));
         }
       }
     }
@@ -79,12 +88,12 @@ export function WebhookDiff({
     ...vscDarkPlus,
     'code[class*="language-"]': {
       ...vscDarkPlus['code[class*="language-"]'],
-      background: '#1e1e2e',
+      background: 'transparent',
       color: '#f8f8f2',
     },
     'pre[class*="language-"]': {
       ...vscDarkPlus['pre[class*="language-"]'],
-      background: '#1e1e2e',
+      background: 'transparent',
       color: '#f8f8f2',
     },
   };
@@ -161,16 +170,43 @@ export function WebhookDiff({
                         fontFamily:
                           'var(--font-geist-mono), "Courier New", monospace',
                         lineHeight: '20px',
-                        background: '#1e1e2e',
+                        background: 'hsl(var(--card))',
                       }}
                       showLineNumbers
                       wrapLines
+                      lineProps={(lineNumber) => {
+                        const lineIndex = lineNumber - 1;
+                        let currentLine = 0;
+                        let isDiff = false;
+
+                        for (const part of (Diff3.diffComm(oldValue.split('\n'), newValue.split('\n')) as unknown as Diff3Part[])) {
+                          if ('common' in part) {
+                            if (currentLine + part.common.length > lineIndex) {
+                              break;
+                            }
+                            currentLine += part.common.length;
+                          } else if (part.buffer1) {
+                            if (currentLine <= lineIndex && lineIndex < currentLine + part.buffer1.length) {
+                              isDiff = true;
+                              break;
+                            }
+                            currentLine += part.buffer1.length;
+                          }
+                        }
+
+                        if (isDiff) {
+                          return {
+                            style: { background: 'rgba(239, 68, 68, 0.15)', display: 'block', width: '100%' },
+                          };
+                        }
+                        return { style: { display: 'block' } };
+                      }}
                     >
                       {oldValue}
                     </SyntaxHighlighter>
                   </ScrollArea>
                 </div>
-                <div className="flex flex-col border border-border/50 rounded-lg overflow-hidden">
+                <div className="flex flex-col border border-border/50 rounded-lg overflow-hidden bg-card">
                   <div className="px-4 py-2 bg-muted/20 border-b border-border/50">
                     <span className="text-sm font-semibold text-foreground">
                       Webhook B
@@ -187,10 +223,37 @@ export function WebhookDiff({
                         fontFamily:
                           'var(--font-geist-mono), "Courier New", monospace',
                         lineHeight: '20px',
-                        background: '#1e1e2e',
+                        background: 'hsl(var(--card))',
                       }}
                       showLineNumbers
                       wrapLines
+                      lineProps={(lineNumber) => {
+                        const lineIndex = lineNumber - 1;
+                        let currentLine = 0;
+                        let isDiff = false;
+
+                        for (const part of (Diff3.diffComm(oldValue.split('\n'), newValue.split('\n')) as unknown as Diff3Part[])) {
+                          if ('common' in part) {
+                            if (currentLine + part.common.length > lineIndex) {
+                              break;
+                            }
+                            currentLine += part.common.length;
+                          } else if (part.buffer2) {
+                            if (currentLine <= lineIndex && lineIndex < currentLine + part.buffer2.length) {
+                              isDiff = true;
+                              break;
+                            }
+                            currentLine += part.buffer2.length;
+                          }
+                        }
+
+                        if (isDiff) {
+                          return {
+                            style: { background: 'rgba(34, 197, 94, 0.15)', display: 'block', width: '100%' },
+                          };
+                        }
+                        return { style: { display: 'block' } };
+                      }}
                     >
                       {newValue}
                     </SyntaxHighlighter>
@@ -200,7 +263,7 @@ export function WebhookDiff({
             </TabsContent>
 
             <TabsContent value="unified" className="flex-1 min-h-0 mt-0">
-              <div className="h-full flex flex-col border border-border/50 rounded-lg overflow-hidden">
+              <div className="h-full flex flex-col border border-border/50 rounded-lg overflow-hidden bg-card">
                 <div className="px-4 py-2 bg-muted/20 border-b border-border/50">
                   <div className="flex items-center gap-4 text-xs">
                     <span className="flex items-center gap-1.5">
@@ -224,7 +287,7 @@ export function WebhookDiff({
                       fontFamily:
                         'var(--font-geist-mono), "Courier New", monospace',
                       lineHeight: '20px',
-                      background: '#1e1e2e',
+                      background: 'hsl(var(--card))',
                     }}
                     showLineNumbers
                     wrapLines
@@ -232,15 +295,15 @@ export function WebhookDiff({
                       const line = unifiedDiff.split('\n')[lineNumber - 1];
                       if (line?.startsWith('-')) {
                         return {
-                          style: { background: 'rgba(239, 68, 68, 0.1)' },
+                          style: { background: 'rgba(239, 68, 68, 0.15)', display: 'block', width: '100%' },
                         };
                       }
                       if (line?.startsWith('+')) {
                         return {
-                          style: { background: 'rgba(34, 197, 94, 0.1)' },
+                          style: { background: 'rgba(34, 197, 94, 0.15)', display: 'block', width: '100%' },
                         };
                       }
-                      return {};
+                      return { style: { display: 'block' } };
                     }}
                   >
                     {unifiedDiff}

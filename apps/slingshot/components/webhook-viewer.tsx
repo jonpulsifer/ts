@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useSWR from 'swr';
 import {
@@ -12,7 +12,7 @@ import type { Webhook } from '@/lib/types';
 import {
   clearCachedWebhooks,
   getCachedEtag,
-  getCachedWebhooks,
+  getCachedWebhooksEntry,
   setCachedWebhooks,
 } from '@/lib/webhook-cache';
 import { WebhookDetail } from './webhook-detail';
@@ -23,6 +23,8 @@ interface WebhookViewerProps {
   initialWebhooks: Webhook[];
   onResend?: (webhook: Webhook) => void;
   refreshTrigger?: number;
+  initialEtag?: string | null;
+  initialMaxSize?: number;
 }
 
 export function WebhookViewer({
@@ -30,51 +32,74 @@ export function WebhookViewer({
   initialWebhooks,
   onResend,
   refreshTrigger,
+  initialEtag,
+  initialMaxSize = 100,
 }: WebhookViewerProps) {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-  
-  // Local state to manage webhooks (combining initial, cached, and SWR updates)
-  const [webhooks, setWebhooks] = useState<Webhook[]>(() => {
-    // Try to hydrate from cache immediately
-    if (typeof window !== 'undefined') {
-      const cached = getCachedWebhooks(projectSlug);
-      if (cached && cached.length > 0) {
-        return cached;
-      }
+  const webhookIdFromQuery = searchParams.get('webhook');
+  const urlUpdateTimeoutRef = useRef<number | null>(null);
+
+  // Try to hydrate from cache immediately (even if stale) for instant UI.
+  const cachedEntry =
+    typeof window !== 'undefined'
+      ? getCachedWebhooksEntry(projectSlug)
+      : null;
+  const initialList =
+    cachedEntry?.webhooks && cachedEntry.webhooks.length > 0
+      ? cachedEntry.webhooks
+      : initialWebhooks;
+
+  const [webhooks, setWebhooks] = useState<Webhook[]>(initialList);
+
+  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(() => {
+    if (initialList.length === 0) {
+      return null;
     }
-    return initialWebhooks;
+
+    if (webhookIdFromQuery) {
+      return (
+        initialList.find((w) => w.id === webhookIdFromQuery) || initialList[0]
+      );
+    }
+    return initialList[0];
   });
 
-  // SWR for polling updates
-  // Only runs on client
+  // SWR for polling updates (metadata only when unchanged)
   const { data: pollResult, mutate, error: swrError } = useSWR(
-    mounted ? ['webhooks', projectSlug] : null,
+    ['webhooks', projectSlug],
     async () => {
-      // Always use cached etag to support conditional fetching
       const currentEtag = getCachedEtag(projectSlug);
       return pollWebhooksAction(projectSlug, currentEtag);
     },
     {
-      refreshInterval: 2000, // Poll every 2 seconds
+      refreshInterval: 2000,
       revalidateOnFocus: true,
       dedupingInterval: 1000,
-      // Ensure we don't overwrite with stale data if we have cached data
       fallbackData: {
         changed: false,
         webhooks: webhooks.length > 0 ? webhooks : undefined,
         etag: undefined,
       },
-    }
+    },
   );
+
+  // If we loaded stale cache data, kick off an immediate metadata check.
+  useEffect(() => {
+    if (cachedEntry?.stale) {
+      mutate();
+    }
+  }, [cachedEntry?.stale, mutate]);
 
   // Handle SWR updates
   useEffect(() => {
     if (pollResult?.changed && pollResult.webhooks) {
       setWebhooks(pollResult.webhooks);
-      setCachedWebhooks(projectSlug, pollResult.webhooks, pollResult.etag);
+      setCachedWebhooks(
+        projectSlug,
+        pollResult.webhooks,
+        pollResult.etag,
+        initialMaxSize,
+      );
 
       // Select new webhook if none selected or if it's the newest one
       if (pollResult.webhooks.length > 0) {
@@ -113,22 +138,44 @@ export function WebhookViewer({
   const handleSelectWebhook = useCallback(
     (webhook: Webhook) => {
       setSelectedWebhook(webhook);
-      // Use history.replaceState to update URL without triggering Next.js navigation/server requests
-      // This ensures instant UI updates and works offline
-      const params = new URLSearchParams(window.location.search);
-      params.set('webhook', webhook.id);
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.replaceState(null, '', newUrl);
+
+      // Clear pending update
+      if (urlUpdateTimeoutRef.current) {
+        cancelAnimationFrame(urlUpdateTimeoutRef.current);
+      }
+
+      // Lightweight URL update so rapid clicks stay instant
+      urlUpdateTimeoutRef.current = requestAnimationFrame(() => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('webhook', webhook.id);
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState(null, '', newUrl);
+      });
+    },
+    [],
+  );
+
+  // Clean up any pending URL update on unmount
+  useEffect(
+    () => () => {
+      if (urlUpdateTimeoutRef.current) {
+        cancelAnimationFrame(urlUpdateTimeoutRef.current);
+      }
     },
     [],
   );
 
   useEffect(() => {
-    setMounted(true);
-    if (initialWebhooks.length > 0) {
-      setCachedWebhooks(projectSlug, initialWebhooks);
+    // Persist initial server data only when we have something meaningful to store.
+    if (initialWebhooks.length > 0 || initialEtag) {
+      setCachedWebhooks(
+        projectSlug,
+        initialWebhooks,
+        initialEtag || undefined,
+        initialMaxSize,
+      );
     }
-  }, [projectSlug, initialWebhooks]);
+  }, [projectSlug, initialWebhooks, initialEtag, initialMaxSize]);
 
   // Manual refresh
   useEffect(() => {
@@ -152,28 +199,6 @@ export function WebhookViewer({
       console.error('Failed to clear history:', error);
     }
   }, [projectSlug, mutate]);
-
-  if (!mounted) {
-    return (
-      <div className="rounded-lg border border-border/50 shadow-md bg-card flex-1 overflow-hidden flex flex-col">
-        <div className="flex h-full">
-          <div className="flex-1 border-r border-border/50">
-            <WebhookList
-              webhooks={webhooks}
-              selectedWebhook={selectedWebhook}
-              onSelectWebhook={handleSelectWebhook}
-              onClearHistory={handleClearHistory}
-              isConnected={true} // SWR is "connected" in terms of polling
-              projectSlug={projectSlug}
-            />
-          </div>
-          <div className="flex-[2]">
-            <WebhookDetail webhook={selectedWebhook} onResend={onResend} />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="rounded-lg border border-border/50 shadow-md bg-card flex-1 overflow-hidden flex flex-col min-h-0">

@@ -14,6 +14,7 @@ export interface Webhook {
   userAgent?: string;
   responseStatus?: number;
   responseBody?: string;
+  duration?: number; // Latency in milliseconds (for outgoing requests)
 }
 
 export interface Project {

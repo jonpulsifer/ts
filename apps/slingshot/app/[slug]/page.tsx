@@ -78,9 +78,20 @@ export default async function ProjectPage({
   }
 
   // Fetch initial webhooks (slug is the project ID)
-  // We intentionally DON'T wait for GCS here to allow instant navigation
-  // The client component will pick up from localStorage or fetch via SWR
-  const initialWebhooks: Webhook[] = [];
+  // We fetch on the server to populate the list immediately
+  let initialWebhooks: Webhook[] = [];
+  let initialWebhookEtag: string | null = null;
+  let initialWebhookMaxSize = 100;
+  try {
+    const { getWebhooksAction } = await import('@/lib/actions');
+    const result = await getWebhooksAction(slug);
+    initialWebhooks = result.webhooks;
+    initialWebhookEtag = result.etag ?? null;
+    initialWebhookMaxSize = result.maxSize ?? 100;
+  } catch (error) {
+    console.error('Failed to fetch initial webhooks:', error);
+    // Continue with empty list - client will try to fetch/poll
+  }
 
   // Generate webhook URL based on slug
   const { BASE_URL } = await import('@/lib/base-url');
@@ -97,6 +108,8 @@ export default async function ProjectPage({
         projectSlug={slug}
         webhookUrl={webhookUrl}
         initialWebhooks={initialWebhooks}
+        initialEtag={initialWebhookEtag}
+        initialMaxSize={initialWebhookMaxSize}
       />
     </div>
   );
