@@ -32,13 +32,9 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('server');
 
-  // Custom Next.js environment variables
-  const MY_NEXTJS_BUNDLED_ENVIRONMENT_VARIABLES = [
-    'NEXT_PUBLIC_ENVIRONMENT_VARIABLE',
-  ];
-
   // Vercel Framework Environment Variables for Next.js
   // Reference: https://vercel.com/docs/environment-variables/framework-environment-variables
+  // Used for badge detection only
   const VERCEL_ENV_VARIABLES = [
     'NEXT_PUBLIC_VERCEL_ENV',
     'NEXT_PUBLIC_VERCEL_TARGET_ENV',
@@ -58,11 +54,16 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
     'NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID',
   ] as const;
 
-  const clientEnv: Record<string, string> = Object.fromEntries(
-    [...MY_NEXTJS_BUNDLED_ENVIRONMENT_VARIABLES, ...VERCEL_ENV_VARIABLES].map(
-      (key) => [key, process.env[key] || ''],
-    ),
-  );
+  // Dynamically collect all client-side environment variables that are not empty
+  // This includes:
+  // - Variables starting with NEXT_PUBLIC_* (automatically exposed)
+  // - Variables defined in next.config.ts env config (explicitly exposed)
+  const clientEnv: Record<string, string> = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value && value.trim() !== '') {
+      clientEnv[key] = value;
+    }
+  }
 
   const currentEnv = activeTab === 'server' ? serverEnv : clientEnv;
 
