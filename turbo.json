@@ -52,7 +52,7 @@
       ],
       "env": [
         "BLOB_READ_WRITE_TOKEN",
-        "EDGE_TOKEN"
+        "EDGE_CONFIG"
       ],
       "outputs": [
         ".next/**",
