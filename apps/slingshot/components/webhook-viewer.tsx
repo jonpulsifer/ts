@@ -92,7 +92,6 @@ export function WebhookViewer({
   // Handle SWR updates
   useEffect(() => {
     if (pollResult?.changed && pollResult.webhooks) {
-      console.log(`[SWR] Received update for ${projectSlug}`);
       setWebhooks(pollResult.webhooks);
       setCachedWebhooks(projectSlug, pollResult.webhooks, pollResult.etag);
 

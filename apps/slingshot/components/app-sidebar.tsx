@@ -268,7 +268,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
           <div className="flex items-center justify-between px-2 py-1.5">
             {!isCollapsed && (
               <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                WEBHOOK PROJECTS
+                WEBHOOK PROJECTS ({optimisticProjects.length})
               </SidebarGroupLabel>
             )}
             {!isCollapsed && (

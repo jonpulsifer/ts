@@ -96,6 +96,34 @@ export async function sendTestWebhookAction(
 }
 
 /**
+ * Poll for stats updates (optimized with metadata check)
+ */
+export async function pollStatsAction(currentEtag?: string | null) {
+  try {
+    const { checkStatsChanged, getStats } = await import('./stats-storage');
+
+    // Check metadata first
+    const { changed, etag: newEtag } = await checkStatsChanged('client');
+
+    // If not changed or ETag matches, return no change
+    if (!changed || (currentEtag && newEtag === currentEtag)) {
+      return { changed: false };
+    }
+
+    // If changed, fetch full data
+    const { data, etag } = await getStats();
+    return {
+      changed: true,
+      stats: data,
+      etag: etag || undefined,
+    };
+  } catch (error) {
+    console.error('Failed to poll stats:', error);
+    return { changed: false };
+  }
+}
+
+/**
  * Get webhooks for a project (slug is the ID)
  * Server action - always fetches from GCS
  * Use getWebhooksWithCache() on the client instead

@@ -35,10 +35,39 @@ const MAX_PENDING_UPDATES = 10; // Or after 10 updates, whichever comes first
 let pendingUpdateCount = 0;
 
 /**
+ * Check if stats file has changed (using metadata only, no download)
+ */
+export async function checkStatsChanged(
+  source: 'client' | 'server' = 'server',
+): Promise<{ changed: boolean; etag: string | null; updated: number | null }> {
+  try {
+    const bucket = await getBucket();
+    const file = bucket.file('stats.json');
+
+    const [exists] = await file.exists();
+    if (!exists) {
+      return { changed: false, etag: null, updated: null };
+    }
+
+    // Only get metadata, don't download
+    const [metadata] = await file.getMetadata();
+    const etag = metadata.etag || null;
+    const updated = metadata.updated
+      ? new Date(metadata.updated).getTime()
+      : null;
+
+    return { changed: true, etag, updated };
+  } catch (error) {
+    console.error(`[GCS] Error checking stats metadata (source: ${source}):`, error);
+    return { changed: false, etag: null, updated: null };
+  }
+}
+
+/**
  * Get stats from storage
  * Returns default stats if GCS operation fails
  */
-export async function getStats(): Promise<StatsData> {
+export async function getStats(): Promise<{ data: StatsData; etag: string | null }> {
   console.log('[GCS] getStats called');
   try {
     const bucket = await getBucket();
@@ -48,18 +77,23 @@ export async function getStats(): Promise<StatsData> {
     const [exists] = await file.exists();
     if (!exists) {
       console.log('[GCS] stats.json does not exist, returning default stats');
-      return DEFAULT_STATS;
+      return { data: DEFAULT_STATS, etag: null };
     }
 
     console.log('[GCS] Downloading stats.json');
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as StatsData;
+    
+    console.log('[GCS] Getting metadata for stats.json');
+    const [metadata] = await file.getMetadata();
+    const etag = metadata.etag || null;
+
     console.log(`[GCS] Retrieved stats for ${Object.keys(data.projects).length} projects`);
-    return data;
+    return { data, etag };
   } catch (error) {
     // Return default stats if GCS operation fails (e.g., during build)
     console.error('[GCS] Error getting stats:', error);
-    return DEFAULT_STATS;
+    return { data: DEFAULT_STATS, etag: null };
   }
 }
 
@@ -156,7 +190,7 @@ export async function incrementWebhookCount(
   timestamp: number,
 ): Promise<void> {
   console.log(`[GCS] incrementWebhookCount called for project: ${slug}`);
-  const stats = await getStats();
+  const { data: stats } = await getStats();
 
   if (!stats.projects[slug]) {
     stats.projects[slug] = {
@@ -181,7 +215,7 @@ export async function incrementWebhookCount(
  */
 export async function resetProjectStats(slug: string): Promise<void> {
   console.log(`[GCS] resetProjectStats called for project: ${slug}`);
-  const stats = await getStats();
+  const { data: stats } = await getStats();
 
   if (stats.projects[slug]) {
     const oldCount = stats.projects[slug].webhookCount;
@@ -209,7 +243,7 @@ export async function resetProjectStats(slug: string): Promise<void> {
  */
 export async function updateProjectCount(count: number): Promise<void> {
   try {
-    const stats = await getStats();
+    const { data: stats } = await getStats();
     stats.global.totalProjects = count;
     stats.global.updatedAt = Date.now();
     await saveStats(stats);
@@ -229,7 +263,7 @@ export async function updateProjectCount(count: number): Promise<void> {
 export async function getProjectStats(
   slug: string,
 ): Promise<ProjectStats | null> {
-  const stats = await getStats();
+  const { data: stats } = await getStats();
   return stats.projects[slug] || null;
 }
 
@@ -237,6 +271,6 @@ export async function getProjectStats(
  * Get global stats
  */
 export async function getGlobalStats(): Promise<GlobalStats> {
-  const stats = await getStats();
+  const { data: stats } = await getStats();
   return stats.global;
 }
