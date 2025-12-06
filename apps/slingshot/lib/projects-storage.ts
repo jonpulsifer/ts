@@ -1,4 +1,9 @@
-import { getBucket } from './gcs-client';
+import {
+  getBucket,
+  isGcsAuthError,
+  isGcsNotFoundError,
+  isGcsUnavailableError,
+} from './gcs-client';
 import { updateProjectCount } from './stats-storage';
 
 /**
@@ -13,6 +18,7 @@ export interface ProjectMapping {
 
 /**
  * Get project mappings from storage
+ * Returns empty object if GCS is unavailable or file doesn't exist
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
   try {
@@ -27,30 +33,12 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as ProjectMapping;
     return data;
-  } catch (error: any) {
-    // Handle file not found errors - return empty mappings
+  } catch (error) {
+    // Return empty mappings if GCS is unavailable, file not found, or auth errors
     if (
-      error?.code === 404 ||
-      error?.statusCode === 404 ||
-      error?.message?.includes('404') ||
-      error?.message?.includes('not found') ||
-      error?.message?.includes('does not exist')
-    ) {
-      return {};
-    }
-    // Handle auth/permission errors - return empty mappings
-    // This can happen during build when GCS auth isn't available
-    if (
-      error?.code === 401 ||
-      error?.code === 403 ||
-      error?.statusCode === 401 ||
-      error?.statusCode === 403 ||
-      error?.message?.includes('Permission') ||
-      error?.message?.includes('access') ||
-      error?.message?.includes('denied') ||
-      error?.message?.includes('Anonymous caller') ||
-      error?.message?.includes('GCS client not available') ||
-      error?.message?.includes('URL is required')
+      isGcsUnavailableError(error) ||
+      isGcsNotFoundError(error) ||
+      isGcsAuthError(error)
     ) {
       return {};
     }
@@ -60,6 +48,7 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
 
 /**
  * Save project mappings to storage
+ * @throws {GcsUnavailableError} if GCS is not available
  */
 export async function saveProjectMappings(
   mappings: ProjectMapping,
@@ -100,8 +89,15 @@ export async function createProject(slug: string): Promise<{ slug: string }> {
 
   await saveProjectMappings(mappings);
 
-  // Update global project count
-  await updateProjectCount(Object.keys(mappings).length);
+  // Update global project count (may fail silently if GCS unavailable)
+  try {
+    await updateProjectCount(Object.keys(mappings).length);
+  } catch (error) {
+    if (!isGcsUnavailableError(error)) {
+      throw error;
+    }
+    // Silently ignore if GCS unavailable - stats update is not critical
+  }
 
   return { slug };
 }
@@ -150,8 +146,15 @@ export async function getAllProjects(): Promise<
     ? [slingshot, ...otherProjects]
     : otherProjects;
 
-  // Sync project count in stats
-  await updateProjectCount(sortedProjects.length);
+  // Sync project count in stats (may fail silently if GCS unavailable)
+  try {
+    await updateProjectCount(sortedProjects.length);
+  } catch (error) {
+    if (!isGcsUnavailableError(error)) {
+      throw error;
+    }
+    // Silently ignore if GCS unavailable - stats update is not critical
+  }
 
   return sortedProjects;
 }
@@ -174,8 +177,15 @@ export async function deleteProject(slug: string): Promise<void> {
   delete mappings[slug];
   await saveProjectMappings(mappings);
 
-  // Update global project count
-  await updateProjectCount(Object.keys(mappings).length);
+  // Update global project count (may fail silently if GCS unavailable)
+  try {
+    await updateProjectCount(Object.keys(mappings).length);
+  } catch (error) {
+    if (!isGcsUnavailableError(error)) {
+      throw error;
+    }
+    // Silently ignore if GCS unavailable - stats update is not critical
+  }
 }
 
 /**

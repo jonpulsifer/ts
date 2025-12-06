@@ -1,4 +1,4 @@
-import { getBucket } from './gcs-client';
+import { getBucket, isGcsAuthError, isGcsNotFoundError } from './gcs-client';
 import { resetProjectStats } from './stats-storage';
 import type { Webhook, WebhookHistory } from './types';
 
@@ -26,7 +26,7 @@ export async function getWebhooks(
     const data = JSON.parse(contents.toString('utf-8')) as WebhookHistory;
 
     // Migrate: ensure all webhooks have direction field (default to 'incoming' for legacy webhooks)
-    if (data?.webhooks) {
+    if (data.webhooks) {
       data.webhooks = data.webhooks.map((webhook) => ({
         ...webhook,
         direction: webhook.direction || 'incoming',
@@ -38,29 +38,9 @@ export async function getWebhooks(
     const etag = metadata.etag || null;
 
     return { data, etag };
-  } catch (error: any) {
-    // Handle file not found errors - return null data
-    if (
-      error?.code === 404 ||
-      error?.statusCode === 404 ||
-      error?.message?.includes('404') ||
-      error?.message?.includes('not found') ||
-      error?.message?.includes('does not exist')
-    ) {
-      return { data: null, etag: null };
-    }
-    // Handle auth/permission errors - return null data
-    // This can happen during build when GCS auth isn't available
-    if (
-      error?.code === 401 ||
-      error?.code === 403 ||
-      error?.statusCode === 401 ||
-      error?.statusCode === 403 ||
-      error?.message?.includes('Permission') ||
-      error?.message?.includes('access') ||
-      error?.message?.includes('denied') ||
-      error?.message?.includes('Anonymous caller')
-    ) {
+  } catch (error) {
+    // Handle file not found and auth errors - return null data
+    if (isGcsNotFoundError(error) || isGcsAuthError(error)) {
       return { data: null, etag: null };
     }
     throw error;
@@ -109,9 +89,9 @@ export async function clearWebhooks(slug: string): Promise<void> {
 
   try {
     await file.delete();
-  } catch (error: any) {
+  } catch (error) {
     // Ignore 404 errors (file doesn't exist)
-    if (error?.code !== 404 && error?.statusCode !== 404) {
+    if (!isGcsNotFoundError(error)) {
       throw error;
     }
   }

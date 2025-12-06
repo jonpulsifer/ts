@@ -1,4 +1,9 @@
-import { getBucket } from './gcs-client';
+import {
+  getBucket,
+  isGcsAuthError,
+  isGcsNotFoundError,
+  isGcsUnavailableError,
+} from './gcs-client';
 
 export interface ProjectStats {
   webhookCount: number;
@@ -17,8 +22,18 @@ export interface StatsData {
   global: GlobalStats;
 }
 
+const DEFAULT_STATS: StatsData = {
+  projects: {},
+  global: {
+    totalProjects: 0,
+    totalWebhooks: 0,
+    updatedAt: Date.now(),
+  },
+};
+
 /**
  * Get stats from storage
+ * Returns default stats if GCS is unavailable or file doesn't exist
  */
 export async function getStats(): Promise<StatsData> {
   try {
@@ -27,57 +42,20 @@ export async function getStats(): Promise<StatsData> {
 
     const [exists] = await file.exists();
     if (!exists) {
-      return {
-        projects: {},
-        global: {
-          totalProjects: 0,
-          totalWebhooks: 0,
-          updatedAt: Date.now(),
-        },
-      };
+      return DEFAULT_STATS;
     }
 
     const [contents] = await file.download();
     const data = JSON.parse(contents.toString('utf-8')) as StatsData;
     return data;
-  } catch (error: any) {
-    // Handle file not found errors - return default stats
+  } catch (error) {
+    // Return default stats if GCS is unavailable, file not found, or auth errors
     if (
-      error?.code === 404 ||
-      error?.statusCode === 404 ||
-      error?.message?.includes('404') ||
-      error?.message?.includes('not found') ||
-      error?.message?.includes('does not exist')
+      isGcsUnavailableError(error) ||
+      isGcsNotFoundError(error) ||
+      isGcsAuthError(error)
     ) {
-      return {
-        projects: {},
-        global: {
-          totalProjects: 0,
-          totalWebhooks: 0,
-          updatedAt: Date.now(),
-        },
-      };
-    }
-    // Handle auth/permission errors - return default stats
-    // This can happen during build when GCS auth isn't available
-    if (
-      error?.code === 401 ||
-      error?.code === 403 ||
-      error?.statusCode === 401 ||
-      error?.statusCode === 403 ||
-      error?.message?.includes('Permission') ||
-      error?.message?.includes('access') ||
-      error?.message?.includes('denied') ||
-      error?.message?.includes('Anonymous caller')
-    ) {
-      return {
-        projects: {},
-        global: {
-          totalProjects: 0,
-          totalWebhooks: 0,
-          updatedAt: Date.now(),
-        },
-      };
+      return DEFAULT_STATS;
     }
     throw error;
   }
@@ -85,17 +63,26 @@ export async function getStats(): Promise<StatsData> {
 
 /**
  * Save stats to storage
+ * Silently fails if GCS is unavailable (non-critical operation)
  */
 export async function saveStats(stats: StatsData): Promise<void> {
-  const bucket = await getBucket();
-  const file = bucket.file('stats.json');
+  try {
+    const bucket = await getBucket();
+    const file = bucket.file('stats.json');
 
-  await file.save(JSON.stringify(stats), {
-    contentType: 'application/json',
-    metadata: {
-      cacheControl: 'no-cache',
-    },
-  });
+    await file.save(JSON.stringify(stats), {
+      contentType: 'application/json',
+      metadata: {
+        cacheControl: 'no-cache',
+      },
+    });
+  } catch (error) {
+    // Silently fail if GCS unavailable - stats are not critical
+    if (isGcsUnavailableError(error) || isGcsAuthError(error)) {
+      return;
+    }
+    throw error;
+  }
 }
 
 /**
@@ -151,12 +138,21 @@ export async function resetProjectStats(slug: string): Promise<void> {
 
 /**
  * Update global project count
+ * Silently fails if GCS is unavailable (non-critical operation)
  */
 export async function updateProjectCount(count: number): Promise<void> {
-  const stats = await getStats();
-  stats.global.totalProjects = count;
-  stats.global.updatedAt = Date.now();
-  await saveStats(stats);
+  try {
+    const stats = await getStats();
+    stats.global.totalProjects = count;
+    stats.global.updatedAt = Date.now();
+    await saveStats(stats);
+  } catch (error) {
+    // Silently fail if GCS unavailable - stats are not critical
+    if (isGcsUnavailableError(error) || isGcsAuthError(error)) {
+      return;
+    }
+    throw error;
+  }
 }
 
 /**
@@ -176,7 +172,3 @@ export async function getGlobalStats(): Promise<GlobalStats> {
   const stats = await getStats();
   return stats.global;
 }
-
-/**
- * Sync stats from actual webhook data (for migration/correction)
- */

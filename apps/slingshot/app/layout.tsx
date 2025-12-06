@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import './globals.css';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { isGcsUnavailableError } from '@/lib/gcs-client';
 import { getAllProjects } from '@/lib/projects-storage';
 
 const geistSans = Geist({
@@ -27,7 +28,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const projects = await getAllProjects();
+  // During build time, GCS may not be available, so handle errors gracefully
+  let projects: Array<{ slug: string; createdAt: number }> = [];
+  try {
+    projects = await getAllProjects();
+  } catch (error) {
+    // During build or when GCS isn't available, use empty array
+    // This allows the app to build successfully
+    if (isGcsUnavailableError(error)) {
+      projects = [];
+    } else {
+      // Re-throw unexpected errors
+      throw error;
+    }
+  }
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
