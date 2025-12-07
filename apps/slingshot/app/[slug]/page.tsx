@@ -1,10 +1,12 @@
 import { Webhook as WebhookIcon } from 'lucide-react';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { CreateProjectButton } from '@/components/create-project-button';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { WebhookSection } from '@/components/webhook-section';
+import { getBaseUrl } from '@/lib/base-url';
 import { projectExists } from '@/lib/projects-storage';
 
 import type { Webhook } from '@/lib/types';
@@ -94,8 +96,9 @@ export default async function ProjectPage({
   }
 
   // Generate webhook URL based on slug
-  const { BASE_URL } = await import('@/lib/base-url');
-  const webhookUrl = `${BASE_URL}/api/${slug}`;
+  const headersList = await headers();
+  const baseUrl = await getBaseUrl(headersList);
+  const webhookUrl = `${baseUrl}/api/${slug}`;
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

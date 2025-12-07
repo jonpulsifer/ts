@@ -1,4 +1,5 @@
 import { Code, Webhook } from 'lucide-react';
+import { headers } from 'next/headers';
 
 import { HowToUseExamples } from '@/components/how-to-use-examples';
 import { PageHeader } from '@/components/page-header';
@@ -9,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { BASE_URL } from '@/lib/base-url';
+import { getBaseUrl } from '@/lib/base-url';
 import { ensureDefaultProject, getAllProjects } from '@/lib/projects-storage';
 
 export default async function Home() {
@@ -17,6 +18,10 @@ export default async function Home() {
   await ensureDefaultProject();
   const projects = await getAllProjects();
   const defaultProject = projects[0]?.slug || 'slingshot';
+
+  // Get base URL from current request headers
+  const headersList = await headers();
+  const baseUrl = await getBaseUrl(headersList);
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
@@ -80,7 +85,7 @@ export default async function Home() {
 
       {/* Interactive Examples */}
       <HowToUseExamples
-        baseUrl={BASE_URL}
+        baseUrl={baseUrl}
         projects={projects}
         defaultProject={defaultProject}
       />
