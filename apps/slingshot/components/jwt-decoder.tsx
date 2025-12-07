@@ -402,7 +402,10 @@ export function JwtDecoder() {
                           // Format special claim types
                           if (key === 'exp' || key === 'nbf' || key === 'iat') {
                             displayValue = formatDate(value as number);
-                          } else if (typeof value === 'object' && value !== null) {
+                          } else if (
+                            typeof value === 'object' &&
+                            value !== null
+                          ) {
                             displayValue = JSON.stringify(value);
                           } else {
                             displayValue = String(value);

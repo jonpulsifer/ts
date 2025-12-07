@@ -23,6 +23,10 @@ const GCP_WORKLOAD_IDENTITY_EXTERNAL_ACCOUNT_CONFIG = {
   subject_token_supplier: { getSubjectToken: getVercelOidcToken },
 } as ExternalAccountClientOptions;
 
+// Cache for auth client and Firestore instance (useful for containerized environments)
+let cachedAuthClient: ExternalAccountClient | null = null;
+let cachedFirestore: Firestore | null = null;
+
 export const shouldSkipFirestoreOperations = () => IS_CI;
 
 export const isFirestoreUnavailableError = (error: unknown) => {
@@ -37,30 +41,36 @@ export const isFirestoreUnavailableError = (error: unknown) => {
   );
 };
 
-export async function getFirestore() {
-  const authClient = ExternalAccountClient.fromJSON(
-    GCP_WORKLOAD_IDENTITY_EXTERNAL_ACCOUNT_CONFIG,
-  );
-  if (!authClient) {
-    throw new Error(
-      'Failed to create GCP workload identity external account client',
+/**
+ * Get or create a cached auth client
+ * This is useful for containerized environments or when running off Vercel
+ * where we want to reuse the auth client across requests
+ */
+function getAuthClient(): ExternalAccountClient {
+  if (!cachedAuthClient) {
+    cachedAuthClient = ExternalAccountClient.fromJSON(
+      GCP_WORKLOAD_IDENTITY_EXTERNAL_ACCOUNT_CONFIG,
     );
+    if (!cachedAuthClient) {
+      throw new Error(
+        'Failed to create GCP workload identity external account client',
+      );
+    }
   }
+  return cachedAuthClient;
+}
 
-  // const targetClient = new Impersonated({
-  //   sourceClient: authClient,
-  //   targetPrincipal: GCP_SERVICE_ACCOUNT_EMAIL,
-  //   lifetime: 30,
-  //   delegates: [],
-  //   targetScopes: ['https://www.googleapis.com/auth/cloud-platform'],
-  //   projectId: GCP_PROJECT_ID,
-  // });
-
-  // await targetClient.getAccessToken();
-  // await authClient.getAccessToken();
-
-  return new Firestore({
-    authClient,
-    projectId: GCP_PROJECT_ID,
-  });
+/**
+ * Get or create a cached Firestore instance
+ * Reuses the cached auth client for better performance in containerized environments
+ */
+export async function getFirestore(): Promise<Firestore> {
+  if (!cachedFirestore) {
+    const authClient = getAuthClient();
+    cachedFirestore = new Firestore({
+      authClient,
+      projectId: GCP_PROJECT_ID,
+    });
+  }
+  return cachedFirestore;
 }
