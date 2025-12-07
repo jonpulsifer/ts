@@ -1,6 +1,6 @@
+import { Loader2 } from 'lucide-react';
 import { Suspense } from 'react';
 import { PageHeader } from '@/components/page-header';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   getFirestore,
   shouldSkipFirestoreOperations,
@@ -93,7 +93,23 @@ export default async function GcpPage() {
         title="Firestore Collections"
         description="View collections and documents from your Firestore database"
       />
-      <Suspense fallback={<Skeleton className="w-full h-[500px]" />}>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <div className="absolute inset-0 h-8 w-8 animate-spin text-primary/20">
+                  <Loader2 className="h-8 w-8" />
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Loading collections...
+              </p>
+            </div>
+          </div>
+        }
+      >
         <FirestoreCollections collectionsData={results} />
       </Suspense>
     </div>

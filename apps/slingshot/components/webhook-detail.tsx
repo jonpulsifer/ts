@@ -398,8 +398,8 @@ ${webhook.body || ''}`;
                   </div>
                   <Button
                     variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 shrink-0 opacity-0 group-hover:opacity-100 hover:bg-primary/10 transition-all"
+                    size="icon-sm"
+                    className="shrink-0 opacity-0 group-hover:opacity-100 hover:bg-primary/10 transition-all"
                     onClick={() => handleCopy(`${key}: ${value}`)}
                   >
                     <Copy className="h-4 w-4" />

@@ -1,7 +1,14 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useSWR from 'swr';
 import { clearWebhooksAction, pollWebhooksAction } from '@/lib/actions';
@@ -35,25 +42,35 @@ export function WebhookViewer({
   const searchParams = useSearchParams();
   const webhookIdFromQuery = searchParams.get('webhook');
   const urlUpdateTimeoutRef = useRef<number | null>(null);
+  const [, startTransition] = useTransition();
 
-  // Always start with server-provided initialWebhooks to avoid hydration mismatch
-  const [webhooks, setWebhooks] = useState<Webhook[]>(initialWebhooks);
-
-  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(() => {
-    if (initialWebhooks.length === 0) {
-      return null;
+  // Local-first: Initialize from cache if available, otherwise use server data
+  const [webhooks, setWebhooks] = useState<Webhook[]>(() => {
+    if (typeof window === 'undefined') {
+      return initialWebhooks;
     }
-
-    if (webhookIdFromQuery) {
-      return (
-        initialWebhooks.find((w) => w.id === webhookIdFromQuery) ||
-        initialWebhooks[0]
-      );
-    }
-    return initialWebhooks[0];
+    const cached = getCachedWebhooksEntry(projectSlug);
+    return cached && cached.webhooks.length > 0
+      ? cached.webhooks
+      : initialWebhooks;
   });
 
-  // SWR for polling updates (metadata only when unchanged)
+  // Initialize selected webhook from initial data
+  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(() => {
+    const webhooksToUse = webhooks.length > 0 ? webhooks : initialWebhooks;
+    if (webhooksToUse.length === 0) {
+      return null;
+    }
+    if (webhookIdFromQuery) {
+      return (
+        webhooksToUse.find((w) => w.id === webhookIdFromQuery) ||
+        webhooksToUse[0]
+      );
+    }
+    return webhooksToUse[0];
+  });
+
+  // SWR for polling updates (uses etag for efficient checks)
   const {
     data: pollResult,
     mutate,
@@ -70,70 +87,93 @@ export function WebhookViewer({
       dedupingInterval: 1000,
       fallbackData: {
         changed: false,
-        webhooks: webhooks.length > 0 ? webhooks : undefined,
+        webhooks: undefined,
         etag: undefined,
       },
     },
   );
 
-  // Hydrate from cache after mount (client-side only) to avoid hydration mismatch
+  // Hydrate from cache on mount and persist server data
   useEffect(() => {
     const cachedEntry = getCachedWebhooksEntry(projectSlug);
-    if (cachedEntry?.webhooks && cachedEntry.webhooks.length > 0) {
-      setWebhooks(cachedEntry.webhooks);
-      // Update selected webhook if needed
-      if (webhookIdFromQuery) {
-        const found = cachedEntry.webhooks.find(
-          (w) => w.id === webhookIdFromQuery,
-        );
-        if (found) {
-          setSelectedWebhook(found);
-        }
-      } else if (!selectedWebhook && cachedEntry.webhooks.length > 0) {
-        setSelectedWebhook(cachedEntry.webhooks[0]);
+
+    // If we have cached data that's different from current state, update it
+    if (cachedEntry && cachedEntry.webhooks.length > 0) {
+      const cachedWebhooks = cachedEntry.webhooks;
+      // Only update if cache is different (avoid unnecessary transitions)
+      if (
+        cachedWebhooks.length !== webhooks.length ||
+        cachedWebhooks[0]?.id !== webhooks[0]?.id
+      ) {
+        startTransition(() => {
+          setWebhooks(cachedWebhooks);
+          // Update selected webhook if needed
+          if (webhookIdFromQuery) {
+            const found = cachedWebhooks.find(
+              (w) => w.id === webhookIdFromQuery,
+            );
+            if (found) {
+              setSelectedWebhook(found);
+            }
+          } else if (!selectedWebhook && cachedWebhooks.length > 0) {
+            setSelectedWebhook(cachedWebhooks[0]);
+          }
+        });
+      }
+
+      // If cache is stale, trigger background refresh
+      if (cachedEntry.stale) {
+        mutate();
       }
     }
-    // If we loaded stale cache data, kick off an immediate metadata check.
-    if (cachedEntry?.stale) {
-      mutate();
+
+    // Persist initial server data to cache
+    if (initialWebhooks.length > 0 || initialEtag) {
+      setCachedWebhooks(
+        projectSlug,
+        initialWebhooks,
+        initialEtag || undefined,
+        initialMaxSize,
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 
-  // Handle SWR updates
+  // Handle SWR polling updates with transitions
   useEffect(() => {
     if (pollResult?.changed && pollResult.webhooks) {
-      setWebhooks(pollResult.webhooks);
-      setCachedWebhooks(
-        projectSlug,
-        pollResult.webhooks,
-        pollResult.etag,
-        initialMaxSize,
-      );
+      startTransition(() => {
+        setWebhooks(pollResult.webhooks);
+        setCachedWebhooks(
+          projectSlug,
+          pollResult.webhooks,
+          pollResult.etag,
+          initialMaxSize,
+        );
 
-      // Select new webhook if none selected or if it's the newest one
-      if (pollResult.webhooks.length > 0) {
-        // If nothing selected, select first
-        if (!selectedWebhook) {
-          setSelectedWebhook(pollResult.webhooks[0]);
+        // Auto-select newest webhook if viewing the top one
+        if (pollResult.webhooks.length > 0) {
+          if (!selectedWebhook) {
+            setSelectedWebhook(pollResult.webhooks[0]);
+          } else if (
+            !webhookIdFromQuery &&
+            selectedWebhook.id === webhooks[0]?.id &&
+            pollResult.webhooks[0].id !== selectedWebhook.id
+          ) {
+            // If viewing the top webhook and a new one arrived, switch to it
+            setSelectedWebhook(pollResult.webhooks[0]);
+          }
         }
-        // If query param is set, respect it, otherwise maybe auto-select?
-        // Let's stick to existing behavior: if a new webhook comes in and we're just viewing the list (no specific selection or viewing the top one), we might want to show it.
-        // But typically we don't change selection unless user does it or it's the first load.
-        // The SSE implementation auto-selected if !selectedWebhook && !webhookIdFromQuery
-        else if (
-          selectedWebhook &&
-          !webhookIdFromQuery &&
-          selectedWebhook.id === webhooks[0]?.id &&
-          pollResult.webhooks[0].id !== selectedWebhook.id
-        ) {
-          // If we were looking at the top one, switch to the new top one?
-          // Actually, let's just update the list. The user can click.
-          // Exception: if we have NO selection, select the first.
-        }
-      }
+      });
     }
-  }, [pollResult, projectSlug, selectedWebhook, webhookIdFromQuery, webhooks]);
+  }, [
+    pollResult,
+    projectSlug,
+    selectedWebhook,
+    webhookIdFromQuery,
+    webhooks,
+    initialMaxSize,
+  ]);
 
   // Update selected webhook when query string changes
   useEffect(() => {
@@ -177,22 +217,12 @@ export function WebhookViewer({
     [],
   );
 
-  useEffect(() => {
-    // Persist initial server data only when we have something meaningful to store.
-    if (initialWebhooks.length > 0 || initialEtag) {
-      setCachedWebhooks(
-        projectSlug,
-        initialWebhooks,
-        initialEtag || undefined,
-        initialMaxSize,
-      );
-    }
-  }, [projectSlug, initialWebhooks, initialEtag, initialMaxSize]);
-
-  // Manual refresh
+  // Manual refresh with transition
   useEffect(() => {
     if (refreshTrigger !== undefined && refreshTrigger > 0) {
-      mutate();
+      startTransition(() => {
+        mutate();
+      });
     }
   }, [refreshTrigger, mutate]);
 
@@ -203,8 +233,10 @@ export function WebhookViewer({
 
     try {
       await clearWebhooksAction(projectSlug);
-      setWebhooks([]);
-      setSelectedWebhook(null);
+      startTransition(() => {
+        setWebhooks([]);
+        setSelectedWebhook(null);
+      });
       clearCachedWebhooks(projectSlug);
       mutate(); // Trigger re-fetch/update
     } catch (error) {

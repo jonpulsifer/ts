@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Toaster } from 'sonner';
 import './globals.css';
-import { AppSidebar } from '@/components/app-sidebar';
+import { SidebarShell } from '@/components/sidebar-shell';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { getAllProjects } from '@/lib/projects-storage';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -22,23 +21,23 @@ export const metadata: Metadata = {
     'Catch webhooks in the wild • Inspect, debug, and replay with ease',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const projects: Array<{ slug: string; createdAt: number }> =
-    await getAllProjects();
-
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SidebarProvider defaultOpen={true}>
-          <AppSidebar projects={projects} />
+          <SidebarShell />
           <SidebarInset>
-            <main className="flex-1 overflow-auto bg-background">
+            <main
+              className="flex-1 overflow-auto bg-background"
+              suppressHydrationWarning
+            >
               {children}
             </main>
           </SidebarInset>

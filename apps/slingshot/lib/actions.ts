@@ -176,9 +176,11 @@ export async function pollWebhooksAction(
 }
 
 /**
- * Get webhooks with localStorage cache check (client-side only)
- * Uses cache if available and not expired - NO GCS requests for cached data
- * Only fetches from GCS if cache is missing/expired
+ * Get webhooks with local-first cache (client-side only)
+ * Uses stale-while-revalidate pattern:
+ * - Returns stale cache immediately if available
+ * - Refreshes in background if stale
+ * - Only waits for server if cache is missing
  */
 export async function getWebhooksWithCache(slug: string) {
   // Only run on client
@@ -186,37 +188,54 @@ export async function getWebhooksWithCache(slug: string) {
     return getWebhooksAction(slug);
   }
 
-  const { getCachedWebhooks, setCachedWebhooks } = await import(
+  const { getCachedWebhooksEntry, setCachedWebhooks } = await import(
     './webhook-cache'
   );
 
-  // Check cache first - if it exists and is valid, use it immediately
-  // NO metadata check - trust the cache until it expires
-  const cached = getCachedWebhooks(slug);
-  if (cached && cached.length > 0) {
-    console.log(
-      `[Client] Using cached webhooks for ${slug} (${cached.length} webhooks, no Firestore request)`,
-    );
+  const cachedEntry = getCachedWebhooksEntry(slug);
+
+  // If we have cached data (even if stale), return it immediately
+  // and refresh in background
+  if (cachedEntry) {
+    // Start background refresh if stale
+    if (cachedEntry.stale) {
+      // Fire and forget - don't await
+      getWebhooksAction(slug)
+        .then((result) => {
+          setCachedWebhooks(
+            slug,
+            result.webhooks,
+            result.etag || undefined,
+            result.maxSize,
+          );
+        })
+        .catch((error) => {
+          console.error('[Cache] Background refresh failed:', error);
+          // Keep using stale cache on error
+        });
+    }
+
     return {
-      webhooks: cached,
-      maxSize: 100, // Default, cache doesn't store this
+      webhooks: cachedEntry.webhooks,
+      maxSize: cachedEntry.maxSize || 100,
+      etag: cachedEntry.etag || null,
+      fromCache: true,
+      stale: cachedEntry.stale,
     };
   }
 
-  // Cache miss or expired, fetch from server
-  console.log(
-    `[Client] Cache miss/expired for ${slug}, fetching from Firestore`,
-  );
+  // Cache miss - fetch from server (user waits)
   const { getWebhooks } = await import('./storage');
   const { data: history, etag } = await getWebhooks(slug);
   const result = {
     webhooks: history?.webhooks || [],
     maxSize: history?.maxSize || 100,
     etag: etag || null,
+    fromCache: false,
+    stale: false,
   };
 
-  // Update cache with fresh data and etag (even if empty) so future requests
-  // can skip downloads when the ETag matches.
+  // Update cache with fresh data
   setCachedWebhooks(slug, result.webhooks, etag || undefined, result.maxSize);
 
   return result;
@@ -267,20 +286,67 @@ export async function sendOutgoingWebhookAction(
       }
     }
 
+    // Ensure URL is properly encoded (handle Unicode characters in URL)
+    let encodedUrl: string;
+    try {
+      const urlObj = new URL(parsed.url);
+      // Reconstruct URL with properly encoded components
+      encodedUrl = urlObj.toString();
+    } catch {
+      // If URL parsing fails, try encoding the entire string
+      encodedUrl = encodeURI(parsed.url);
+    }
+
     // Validate domain before sending
     const { validateOutgoingDomain } = await import(
       './validate-outgoing-domain'
     );
-    const validation = validateOutgoingDomain(parsed.url);
+    const validation = validateOutgoingDomain(encodedUrl);
 
     if (!validation.allowed) {
       throw new Error(validation.error || 'Domain not allowed');
     }
 
+    // Sanitize headers to ensure they're ASCII-only (HTTP headers must be ASCII)
+    // Headers cannot contain Unicode characters - they must be ASCII (0-255)
+    const sanitizedHeaders: Record<string, string> = {};
+    for (const [key, value] of Object.entries(parsed.headers)) {
+      // Header keys must be ASCII-only - replace non-ASCII with '?'
+      const sanitizedKey = Array.from(key)
+        .map((char) => {
+          const code = char.charCodeAt(0);
+          // Check for surrogate pairs (UTF-16) and single code points > 255
+          if (code >= 0xd800 && code <= 0xdfff) {
+            // Surrogate pair - skip or replace
+            return '';
+          }
+          return code > 255 ? '?' : char;
+        })
+        .join('')
+        .trim();
+
+      // Header values must be ASCII-only - replace non-ASCII with '?'
+      const sanitizedValue = Array.from(value)
+        .map((char) => {
+          const code = char.charCodeAt(0);
+          // Check for surrogate pairs (UTF-16) and single code points > 255
+          if (code >= 0xd800 && code <= 0xdfff) {
+            // Surrogate pair - skip or replace
+            return '';
+          }
+          return code > 255 ? '?' : char;
+        })
+        .join('');
+
+      if (sanitizedKey) {
+        sanitizedHeaders[sanitizedKey] = sanitizedValue;
+      }
+    }
+
     // Send the webhook
     const options: RequestInit = {
       method: parsed.method,
-      headers: parsed.headers,
+      headers: sanitizedHeaders,
     };
 
     if (parsed.body && ['POST', 'PUT', 'PATCH'].includes(parsed.method)) {
@@ -288,7 +354,7 @@ export async function sendOutgoingWebhookAction(
     }
 
     const startTime = Date.now();
-    const response = await fetch(parsed.url, options);
+    const response = await fetch(encodedUrl, options);
     const endTime = Date.now();
     const duration = endTime - startTime;
 
@@ -299,14 +365,14 @@ export async function sendOutgoingWebhookAction(
     const { incrementWebhookCount } = await import('./stats-storage');
     const { generateProjectId } = await import('./nanoid');
 
-    // Sanitize headers before storing
-    const sanitizedHeaders = sanitizeHeaders(parsed.headers || {});
+    // Sanitize headers before storing (remove sensitive values)
+    const sanitizedHeadersForStorage = sanitizeHeaders(parsed.headers || {});
 
     const webhook: Webhook = {
       id: generateProjectId(),
       method: parsed.method,
-      url: parsed.url,
-      headers: sanitizedHeaders,
+      url: encodedUrl, // Use encoded URL
+      headers: sanitizedHeadersForStorage,
       body: parsed.body || null,
       timestamp: Date.now(),
       direction: 'outgoing',

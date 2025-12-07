@@ -11,7 +11,13 @@ import {
   Webhook,
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useOptimistic, useState, useTransition } from 'react';
+import {
+  useEffect,
+  useOptimistic,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { toast } from 'sonner';
 import { CreateProjectModal } from '@/components/create-project-modal';
 import { Badge } from '@/components/ui/badge';
@@ -93,10 +99,25 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
   );
 
   // Sync optimistic state with server state when initialProjects changes
+  // Use a ref to track previous value and avoid unnecessary updates
+  const prevProjectsRef = useRef(initialProjects);
+
   useEffect(() => {
-    startTransition(() => {
-      setOptimisticProjects(initialProjects);
-    });
+    const prevProjects = prevProjectsRef.current;
+    const projectsChanged =
+      initialProjects.length !== prevProjects.length ||
+      initialProjects.some(
+        (p, i) =>
+          prevProjects[i]?.slug !== p.slug ||
+          prevProjects[i]?.createdAt !== p.createdAt,
+      );
+
+    if (projectsChanged) {
+      prevProjectsRef.current = initialProjects;
+      startTransition(() => {
+        setOptimisticProjects(initialProjects);
+      });
+    }
   }, [initialProjects, setOptimisticProjects, startTransition]);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -284,8 +305,8 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
             {!isCollapsed && (
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-6 w-6 p-0 ml-auto"
+                size="icon-sm"
+                className="ml-auto"
                 onClick={() => setCreateModalOpen(true)}
                 title="Create new webhook project"
               >
@@ -339,9 +360,9 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
                         {canDelete && !isCollapsed && (
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="icon-sm"
                             className={cn(
-                              'h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity ml-1 shrink-0',
+                              'opacity-0 group-hover:opacity-100 transition-opacity ml-1 shrink-0',
                               'hover:bg-destructive/10 hover:text-destructive',
                             )}
                             onClick={(e) => handleDeleteClick(e, project)}

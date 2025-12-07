@@ -1,8 +1,8 @@
-import { Code, Webhook } from 'lucide-react';
-import { headers } from 'next/headers';
+import { Code, Loader2, Webhook } from 'lucide-react';
+import { Suspense } from 'react';
 
-import { HowToUseExamples } from '@/components/how-to-use-examples';
 import { PageHeader } from '@/components/page-header';
+import { ProjectsList } from '@/components/projects-list';
 import {
   Card,
   CardContent,
@@ -10,19 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { getBaseUrl } from '@/lib/base-url';
-import { ensureDefaultProject, getAllProjects } from '@/lib/projects-storage';
 
-export default async function Home() {
-  // Ensure default project exists (handles GCS unavailability gracefully)
-  await ensureDefaultProject();
-  const projects = await getAllProjects();
-  const defaultProject = projects[0]?.slug || 'slingshot';
-
-  // Get base URL from current request headers
-  const headersList = await headers();
-  const baseUrl = await getBaseUrl(headersList);
-
+export default function Home() {
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
       <PageHeader
@@ -84,11 +73,23 @@ export default async function Home() {
       </Card>
 
       {/* Interactive Examples */}
-      <HowToUseExamples
-        baseUrl={baseUrl}
-        projects={projects}
-        defaultProject={defaultProject}
-      />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <div className="absolute inset-0 h-8 w-8 animate-spin text-primary/20">
+                  <Loader2 className="h-8 w-8" />
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">Loading...</p>
+            </div>
+          </div>
+        }
+      >
+        <ProjectsList />
+      </Suspense>
     </div>
   );
 }

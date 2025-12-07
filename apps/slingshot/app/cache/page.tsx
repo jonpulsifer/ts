@@ -29,7 +29,13 @@ import {
 
 export default function CachePage() {
   const [entries, setEntries] = useState<
-    { slug: string; timestamp: number; count: number; size: number }[]
+    {
+      slug: string;
+      timestamp: number;
+      count: number;
+      size: number;
+      stale: boolean;
+    }[]
   >([]);
   const [mounted, setMounted] = useState(false);
 
@@ -108,6 +114,7 @@ export default function CachePage() {
                     <TableHead>Project</TableHead>
                     <TableHead>Webhooks</TableHead>
                     <TableHead>Size</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Last Updated</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -120,6 +127,17 @@ export default function CachePage() {
                       </TableCell>
                       <TableCell>{entry.count}</TableCell>
                       <TableCell>{formatBytes(entry.size)}</TableCell>
+                      <TableCell>
+                        {entry.stale ? (
+                          <span className="text-yellow-600 dark:text-yellow-400">
+                            Stale
+                          </span>
+                        ) : (
+                          <span className="text-green-600 dark:text-green-400">
+                            Fresh
+                          </span>
+                        )}
+                      </TableCell>
                       <TableCell>
                         {formatDistanceToNow(entry.timestamp, {
                           addSuffix: true,

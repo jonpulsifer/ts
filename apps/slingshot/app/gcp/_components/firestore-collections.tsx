@@ -1,14 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -39,101 +32,101 @@ type FirestoreCollectionsProps = {
 export default function FirestoreCollections({
   collectionsData,
 }: FirestoreCollectionsProps) {
-  return (
-    <div className="space-y-6">
+  if (!collectionsData.success) {
+    return (
       <Card className="w-full border-2 shadow-lg">
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl">Firestore Collections</CardTitle>
-              <CardDescription className="mt-1">
-                Collections and documents from your Firestore database
-              </CardDescription>
+        <CardContent className="p-6">
+          <div className="space-y-2">
+            <div className="text-sm font-semibold text-destructive">
+              Failed to List Collections
             </div>
-            {collectionsData.success && (
-              <Badge variant="default" className="text-sm">
-                Success
-              </Badge>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {collectionsData.success && collectionsData.collections ? (
-            <>
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Showing collections and document counts from Firestore
+            {collectionsData.error && (
+              <div className="p-4 bg-destructive/10 border border-destructive rounded-lg">
+                <p className="text-sm text-destructive font-mono">
+                  {collectionsData.error}
                 </p>
               </div>
-              <Separator />
-              {collectionsData.collections.length === 0 ? (
-                <div className="text-sm text-muted-foreground">
-                  No collections found
-                </div>
-              ) : (
-                collectionsData.collections.map((collection, idx) => (
-                  <div key={idx} className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold">
-                        Collection: {collection.name}
-                      </div>
-                      <Badge variant="secondary">
-                        {collection.documentCount} document
-                        {collection.documentCount !== 1 ? 's' : ''}
-                      </Badge>
-                    </div>
-                    {collection.sampleDocuments &&
-                      collection.sampleDocuments.length > 0 && (
-                        <div className="rounded-lg border overflow-hidden">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead className="font-semibold">
-                                  Document ID / Type
-                                </TableHead>
-                                <TableHead className="font-semibold">
-                                  Last Updated
-                                </TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {collection.sampleDocuments.map((doc, docIdx) => (
-                                <TableRow key={docIdx}>
-                                  <TableCell className="font-mono text-sm">
-                                    {doc.id}
-                                  </TableCell>
-                                  <TableCell className="text-sm text-muted-foreground">
-                                    {doc.updatedAt || 'N/A'}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
-                      )}
-                    {idx < collectionsData.collections!.length - 1 && (
-                      <Separator className="my-6" />
-                    )}
-                  </div>
-                ))
-              )}
-            </>
-          ) : (
-            <div className="space-y-2">
-              <div className="text-sm font-semibold text-destructive">
-                Failed to List Collections
-              </div>
-              {collectionsData.error && (
-                <div className="p-4 bg-destructive/10 border border-destructive rounded-lg">
-                  <p className="text-sm text-destructive font-mono">
-                    {collectionsData.error}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </CardContent>
       </Card>
+    );
+  }
+
+  if (
+    !collectionsData.collections ||
+    collectionsData.collections.length === 0
+  ) {
+    return (
+      <Card className="w-full border-2 shadow-lg">
+        <CardContent className="p-6">
+          <div className="text-sm text-muted-foreground">
+            No collections found
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {collectionsData.collections.map((collection, idx) => (
+        <Card key={idx} className="w-full border shadow-lg">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg font-mono">
+                {collection.name}
+              </CardTitle>
+              <Badge variant="secondary">
+                {collection.documentCount}{' '}
+                {collection.documentCount === 1 ? 'doc' : 'docs'}
+              </Badge>
+            </div>
+          </CardHeader>
+          {collection.sampleDocuments &&
+            collection.sampleDocuments.length > 0 && (
+              <CardContent>
+                <div className="rounded-lg border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-semibold">Type</TableHead>
+                        <TableHead className="font-semibold">Count</TableHead>
+                        <TableHead className="font-semibold">
+                          Last Updated
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {collection.sampleDocuments.map((doc, docIdx) => {
+                        // Parse "type (count)" format
+                        const match = doc.id.match(/^(.+?)\s+\((\d+)\)$/);
+                        const type = match ? match[1] : doc.type || doc.id;
+                        const count = match
+                          ? Number.parseInt(match[2], 10)
+                          : null;
+
+                        return (
+                          <TableRow key={docIdx}>
+                            <TableCell className="font-mono text-sm">
+                              {type}
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {count !== null ? count : '—'}
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {doc.updatedAt || '—'}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            )}
+        </Card>
+      ))}
     </div>
   );
 }

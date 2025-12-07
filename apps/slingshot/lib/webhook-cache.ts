@@ -1,61 +1,24 @@
 /**
- * LocalStorage cache for webhook data to reduce GCS storage quota usage
+ * Optimized local-first cache for webhook data
+ * Uses stale-while-revalidate pattern for instant UI with background refresh
  */
 
 import type { Webhook } from './types';
 
 const CACHE_PREFIX = 'slingshot_webhooks_';
-const CACHE_TIMESTAMP_PREFIX = 'slingshot_webhooks_ts_';
-const CACHE_ETAG_PREFIX = 'slingshot_webhooks_etag_';
-const CACHE_MAX_AGE = 5 * 60 * 1000; // 5 minutes
+const CACHE_MAX_AGE = 30 * 60 * 1000; // 30 minutes (increased from 5)
+const CACHE_STALE_AGE = 5 * 60 * 1000; // 5 minutes - data is stale but usable
 
 interface CachedWebhooks {
   webhooks: Webhook[];
-  timestamp: number;
   etag?: string;
   maxSize?: number;
+  timestamp: number; // Single timestamp, no redundant storage
 }
 
 /**
- * Get cached webhooks for a project
- */
-export function getCachedWebhooks(projectSlug: string): Webhook[] | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  try {
-    const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
-    const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
-
-    const cached = localStorage.getItem(cacheKey);
-    const timestampStr = localStorage.getItem(timestampKey);
-
-    if (!cached || !timestampStr) {
-      return null;
-    }
-
-    const timestamp = Number.parseInt(timestampStr, 10);
-    const now = Date.now();
-
-    // Check if cache is expired
-    if (now - timestamp > CACHE_MAX_AGE) {
-      localStorage.removeItem(cacheKey);
-      localStorage.removeItem(timestampKey);
-      return null;
-    }
-
-    const data: CachedWebhooks = JSON.parse(cached);
-    return data.webhooks;
-  } catch (error) {
-    console.error('Failed to read webhook cache:', error);
-    return null;
-  }
-}
-
-/**
- * Get full cache entry (including etag) without clearing on expiry.
- * Consumers can decide whether to treat stale data as a soft-hit for instant UI.
+ * Get cached webhooks entry (single key lookup)
+ * Returns null if cache doesn't exist or is invalid
  */
 export function getCachedWebhooksEntry(
   projectSlug: string,
@@ -66,27 +29,54 @@ export function getCachedWebhooksEntry(
 
   try {
     const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
-    const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
     const cached = localStorage.getItem(cacheKey);
-    const timestampStr = localStorage.getItem(timestampKey);
 
-    if (!cached || !timestampStr) {
+    if (!cached) {
       return null;
     }
 
-    const timestamp = Number.parseInt(timestampStr, 10);
     const data: CachedWebhooks = JSON.parse(cached);
-    const stale = Date.now() - timestamp > CACHE_MAX_AGE;
+    const age = Date.now() - data.timestamp;
+    const stale = age > CACHE_STALE_AGE;
+
+    // If cache is too old, return null to force refresh
+    if (age > CACHE_MAX_AGE) {
+      localStorage.removeItem(cacheKey);
+      return null;
+    }
 
     return { ...data, stale };
   } catch (error) {
-    console.error('Failed to read webhook cache entry:', error);
+    console.error('Failed to read webhook cache:', error);
+    // Clean up corrupted cache
+    try {
+      const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
+      localStorage.removeItem(cacheKey);
+    } catch {
+      // Ignore cleanup errors
+    }
     return null;
   }
 }
 
 /**
- * Set cached webhooks for a project
+ * Get cached webhooks (simplified API)
+ */
+export function getCachedWebhooks(projectSlug: string): Webhook[] | null {
+  const entry = getCachedWebhooksEntry(projectSlug);
+  return entry?.webhooks || null;
+}
+
+/**
+ * Get cached etag
+ */
+export function getCachedEtag(projectSlug: string): string | null {
+  const entry = getCachedWebhooksEntry(projectSlug);
+  return entry?.etag || null;
+}
+
+/**
+ * Set cached webhooks (single key write)
  */
 export function setCachedWebhooks(
   projectSlug: string,
@@ -100,21 +90,14 @@ export function setCachedWebhooks(
 
   try {
     const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
-    const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
-    const etagKey = `${CACHE_ETAG_PREFIX}${projectSlug}`;
-
     const data: CachedWebhooks = {
       webhooks,
-      timestamp: Date.now(),
       etag,
       maxSize,
+      timestamp: Date.now(),
     };
 
     localStorage.setItem(cacheKey, JSON.stringify(data));
-    localStorage.setItem(timestampKey, Date.now().toString());
-    if (etag) {
-      localStorage.setItem(etagKey, etag);
-    }
   } catch (error) {
     // Handle quota exceeded errors gracefully
     if (error instanceof DOMException && error.name === 'QuotaExceededError') {
@@ -123,19 +106,13 @@ export function setCachedWebhooks(
       // Try once more
       try {
         const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
-        const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
-        const etagKey = `${CACHE_ETAG_PREFIX}${projectSlug}`;
         const data: CachedWebhooks = {
           webhooks,
-          timestamp: Date.now(),
           etag,
           maxSize,
+          timestamp: Date.now(),
         };
         localStorage.setItem(cacheKey, JSON.stringify(data));
-        localStorage.setItem(timestampKey, Date.now().toString());
-        if (etag) {
-          localStorage.setItem(etagKey, etag);
-        }
       } catch (retryError) {
         console.error('Failed to cache webhooks after cleanup:', retryError);
       }
@@ -146,19 +123,32 @@ export function setCachedWebhooks(
 }
 
 /**
- * Get cached etag for a project
+ * Update cached webhooks optimistically
+ * Used for immediate UI updates before server confirmation
  */
-export function getCachedEtag(projectSlug: string): string | null {
+export function updateCachedWebhooks(
+  projectSlug: string,
+  updater: (webhooks: Webhook[]) => Webhook[],
+): void {
   if (typeof window === 'undefined') {
-    return null;
+    return;
   }
 
-  try {
-    const etagKey = `${CACHE_ETAG_PREFIX}${projectSlug}`;
-    return localStorage.getItem(etagKey);
-  } catch (_error) {
-    return null;
+  const entry = getCachedWebhooksEntry(projectSlug);
+  if (entry) {
+    const updated = updater(entry.webhooks);
+    setCachedWebhooks(projectSlug, updated, entry.etag, entry.maxSize);
   }
+}
+
+/**
+ * Add webhook optimistically to cache
+ */
+export function addWebhookToCache(projectSlug: string, webhook: Webhook): void {
+  updateCachedWebhooks(projectSlug, (webhooks) => {
+    // Add to beginning (newest first)
+    return [webhook, ...webhooks];
+  });
 }
 
 /**
@@ -171,11 +161,7 @@ export function clearCachedWebhooks(projectSlug: string): void {
 
   try {
     const cacheKey = `${CACHE_PREFIX}${projectSlug}`;
-    const timestampKey = `${CACHE_TIMESTAMP_PREFIX}${projectSlug}`;
-    const etagKey = `${CACHE_ETAG_PREFIX}${projectSlug}`;
     localStorage.removeItem(cacheKey);
-    localStorage.removeItem(timestampKey);
-    localStorage.removeItem(etagKey);
   } catch (error) {
     console.error('Failed to clear webhook cache:', error);
   }
@@ -193,19 +179,21 @@ function clearOldCacheEntries(): void {
     const now = Date.now();
     const keysToRemove: string[] = [];
 
-    // Find all cache timestamp keys
+    // Find all cache keys
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key?.startsWith(CACHE_TIMESTAMP_PREFIX)) {
-        const timestampStr = localStorage.getItem(key);
-        if (timestampStr) {
-          const timestamp = Number.parseInt(timestampStr, 10);
-          if (now - timestamp > CACHE_MAX_AGE) {
-            keysToRemove.push(key);
-            // Also remove the corresponding cache key
-            const projectSlug = key.replace(CACHE_TIMESTAMP_PREFIX, '');
-            keysToRemove.push(`${CACHE_PREFIX}${projectSlug}`);
+      if (key?.startsWith(CACHE_PREFIX)) {
+        try {
+          const cached = localStorage.getItem(key);
+          if (cached) {
+            const data: CachedWebhooks = JSON.parse(cached);
+            if (now - data.timestamp > CACHE_MAX_AGE) {
+              keysToRemove.push(key);
+            }
           }
+        } catch {
+          // Corrupted entry, remove it
+          keysToRemove.push(key);
         }
       }
     }
@@ -220,31 +208,14 @@ function clearOldCacheEntries(): void {
 }
 
 /**
- * Update cached webhooks by adding a new webhook or updating existing ones
- */
-export function updateCachedWebhooks(
-  projectSlug: string,
-  updater: (webhooks: Webhook[]) => Webhook[],
-): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  const cached = getCachedWebhooks(projectSlug);
-  if (cached) {
-    const updated = updater(cached);
-    setCachedWebhooks(projectSlug, updated);
-  }
-}
-
-/**
- * Get all cache entries with details
+ * Get all cache entries with details (for debugging/admin)
  */
 export function getAllCacheEntries(): {
   slug: string;
   timestamp: number;
   count: number;
   size: number;
+  stale: boolean;
 }[] {
   if (typeof window === 'undefined') {
     return [];
@@ -256,28 +227,29 @@ export function getAllCacheEntries(): {
       timestamp: number;
       count: number;
       size: number;
+      stale: boolean;
     }[] = [];
 
     // Find all cache keys
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key?.startsWith(CACHE_PREFIX)) {
-        const slug = key.replace(CACHE_PREFIX, '');
-        const cachedStr = localStorage.getItem(key);
-        const timestampStr = localStorage.getItem(
-          `${CACHE_TIMESTAMP_PREFIX}${slug}`,
-        );
-
-        if (cachedStr && timestampStr) {
-          const timestamp = Number.parseInt(timestampStr, 10);
-          const data: CachedWebhooks = JSON.parse(cachedStr);
-
-          entries.push({
-            slug,
-            timestamp,
-            count: data.webhooks.length,
-            size: cachedStr.length,
-          });
+        try {
+          const slug = key.replace(CACHE_PREFIX, '');
+          const cached = localStorage.getItem(key);
+          if (cached) {
+            const data: CachedWebhooks = JSON.parse(cached);
+            const age = Date.now() - data.timestamp;
+            entries.push({
+              slug,
+              timestamp: data.timestamp,
+              count: data.webhooks.length,
+              size: cached.length,
+              stale: age > CACHE_STALE_AGE,
+            });
+          }
+        } catch {
+          // Skip corrupted entries
         }
       }
     }
@@ -303,11 +275,7 @@ export function clearAllCachedWebhooks(): void {
     // Find all cache-related keys
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (
-        key?.startsWith(CACHE_PREFIX) ||
-        key?.startsWith(CACHE_TIMESTAMP_PREFIX) ||
-        key?.startsWith(CACHE_ETAG_PREFIX)
-      ) {
+      if (key?.startsWith(CACHE_PREFIX)) {
         keysToRemove.push(key);
       }
     }

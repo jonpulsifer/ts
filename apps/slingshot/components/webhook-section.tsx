@@ -139,7 +139,7 @@ export function WebhookSection({
                           <CopyButton text={displayUrl} />
                           <Button
                             variant="outline"
-                            size="sm"
+                            size="icon-lg"
                             onClick={async () => {
                               try {
                                 const result = await sendTestWebhookAction(
@@ -157,7 +157,7 @@ export function WebhookSection({
                                 );
                               }
                             }}
-                            className="h-10 w-10 shrink-0"
+                            className="shrink-0"
                             title="Send GET request"
                           >
                             <Send className="h-4 w-4" />

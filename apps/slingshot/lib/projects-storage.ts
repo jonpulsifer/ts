@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import {
   getFirestore,
   isFirestoreUnavailableError,
@@ -68,6 +69,10 @@ export async function projectExists(slug: string): Promise<boolean> {
 /**
  * Create a new project (slug is the ID)
  */
+/**
+ * Invalidate projects cache by re-exporting with cache
+ * This ensures fresh data after mutations
+ */
 export async function createProject(slug: string): Promise<{ slug: string }> {
   if (shouldSkipFirestoreOperations()) {
     return { slug };
@@ -125,10 +130,10 @@ export async function getProjectBySlug(
 }
 
 /**
- * Get all projects as a list
+ * Get all projects as a list (internal, uncached)
  * Pins "slingshot" to the top, sorts the rest alphabetically
  */
-export async function getAllProjects(): Promise<
+async function _getAllProjectsUncached(): Promise<
   Array<{ slug: string; createdAt: number }>
 > {
   const mappings = await getProjectMappings();
@@ -155,6 +160,17 @@ export async function getAllProjects(): Promise<
 
   return sortedProjects;
 }
+
+/**
+ * Get all projects as a list
+ * Cached per request using React's cache() to prevent duplicate fetches
+ * Pins "slingshot" to the top, sorts the rest alphabetically
+ */
+export const getAllProjects = cache(
+  async (): Promise<Array<{ slug: string; createdAt: number }>> => {
+    return _getAllProjectsUncached();
+  },
+);
 
 /**
  * Delete a project by slug

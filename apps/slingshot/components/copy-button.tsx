@@ -21,7 +21,7 @@ interface CopyButtonProps {
 
 export function CopyButton({
   text,
-  size = 'sm',
+  size = 'icon',
   variant = 'outline',
   title,
   className,

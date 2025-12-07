@@ -200,9 +200,8 @@ const WebhookListItem = memo(function WebhookListItem({
             <div className="opacity-70 group-hover:opacity-100 transition-opacity">
               <CopyButton
                 text={`${typeof window !== 'undefined' ? window.location.origin : ''}/${projectSlug}?webhook=${webhook.id}`}
-                size="sm"
+                size="icon"
                 variant="outline"
-                className="h-8 w-8 p-0"
                 title="Copy link to webhook"
               />
             </div>
@@ -211,8 +210,8 @@ const WebhookListItem = memo(function WebhookListItem({
             >
               <Button
                 variant="outline"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-primary/10"
+                size="icon"
+                className="hover:bg-primary/10"
                 onClick={(e) => {
                   e.stopPropagation();
                   onCompare(webhook);
@@ -271,9 +270,9 @@ export function WebhookList({
         {webhooks.length > 0 && (
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={onClearHistory}
-            className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+            className="hover:bg-destructive/10 hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
           </Button>

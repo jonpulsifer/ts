@@ -1,15 +1,14 @@
-import { Webhook as WebhookIcon } from 'lucide-react';
+import { Loader2, Webhook as WebhookIcon } from 'lucide-react';
 import { headers } from 'next/headers';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { CreateProjectButton } from '@/components/create-project-button';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { WebhookSection } from '@/components/webhook-section';
+import { WebhookSectionWrapper } from '@/components/webhook-section-wrapper';
 import { getBaseUrl } from '@/lib/base-url';
 import { projectExists } from '@/lib/projects-storage';
-
-import type { Webhook } from '@/lib/types';
 
 export default async function ProjectPage({
   params,
@@ -79,23 +78,6 @@ export default async function ProjectPage({
     );
   }
 
-  // Fetch initial webhooks (slug is the project ID)
-  // We fetch on the server to populate the list immediately
-  let initialWebhooks: Webhook[] = [];
-  let initialWebhookEtag: string | null = null;
-  let initialWebhookMaxSize = 100;
-  try {
-    const { getWebhooksAction } = await import('@/lib/actions');
-    const result = await getWebhooksAction(slug);
-    initialWebhooks = result.webhooks;
-    initialWebhookEtag = result.etag ?? null;
-    initialWebhookMaxSize = result.maxSize ?? 100;
-  } catch (error) {
-    console.error('Failed to fetch initial webhooks:', error);
-    // Continue with empty list - client will try to fetch/poll
-  }
-
-  // Generate webhook URL based on slug
   const headersList = await headers();
   const baseUrl = await getBaseUrl(headersList);
   const webhookUrl = `${baseUrl}/api/${slug}`;
@@ -107,13 +89,25 @@ export default async function ProjectPage({
         description={`Webhook project • Endpoint: /api/${slug}`}
       />
 
-      <WebhookSection
-        projectSlug={slug}
-        webhookUrl={webhookUrl}
-        initialWebhooks={initialWebhooks}
-        initialEtag={initialWebhookEtag}
-        initialMaxSize={initialWebhookMaxSize}
-      />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <div className="absolute inset-0 h-8 w-8 animate-spin text-primary/20">
+                  <Loader2 className="h-8 w-8" />
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Loading webhooks...
+              </p>
+            </div>
+          </div>
+        }
+      >
+        <WebhookSectionWrapper projectSlug={slug} webhookUrl={webhookUrl} />
+      </Suspense>
     </div>
   );
 }

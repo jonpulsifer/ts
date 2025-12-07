@@ -49,6 +49,9 @@ export default async function EnvironmentPage() {
   // Sanitize sensitive environment variables
   const sanitizedServerEnv = sanitizeEnvVars(sortedServerEnv);
 
+  // Client-side env vars (NEXT_PUBLIC_*) are only available on the client
+  // They are bundled at build time and not accessible on the server
+  // The Environment component will compute them client-side in useEffect
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <PageHeader
