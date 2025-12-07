@@ -55,13 +55,33 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
     'NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID',
   ] as const;
 
+  // Known Next.js environment variables that may not be enumerable
+  // These are explicitly checked even if they don't appear in Object.entries(process.env)
+  // Includes variables defined in next.config.ts env config and Vercel framework variables
+  const KNOWN_NEXT_ENV_VARS = [
+    'NEXT_PUBLIC_BASE_URL',
+    'NEXT_PUBLIC_ENVIRONMENT_VARIABLE',
+    ...VERCEL_ENV_VARIABLES,
+  ] as const;
+
   // Dynamically collect all client-side environment variables that are not empty
   // This includes:
   // - Variables starting with NEXT_PUBLIC_* (automatically exposed)
   // - Variables defined in next.config.ts env config (explicitly exposed)
   const rawClientEnv: Record<string, string> = {};
-  for (const [key, value] of Object.entries(process.env)) {
+  
+  // First, explicitly check known Next.js variables that might not be enumerable
+  // This ensures we capture variables defined in next.config.ts env config
+  for (const key of KNOWN_NEXT_ENV_VARS) {
+    const value = process.env[key];
     if (value && value.trim() !== '') {
+      rawClientEnv[key] = value;
+    }
+  }
+
+  // Then, collect all other enumerable variables
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value && value.trim() !== '' && !(key in rawClientEnv)) {
       rawClientEnv[key] = value;
     }
   }
