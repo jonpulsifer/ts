@@ -1,4 +1,8 @@
-import { getBucket, isGcsUnavailableError } from './gcs-client';
+import {
+  getBucket,
+  isGcsUnavailableError,
+  shouldSkipGcsOperations,
+} from './gcs-client';
 
 export interface ProjectStats {
   webhookCount: number;
@@ -107,6 +111,11 @@ export async function getStats(
  * Silently fails if GCS is unavailable (non-critical operation)
  */
 async function saveStatsImmediate(stats: StatsData): Promise<void> {
+  if (shouldSkipGcsOperations()) {
+    console.log('[GCS] Skipping stats save - CI environment detected');
+    return;
+  }
+
   console.log(
     `[GCS] saveStatsImmediate called (${Object.keys(stats.projects).length} projects)`,
   );

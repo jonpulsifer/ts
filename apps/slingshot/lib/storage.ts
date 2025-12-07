@@ -1,4 +1,4 @@
-import { getBucket } from './gcs-client';
+import { getBucket, shouldSkipGcsOperations } from './gcs-client';
 import { resetProjectStats } from './stats-storage';
 import type { Webhook, WebhookHistory } from './types';
 
@@ -94,6 +94,11 @@ export async function saveWebhooks(
   slug: string,
   webhooks: Webhook[],
 ): Promise<string> {
+  if (shouldSkipGcsOperations()) {
+    console.log('[GCS] Skipping webhooks save - CI environment detected');
+    return '';
+  }
+
   const trimmedWebhooks = webhooks.slice(0, MAX_WEBHOOKS);
 
   const data: WebhookHistory = {
@@ -128,6 +133,11 @@ export async function saveWebhooks(
  * slug is used as the project ID
  */
 export async function clearWebhooks(slug: string): Promise<void> {
+  if (shouldSkipGcsOperations()) {
+    console.log('[GCS] Skipping webhooks clear - CI environment detected');
+    return;
+  }
+
   const key = `projects/${slug}/webhooks.json`;
   console.log(`[GCS] clearWebhooks called for project: ${slug}`);
 

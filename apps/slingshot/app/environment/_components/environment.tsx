@@ -69,7 +69,7 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
   // - Variables starting with NEXT_PUBLIC_* (automatically exposed)
   // - Variables defined in next.config.ts env config (explicitly exposed)
   const rawClientEnv: Record<string, string> = {};
-  
+
   // First, explicitly check known Next.js variables that might not be enumerable
   // This ensures we capture variables defined in next.config.ts env config
   for (const key of KNOWN_NEXT_ENV_VARS) {

@@ -1,4 +1,8 @@
-import { getBucket, isGcsUnavailableError } from './gcs-client';
+import {
+  getBucket,
+  isGcsUnavailableError,
+  shouldSkipGcsOperations,
+} from './gcs-client';
 import { updateProjectCount } from './stats-storage';
 
 /**
@@ -46,6 +50,13 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
 export async function saveProjectMappings(
   mappings: ProjectMapping,
 ): Promise<void> {
+  if (shouldSkipGcsOperations()) {
+    console.log(
+      '[GCS] Skipping project mappings save - CI environment detected',
+    );
+    return;
+  }
+
   const projectCount = Object.keys(mappings).length;
   console.log(`[GCS] saveProjectMappings called (${projectCount} projects)`);
   const bucket = await getBucket();

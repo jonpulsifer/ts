@@ -8,6 +8,14 @@ const GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID = 'vercel';
 const BUCKET_NAME = 'homelab-ng-free';
 
 const IS_VERCEL = !!process.env.VERCEL;
+const IS_CI = !!process.env.CI;
+
+/**
+ * Check if GCS operations should be skipped (e.g., during CI builds)
+ */
+export function shouldSkipGcsOperations(): boolean {
+  return IS_CI;
+}
 
 /**
  * Check if an error indicates GCS is unavailable (e.g., during build when URL is required)
@@ -111,9 +119,10 @@ export async function getStorageClient(): Promise<Storage> {
     );
   }
 
-  storageClient = new Storage({
-    authClient: authClient as any,
-  });
+  // Only pass authClient if it's defined (on Vercel), otherwise use default credentials
+  const storageOptions = authClient ? { authClient: authClient as any } : {};
+
+  storageClient = new Storage(storageOptions);
 
   storageClientAuthInitialized = true;
   console.log('[GCS] Storage client initialized successfully');
