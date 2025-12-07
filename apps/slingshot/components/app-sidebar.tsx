@@ -4,6 +4,7 @@ import {
   BookOpen,
   Cloud,
   Database,
+  Key,
   Plus,
   Terminal,
   Trash2,
@@ -111,6 +112,7 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
           !pathname.startsWith('/projects') &&
           !pathname.startsWith('/request-headers') &&
           !pathname.startsWith('/environment') &&
+          !pathname.startsWith('/jwt-decoder') &&
           !pathname.startsWith('/gcp') &&
           !pathname.startsWith('/cache')
         ? pathname.split('/')[1]
@@ -119,8 +121,9 @@ export function AppSidebar({ projects: initialProjects }: AppSidebarProps) {
   const developerTools = [
     { name: 'Environment', url: '/environment', icon: Terminal },
     { name: 'Request Headers', url: '/request-headers', icon: BookOpen },
-    { name: 'Google Cloud Storage', url: '/gcp', icon: Cloud },
-    { name: 'Cache Management', url: '/cache', icon: Database },
+    { name: 'JWT Decoder', url: '/jwt-decoder', icon: Key },
+    { name: 'Firestore Collections', url: '/gcp', icon: Database },
+    { name: 'Cache Management', url: '/cache', icon: Cloud },
   ];
 
   const handleDeleteClick = (e: React.MouseEvent, project: Project) => {

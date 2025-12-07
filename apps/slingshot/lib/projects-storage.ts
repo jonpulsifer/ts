@@ -1,8 +1,8 @@
 import {
-  getBucket,
-  isGcsUnavailableError,
-  shouldSkipGcsOperations,
-} from './gcs-client';
+  getFirestore,
+  isFirestoreUnavailableError,
+  shouldSkipFirestoreOperations,
+} from './firestore-client';
 import { updateProjectCount } from './stats-storage';
 
 /**
@@ -20,89 +20,82 @@ export interface ProjectMapping {
  * Returns empty object if GCS operation fails
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
-  console.log('[GCS] getProjectMappings called');
+  if (shouldSkipFirestoreOperations()) {
+    return {
+      slingshot: {
+        slug: 'slingshot',
+        createdAt: Date.now(),
+      },
+    };
+  }
   try {
-    const bucket = await getBucket();
-    const file = bucket.file('project_mappings.json');
+    const firestore = await getFirestore();
+    const snapshot = await firestore
+      .collection('slingshot')
+      .where('type', '==', 'project')
+      .get();
 
-    console.log('[GCS] Checking if project_mappings.json exists');
-    const [exists] = await file.exists();
-    if (!exists) {
-      console.log('[GCS] project_mappings.json does not exist');
+    const mappings: ProjectMapping = {};
+    snapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      mappings[doc.id] = {
+        slug: data.slug || doc.id,
+        createdAt: data.createdAt || Date.now(),
+      };
+    });
+    return mappings;
+  } catch (error) {
+    console.error('[Firestore] Error getting project mappings:', error);
+    if (isFirestoreUnavailableError(error)) {
       return {};
     }
-
-    console.log('[GCS] Downloading project_mappings.json');
-    const [contents] = await file.download();
-    const data = JSON.parse(contents.toString('utf-8')) as ProjectMapping;
-    console.log(`[GCS] Retrieved ${Object.keys(data).length} project mappings`);
-    return data;
-  } catch (error) {
-    // Return empty mappings if GCS operation fails (e.g., during build)
-    console.error('[GCS] Error getting project mappings:', error);
-    return {};
+    throw error;
   }
-}
-
-/**
- * Save project mappings to storage
- */
-export async function saveProjectMappings(
-  mappings: ProjectMapping,
-): Promise<void> {
-  if (shouldSkipGcsOperations()) {
-    console.log(
-      '[GCS] Skipping project mappings save - CI environment detected',
-    );
-    return;
-  }
-
-  const projectCount = Object.keys(mappings).length;
-  console.log(`[GCS] saveProjectMappings called (${projectCount} projects)`);
-  const bucket = await getBucket();
-  const file = bucket.file('project_mappings.json');
-
-  console.log('[GCS] Saving project_mappings.json');
-  await file.save(JSON.stringify(mappings), {
-    contentType: 'application/json',
-    metadata: {
-      cacheControl: 'no-cache',
-    },
-  });
-  console.log('[GCS] Successfully saved project_mappings.json');
 }
 
 /**
  * Check if project exists by slug (slug is the ID)
  */
 export async function projectExists(slug: string): Promise<boolean> {
-  const mappings = await getProjectMappings();
-  return !!mappings[slug];
+  if (shouldSkipFirestoreOperations()) {
+    return slug === 'slingshot';
+  }
+  const firestore = await getFirestore();
+  const doc = await firestore.collection('slingshot').doc(slug).get();
+  return doc.exists && (doc.data()?.type || 'project') === 'project';
 }
 
 /**
  * Create a new project (slug is the ID)
  */
 export async function createProject(slug: string): Promise<{ slug: string }> {
-  console.log(`[GCS] createProject called for slug: ${slug}`);
-  const mappings = await getProjectMappings();
+  if (shouldSkipFirestoreOperations()) {
+    return { slug };
+  }
 
-  if (mappings[slug]) {
+  const firestore = await getFirestore();
+  const docRef = firestore.collection('slingshot').doc(slug);
+  const snap = await docRef.get();
+
+  if (snap.exists) {
     throw new Error('Slug already exists');
   }
 
-  mappings[slug] = {
+  await docRef.set({
     slug,
     createdAt: Date.now(),
-  };
+    webhookCount: 0,
+    lastWebhookTimestamp: null,
+    updatedAt: Date.now(),
+    webhooksUpdatedAt: Date.now(),
+    type: 'project',
+    maxSize: 100,
+  });
 
-  await saveProjectMappings(mappings);
-
-  // Update global project count (may fail silently if GCS unavailable)
   try {
-    await updateProjectCount(Object.keys(mappings).length);
+    await updateProjectCount();
   } catch (error) {
-    if (!isGcsUnavailableError(error)) {
+    if (!isFirestoreUnavailableError(error)) {
       throw error;
     }
   }
@@ -116,16 +109,18 @@ export async function createProject(slug: string): Promise<{ slug: string }> {
 export async function getProjectBySlug(
   slug: string,
 ): Promise<{ slug: string; createdAt: number } | null> {
-  const mappings = await getProjectMappings();
-  const project = mappings[slug];
-
-  if (!project) {
+  if (shouldSkipFirestoreOperations()) {
+    return slug === 'slingshot' ? { slug, createdAt: Date.now() } : null;
+  }
+  const firestore = await getFirestore();
+  const doc = await firestore.collection('slingshot').doc(slug).get();
+  if (!doc.exists || (doc.data()?.type || 'project') !== 'project') {
     return null;
   }
-
+  const data = doc.data() || {};
   return {
-    slug,
-    createdAt: project.createdAt,
+    slug: data.slug || slug,
+    createdAt: data.createdAt || Date.now(),
   };
 }
 
@@ -142,23 +137,18 @@ export async function getAllProjects(): Promise<
     createdAt: project.createdAt,
   }));
 
-  // Separate slingshot from other projects
   const slingshot = projects.find((p) => p.slug === 'slingshot');
   const otherProjects = projects.filter((p) => p.slug !== 'slingshot');
-
-  // Sort other projects alphabetically by slug
   otherProjects.sort((a, b) => a.slug.localeCompare(b.slug));
 
-  // Combine: slingshot first, then alphabetically sorted rest
   const sortedProjects = slingshot
     ? [slingshot, ...otherProjects]
     : otherProjects;
 
-  // Sync project count in stats (may fail silently if GCS unavailable)
   try {
-    await updateProjectCount(sortedProjects.length);
+    await updateProjectCount();
   } catch (error) {
-    if (!isGcsUnavailableError(error)) {
+    if (!isFirestoreUnavailableError(error)) {
       throw error;
     }
   }
@@ -170,26 +160,37 @@ export async function getAllProjects(): Promise<
  * Delete a project by slug
  */
 export async function deleteProject(slug: string): Promise<void> {
-  console.log(`[GCS] deleteProject called for slug: ${slug}`);
-  const mappings = await getProjectMappings();
-
-  if (!mappings[slug]) {
-    throw new Error('Project not found');
-  }
-
-  // Don't allow deleting the default project
   if (slug === 'slingshot') {
     throw new Error('Cannot delete the default project');
   }
 
-  delete mappings[slug];
-  await saveProjectMappings(mappings);
+  if (shouldSkipFirestoreOperations()) {
+    return;
+  }
 
-  // Update global project count (may fail silently if GCS unavailable)
+  const firestore = await getFirestore();
+  const docRef = firestore.collection('slingshot').doc(slug);
+  const snap = await docRef.get();
+
+  if (!snap.exists) {
+    throw new Error('Project not found');
+  }
+
+  // Delete webhooks subcollection
+  const webhooksSnap = await docRef.collection('webhooks').get();
+  const batch = firestore.batch();
+  for (const doc of webhooksSnap.docs) {
+    batch.delete(doc.ref);
+  }
+  batch.delete(docRef);
+  await batch.commit();
+
   try {
-    await updateProjectCount(Object.keys(mappings).length);
+    await updateProjectCount();
+    const { removeProjectStats } = await import('./stats-storage');
+    await removeProjectStats(slug);
   } catch (error) {
-    if (!isGcsUnavailableError(error)) {
+    if (!isFirestoreUnavailableError(error)) {
       throw error;
     }
   }
@@ -200,19 +201,24 @@ export async function deleteProject(slug: string): Promise<void> {
  * During build/prerender, if GCS write fails, just return the slug
  */
 export async function ensureDefaultProject(): Promise<{ slug: string }> {
-  const mappings = await getProjectMappings();
   const defaultSlug = 'slingshot';
+  if (shouldSkipFirestoreOperations()) {
+    return { slug: defaultSlug };
+  }
+  const firestore = await getFirestore();
+  const docRef = firestore.collection('slingshot').doc(defaultSlug);
+  const snap = await docRef.get();
 
-  if (mappings[defaultSlug]) {
+  if (snap.exists) {
     return { slug: defaultSlug };
   }
 
-  // Try to create default project, but if it fails (e.g., during build), just return the slug
   try {
     return await createProject(defaultSlug);
-  } catch {
-    // If GCS operation fails (e.g., during build/prerender), just return the slug
-    // The project will be created at runtime when GCS is available
-    return { slug: defaultSlug };
+  } catch (error) {
+    if (isFirestoreUnavailableError(error)) {
+      return { slug: defaultSlug };
+    }
+    throw error;
   }
 }

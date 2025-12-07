@@ -1,6 +1,6 @@
 # Slingshot - Webhook Testing Platform
 
-A modern, serverless webhook testing platform built with Next.js 16, Google Cloud Storage, and distributed serverless primitives.
+A modern, serverless webhook testing platform built with Next.js 16, Google Cloud Firestore, and distributed serverless primitives.
 
 ## Features
 
@@ -19,7 +19,7 @@ A modern, serverless webhook testing platform built with Next.js 16, Google Clou
 ### Technology Stack
 
 - **Framework**: Next.js 16 (App Router, React Server Components)
-- **Storage**: Google Cloud Storage (object storage)
+- **Storage**: Google Cloud Firestore (NoSQL database)
 - **Routing**: Middleware-based slug-to-ID resolution
 - **Rate Limiting**: In-memory sliding window (5 RPS)
 - **Real-time**: Server-Sent Events with polling fallback
@@ -30,7 +30,7 @@ A modern, serverless webhook testing platform built with Next.js 16, Google Clou
 1. **Single-File Storage**: All webhooks for a project are stored in one JSON file (`projects/{id}/webhooks.json`) with a circular buffer limit of 100 webhooks
 2. **Optimistic Locking**: Uses ETag-based retry logic instead of distributed locks (no Redis required)
 3. **Client-Side Resend**: Webhook replay happens in the browser to prevent SSRF attacks
-4. **Google Cloud Storage**: Uses GCS with Workload Identity Federation for authentication
+4. **Google Cloud Firestore**: Uses Firestore with Workload Identity Federation for authentication
 
 ## Getting Started
 
@@ -38,7 +38,7 @@ A modern, serverless webhook testing platform built with Next.js 16, Google Clou
 
 - Node.js 18+ and pnpm
 - Google Cloud Project with Workload Identity Federation configured
-- GCS bucket `homelab-ng` with appropriate permissions
+- Firestore database with appropriate permissions
 
 ### Installation
 
@@ -118,7 +118,6 @@ apps/slingshot/
 │   ├── webhook-detail.tsx
 │   └── webhook-diff.tsx
 ├── lib/
-│   ├── gcs-client.ts          # Google Cloud Storage client
 │   ├── storage.ts             # Webhook storage operations
 │   ├── projects-storage.ts    # Project mapping management
 │   ├── stats-storage.ts       # Statistics storage
@@ -141,7 +140,7 @@ The platform implements a 5 requests per second rate limiter per project to prev
 3. Ensure Workload Identity Federation is configured for your Vercel project
 4. Deploy!
 
-The platform uses Google Cloud Storage with Workload Identity Federation for authentication when deployed on Vercel, and will automatically scale.
+The platform uses Google Cloud Firestore with Workload Identity Federation for authentication when deployed on Vercel, and will automatically scale.
 
 ## Limitations
 

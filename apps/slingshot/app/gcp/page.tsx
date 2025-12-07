@@ -1,8 +1,11 @@
 import { Suspense } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getBucket } from '@/lib/gcs-client';
-import GcpAuth from './_components/gcp-auth';
+import {
+  getFirestore,
+  shouldSkipFirestoreOperations,
+} from '@/lib/firestore-client';
+import FirestoreCollections from './_components/firestore-collections';
 
 // Force dynamic rendering since this page requires runtime GCP authentication
 export const dynamic = 'force-dynamic';
@@ -10,81 +13,89 @@ export const dynamic = 'force-dynamic';
 export default async function GcpPage() {
   let results: {
     success: boolean;
-    files?: Array<{
+    collections?: Array<{
       name: string;
-      size: string;
-      updated: string;
-      contentType?: string;
+      documentCount: number;
+      sampleDocuments?: Array<{
+        id: string;
+        type?: string;
+        updatedAt?: string;
+      }>;
     }>;
-    totalFiles?: number;
     error?: string;
   };
 
-  let bucketName: string | undefined;
   try {
-    const bucket = await getBucket();
-    bucketName = bucket.name;
+    if (shouldSkipFirestoreOperations()) {
+      results = {
+        success: true,
+        collections: [],
+      };
+    } else {
+      const firestore = await getFirestore();
 
-    // List files from the bucket (limit to 20 for display)
-    const [files] = await bucket.getFiles({ maxResults: 20 });
+      // Get the main 'slingshot' collection
+      const slingshotCollection = firestore.collection('slingshot');
+      const snapshot = await slingshotCollection.limit(100).get();
 
-    // Fetch metadata for each file
-    const fileList = await Promise.all(
-      files.map(async (file) => {
-        const [metadata] = await file.getMetadata();
-        return {
-          name: file.name,
-          size: metadata.size
-            ? formatBytes(
-                typeof metadata.size === 'string'
-                  ? Number.parseInt(metadata.size, 10)
-                  : metadata.size,
-              )
-            : 'Unknown',
-          updated: metadata.updated
-            ? new Date(metadata.updated).toLocaleString()
-            : 'Unknown',
-          contentType: metadata.contentType || 'Unknown',
-        };
-      }),
-    );
+      // Group documents by type if they have one
+      const documentsByType: Record<
+        string,
+        Array<{ id: string; updatedAt?: number }>
+      > = {};
+      snapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        const type = data.type || 'unknown';
+        if (!documentsByType[type]) {
+          documentsByType[type] = [];
+        }
+        documentsByType[type].push({
+          id: doc.id,
+          updatedAt: data.updatedAt || data.createdAt,
+        });
+      });
 
-    results = {
-      success: true,
-      files: fileList,
-      totalFiles: fileList.length,
-    };
+      // Create collection info
+      const collections = [
+        {
+          name: 'slingshot',
+          documentCount: snapshot.size,
+          sampleDocuments: Object.entries(documentsByType)
+            .map(([type, docs]) => ({
+              id: `${type} (${docs.length})`,
+              type,
+              updatedAt: docs[0]?.updatedAt
+                ? new Date(docs[0].updatedAt).toLocaleString()
+                : undefined,
+            }))
+            .slice(0, 20),
+        },
+      ];
+
+      results = {
+        success: true,
+        collections,
+      };
+    }
   } catch (error) {
     results = {
       success: false,
       error:
         error instanceof Error
           ? error.message
-          : 'Failed to list files from bucket',
+          : 'Failed to list Firestore collections',
     };
   }
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <PageHeader
-        title="Google Cloud Storage"
-        description="View files from your GCP storage bucket"
+        title="Firestore Collections"
+        description="View collections and documents from your Firestore database"
       />
       <Suspense fallback={<Skeleton className="w-full h-[500px]" />}>
-        <GcpAuth storageData={results} bucketName={bucketName} />
+        <FirestoreCollections collectionsData={results} />
       </Suspense>
     </div>
   );
-}
-
-function formatBytes(bytes: number, decimals = 2): string {
-  if (bytes === 0) return '0 Bytes';
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return `${Number.parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
 }

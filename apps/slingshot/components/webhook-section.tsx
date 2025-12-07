@@ -58,12 +58,7 @@ export function WebhookSection({
     <div className="space-y-6">
       {/* Tabs for top section only */}
       <div className="rounded-lg border border-border/50 shadow-md bg-card overflow-hidden">
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="w-full"
-          suppressHydrationWarning
-        >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="border-b border-border/50 px-6 pt-4">
             <TabsList className="grid w-full max-w-md grid-cols-2 relative bg-muted/50 p-1">
               <div

@@ -4,7 +4,7 @@ import { projectExists } from '@/lib/projects-storage';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { sanitizeHeaders } from '@/lib/sanitize-headers';
 import { incrementWebhookCount } from '@/lib/stats-storage';
-import { getWebhooks, saveWebhooks } from '@/lib/storage';
+import { appendWebhook } from '@/lib/storage';
 import type { Webhook } from '@/lib/types';
 
 const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB
@@ -86,82 +86,32 @@ async function handleWebhook(request: NextRequest, slug: string) {
     userAgent: request.headers.get('user-agent') || undefined,
   };
 
-  // Save webhook with retry logic (optimistic locking)
-  const maxRetries = 5;
-  let lastError: Error | null = null;
+  try {
+    await appendWebhook(slug, webhook);
+    await incrementWebhookCount(slug, webhook.timestamp);
 
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      // Always fetch fresh data on each attempt
-      const { data: history } = await getWebhooks(slug, 'server');
-      const existingWebhooks = history?.webhooks || [];
-
-      // Check if webhook already exists (avoid duplicates from retries)
-      if (existingWebhooks.some((w) => w.id === webhook.id)) {
-        // Webhook already saved, return success
-        return NextResponse.json(
-          {
-            success: true,
-            webhookId: webhook.id,
-            timestamp: webhook.timestamp,
-          },
-          {
-            status: 200,
-            headers: {
-              'X-RateLimit-Limit': rateLimitResult.limit.toString(),
-              'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-              'X-RateLimit-Reset': rateLimitResult.reset.toString(),
-            },
-          },
-        );
-      }
-
-      // Add new webhook to the front
-      const updatedWebhooks = [webhook, ...existingWebhooks];
-
-      await saveWebhooks(slug, updatedWebhooks);
-
-      // Update stats
-      await incrementWebhookCount(slug, webhook.timestamp);
-
-      // Return success
-      return NextResponse.json(
-        {
-          success: true,
-          webhookId: webhook.id,
-          timestamp: webhook.timestamp,
+    return NextResponse.json(
+      {
+        success: true,
+        webhookId: webhook.id,
+        timestamp: webhook.timestamp,
+      },
+      {
+        status: 200,
+        headers: {
+          'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
         },
-        {
-          status: 200,
-          headers: {
-            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
-            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-            'X-RateLimit-Reset': rateLimitResult.reset.toString(),
-          },
-        },
-      );
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error('Unknown error');
-
-      // If it's the last attempt, return error
-      if (attempt === maxRetries - 1) {
-        console.error('Failed to save webhook after retries:', lastError);
-        return NextResponse.json(
-          { error: 'Failed to save webhook' },
-          { status: 500 },
-        );
-      }
-
-      // Wait before retry (exponential backoff)
-      await new Promise((resolve) => setTimeout(resolve, 2 ** attempt * 10));
-    }
+      },
+    );
+  } catch (error) {
+    console.error('Failed to save webhook:', error);
+    return NextResponse.json(
+      { error: 'Failed to save webhook' },
+      { status: 500 },
+    );
   }
-
-  // Should never reach here, but TypeScript needs it
-  return NextResponse.json(
-    { error: 'Failed to save webhook' },
-    { status: 500 },
-  );
 }
 
 export async function GET(

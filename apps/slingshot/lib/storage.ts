@@ -1,158 +1,229 @@
-import { getBucket, shouldSkipGcsOperations } from './gcs-client';
+import type { Firestore } from '@google-cloud/firestore';
+import {
+  getFirestore,
+  shouldSkipFirestoreOperations,
+} from './firestore-client';
 import { resetProjectStats } from './stats-storage';
 import type { Webhook, WebhookHistory } from './types';
 
 const MAX_WEBHOOKS = 100;
+const COLLECTION = 'slingshot';
 
-/**
- * Check if webhooks file has changed (using metadata only, no download)
- * Returns etag and updated timestamp if file exists
- */
+const ensureProjectDoc = async (firestore: Firestore, slug: string) => {
+  const docRef = firestore.collection(COLLECTION).doc(slug);
+  const snap = await docRef.get();
+  if (!snap.exists) {
+    await docRef.set({
+      slug,
+      createdAt: Date.now(),
+      webhookCount: 0,
+      lastWebhookTimestamp: null,
+      updatedAt: Date.now(),
+      webhooksUpdatedAt: Date.now(),
+      type: 'project',
+      maxSize: MAX_WEBHOOKS,
+    });
+  }
+  return docRef;
+};
+
 export async function checkWebhooksChanged(
   slug: string,
 ): Promise<{ changed: boolean; etag: string | null; updated: number | null }> {
-  const key = `projects/${slug}/webhooks.json`;
-
+  if (shouldSkipFirestoreOperations()) {
+    return { changed: false, etag: null, updated: null };
+  }
   try {
-    const bucket = await getBucket();
-    const file = bucket.file(key);
-
-    // Only get metadata, don't download (this will throw 404 if file doesn't exist)
-    const [metadata] = await file.getMetadata();
-    const etag = metadata.etag || null;
-    const updated = metadata.updated
-      ? new Date(metadata.updated).getTime()
-      : null;
-
-    return { changed: true, etag, updated };
-  } catch (error: any) {
-    if (error.code === 404) {
+    const firestore = await getFirestore();
+    const docRef = firestore.collection(COLLECTION).doc(slug);
+    const snap = await docRef.get();
+    if (!snap.exists) {
       return { changed: false, etag: null, updated: null };
     }
-    console.error(`[GCS] Error checking webhooks metadata for ${slug}:`, error);
+    const data = snap.data() || {};
+    const updated =
+      typeof data.webhooksUpdatedAt === 'number'
+        ? data.webhooksUpdatedAt
+        : null;
+    return {
+      changed: !!updated,
+      etag: updated ? updated.toString() : null,
+      updated,
+    };
+  } catch (_error) {
     return { changed: false, etag: null, updated: null };
   }
 }
 
-/**
- * Get webhooks from storage (Google Cloud Storage)
- * slug is used as the project ID
- */
 export async function getWebhooks(
   slug: string,
-  knownEtag?: string | null,
+  _knownEtag?: string | null,
 ): Promise<{ data: WebhookHistory | null; etag: string | null }> {
-  const key = `projects/${slug}/webhooks.json`;
-
-  console.log(`[GCS] getWebhooks called for project: ${slug}`);
-
+  if (shouldSkipFirestoreOperations()) {
+    return { data: null, etag: null };
+  }
   try {
-    const bucket = await getBucket();
-    const file = bucket.file(key);
+    const firestore = await getFirestore();
+    const docRef = await ensureProjectDoc(firestore, slug);
+    const projectSnap = await docRef.get();
+    const projectData = projectSnap.data() || {};
+    const etag = projectData.webhooksUpdatedAt
+      ? projectData.webhooksUpdatedAt.toString()
+      : null;
 
-    console.log(`[GCS] Downloading file: ${key}`);
-    const [contents] = await file.download();
-    const data = JSON.parse(contents.toString('utf-8')) as WebhookHistory;
+    const webhooksSnap = await docRef
+      .collection('webhooks')
+      .orderBy('timestamp', 'desc')
+      .limit(MAX_WEBHOOKS)
+      .get();
 
-    // Migrate: ensure all webhooks have direction field (default to 'incoming' for legacy webhooks)
-    if (data.webhooks) {
-      data.webhooks = data.webhooks.map((webhook) => ({
-        ...webhook,
-        direction: webhook.direction || 'incoming',
-      }));
-    }
+    const webhooks: Webhook[] = webhooksSnap.docs.map((doc) => {
+      const data = doc.data() as Webhook;
+      return { ...data, direction: data.direction || 'incoming' };
+    });
 
-    console.log(
-      `[GCS] Retrieved ${data.webhooks?.length || 0} webhooks from ${key}`,
-    );
-
-    // Get metadata for etag if not provided
-    let etag = knownEtag || null;
-    if (!etag) {
-      console.log(`[GCS] Getting metadata for: ${key}`);
-      const [metadata] = await file.getMetadata();
-      etag = metadata.etag || null;
-    }
+    const data: WebhookHistory = {
+      webhooks,
+      maxSize: projectData.maxSize || MAX_WEBHOOKS,
+    };
 
     return { data, etag };
-  } catch (error: any) {
-    // Return null data if GCS operation fails (e.g., during build or file not found)
-    if (error.code !== 404) {
-      console.error(`[GCS] Error getting webhooks for ${slug}:`, error);
-    } else {
-      console.log(`[GCS] File does not exist: ${key}`);
-    }
+  } catch (error) {
+    console.error(`[Firestore] Error getting webhooks for ${slug}:`, error);
     return { data: null, etag: null };
   }
 }
 
-/**
- * Save webhooks to storage
- * slug is used as the project ID
- */
+export async function appendWebhook(
+  slug: string,
+  webhook: Webhook,
+): Promise<void> {
+  if (shouldSkipFirestoreOperations()) {
+    console.log('[Firestore] Skipping appendWebhook - CI environment detected');
+    return;
+  }
+
+  const firestore = await getFirestore();
+  const docRef = firestore.collection(COLLECTION).doc(slug);
+  const webhooksRef = docRef.collection('webhooks');
+
+  await firestore.runTransaction(async (tx) => {
+    // All reads must happen before any writes
+    const projectSnap = await tx.get(docRef);
+
+    // Enforce cap: delete oldest beyond MAX_WEBHOOKS
+    // Read this before any writes
+    const extraQuery = webhooksRef
+      .orderBy('timestamp', 'desc')
+      .offset(MAX_WEBHOOKS)
+      .limit(50);
+    const extraSnap = await tx.get(extraQuery);
+
+    // Now perform all writes
+    if (!projectSnap.exists) {
+      tx.set(docRef, {
+        slug,
+        createdAt: Date.now(),
+        webhooksUpdatedAt: Date.now(),
+        type: 'project',
+        maxSize: MAX_WEBHOOKS,
+      });
+    }
+
+    tx.set(webhooksRef.doc(webhook.id), webhook);
+
+    for (const doc of extraSnap.docs) {
+      tx.delete(doc.ref);
+    }
+
+    tx.set(
+      docRef,
+      {
+        slug,
+        lastWebhookTimestamp: webhook.timestamp,
+        updatedAt: Date.now(),
+        webhooksUpdatedAt: Date.now(),
+        type: 'project',
+        maxSize: MAX_WEBHOOKS,
+      },
+      { merge: true },
+    );
+  });
+}
+
 export async function saveWebhooks(
   slug: string,
   webhooks: Webhook[],
 ): Promise<string> {
-  if (shouldSkipGcsOperations()) {
-    console.log('[GCS] Skipping webhooks save - CI environment detected');
+  if (shouldSkipFirestoreOperations()) {
+    console.log('[Firestore] Skipping saveWebhooks - CI environment detected');
     return '';
   }
 
-  const trimmedWebhooks = webhooks.slice(0, MAX_WEBHOOKS);
+  const firestore = await getFirestore();
+  const docRef = await ensureProjectDoc(firestore, slug);
+  const webhooksRef = docRef.collection('webhooks');
+  const trimmed = webhooks.slice(0, MAX_WEBHOOKS);
 
-  const data: WebhookHistory = {
-    webhooks: trimmedWebhooks,
-    maxSize: MAX_WEBHOOKS,
-  };
+  // Replace collection contents
+  const batch = firestore.batch();
 
-  const key = `projects/${slug}/webhooks.json`;
-  console.log(
-    `[GCS] saveWebhooks called for project: ${slug}, saving ${trimmedWebhooks.length} webhooks`,
-  );
+  const existing = await webhooksRef.get();
+  for (const doc of existing.docs) {
+    batch.delete(doc.ref);
+  }
 
-  const bucket = await getBucket();
-  const file = bucket.file(key);
-
-  console.log(`[GCS] Saving file: ${key} (${trimmedWebhooks.length} webhooks)`);
-  await file.save(JSON.stringify(data), {
-    contentType: 'application/json',
-    metadata: {
-      cacheControl: 'no-cache',
-    },
+  trimmed.forEach((webhook) => {
+    batch.set(webhooksRef.doc(webhook.id), webhook);
   });
 
-  // Get metadata for etag
-  console.log(`[GCS] Getting metadata after save for: ${key}`);
-  const [metadata] = await file.getMetadata();
-  return metadata.etag || '';
+  const now = Date.now();
+  batch.set(
+    docRef,
+    {
+      slug,
+      webhookCount: trimmed.length,
+      lastWebhookTimestamp: trimmed[0]?.timestamp || null,
+      updatedAt: now,
+      webhooksUpdatedAt: now,
+      type: 'project',
+      maxSize: MAX_WEBHOOKS,
+    },
+    { merge: true },
+  );
+
+  await batch.commit();
+  return now.toString();
 }
 
-/**
- * Clear webhooks for a project
- * slug is used as the project ID
- */
 export async function clearWebhooks(slug: string): Promise<void> {
-  if (shouldSkipGcsOperations()) {
-    console.log('[GCS] Skipping webhooks clear - CI environment detected');
+  if (shouldSkipFirestoreOperations()) {
+    console.log('[Firestore] Skipping clearWebhooks - CI environment detected');
     return;
   }
 
-  const key = `projects/${slug}/webhooks.json`;
-  console.log(`[GCS] clearWebhooks called for project: ${slug}`);
+  const firestore = await getFirestore();
+  const docRef = firestore.collection(COLLECTION).doc(slug);
+  const webhooksRef = docRef.collection('webhooks');
 
-  const bucket = await getBucket();
-  const file = bucket.file(key);
-
-  try {
-    console.log(`[GCS] Deleting file: ${key}`);
-    await file.delete();
-    console.log(`[GCS] Successfully deleted file: ${key}`);
-  } catch (error) {
-    // Ignore errors (file might not exist)
-    console.log(`[GCS] File does not exist or delete failed: ${key}`, error);
+  const snap = await webhooksRef.get();
+  const batch = firestore.batch();
+  for (const doc of snap.docs) {
+    batch.delete(doc.ref);
   }
 
-  // Reset stats for this project
+  const now = Date.now();
+  batch.set(
+    docRef,
+    {
+      webhookCount: 0,
+      lastWebhookTimestamp: null,
+      updatedAt: now,
+      webhooksUpdatedAt: now,
+    },
+    { merge: true },
+  );
+
+  await batch.commit();
   await resetProjectStats(slug);
 }

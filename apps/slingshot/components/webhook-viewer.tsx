@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import useSWR from 'swr';
 import { clearWebhooksAction, pollWebhooksAction } from '@/lib/actions';
@@ -212,10 +212,28 @@ export function WebhookViewer({
     }
   }, [projectSlug, mutate]);
 
+  const panelGroupId = useMemo(
+    () => `webhook-viewer-panels-${projectSlug}`,
+    [projectSlug],
+  );
+  const listPanelId = `${panelGroupId}-list`;
+  const detailPanelId = `${panelGroupId}-detail`;
+  const resizeHandleId = `${panelGroupId}-resize`;
+
   return (
     <div className="rounded-lg border border-border/50 shadow-md bg-card flex-1 overflow-hidden flex flex-col min-h-0">
-      <PanelGroup direction="horizontal" className="h-full min-h-0">
-        <Panel defaultSize={30} minSize={20} maxSize={50} className="min-h-0">
+      <PanelGroup
+        id={panelGroupId}
+        direction="horizontal"
+        className="h-full min-h-0"
+      >
+        <Panel
+          id={listPanelId}
+          defaultSize={30}
+          minSize={20}
+          maxSize={50}
+          className="min-h-0"
+        >
           <WebhookList
             webhooks={webhooks}
             selectedWebhook={selectedWebhook}
@@ -225,8 +243,16 @@ export function WebhookViewer({
             projectSlug={projectSlug}
           />
         </Panel>
-        <PanelResizeHandle className="w-2 bg-border/50 hover:bg-primary/30 transition-colors" />
-        <Panel defaultSize={70} minSize={50} className="min-h-0">
+        <PanelResizeHandle
+          id={resizeHandleId}
+          className="w-2 bg-border/50 hover:bg-primary/30 transition-colors"
+        />
+        <Panel
+          id={detailPanelId}
+          defaultSize={70}
+          minSize={50}
+          className="min-h-0"
+        >
           <WebhookDetail webhook={selectedWebhook} onResend={onResend} />
         </Panel>
       </PanelGroup>

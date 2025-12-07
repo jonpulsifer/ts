@@ -1,8 +1,8 @@
 import {
-  getBucket,
-  isGcsUnavailableError,
-  shouldSkipGcsOperations,
-} from './gcs-client';
+  getFirestore,
+  isFirestoreUnavailableError,
+  shouldSkipFirestoreOperations,
+} from './firestore-client';
 
 export interface ProjectStats {
   webhookCount: number;
@@ -30,14 +30,6 @@ const DEFAULT_STATS: StatsData = {
   },
 };
 
-// Debouncing mechanism to reduce GCS write frequency
-let pendingStats: StatsData | null = null;
-let saveTimeout: NodeJS.Timeout | null = null;
-let isSaving = false;
-const SAVE_DEBOUNCE_MS = 30000; // Save at most once every 30 seconds
-const MAX_PENDING_UPDATES = 10; // Or after 10 updates, whichever comes first
-let pendingUpdateCount = 0;
-
 /**
  * Check if stats file has changed (using metadata only, no download)
  */
@@ -46,23 +38,20 @@ export async function checkStatsChanged(): Promise<{
   etag: string | null;
   updated: number | null;
 }> {
+  if (shouldSkipFirestoreOperations()) {
+    return { changed: false, etag: null, updated: null };
+  }
   try {
-    const bucket = await getBucket();
-    const file = bucket.file('stats.json');
-
-    // Only get metadata, don't download (throws 404 if not found)
-    const [metadata] = await file.getMetadata();
-    const etag = metadata.etag || null;
-    const updated = metadata.updated
-      ? new Date(metadata.updated).getTime()
-      : null;
-
-    return { changed: true, etag, updated };
-  } catch (error: any) {
-    if (error.code === 404) {
+    const firestore = await getFirestore();
+    const metaDoc = await firestore.collection('slingshot').doc('_meta').get();
+    if (!metaDoc.exists) {
       return { changed: false, etag: null, updated: null };
     }
-    console.error('[GCS] Error checking stats metadata:', error);
+    const data = metaDoc.data() || {};
+    const updated =
+      typeof data.updatedAt === 'number' ? data.updatedAt : Date.now();
+    return { changed: true, etag: updated.toString(), updated };
+  } catch (_error) {
     return { changed: false, etag: null, updated: null };
   }
 }
@@ -74,132 +63,45 @@ export async function checkStatsChanged(): Promise<{
 export async function getStats(
   knownEtag?: string | null,
 ): Promise<{ data: StatsData; etag: string | null }> {
-  console.log('[GCS] getStats called');
-  try {
-    const bucket = await getBucket();
-    const file = bucket.file('stats.json');
-
-    console.log('[GCS] Downloading stats.json');
-    const [contents] = await file.download();
-    const data = JSON.parse(contents.toString('utf-8')) as StatsData;
-
-    // Get metadata for etag if not provided
-    let etag = knownEtag || null;
-    if (!etag) {
-      console.log('[GCS] Getting metadata for stats.json');
-      const [metadata] = await file.getMetadata();
-      etag = metadata.etag || null;
-    }
-
-    console.log(
-      `[GCS] Retrieved stats for ${Object.keys(data.projects).length} projects`,
-    );
-    return { data, etag };
-  } catch (error: any) {
-    // Return default stats if GCS operation fails (e.g., during build)
-    if (error.code !== 404) {
-      console.error('[GCS] Error getting stats:', error);
-    } else {
-      console.log('[GCS] stats.json does not exist, returning default stats');
-    }
+  if (shouldSkipFirestoreOperations()) {
     return { data: DEFAULT_STATS, etag: null };
   }
-}
-
-/**
- * Save stats to storage (internal, immediate save)
- * Silently fails if GCS is unavailable (non-critical operation)
- */
-async function saveStatsImmediate(stats: StatsData): Promise<void> {
-  if (shouldSkipGcsOperations()) {
-    console.log('[GCS] Skipping stats save - CI environment detected');
-    return;
-  }
-
-  console.log(
-    `[GCS] saveStatsImmediate called (${Object.keys(stats.projects).length} projects)`,
-  );
   try {
-    const bucket = await getBucket();
-    const file = bucket.file('stats.json');
+    const firestore = await getFirestore();
+    const metaDoc = await firestore.collection('slingshot').doc('_meta').get();
+    const projectsSnap = await firestore
+      .collection('slingshot')
+      .where('type', '==', 'project')
+      .get();
 
-    console.log('[GCS] Saving stats.json');
-    await file.save(JSON.stringify(stats), {
-      contentType: 'application/json',
-      metadata: {
-        cacheControl: 'no-cache',
-      },
+    const projects: Record<string, ProjectStats> = {};
+    projectsSnap.docs.forEach((doc) => {
+      const data = doc.data() || {};
+      projects[doc.id] = {
+        webhookCount: data.webhookCount || 0,
+        lastWebhookTimestamp:
+          typeof data.lastWebhookTimestamp === 'number'
+            ? data.lastWebhookTimestamp
+            : null,
+        updatedAt: data.updatedAt || Date.now(),
+      };
     });
-    console.log('[GCS] Successfully saved stats.json');
+
+    const metaData = metaDoc.data() || {};
+    const global: GlobalStats = {
+      totalProjects: metaData.totalProjects || projectsSnap.docs.length,
+      totalWebhooks: metaData.totalWebhooks || 0,
+      updatedAt: metaData.updatedAt || Date.now(),
+    };
+
+    const etag = knownEtag || global.updatedAt.toString();
+    return { data: { projects, global }, etag };
   } catch (error) {
-    // Silently fail - stats are not critical
-    console.error('[GCS] Error saving stats (non-critical):', error);
+    if (isFirestoreUnavailableError(error)) {
+      return { data: DEFAULT_STATS, etag: null };
+    }
+    throw error;
   }
-}
-
-/**
- * Save stats to storage with debouncing
- * Batches multiple updates to reduce GCS write frequency
- * Silently fails if GCS is unavailable (non-critical operation)
- */
-export async function saveStats(stats: StatsData): Promise<void> {
-  // Store the latest stats
-  pendingStats = stats;
-  pendingUpdateCount++;
-
-  // If we've accumulated enough updates, save immediately
-  if (pendingUpdateCount >= MAX_PENDING_UPDATES) {
-    console.log(
-      `[GCS] saveStats: ${pendingUpdateCount} pending updates, saving immediately`,
-    );
-    await flushPendingStats();
-    return;
-  }
-
-  // Otherwise, debounce the save
-  if (saveTimeout) {
-    clearTimeout(saveTimeout);
-  }
-
-  saveTimeout = setTimeout(async () => {
-    await flushPendingStats();
-  }, SAVE_DEBOUNCE_MS);
-
-  console.log(
-    `[GCS] saveStats: Debounced (${pendingUpdateCount} pending updates, will save in ${SAVE_DEBOUNCE_MS}ms)`,
-  );
-}
-
-/**
- * Flush pending stats to GCS immediately
- */
-async function flushPendingStats(): Promise<void> {
-  if (isSaving || !pendingStats) {
-    return;
-  }
-
-  isSaving = true;
-  const statsToSave = pendingStats;
-  pendingStats = null;
-  pendingUpdateCount = 0;
-
-  if (saveTimeout) {
-    clearTimeout(saveTimeout);
-    saveTimeout = null;
-  }
-
-  try {
-    await saveStatsImmediate(statsToSave);
-  } finally {
-    isSaving = false;
-  }
-}
-
-/**
- * Force flush pending stats (for critical operations like project deletion)
- */
-export async function flushStats(): Promise<void> {
-  await flushPendingStats();
 }
 
 /**
@@ -209,69 +111,153 @@ export async function incrementWebhookCount(
   slug: string,
   timestamp: number,
 ): Promise<void> {
-  console.log(`[GCS] incrementWebhookCount called for project: ${slug}`);
-  const { data: stats } = await getStats();
-
-  if (!stats.projects[slug]) {
-    stats.projects[slug] = {
-      webhookCount: 0,
-      lastWebhookTimestamp: null,
-      updatedAt: Date.now(),
-    };
+  if (shouldSkipFirestoreOperations()) {
+    return;
   }
 
-  stats.projects[slug].webhookCount += 1;
-  stats.projects[slug].lastWebhookTimestamp = timestamp;
-  stats.projects[slug].updatedAt = Date.now();
+  const firestore = await getFirestore();
+  const projectRef = firestore.collection('slingshot').doc(slug);
+  const metaRef = firestore.collection('slingshot').doc('_meta');
 
-  stats.global.totalWebhooks += 1;
-  stats.global.updatedAt = Date.now();
+  await firestore.runTransaction(async (tx) => {
+    // All reads must happen before any writes
+    const projectSnap = await tx.get(projectRef);
+    const metaSnap = await tx.get(metaRef);
 
-  await saveStats(stats);
+    // Now perform all writes
+    if (!projectSnap.exists) {
+      tx.set(projectRef, {
+        slug,
+        createdAt: Date.now(),
+        type: 'project',
+        webhookCount: 0,
+        lastWebhookTimestamp: null,
+        updatedAt: Date.now(),
+        webhooksUpdatedAt: Date.now(),
+      });
+    }
+
+    const projectData = projectSnap.data() || {};
+    const currentCount =
+      typeof projectData.webhookCount === 'number'
+        ? projectData.webhookCount
+        : 0;
+
+    tx.set(
+      projectRef,
+      {
+        webhookCount: currentCount + 1,
+        lastWebhookTimestamp: timestamp,
+        updatedAt: Date.now(),
+      },
+      { merge: true },
+    );
+
+    const metaData = metaSnap.data() || {};
+    const currentTotal =
+      typeof metaData.totalWebhooks === 'number' ? metaData.totalWebhooks : 0;
+    const currentProjects =
+      typeof metaData.totalProjects === 'number'
+        ? metaData.totalProjects
+        : undefined;
+
+    // Build update object, excluding undefined values
+    const updateData: {
+      totalWebhooks: number;
+      totalProjects?: number;
+      updatedAt: number;
+      type: string;
+    } = {
+      totalWebhooks: currentTotal + 1,
+      updatedAt: Date.now(),
+      type: 'meta',
+    };
+
+    // Only include totalProjects if it has a valid value
+    if (typeof currentProjects === 'number') {
+      updateData.totalProjects = currentProjects;
+    }
+
+    tx.set(metaRef, updateData, { merge: true });
+  });
 }
 
 /**
  * Reset project stats when webhooks are cleared
  */
 export async function resetProjectStats(slug: string): Promise<void> {
-  console.log(`[GCS] resetProjectStats called for project: ${slug}`);
-  const { data: stats } = await getStats();
-
-  if (stats.projects[slug]) {
-    const oldCount = stats.projects[slug].webhookCount;
-    stats.projects[slug] = {
-      webhookCount: 0,
-      lastWebhookTimestamp: null,
-      updatedAt: Date.now(),
-    };
-
-    stats.global.totalWebhooks = Math.max(
-      0,
-      stats.global.totalWebhooks - oldCount,
-    );
-    stats.global.updatedAt = Date.now();
-
-    await saveStats(stats);
-    // Flush immediately for critical operations
-    await flushStats();
+  if (shouldSkipFirestoreOperations()) {
+    return;
   }
+
+  const firestore = await getFirestore();
+  const projectRef = firestore.collection('slingshot').doc(slug);
+  const metaRef = firestore.collection('slingshot').doc('_meta');
+
+  await firestore.runTransaction(async (tx) => {
+    const projectSnap = await tx.get(projectRef);
+    const metaSnap = await tx.get(metaRef);
+    const oldCount =
+      (projectSnap.data() && projectSnap.data()!.webhookCount) || 0;
+
+    tx.set(
+      projectRef,
+      {
+        webhookCount: 0,
+        lastWebhookTimestamp: null,
+        updatedAt: Date.now(),
+      },
+      { merge: true },
+    );
+
+    const metaData = metaSnap.data() || {};
+    const currentTotal =
+      typeof metaData.totalWebhooks === 'number' ? metaData.totalWebhooks : 0;
+
+    tx.set(
+      metaRef,
+      {
+        totalWebhooks: Math.max(0, currentTotal - oldCount),
+        updatedAt: Date.now(),
+      },
+      { merge: true },
+    );
+  });
 }
 
 /**
  * Update global project count
  * Silently fails if GCS is unavailable (non-critical operation)
  */
-export async function updateProjectCount(count: number): Promise<void> {
+export async function updateProjectCount(count?: number): Promise<void> {
+  if (shouldSkipFirestoreOperations()) {
+    return;
+  }
+
+  const firestore = await getFirestore();
+  const metaRef = firestore.collection('slingshot').doc('_meta');
+
   try {
-    const { data: stats } = await getStats();
-    stats.global.totalProjects = count;
-    stats.global.updatedAt = Date.now();
-    await saveStats(stats);
-    // Flush immediately for critical operations like project creation/deletion
-    await flushStats();
+    const total =
+      typeof count === 'number'
+        ? count
+        : (
+            await firestore
+              .collection('slingshot')
+              .where('type', '==', 'project')
+              .get()
+          ).docs.length;
+
+    await metaRef.set(
+      {
+        totalProjects: total,
+        updatedAt: Date.now(),
+        type: 'meta',
+      },
+      { merge: true },
+    );
   } catch (error) {
-    // Silently fail if GCS unavailable - stats are not critical
-    if (!isGcsUnavailableError(error)) {
+    if (!isFirestoreUnavailableError(error)) {
       throw error;
     }
   }
@@ -283,37 +269,75 @@ export async function updateProjectCount(count: number): Promise<void> {
 export async function getProjectStats(
   slug: string,
 ): Promise<ProjectStats | null> {
-  const { data: stats } = await getStats();
-  return stats.projects[slug] || null;
+  const firestore = await getFirestore();
+  const doc = await firestore.collection('slingshot').doc(slug).get();
+  if (!doc.exists) return null;
+  const data = doc.data() || {};
+  return {
+    webhookCount: data.webhookCount || 0,
+    lastWebhookTimestamp:
+      typeof data.lastWebhookTimestamp === 'number'
+        ? data.lastWebhookTimestamp
+        : null,
+    updatedAt: data.updatedAt || Date.now(),
+  };
 }
 
 /**
  * Remove project stats when a project is deleted
  */
 export async function removeProjectStats(slug: string): Promise<void> {
-  console.log(`[GCS] removeProjectStats called for project: ${slug}`);
-  const { data: stats } = await getStats();
+  const firestore = await getFirestore();
+  const metaRef = firestore.collection('slingshot').doc('_meta');
+  const projectRef = firestore.collection('slingshot').doc(slug);
 
-  if (stats.projects[slug]) {
-    const oldCount = stats.projects[slug].webhookCount;
-    delete stats.projects[slug];
+  await firestore.runTransaction(async (tx) => {
+    const projectSnap = await tx.get(projectRef);
+    const metaSnap = await tx.get(metaRef);
+    const oldCount =
+      (projectSnap.data() && projectSnap.data()!.webhookCount) || 0;
 
-    stats.global.totalWebhooks = Math.max(
-      0,
-      stats.global.totalWebhooks - oldCount,
-    );
-    stats.global.updatedAt = Date.now();
+    tx.delete(projectRef);
 
-    await saveStats(stats);
-    // Flush immediately for critical operations
-    await flushStats();
-  }
+    const metaData = metaSnap.data() || {};
+    const currentTotal =
+      typeof metaData.totalWebhooks === 'number' ? metaData.totalWebhooks : 0;
+    const currentProjects =
+      typeof metaData.totalProjects === 'number'
+        ? metaData.totalProjects
+        : undefined;
+
+    // Build update object, excluding undefined values
+    const updateData: {
+      totalWebhooks: number;
+      totalProjects?: number;
+      updatedAt: number;
+      type: string;
+    } = {
+      totalWebhooks: Math.max(0, currentTotal - oldCount),
+      updatedAt: Date.now(),
+      type: 'meta',
+    };
+
+    // Only include totalProjects if it has a valid value
+    if (typeof currentProjects === 'number') {
+      updateData.totalProjects = Math.max(0, currentProjects - 1);
+    }
+
+    tx.set(metaRef, updateData, { merge: true });
+  });
 }
 
 /**
  * Get global stats
  */
 export async function getGlobalStats(): Promise<GlobalStats> {
-  const { data: stats } = await getStats();
-  return stats.global;
+  const firestore = await getFirestore();
+  const snap = await firestore.collection('slingshot').doc('_meta').get();
+  const data = snap.data() || {};
+  return {
+    totalProjects: data.totalProjects || 0,
+    totalWebhooks: data.totalWebhooks || 0,
+    updatedAt: data.updatedAt || Date.now(),
+  };
 }

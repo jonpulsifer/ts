@@ -195,7 +195,7 @@ export async function getWebhooksWithCache(slug: string) {
   const cached = getCachedWebhooks(slug);
   if (cached && cached.length > 0) {
     console.log(
-      `[Client] Using cached webhooks for ${slug} (${cached.length} webhooks, no GCS request)`,
+      `[Client] Using cached webhooks for ${slug} (${cached.length} webhooks, no Firestore request)`,
     );
     return {
       webhooks: cached,
@@ -204,7 +204,9 @@ export async function getWebhooksWithCache(slug: string) {
   }
 
   // Cache miss or expired, fetch from server
-  console.log(`[Client] Cache miss/expired for ${slug}, fetching from GCS`);
+  console.log(
+    `[Client] Cache miss/expired for ${slug}, fetching from Firestore`,
+  );
   const { getWebhooks } = await import('./storage');
   const { data: history, etag } = await getWebhooks(slug);
   const result = {
@@ -293,7 +295,7 @@ export async function sendOutgoingWebhookAction(
     const responseText = await response.text();
 
     // Save the outgoing webhook
-    const { getWebhooks, saveWebhooks } = await import('./storage');
+    const { appendWebhook } = await import('./storage');
     const { incrementWebhookCount } = await import('./stats-storage');
     const { generateProjectId } = await import('./nanoid');
 
@@ -313,16 +315,8 @@ export async function sendOutgoingWebhookAction(
       duration,
     };
 
-    // Get existing webhooks
-    const { data: history } = await getWebhooks(slug);
-    const existingWebhooks = history?.webhooks || [];
-
-    // Add new webhook to the front
-    const updatedWebhooks = [webhook, ...existingWebhooks];
-
-    await saveWebhooks(slug, updatedWebhooks);
-
-    // Update stats
+    // Append webhook
+    await appendWebhook(slug, webhook);
     await incrementWebhookCount(slug, webhook.timestamp);
 
     return {
@@ -358,7 +352,7 @@ export async function saveOutgoingWebhookAction(
   },
 ) {
   try {
-    const { getWebhooks, saveWebhooks } = await import('./storage');
+    const { appendWebhook } = await import('./storage');
     const { incrementWebhookCount } = await import('./stats-storage');
     const { generateProjectId } = await import('./nanoid');
 
@@ -377,16 +371,7 @@ export async function saveOutgoingWebhookAction(
       responseBody: webhookData.responseBody,
     };
 
-    // Get existing webhooks
-    const { data: history } = await getWebhooks(slug);
-    const existingWebhooks = history?.webhooks || [];
-
-    // Add new webhook to the front
-    const updatedWebhooks = [webhook, ...existingWebhooks];
-
-    await saveWebhooks(slug, updatedWebhooks);
-
-    // Update stats
+    await appendWebhook(slug, webhook);
     await incrementWebhookCount(slug, webhook.timestamp);
 
     return {
