@@ -15,9 +15,9 @@ export function validateOutgoingDomain(url: string): {
   // In production, check against allowed domains
   const allowedDomains = process.env.WEBHOOK_ALLOWED_OUTGOING_DOMAINS;
 
-  // If no restriction is set in production, allow all (backward compatibility)
+  // If no restriction is set in production, deny all
   if (!allowedDomains) {
-    return { allowed: true };
+    return { allowed: false };
   }
 
   try {
