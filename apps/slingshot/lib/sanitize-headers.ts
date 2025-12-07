@@ -74,6 +74,13 @@ export function sanitizeEnvVars(
   for (const [key, value] of Object.entries(envVars)) {
     const upperKey = key.toUpperCase();
 
+    // All NEXT_PUBLIC_* variables are safe since they're client-side
+    // Skip sanitization for these variables
+    if (upperKey.startsWith('NEXT_PUBLIC_')) {
+      sanitized[key] = value;
+      continue;
+    }
+
     // Check if the key matches any sensitive environment variable (case-insensitive)
     const isSensitive = SENSITIVE_ENV_VARS.some(
       (sensitiveKey) => upperKey === sensitiveKey.toUpperCase(),

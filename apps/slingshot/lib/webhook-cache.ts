@@ -208,7 +208,7 @@ function clearOldCacheEntries(): void {
 }
 
 /**
- * Get all cache entries with details (for debugging/admin)
+ * Get all cache entries with details (for admin/debugging purposes)
  */
 export function getAllCacheEntries(): {
   slug: string;
@@ -284,7 +284,6 @@ export function clearAllCachedWebhooks(): void {
     keysToRemove.forEach((key) => {
       localStorage.removeItem(key);
     });
-    console.log(`[Cache] Cleared ${keysToRemove.length} cache entries`);
   } catch (error) {
     console.error('Failed to clear all cached webhooks:', error);
     throw error;

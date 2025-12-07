@@ -29,11 +29,10 @@ export default async function EnvironmentPage() {
   const allServerEnv = Object.fromEntries(
     Object.entries(process.env)
       .filter(([key]) => !key.startsWith('NEXT_PUBLIC_'))
-      .filter(([_, value]) => value !== undefined)
-      .sort(([a], [b]) => a.localeCompare(b)),
+      .filter(([_, value]) => value !== undefined),
   ) as Record<string, string>;
 
-  // Ensure all Vercel system variables are included (even if undefined, for visibility)
+  // Ensure all Vercel system variables are included
   const serverEnv: Record<string, string> = { ...allServerEnv };
   VERCEL_SYSTEM_VARIABLES.forEach((key) => {
     if (process.env[key] !== undefined) {
@@ -41,7 +40,7 @@ export default async function EnvironmentPage() {
     }
   });
 
-  // Sort again after adding Vercel system variables
+  // Sort alphabetically
   const sortedServerEnv = Object.fromEntries(
     Object.entries(serverEnv).sort(([a], [b]) => a.localeCompare(b)),
   );

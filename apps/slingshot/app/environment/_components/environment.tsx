@@ -36,7 +36,7 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
 
   // Vercel Framework Environment Variables for Next.js
   // Reference: https://vercel.com/docs/environment-variables/framework-environment-variables
-  // Used for badge detection only
+  // Used for badge detection in the UI
   const VERCEL_ENV_VARIABLES = [
     'NEXT_PUBLIC_VERCEL_ENV',
     'NEXT_PUBLIC_VERCEL_TARGET_ENV',
@@ -56,37 +56,57 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
     'NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID',
   ] as const;
 
-  const KNOWN_NEXT_ENV_VARS = [
-    'NEXT_PUBLIC_BASE_URL',
-    'NEXT_PUBLIC_ENVIRONMENT_VARIABLE',
-    ...VERCEL_ENV_VARIABLES,
-  ] as const;
-
   // Compute client env on the client side to get actual values
+  // IMPORTANT: Next.js only bundles NEXT_PUBLIC_* variables that are STATICALLY referenced
+  // Dynamic access like process.env[key] won't work - we must reference each variable directly
   useEffect(() => {
     const rawClientEnv: Record<string, string> = {};
 
-    // First, explicitly check known Next.js variables
-    for (const key of KNOWN_NEXT_ENV_VARS) {
-      const value = process.env[key];
-      if (value && value.trim() !== '') {
+    // Statically reference each variable so Next.js bundles them
+    // Next.js uses static analysis to determine which env vars to bundle at build time
+    const envVars: Record<string, string | undefined> = {
+      NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+      NEXT_PUBLIC_ENVIRONMENT_VARIABLE:
+        process.env.NEXT_PUBLIC_ENVIRONMENT_VARIABLE,
+      NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
+      NEXT_PUBLIC_VERCEL_TARGET_ENV: process.env.NEXT_PUBLIC_VERCEL_TARGET_ENV,
+      NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
+      NEXT_PUBLIC_VERCEL_BRANCH_URL: process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL,
+      NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL:
+        process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL,
+      NEXT_PUBLIC_VERCEL_AUTOMATION_BYPASS_SECRET:
+        process.env.NEXT_PUBLIC_VERCEL_AUTOMATION_BYPASS_SECRET,
+      NEXT_PUBLIC_VERCEL_GIT_PROVIDER:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_PROVIDER,
+      NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG,
+      NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER,
+      NEXT_PUBLIC_VERCEL_GIT_REPO_ID:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_ID,
+      NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF,
+      NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
+      NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE,
+      NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_LOGIN:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_LOGIN,
+      NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME,
+      NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID:
+        process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID,
+    };
+
+    // Process each variable - only include variables that are actually bundled
+    for (const [key, value] of Object.entries(envVars)) {
+      if (value !== undefined) {
         rawClientEnv[key] = value;
       }
+      // Skip variables that aren't bundled - don't display them
     }
 
-    // Then, collect all other NEXT_PUBLIC_* variables
-    for (const [key, value] of Object.entries(process.env)) {
-      if (
-        key.startsWith('NEXT_PUBLIC_') &&
-        value &&
-        value.trim() !== '' &&
-        !(key in rawClientEnv)
-      ) {
-        rawClientEnv[key] = value;
-      }
-    }
-
-    // Sanitize sensitive environment variables
+    // Sanitize sensitive environment variables (NEXT_PUBLIC_* vars are skipped as they're safe)
     const sanitized = sanitizeEnvVars(rawClientEnv);
     setClientEnv(sanitized);
   }, []);
@@ -161,10 +181,10 @@ export default function Environment({ serverEnv }: EnvironmentProps) {
                   </TableHeader>
                   <TableBody>
                     {filteredEnv.map(([key, value]) => {
-                      // Check if it's a Vercel framework variable (has framework prefix)
-                      const isVercelFramework = VERCEL_ENV_VARIABLES.includes(
-                        key as any,
-                      );
+                      // Check if it's a Vercel framework variable
+                      const isVercelFramework = (
+                        VERCEL_ENV_VARIABLES as readonly string[]
+                      ).includes(key);
                       // Check if it's a Vercel system variable (starts with VERCEL_ but not a framework variable)
                       const isVercelSystem =
                         (key === 'VERCEL' || key.startsWith('VERCEL_')) &&
