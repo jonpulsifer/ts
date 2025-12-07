@@ -36,27 +36,21 @@ export function WebhookViewer({
   const webhookIdFromQuery = searchParams.get('webhook');
   const urlUpdateTimeoutRef = useRef<number | null>(null);
 
-  // Try to hydrate from cache immediately (even if stale) for instant UI.
-  const cachedEntry =
-    typeof window !== 'undefined' ? getCachedWebhooksEntry(projectSlug) : null;
-  const initialList =
-    cachedEntry?.webhooks && cachedEntry.webhooks.length > 0
-      ? cachedEntry.webhooks
-      : initialWebhooks;
-
-  const [webhooks, setWebhooks] = useState<Webhook[]>(initialList);
+  // Always start with server-provided initialWebhooks to avoid hydration mismatch
+  const [webhooks, setWebhooks] = useState<Webhook[]>(initialWebhooks);
 
   const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(() => {
-    if (initialList.length === 0) {
+    if (initialWebhooks.length === 0) {
       return null;
     }
 
     if (webhookIdFromQuery) {
       return (
-        initialList.find((w) => w.id === webhookIdFromQuery) || initialList[0]
+        initialWebhooks.find((w) => w.id === webhookIdFromQuery) ||
+        initialWebhooks[0]
       );
     }
-    return initialList[0];
+    return initialWebhooks[0];
   });
 
   // SWR for polling updates (metadata only when unchanged)
@@ -82,12 +76,29 @@ export function WebhookViewer({
     },
   );
 
-  // If we loaded stale cache data, kick off an immediate metadata check.
+  // Hydrate from cache after mount (client-side only) to avoid hydration mismatch
   useEffect(() => {
+    const cachedEntry = getCachedWebhooksEntry(projectSlug);
+    if (cachedEntry?.webhooks && cachedEntry.webhooks.length > 0) {
+      setWebhooks(cachedEntry.webhooks);
+      // Update selected webhook if needed
+      if (webhookIdFromQuery) {
+        const found = cachedEntry.webhooks.find(
+          (w) => w.id === webhookIdFromQuery,
+        );
+        if (found) {
+          setSelectedWebhook(found);
+        }
+      } else if (!selectedWebhook && cachedEntry.webhooks.length > 0) {
+        setSelectedWebhook(cachedEntry.webhooks[0]);
+      }
+    }
+    // If we loaded stale cache data, kick off an immediate metadata check.
     if (cachedEntry?.stale) {
       mutate();
     }
-  }, [cachedEntry?.stale, mutate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   // Handle SWR updates
   useEffect(() => {
