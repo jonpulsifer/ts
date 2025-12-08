@@ -4,15 +4,15 @@ A modern, serverless webhook testing platform built with Next.js 16, Google Clou
 
 ## Features
 
-- 🚀 **Serverless Architecture** - Built entirely on Vercel's edge network
-- 🎨 **Violet Design System** - Custom rgb(109, 40, 217) theme
-- ⚡ **Real-time Updates** - Server-Sent Events (SSE) for live webhook streaming
-- 🔒 **Rate Limiting** - 5 requests per second to prevent congestion
-- 📦 **Single-File Storage** - All webhooks stored in a single JSON file per project
-- 🔄 **Optimistic Locking** - ETag-based concurrency control for data integrity
-- 🎯 **One-Click Resend** - Client-side webhook replay (SSRF-safe)
-- 🔍 **Advanced Inspection** - Monaco Editor for JSON viewing, diffing, and cURL export
-- 📱 **Responsive UI** - Resizable panels with ShadCN UI components
+- 🚀 **Serverless-first** — Runs on Vercel Edge with no dedicated servers to manage
+- ⚡ **Live stream** — Real-time webhook ingestion with SSE + local cache hydration
+- 🔍 **Rich inspection** — Headers, body, response, and raw payload views with syntax highlighting
+- 🟥🟩 **Color-coded diffs** — Inline and side-by-side diffs to compare any two events
+- 🎯 **Replay safely** — Client-side webhook resend to avoid SSRF risk
+- 🔒 **Rate limiting** — 5 req/sec per project to prevent congestion
+- 📦 **Single-file storage** — Circular buffer per project with optimistic locking
+- 🧭 **Quick copy** — One-click cURL/HTTPie/Burp export for fast debugging
+- 📱 **Responsive UI** — Resizable panels and keyboard-friendly interactions
 
 ## Architecture
 
@@ -23,7 +23,7 @@ A modern, serverless webhook testing platform built with Next.js 16, Google Clou
 - **Routing**: Middleware-based slug-to-ID resolution
 - **Rate Limiting**: In-memory sliding window (5 RPS)
 - **Real-time**: Server-Sent Events with polling fallback
-- **UI**: ShadCN UI, Tailwind CSS, Monaco Editor, React Resizable Panels
+- **UI**: ShadCN UI, Tailwind CSS, React Resizable Panels, Prism highlighting
 
 ### Key Design Decisions
 
@@ -93,10 +93,10 @@ You can send any HTTP request (GET, POST, PUT, PATCH, DELETE) to this endpoint. 
 
 - **View Webhooks**: Click on any webhook in the list to see full details
 - **Inspect Headers**: View all request headers in a searchable table
-- **View Body**: Pretty-printed JSON in Monaco Editor with syntax highlighting
+- **View Body**: Pretty-printed JSON with syntax highlighting
 - **Copy as cURL**: One-click export to cURL command
 - **Resend**: Replay webhooks to any target URL (client-side, SSRF-safe)
-- **Compare**: Select two webhooks to see a side-by-side diff
+- **Compare**: Inline and side-by-side diffs with color-coded changes
 - **Clear History**: Delete all webhooks for a project
 
 ## Project Structure

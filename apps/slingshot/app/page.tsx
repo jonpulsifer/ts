@@ -16,7 +16,7 @@ export default function Home() {
     <div className="flex flex-1 flex-col gap-6 p-6">
       <PageHeader
         title="Quick Start"
-        description="Get started with Slingshot • Catch, inspect, debug, and replay webhooks"
+        description="Get started with Slingshot • Capture, inspect, diff, and replay webhooks safely"
       />
 
       {/* What is Slingshot Section */}
@@ -58,13 +58,15 @@ export default function Home() {
                 Features
               </h3>
               <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                <li>Real-time webhook streaming via SWR Polling</li>
-                <li>Full request inspection (headers, body, IP, timestamp)</li>
-                <li>JSON viewing and diffing with Monaco Editor</li>
-                <li>One-click cURL export</li>
-                <li>Client-side webhook replay (SSRF-safe)</li>
+                <li>Live webhook stream powered by SSE with smart caching</li>
+                <li>Headers, body, response, and raw payload inspection</li>
                 <li>
-                  Supports all HTTP methods (GET, POST, PUT, DELETE, etc.)
+                  Color-coded inline and side-by-side diffs between events
+                </li>
+                <li>One-click exports to HTTPie, cURL, or Burp</li>
+                <li>Client-side replay to any target (SSRF-safe)</li>
+                <li>
+                  Supports every HTTP method (GET, POST, PUT, DELETE, etc.)
                 </li>
               </ul>
             </div>

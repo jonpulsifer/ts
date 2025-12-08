@@ -31,6 +31,3 @@ patches:
 
 transformers:
   - http-route-prefixer.yaml
-
-
-

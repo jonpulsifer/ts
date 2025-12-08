@@ -12,6 +12,3 @@ spec:
         certificateRefs:
           - kind: Secret
             name: *hostname
-
-
-

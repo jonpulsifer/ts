@@ -132,12 +132,22 @@ function DiffLines({ diff }: { diff: string }) {
 function PrettyCode({
   value,
   changedLines,
+  variant = 'compare',
 }: {
   value: string;
   changedLines?: Set<number>;
+  variant?: 'base' | 'compare';
 }) {
+  const isBase = variant === 'base';
+  const highlightColor = isBase
+    ? 'rgba(244,63,94,0.14)' // rose
+    : 'rgba(34,197,94,0.14)'; // emerald
+  const panelClass = isBase
+    ? 'border-rose-500/40 bg-rose-950/30'
+    : 'border-emerald-500/40 bg-emerald-950/30';
+
   return (
-    <div className="rounded-lg border border-border/50 bg-muted/20 shadow-sm">
+    <div className={`rounded-lg border shadow-sm ${panelClass}`}>
       <SyntaxHighlighter
         language="json"
         style={dracula}
@@ -158,7 +168,7 @@ function PrettyCode({
           return {
             style: {
               display: 'block',
-              background: isChanged ? 'rgba(34,197,94,0.12)' : undefined,
+              background: isChanged ? highlightColor : undefined,
             },
           };
         }}
@@ -304,16 +314,24 @@ export function WebhookDiffInline({
           {base && compare ? (
             <div className="grid gap-3 md:grid-cols-2">
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground">
+                <div className="text-xs font-semibold text-rose-200">
                   Base request
                 </div>
-                <PrettyCode value={oldValue} changedLines={changedOld} />
+                <PrettyCode
+                  value={oldValue}
+                  changedLines={changedOld}
+                  variant="base"
+                />
               </div>
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground">
+                <div className="text-xs font-semibold text-emerald-200">
                   Compare request
                 </div>
-                <PrettyCode value={newValue} changedLines={changedNew} />
+                <PrettyCode
+                  value={newValue}
+                  changedLines={changedNew}
+                  variant="compare"
+                />
               </div>
             </div>
           ) : (

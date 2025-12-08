@@ -363,7 +363,7 @@ ${webhook.body || ''}`;
               setActiveTab(tab);
               onActiveTabChange?.(tab);
             }}
-            className="w-full"
+            className="w-full flex flex-col gap-4"
           >
             <TabsList className="flex w-full justify-start overflow-x-auto">
               <TabsTrigger
@@ -401,14 +401,14 @@ ${webhook.body || ''}`;
               </TabsTrigger>
             </TabsList>
 
-            <div className="flex-1 overflow-hidden relative group/editor space-y-6 pb-2 pt-4">
+            <div className="relative flex-1 min-h-[360px] max-h-[70vh] overflow-hidden group/editor pt-2">
               {(activeTab === 'body' ||
                 activeTab === 'response' ||
                 activeTab === 'raw') && (
                 <Button
                   variant="outline"
                   size="sm"
-                  className="absolute top-0 right-2 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
+                  className="absolute top-1 right-2 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
                   onClick={() => {
                     let text = '';
                     if (activeTab === 'body' && webhook.body) {
@@ -437,8 +437,8 @@ ${webhook.body || ''}`;
                 </Button>
               )}
 
-              <TabsContent value="headers" className="m-0">
-                <ScrollArea className="h-full max-h-[70vh]">
+              <TabsContent value="headers" className="m-0 h-full">
+                <ScrollArea className="h-full">
                   <div className="p-2 sm:p-4 space-y-2">
                     {Object.entries(webhook.headers).map(([key, value]) => (
                       <div
@@ -465,46 +465,54 @@ ${webhook.body || ''}`;
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="body" className="m-0">
-                {hasBody && renderCodeBlock(formattedBody || webhook.body!)}
+              <TabsContent value="body" className="m-0 h-full">
+                <div className="h-full">
+                  {hasBody && renderCodeBlock(formattedBody || webhook.body!)}
+                </div>
               </TabsContent>
 
-              <TabsContent value="response" className="m-0">
-                {hasResponse &&
-                  renderCodeBlock(
-                    (() => {
-                      try {
-                        return JSON.stringify(
-                          JSON.parse(webhook.responseBody || ''),
-                          null,
-                          2,
-                        );
-                      } catch {
-                        return webhook.responseBody || '';
-                      }
-                    })(),
+              <TabsContent value="response" className="m-0 h-full">
+                <div className="h-full">
+                  {hasResponse &&
+                    renderCodeBlock(
+                      (() => {
+                        try {
+                          return JSON.stringify(
+                            JSON.parse(webhook.responseBody || ''),
+                            null,
+                            2,
+                          );
+                        } catch {
+                          return webhook.responseBody || '';
+                        }
+                      })(),
+                    )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="raw" className="m-0 h-full">
+                <div className="h-full">
+                  {renderCodeBlock(JSON.stringify(webhook, null, 2))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="diff" className="m-0 h-full">
+                <div className="h-full overflow-auto pr-1">
+                  {hasDiff && compareWebhook && (
+                    <WebhookDiffInline
+                      webhooks={[webhook, compareWebhook]}
+                      baseId={webhook.id}
+                      compareId={compareWebhook.id}
+                      onBaseChange={() => {}}
+                      onCompareChange={() => {}}
+                    />
                   )}
-              </TabsContent>
-
-              <TabsContent value="raw" className="m-0">
-                {renderCodeBlock(JSON.stringify(webhook, null, 2))}
-              </TabsContent>
-
-              <TabsContent value="diff" className="m-0">
-                {hasDiff && compareWebhook && (
-                  <WebhookDiffInline
-                    webhooks={[webhook, compareWebhook]}
-                    baseId={webhook.id}
-                    compareId={compareWebhook.id}
-                    onBaseChange={() => {}}
-                    onCompareChange={() => {}}
-                  />
-                )}
-                {!hasDiff && (
-                  <div className="rounded-lg border border-dashed border-border/50 p-4 text-sm text-muted-foreground">
-                    Select another webhook to compare.
-                  </div>
-                )}
+                  {!hasDiff && (
+                    <div className="rounded-lg border border-dashed border-border/50 p-4 text-sm text-muted-foreground">
+                      Select another webhook to compare.
+                    </div>
+                  )}
+                </div>
               </TabsContent>
             </div>
           </Tabs>

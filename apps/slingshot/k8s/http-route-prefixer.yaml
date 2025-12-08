@@ -8,6 +8,3 @@ fieldSpecs:
     kind: HTTPRoute
   - path: spec/rules/backendRefs/name
     kind: HTTPRoute
-
-
-
