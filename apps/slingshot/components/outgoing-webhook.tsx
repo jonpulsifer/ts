@@ -390,19 +390,38 @@ export function OutgoingWebhook({
         }
       } else {
         // Server-side fetch (via Server Action)
-        const result = await sendOutgoingWebhookAction(projectSlug, {
-          method,
-          url,
-          headers: parsedHeaders,
-          body: bodyString,
-        });
+        try {
+          const result = await sendOutgoingWebhookAction(projectSlug, {
+            method,
+            url,
+            headers: parsedHeaders,
+            body: bodyString,
+          });
 
-        toast.success(
-          `Webhook sent! Status: ${result.status} ${result.statusText}`,
-          {
-            description: result.responseBody?.slice(0, 100),
-          },
-        );
+          toast.success(
+            `Webhook sent! Status: ${result.status} ${result.statusText}`,
+            {
+              description: result.responseBody?.slice(0, 100),
+            },
+          );
+        } catch (actionError) {
+          // Extract error message from server action error
+          let errorMessage = 'Failed to send webhook';
+          if (actionError instanceof Error) {
+            errorMessage = actionError.message;
+          } else if (typeof actionError === 'string') {
+            errorMessage = actionError;
+          } else if (
+            actionError &&
+            typeof actionError === 'object' &&
+            'message' in actionError
+          ) {
+            errorMessage = String(actionError.message);
+          }
+
+          toast.error(errorMessage);
+          return; // Exit early on error
+        }
       }
 
       // Clear the resend webhook after successful send
@@ -415,9 +434,14 @@ export function OutgoingWebhook({
         onWebhookSent();
       }
     } catch (error) {
-      toast.error(
-        `Failed to send webhook: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+      // Fallback error handling for any other errors
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'string'
+            ? error
+            : 'Failed to send webhook';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

@@ -1,23 +1,12 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
-import {
-  Circle,
-  Clock,
-  FileJson,
-  GitCompare,
-  Hash,
-  Layers,
-  Timer,
-  Trash2,
-} from 'lucide-react';
+import { Circle, FileJson, GitCompare, Timer, Trash2 } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Webhook } from '@/lib/types';
 import { CopyButton } from './copy-button';
-import { WebhookDiff } from './webhook-diff';
 
 // Format time consistently (client-side only to avoid hydration issues)
 function formatTime(timestamp: number): string {
@@ -37,18 +26,9 @@ interface WebhookListProps {
   onClearHistory: () => void;
   isConnected: boolean;
   projectSlug: string;
-}
-
-// Client-side only component for relative time to avoid hydration issues
-function RelativeTime({ timestamp }: { timestamp: number }) {
-  // Use formatted time string directly to avoid client-side ticks for list performance
-  const relativeTime = formatDistanceToNow(new Date(timestamp), {
-    addSuffix: true,
-  });
-
-  return (
-    <span className="text-sm font-medium text-foreground">{relativeTime}</span>
-  );
+  onCompare?: (webhook: Webhook) => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 // Client-side only time display to avoid hydration issues
@@ -79,6 +59,15 @@ const getMethodColor = (method: string) => {
   return colors[method] || 'bg-gray-500/15 text-gray-400';
 };
 
+const _getStatusDot = (webhook: Webhook) => {
+  if (webhook.direction === 'incoming') return 'bg-blue-400';
+  if (webhook.responseStatus === undefined) return 'bg-purple-400';
+  if (webhook.responseStatus >= 200 && webhook.responseStatus < 300)
+    return 'bg-green-400';
+  if (webhook.responseStatus >= 400) return 'bg-red-400';
+  return 'bg-amber-400';
+};
+
 const WebhookListItem = memo(function WebhookListItem({
   webhook,
   isSelected,
@@ -86,6 +75,7 @@ const WebhookListItem = memo(function WebhookListItem({
   onCompare,
   canCompare,
   projectSlug,
+  index,
 }: {
   webhook: Webhook;
   isSelected: boolean;
@@ -93,6 +83,7 @@ const WebhookListItem = memo(function WebhookListItem({
   onCompare: (webhook: Webhook) => void;
   canCompare: boolean;
   projectSlug: string;
+  index: number;
 }) {
   const methodColors: Record<string, string> = {
     GET: 'border-l-blue-500',
@@ -111,22 +102,28 @@ const WebhookListItem = memo(function WebhookListItem({
           : `hover:bg-muted/20 ${leftBorderColor} border-l-2 border-l-transparent hover:border-l-2`
       }`}
     >
-      <div className="w-full p-4 group">
-        <div className="flex items-start justify-between gap-3">
+      <div className="w-full p-2 sm:p-3 group">
+        <div className="flex items-start justify-between gap-1.5 sm:gap-2.5">
           <button
             type="button"
             onClick={() => onSelect(webhook)}
             className="flex-1 min-w-0 text-left"
           >
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
               <Badge
-                className={`text-xs font-semibold ${getMethodColor(webhook.method)}`}
+                variant="outline"
+                className="text-[10px] h-5 min-w-6 px-1.5 py-0 flex items-center justify-center border-border/60 text-muted-foreground"
+              >
+                #{index + 1}
+              </Badge>
+              <Badge
+                className={`text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 ${getMethodColor(webhook.method)}`}
               >
                 {webhook.method}
               </Badge>
               <Badge
                 variant="outline"
-                className={`text-xs ${
+                className={`text-[10px] sm:text-[11px] ${
                   webhook.direction === 'incoming'
                     ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
                     : 'bg-purple-500/10 text-purple-400 border-purple-500/30'
@@ -137,7 +134,7 @@ const WebhookListItem = memo(function WebhookListItem({
               {webhook.direction === 'outgoing' && webhook.responseStatus && (
                 <Badge
                   variant="outline"
-                  className={`text-xs font-medium tabular-nums border bg-transparent ${
+                  className={`text-[10px] sm:text-[11px] font-medium tabular-nums border bg-transparent ${
                     webhook.responseStatus >= 200 &&
                     webhook.responseStatus < 300
                       ? 'text-green-400 border-green-500/30'
@@ -152,76 +149,51 @@ const WebhookListItem = memo(function WebhookListItem({
               {webhook.duration !== undefined && (
                 <Badge
                   variant="outline"
-                  className="text-xs font-medium tabular-nums border-border/50 bg-muted/30 text-muted-foreground gap-1 sm:hidden"
+                  className="text-[10px] font-medium tabular-nums border-border/50 bg-muted/30 text-muted-foreground gap-1 sm:hidden"
                 >
                   <Timer className="h-3 w-3" />
                   {webhook.duration}ms
                 </Badge>
               )}
-              <div className="ml-auto flex items-center text-xs text-muted-foreground">
-                <RelativeTime timestamp={webhook.timestamp} />
-              </div>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground/80">
-              <div className="flex items-center gap-1.5" title="Header count">
-                <Layers className="h-3 w-3 opacity-70" />
-                <span className="font-medium">
-                  {Object.keys(webhook.headers).length}
-                </span>
-              </div>
               {webhook.body && (
-                <div className="flex items-center gap-1.5" title="Body size">
+                <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                   <FileJson className="h-3 w-3 opacity-70" />
                   <span className="tabular-nums">
                     {new Blob([webhook.body]).size} B
                   </span>
-                </div>
+                </span>
               )}
               {webhook.duration !== undefined && (
-                <div className="flex items-center gap-1.5" title="Duration">
-                  <Clock className="h-3 w-3 opacity-70" />
-                  <span className="tabular-nums font-medium">
-                    {webhook.duration}ms
-                  </span>
-                </div>
-              )}
-              <div
-                className="flex items-center gap-1.5 ml-auto"
-                title="Webhook ID"
-              >
-                <Hash className="h-3 w-3 opacity-70" />
-                <span className="font-mono tabular-nums">
-                  {webhook.id.slice(0, 8)}
+                <span className="hidden sm:flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <Timer className="h-3 w-3 opacity-70" />
+                  <span className="tabular-nums">{webhook.duration}ms</span>
                 </span>
+              )}
+              <div className="w-full text-[10px] text-muted-foreground/60 font-mono truncate -mt-0.5">
+                {webhook.id}
               </div>
             </div>
           </button>
-          <div className="flex flex-col gap-1 shrink-0 transition-opacity">
-            <div className="opacity-70 group-hover:opacity-100 transition-opacity">
-              <CopyButton
-                text={`${typeof window !== 'undefined' ? window.location.origin : ''}/${projectSlug}?webhook=${webhook.id}`}
-                size="icon"
-                variant="outline"
-                title="Copy link to webhook"
-              />
-            </div>
-            <div
-              className={`opacity-70 group-hover:opacity-100 transition-opacity ${canCompare ? '' : 'invisible'}`}
+          <div className="flex items-center gap-1 shrink-0 transition-opacity opacity-70 group-hover:opacity-100">
+            <CopyButton
+              text={`${typeof window !== 'undefined' ? window.location.origin : ''}/${projectSlug}?webhook=${webhook.id}`}
+              size="icon"
+              variant="outline"
+              title="Copy link to webhook"
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              className="hover:bg-primary/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCompare(webhook);
+              }}
+              title="Compare with selected webhook"
+              disabled={!canCompare}
             >
-              <Button
-                variant="outline"
-                size="icon"
-                className="hover:bg-primary/10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCompare(webhook);
-                }}
-                title="Compare with selected webhook"
-                disabled={!canCompare}
-              >
-                <GitCompare className="h-4 w-4" />
-              </Button>
-            </div>
+              <GitCompare className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>
@@ -236,22 +208,19 @@ export function WebhookList({
   onClearHistory,
   isConnected,
   projectSlug,
+  onCompare,
 }: WebhookListProps) {
-  const [diffOpen, setDiffOpen] = useState(false);
-  const [diffWebhookA, setDiffWebhookA] = useState<Webhook | null>(null);
-  const [diffWebhookB, setDiffWebhookB] = useState<Webhook | null>(null);
   const selectedId = selectedWebhook?.id;
 
   const handleCompare = (webhook: Webhook) => {
-    if (selectedWebhook && selectedWebhook.id !== webhook.id) {
-      setDiffWebhookA(selectedWebhook);
-      setDiffWebhookB(webhook);
-      setDiffOpen(true);
+    if (!onCompare || !selectedWebhook || selectedWebhook.id === webhook.id) {
+      return;
     }
+    onCompare(webhook);
   };
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
+    <div className="h-full min-h-[260px] flex flex-col overflow-hidden">
       <div className="p-4 border-b border-border/50 flex items-center justify-between bg-muted/20 shrink-0">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-foreground">Webhooks</h2>
@@ -267,18 +236,20 @@ export function WebhookList({
             </span>
           </div>
         </div>
-        {webhooks.length > 0 && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClearHistory}
-            className="hover:bg-destructive/10 hover:text-destructive"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {webhooks.length > 0 && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClearHistory}
+              className="hover:bg-destructive/10 hover:text-destructive"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </div>
-      <ScrollArea className="flex-1 min-h-0">
+      <ScrollArea className="flex-1 min-h-[200px]">
         {webhooks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 bg-muted/20">
             <Circle className="h-20 w-20 text-primary mb-4 drop-shadow-[0_0_6px_rgba(139,92,246,0.4)] fill-primary/50" />
@@ -292,7 +263,7 @@ export function WebhookList({
           </div>
         ) : (
           <div className="relative">
-            {webhooks.map((webhook, _index) => (
+            {webhooks.map((webhook, index) => (
               <WebhookListItem
                 key={webhook.id}
                 webhook={webhook}
@@ -301,19 +272,12 @@ export function WebhookList({
                 onCompare={handleCompare}
                 canCompare={!!selectedId && selectedId !== webhook.id}
                 projectSlug={projectSlug}
+                index={index}
               />
             ))}
           </div>
         )}
       </ScrollArea>
-      {diffWebhookA && diffWebhookB && (
-        <WebhookDiff
-          webhookA={diffWebhookA}
-          webhookB={diffWebhookB}
-          open={diffOpen}
-          onOpenChange={setDiffOpen}
-        />
-      )}
     </div>
   );
 }

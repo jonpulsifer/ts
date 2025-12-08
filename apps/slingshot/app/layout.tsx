@@ -3,7 +3,11 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Toaster } from 'sonner';
 import './globals.css';
 import { SidebarShell } from '@/components/sidebar-shell';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -34,12 +38,25 @@ export default function RootLayout({
         <SidebarProvider defaultOpen={true}>
           <SidebarShell />
           <SidebarInset>
-            <main
-              className="flex-1 overflow-auto bg-background"
+            <div
+              className="flex min-h-svh flex-col bg-background"
               suppressHydrationWarning
             >
-              {children}
-            </main>
+              <div className="md:hidden sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur">
+                <SidebarTrigger />
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span className="text-sm font-semibold text-foreground truncate">
+                    Slingshot
+                  </span>
+                  <span className="text-xs text-muted-foreground truncate">
+                    Webhook testing platform
+                  </span>
+                </div>
+              </div>
+              <main className="flex-1 overflow-auto px-4 pb-6 pt-4 md:px-6 md:pt-6">
+                {children}
+              </main>
+            </div>
           </SidebarInset>
         </SidebarProvider>
         <Toaster position="top-right" richColors theme="dark" />

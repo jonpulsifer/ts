@@ -15,7 +15,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Webhook } from '@/lib/types';
+import { WebhookDiffInline } from './webhook-diff';
 
 // Format time consistently (client-side only to avoid hydration issues)
 function formatTime(timestamp: number): string {
@@ -64,9 +66,20 @@ const codeCustomStyle = {
 interface WebhookDetailProps {
   webhook: Webhook | null;
   onResend?: (webhook: Webhook) => void;
+  compareWebhook?: Webhook | null;
+  activeTabExternal?: 'headers' | 'body' | 'response' | 'raw' | 'diff';
+  onActiveTabChange?: (
+    tab: 'headers' | 'body' | 'response' | 'raw' | 'diff',
+  ) => void;
 }
 
-export function WebhookDetail({ webhook, onResend }: WebhookDetailProps) {
+export function WebhookDetail({
+  webhook,
+  onResend,
+  compareWebhook,
+  activeTabExternal,
+  onActiveTabChange,
+}: WebhookDetailProps) {
   if (!webhook) {
     return (
       <div className="h-full flex items-center justify-center bg-muted/20">
@@ -80,7 +93,15 @@ export function WebhookDetail({ webhook, onResend }: WebhookDetailProps) {
     );
   }
 
-  return <WebhookDetailContent webhook={webhook} onResend={onResend} />;
+  return (
+    <WebhookDetailContent
+      webhook={webhook}
+      onResend={onResend}
+      compareWebhook={compareWebhook}
+      activeTabExternal={activeTabExternal}
+      onActiveTabChange={onActiveTabChange}
+    />
+  );
 }
 
 function _WebhookDetailSkeleton() {
@@ -112,16 +133,34 @@ function _WebhookDetailSkeleton() {
 function WebhookDetailContent({
   webhook,
   onResend,
+  compareWebhook,
+  activeTabExternal,
+  onActiveTabChange,
 }: {
   webhook: Webhook;
   onResend?: (webhook: Webhook) => void;
+  compareWebhook?: Webhook | null;
+  activeTabExternal?: 'headers' | 'body' | 'response' | 'raw' | 'diff';
+  onActiveTabChange?: (
+    tab: 'headers' | 'body' | 'response' | 'raw' | 'diff',
+  ) => void;
 }) {
   const [activeTab, setActiveTab] = useState<
-    'headers' | 'body' | 'response' | 'raw'
+    'headers' | 'body' | 'response' | 'raw' | 'diff'
   >('headers');
   const [time, setTime] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [mounted, setMounted] = useState(false);
+  const hasBody = Boolean(webhook.body);
+  const hasResponse =
+    webhook.direction === 'outgoing' && Boolean(webhook.responseBody);
+  const hasDiff = Boolean(compareWebhook);
+
+  useEffect(() => {
+    if (activeTabExternal) {
+      setActiveTab(activeTabExternal);
+    }
+  }, [activeTabExternal]);
 
   const handleCopy = async (text: string, label?: string) => {
     await navigator.clipboard.writeText(text);
@@ -212,227 +251,264 @@ ${webhook.body || ''}`;
   return (
     <div className="h-full flex flex-col">
       <div className="p-6 border-b border-border/50 space-y-4 bg-muted/20">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Badge
-              variant="outline"
-              className="text-sm font-semibold border border-border/50 bg-primary/5"
-            >
-              {webhook.method}
-            </Badge>
-            <Badge
-              variant="outline"
-              className={`text-xs ${
-                webhook.direction === 'incoming'
-                  ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-                  : 'bg-purple-500/10 text-purple-400 border-purple-500/30'
-              }`}
-            >
-              {webhook.direction === 'incoming' ? 'Incoming' : 'Outgoing'}
-            </Badge>
-            {webhook.direction === 'outgoing' && webhook.responseStatus && (
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <Badge
                 variant="outline"
-                className={`text-xs font-semibold ${
-                  webhook.responseStatus >= 200 && webhook.responseStatus < 300
-                    ? 'bg-green-500/10 text-green-400 border-green-500/30'
-                    : webhook.responseStatus >= 400
-                      ? 'bg-red-500/10 text-red-400 border-red-500/30'
-                      : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30'
+                className="text-sm font-semibold border border-border/50 bg-primary/5"
+              >
+                {webhook.method}
+              </Badge>
+              <Badge
+                variant="outline"
+                className={`text-xs ${
+                  webhook.direction === 'incoming'
+                    ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+                    : 'bg-purple-500/10 text-purple-400 border-purple-500/30'
                 }`}
               >
-                {webhook.responseStatus}
+                {webhook.direction === 'incoming' ? 'Incoming' : 'Outgoing'}
               </Badge>
-            )}
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-foreground">
-                {mounted ? time : '--:--:-- --'}
-              </span>
-              <span className="text-xs text-muted-foreground font-mono">
-                {mounted ? date : '--- --, ----'}
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const cmd = buildHttpie();
-                  if (cmd) handleCopy(cmd, 'HTTPie command');
-                }}
-                className="gap-2"
-              >
-                <Copy className="h-4 w-4" />
-                Copy as HTTPie
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="px-2">
-                    ▾
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const cmd = buildCurl();
-                      if (cmd) handleCopy(cmd, 'cURL command');
-                    }}
-                  >
-                    Copy as cURL
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const cmd = buildHttpie();
-                      if (cmd) handleCopy(cmd, 'HTTPie command');
-                    }}
-                  >
-                    Copy as HTTPie
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const req = buildBurpRequest();
-                      if (req) handleCopy(req, 'Burp request');
-                    }}
-                  >
-                    Copy for Burp
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            {onResend && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => onResend(webhook)}
-                className="gap-2 bg-primary hover:bg-primary/90"
-              >
-                <Send className="h-4 w-4" />
-                Resend
-              </Button>
-            )}
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant={activeTab === 'headers' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTab('headers')}
-          >
-            Headers
-          </Button>
-          <Button
-            variant={activeTab === 'body' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTab('body')}
-            disabled={!webhook.body}
-          >
-            Body
-          </Button>
-          {webhook.direction === 'outgoing' && webhook.responseBody && (
-            <Button
-              variant={activeTab === 'response' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setActiveTab('response')}
-            >
-              Response
-            </Button>
-          )}
-          <Button
-            variant={activeTab === 'raw' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTab('raw')}
-          >
-            Raw
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-hidden relative group/editor">
-        {(activeTab === 'body' ||
-          activeTab === 'response' ||
-          activeTab === 'raw') && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="absolute top-4 right-8 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
-            onClick={() => {
-              let text = '';
-              if (activeTab === 'body' && webhook.body) {
-                text = formattedBody || webhook.body;
-              } else if (activeTab === 'response' && webhook.responseBody) {
-                try {
-                  text = JSON.stringify(
-                    JSON.parse(webhook.responseBody),
-                    null,
-                    2,
-                  );
-                } catch {
-                  text = webhook.responseBody;
-                }
-              } else if (activeTab === 'raw') {
-                text = JSON.stringify(webhook, null, 2);
-              }
-              if (text) handleCopy(text, 'Content copied');
-            }}
-          >
-            <Copy className="h-4 w-4" />
-            Copy
-          </Button>
-        )}
-
-        {activeTab === 'headers' && (
-          <ScrollArea className="h-full">
-            <div className="p-6 space-y-2">
-              {Object.entries(webhook.headers).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="flex gap-4 py-3 px-3 border-b border-border/30 last:border-0 hover:bg-muted/30 transition-all rounded-lg group"
+              {webhook.direction === 'outgoing' && webhook.responseStatus && (
+                <Badge
+                  variant="outline"
+                  className={`text-xs font-semibold ${
+                    webhook.responseStatus >= 200 &&
+                    webhook.responseStatus < 300
+                      ? 'bg-green-500/10 text-green-400 border-green-500/30'
+                      : webhook.responseStatus >= 400
+                        ? 'bg-red-500/10 text-red-400 border-red-500/30'
+                        : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30'
+                  }`}
                 >
-                  <div className="font-mono text-sm font-semibold min-w-[200px] text-foreground group-hover:text-primary transition-colors">
-                    {key}
-                  </div>
-                  <div className="font-mono text-sm text-muted-foreground flex-1 break-all group-hover:text-foreground/80 transition-colors">
-                    {value}
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="shrink-0 opacity-0 group-hover:opacity-100 hover:bg-primary/10 transition-all"
-                    onClick={() => handleCopy(`${key}: ${value}`)}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
+                  {webhook.responseStatus}
+                </Badge>
+              )}
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-foreground">
+                  {mounted ? time : '--:--:-- --'}
+                </span>
+                <span className="text-xs text-muted-foreground font-mono">
+                  {mounted ? date : '--- --, ----'}
+                </span>
+              </div>
             </div>
-          </ScrollArea>
-        )}
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const cmd = buildHttpie();
+                    if (cmd) handleCopy(cmd, 'HTTPie command');
+                  }}
+                  className="gap-2"
+                >
+                  <Copy className="h-4 w-4" />
+                  Copy as HTTPie
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="px-2">
+                      ▾
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const cmd = buildCurl();
+                        if (cmd) handleCopy(cmd, 'cURL command');
+                      }}
+                    >
+                      Copy as cURL
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const cmd = buildHttpie();
+                        if (cmd) handleCopy(cmd, 'HTTPie command');
+                      }}
+                    >
+                      Copy as HTTPie
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const req = buildBurpRequest();
+                        if (req) handleCopy(req, 'Burp request');
+                      }}
+                    >
+                      Copy for Burp
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              {onResend && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => onResend(webhook)}
+                  className="gap-2 bg-primary hover:bg-primary/90"
+                >
+                  <Send className="h-4 w-4" />
+                  Resend
+                </Button>
+              )}
+            </div>
+          </div>
 
-        {activeTab === 'body' &&
-          webhook.body &&
-          renderCodeBlock(formattedBody || webhook.body)}
+          <Tabs
+            value={activeTab}
+            onValueChange={(val) => {
+              const tab = val as typeof activeTab;
+              setActiveTab(tab);
+              onActiveTabChange?.(tab);
+            }}
+            className="w-full"
+          >
+            <TabsList className="flex w-full justify-start overflow-x-auto">
+              <TabsTrigger
+                value="headers"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+              >
+                Headers
+              </TabsTrigger>
+              <TabsTrigger
+                value="body"
+                disabled={!hasBody}
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+              >
+                Body
+              </TabsTrigger>
+              <TabsTrigger
+                value="response"
+                disabled={!hasResponse}
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+              >
+                Response
+              </TabsTrigger>
+              <TabsTrigger
+                value="raw"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                Raw
+              </TabsTrigger>
+              <TabsTrigger
+                value="diff"
+                disabled={!hasDiff}
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+              >
+                Diff
+              </TabsTrigger>
+            </TabsList>
 
-        {activeTab === 'response' &&
-          webhook.direction === 'outgoing' &&
-          webhook.responseBody &&
-          renderCodeBlock(
-            (() => {
-              try {
-                return JSON.stringify(
-                  JSON.parse(webhook.responseBody),
-                  null,
-                  2,
-                );
-              } catch {
-                return webhook.responseBody;
-              }
-            })(),
-          )}
+            <div className="flex-1 overflow-hidden relative group/editor space-y-6 pb-2 pt-4">
+              {(activeTab === 'body' ||
+                activeTab === 'response' ||
+                activeTab === 'raw') && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="absolute top-0 right-2 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
+                  onClick={() => {
+                    let text = '';
+                    if (activeTab === 'body' && webhook.body) {
+                      text = formattedBody || webhook.body;
+                    } else if (
+                      activeTab === 'response' &&
+                      webhook.responseBody
+                    ) {
+                      try {
+                        text = JSON.stringify(
+                          JSON.parse(webhook.responseBody),
+                          null,
+                          2,
+                        );
+                      } catch {
+                        text = webhook.responseBody;
+                      }
+                    } else if (activeTab === 'raw') {
+                      text = JSON.stringify(webhook, null, 2);
+                    }
+                    if (text) handleCopy(text, 'Content copied');
+                  }}
+                >
+                  <Copy className="h-4 w-4" />
+                  Copy
+                </Button>
+              )}
 
-        {activeTab === 'raw' &&
-          renderCodeBlock(JSON.stringify(webhook, null, 2))}
+              <TabsContent value="headers" className="m-0">
+                <ScrollArea className="h-full max-h-[70vh]">
+                  <div className="p-2 sm:p-4 space-y-2">
+                    {Object.entries(webhook.headers).map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="flex gap-4 py-3 px-3 border-b border-border/30 last:border-0 hover:bg-muted/30 transition-all rounded-lg group"
+                      >
+                        <div className="font-mono text-sm font-semibold min-w-[160px] sm:min-w-[200px] text-foreground group-hover:text-primary transition-colors">
+                          {key}
+                        </div>
+                        <div className="font-mono text-sm text-muted-foreground flex-1 break-all group-hover:text-foreground/80 transition-colors">
+                          {value}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          className="shrink-0 opacity-0 group-hover:opacity-100 hover:bg-primary/10 transition-all"
+                          onClick={() => handleCopy(`${key}: ${value}`)}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+
+              <TabsContent value="body" className="m-0">
+                {hasBody && renderCodeBlock(formattedBody || webhook.body!)}
+              </TabsContent>
+
+              <TabsContent value="response" className="m-0">
+                {hasResponse &&
+                  renderCodeBlock(
+                    (() => {
+                      try {
+                        return JSON.stringify(
+                          JSON.parse(webhook.responseBody || ''),
+                          null,
+                          2,
+                        );
+                      } catch {
+                        return webhook.responseBody || '';
+                      }
+                    })(),
+                  )}
+              </TabsContent>
+
+              <TabsContent value="raw" className="m-0">
+                {renderCodeBlock(JSON.stringify(webhook, null, 2))}
+              </TabsContent>
+
+              <TabsContent value="diff" className="m-0">
+                {hasDiff && compareWebhook && (
+                  <WebhookDiffInline
+                    webhooks={[webhook, compareWebhook]}
+                    baseId={webhook.id}
+                    compareId={compareWebhook.id}
+                    onBaseChange={() => {}}
+                    onCompareChange={() => {}}
+                  />
+                )}
+                {!hasDiff && (
+                  <div className="rounded-lg border border-dashed border-border/50 p-4 text-sm text-muted-foreground">
+                    Select another webhook to compare.
+                  </div>
+                )}
+              </TabsContent>
+            </div>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

@@ -3,351 +3,326 @@
 import * as Diff3 from 'node-diff3';
 import { useMemo } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Webhook } from '@/lib/types';
 
-interface CommonPart {
-  common: string[];
+interface WebhookDiffInlineProps {
+  webhooks: Webhook[];
+  baseId: string | null;
+  compareId: string | null;
+  onBaseChange: (id: string) => void;
+  onCompareChange: (id: string | null) => void;
 }
 
-interface DiffPart {
-  buffer1: string[];
-  buffer2: string[];
+function stringifyWebhook(webhook: Webhook | null) {
+  if (!webhook) return '';
+  return JSON.stringify(webhook, null, 2);
 }
 
-type Diff3Part = CommonPart | DiffPart;
+function buildUnifiedDiff(oldValue: string, newValue: string) {
+  if (!oldValue || !newValue) return '';
 
-interface WebhookDiffProps {
-  webhookA: Webhook | null;
-  webhookB: Webhook | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+  const oldLines = oldValue.split('\n');
+  const newLines = newValue.split('\n');
+  const diff: string[] = [];
 
-export function WebhookDiff({
-  webhookA,
-  webhookB,
-  open,
-  onOpenChange,
-}: WebhookDiffProps) {
-  const oldValue = useMemo(() => {
-    if (!webhookA) return '';
-    return JSON.stringify(webhookA, null, 2);
-  }, [webhookA]);
+  const comm = Diff3.diffComm(oldLines, newLines) as Array<
+    { common: string[] } | { buffer1: string[]; buffer2: string[] }
+  >;
 
-  const newValue = useMemo(() => {
-    if (!webhookB) return '';
-    return JSON.stringify(webhookB, null, 2);
-  }, [webhookB]);
-
-  // Generate unified diff
-  const unifiedDiff = useMemo(() => {
-    if (!oldValue || !newValue) return '';
-
-    const oldLines = oldValue.split('\n');
-    const newLines = newValue.split('\n');
-    const diff: string[] = [];
-
-    const comm = Diff3.diffComm(oldLines, newLines) as unknown as Diff3Part[];
-
-    for (const part of comm) {
-      if ('common' in part) {
-        part.common.forEach((line: string) => {
-          diff.push(` ${line}`);
-        });
-      } else {
-        if (part.buffer1) {
-          part.buffer1.forEach((line: string) => {
-            diff.push(`-${line}`);
-          });
-        }
-        if (part.buffer2) {
-          part.buffer2.forEach((line: string) => {
-            diff.push(`+${line}`);
-          });
-        }
+  for (const part of comm) {
+    if ('common' in part) {
+      for (const line of part.common) {
+        diff.push(` ${line}`);
       }
+      continue;
     }
 
-    return diff.join('\n');
-  }, [oldValue, newValue]);
-
-  if (!webhookA || !webhookB) {
-    return null;
+    if (part.buffer1) {
+      for (const line of part.buffer1) {
+        diff.push(`-${line}`);
+      }
+    }
+    if (part.buffer2) {
+      for (const line of part.buffer2) {
+        diff.push(`+${line}`);
+      }
+    }
   }
 
-  const formatTimestamp = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString();
-  };
+  return diff.join('\n');
+}
 
-  // Custom style based on vscDarkPlus but with violet accents
-  const customStyle = {
-    ...vscDarkPlus,
-    'code[class*="language-"]': {
-      ...vscDarkPlus['code[class*="language-"]'],
-      background: 'transparent',
-      color: '#f8f8f2',
-    },
-    'pre[class*="language-"]': {
-      ...vscDarkPlus['pre[class*="language-"]'],
-      background: 'transparent',
-      color: '#f8f8f2',
-    },
-  };
+function getChangedLineSets(oldValue: string, newValue: string) {
+  const oldLines = oldValue.split('\n');
+  const newLines = newValue.split('\n');
+  const changedOld = new Set<number>();
+  const changedNew = new Set<number>();
+
+  const comm = Diff3.diffComm(oldLines, newLines) as Array<
+    { common: string[] } | { buffer1: string[]; buffer2: string[] }
+  >;
+
+  let oldIndex = 0;
+  let newIndex = 0;
+  for (const part of comm) {
+    if ('common' in part) {
+      oldIndex += part.common.length;
+      newIndex += part.common.length;
+      continue;
+    }
+    if (part.buffer1) {
+      for (let i = 0; i < part.buffer1.length; i++) {
+        changedOld.add(oldIndex + i);
+      }
+      oldIndex += part.buffer1.length;
+    }
+    if (part.buffer2) {
+      for (let i = 0; i < part.buffer2.length; i++) {
+        changedNew.add(newIndex + i);
+      }
+      newIndex += part.buffer2.length;
+    }
+  }
+
+  return { changedOld, changedNew };
+}
+
+function DiffLines({ diff }: { diff: string }) {
+  const lines = diff.split('\n');
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="w-[100vw] max-w-[100vw] max-h-[95vh] flex flex-col p-0"
-        style={{ margin: 0, maxWidth: '100vw' }}
-      >
-        <DialogHeader className="px-6 pt-6 pb-4">
-          <DialogTitle>Compare Webhooks</DialogTitle>
-        </DialogHeader>
-        <div
-          className="flex-1 flex flex-col min-h-0 px-6 pb-6"
-          style={{ minHeight: '600px' }}
-        >
-          <div className="flex items-center justify-between mb-4 gap-4">
-            <div className="flex items-center gap-3">
-              <Badge
-                variant="outline"
-                className="text-xs bg-primary/5 border-border/50"
-              >
-                {webhookA.method}
-              </Badge>
-              <span className="text-sm text-muted-foreground font-mono">
-                {webhookA.id.slice(0, 8)}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {formatTimestamp(webhookA.timestamp)}
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Badge
-                variant="outline"
-                className="text-xs bg-primary/5 border-border/50"
-              >
-                {webhookB.method}
-              </Badge>
-              <span className="text-sm text-muted-foreground font-mono">
-                {webhookB.id.slice(0, 8)}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {formatTimestamp(webhookB.timestamp)}
-              </span>
-            </div>
+    <div className="font-mono text-xs md:text-sm leading-6">
+      {lines.map((line, idx) => {
+        const type = line.startsWith('+')
+          ? 'added'
+          : line.startsWith('-')
+            ? 'removed'
+            : 'context';
+        return (
+          <div
+            key={`${type}-${idx}`}
+            className={[
+              'whitespace-pre-wrap px-3 py-1 rounded',
+              type === 'added' && 'bg-emerald-500/10 text-emerald-200',
+              type === 'removed' && 'bg-rose-500/10 text-rose-200',
+              type === 'context' && 'text-muted-foreground/90',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+          >
+            {line || ' '}
           </div>
+        );
+      })}
+    </div>
+  );
+}
 
-          <Tabs defaultValue="unified" className="flex-1 flex flex-col min-h-0">
-            <TabsList className="mb-4">
-              <TabsTrigger value="split">Side by Side</TabsTrigger>
-              <TabsTrigger value="unified">Unified Diff</TabsTrigger>
-            </TabsList>
+function PrettyCode({
+  value,
+  changedLines,
+}: {
+  value: string;
+  changedLines?: Set<number>;
+}) {
+  return (
+    <div className="rounded-lg border border-border/50 bg-muted/20 shadow-sm">
+      <SyntaxHighlighter
+        language="json"
+        style={dracula}
+        customStyle={{
+          margin: 0,
+          padding: '1rem',
+          fontSize: 13,
+          lineHeight: '20px',
+          background: 'hsl(var(--card))',
+        }}
+        wrapLines
+        showLineNumbers
+        lineNumberStyle={{ color: 'rgba(255,255,255,0.35)', minWidth: '2ch' }}
+        lineProps={(lineNumber) => {
+          if (!changedLines) return { style: { display: 'block' } };
+          const idx = lineNumber - 1;
+          const isChanged = changedLines.has(idx);
+          return {
+            style: {
+              display: 'block',
+              background: isChanged ? 'rgba(34,197,94,0.12)' : undefined,
+            },
+          };
+        }}
+      >
+        {value}
+      </SyntaxHighlighter>
+    </div>
+  );
+}
 
-            <TabsContent value="split" className="flex-1 min-h-0 mt-0">
-              <div
-                className="grid grid-cols-2 gap-4 h-full"
-                style={{ minHeight: '600px' }}
-              >
-                <div className="flex flex-col border border-border/50 rounded-lg overflow-hidden">
-                  <div className="px-4 py-2 bg-muted/20 border-b border-border/50">
-                    <span className="text-sm font-semibold text-foreground">
-                      Webhook A
-                    </span>
-                  </div>
-                  <ScrollArea className="flex-1">
-                    <SyntaxHighlighter
-                      language="json"
-                      style={customStyle}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '13px',
-                        fontFamily:
-                          'var(--font-geist-mono), "Courier New", monospace',
-                        lineHeight: '20px',
-                        background: 'hsl(var(--card))',
-                      }}
-                      showLineNumbers
-                      wrapLines
-                      lineProps={(lineNumber) => {
-                        const lineIndex = lineNumber - 1;
-                        let currentLine = 0;
-                        let isDiff = false;
+export function WebhookDiffInline({
+  webhooks,
+  baseId,
+  compareId,
+  onBaseChange,
+  onCompareChange,
+}: WebhookDiffInlineProps) {
+  const base = useMemo(
+    () => webhooks.find((w) => w.id === baseId) || null,
+    [webhooks, baseId],
+  );
+  const compare = useMemo(
+    () => webhooks.find((w) => w.id === compareId) || null,
+    [webhooks, compareId],
+  );
 
-                        for (const part of Diff3.diffComm(
-                          oldValue.split('\n'),
-                          newValue.split('\n'),
-                        ) as unknown as Diff3Part[]) {
-                          if ('common' in part) {
-                            if (currentLine + part.common.length > lineIndex) {
-                              break;
-                            }
-                            currentLine += part.common.length;
-                          } else if (part.buffer1) {
-                            if (
-                              currentLine <= lineIndex &&
-                              lineIndex < currentLine + part.buffer1.length
-                            ) {
-                              isDiff = true;
-                              break;
-                            }
-                            currentLine += part.buffer1.length;
-                          }
-                        }
+  const oldValue = useMemo(() => stringifyWebhook(base), [base]);
+  const newValue = useMemo(() => stringifyWebhook(compare), [compare]);
+  const unifiedDiff = useMemo(
+    () => buildUnifiedDiff(oldValue, newValue),
+    [oldValue, newValue],
+  );
+  const { changedOld, changedNew } = useMemo(
+    () => getChangedLineSets(oldValue, newValue),
+    [oldValue, newValue],
+  );
 
-                        if (isDiff) {
-                          return {
-                            style: {
-                              background: 'rgba(239, 68, 68, 0.15)',
-                              display: 'block',
-                              width: '100%',
-                            },
-                          };
-                        }
-                        return { style: { display: 'block' } };
-                      }}
-                    >
-                      {oldValue}
-                    </SyntaxHighlighter>
-                  </ScrollArea>
-                </div>
-                <div className="flex flex-col border border-border/50 rounded-lg overflow-hidden bg-card">
-                  <div className="px-4 py-2 bg-muted/20 border-b border-border/50">
-                    <span className="text-sm font-semibold text-foreground">
-                      Webhook B
-                    </span>
-                  </div>
-                  <ScrollArea className="flex-1">
-                    <SyntaxHighlighter
-                      language="json"
-                      style={customStyle}
-                      customStyle={{
-                        margin: 0,
-                        padding: '1rem',
-                        fontSize: '13px',
-                        fontFamily:
-                          'var(--font-geist-mono), "Courier New", monospace',
-                        lineHeight: '20px',
-                        background: 'hsl(var(--card))',
-                      }}
-                      showLineNumbers
-                      wrapLines
-                      lineProps={(lineNumber) => {
-                        const lineIndex = lineNumber - 1;
-                        let currentLine = 0;
-                        let isDiff = false;
-
-                        for (const part of Diff3.diffComm(
-                          oldValue.split('\n'),
-                          newValue.split('\n'),
-                        ) as unknown as Diff3Part[]) {
-                          if ('common' in part) {
-                            if (currentLine + part.common.length > lineIndex) {
-                              break;
-                            }
-                            currentLine += part.common.length;
-                          } else if (part.buffer2) {
-                            if (
-                              currentLine <= lineIndex &&
-                              lineIndex < currentLine + part.buffer2.length
-                            ) {
-                              isDiff = true;
-                              break;
-                            }
-                            currentLine += part.buffer2.length;
-                          }
-                        }
-
-                        if (isDiff) {
-                          return {
-                            style: {
-                              background: 'rgba(34, 197, 94, 0.15)',
-                              display: 'block',
-                              width: '100%',
-                            },
-                          };
-                        }
-                        return { style: { display: 'block' } };
-                      }}
-                    >
-                      {newValue}
-                    </SyntaxHighlighter>
-                  </ScrollArea>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="unified" className="flex-1 min-h-0 mt-0">
-              <div className="h-full flex flex-col border border-border/50 rounded-lg overflow-hidden bg-card">
-                <div className="px-4 py-2 bg-muted/20 border-b border-border/50">
-                  <div className="flex items-center gap-4 text-xs">
-                    <span className="flex items-center gap-1.5">
-                      <span className="inline-block w-3 h-3 bg-red-500/20 border border-red-500/50 rounded" />
-                      <span className="text-muted-foreground">Removed</span>
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="inline-block w-3 h-3 bg-green-500/20 border border-green-500/50 rounded" />
-                      <span className="text-muted-foreground">Added</span>
-                    </span>
-                  </div>
-                </div>
-                <ScrollArea className="flex-1" style={{ minHeight: '600px' }}>
-                  <SyntaxHighlighter
-                    language="diff"
-                    style={customStyle}
-                    customStyle={{
-                      margin: 0,
-                      padding: '1rem',
-                      fontSize: '13px',
-                      fontFamily:
-                        'var(--font-geist-mono), "Courier New", monospace',
-                      lineHeight: '20px',
-                      background: 'hsl(var(--card))',
-                    }}
-                    showLineNumbers
-                    wrapLines
-                    lineProps={(lineNumber) => {
-                      const line = unifiedDiff.split('\n')[lineNumber - 1];
-                      if (line?.startsWith('-')) {
-                        return {
-                          style: {
-                            background: 'rgba(239, 68, 68, 0.15)',
-                            display: 'block',
-                            width: '100%',
-                          },
-                        };
-                      }
-                      if (line?.startsWith('+')) {
-                        return {
-                          style: {
-                            background: 'rgba(34, 197, 94, 0.15)',
-                            display: 'block',
-                            width: '100%',
-                          },
-                        };
-                      }
-                      return { style: { display: 'block' } };
-                    }}
-                  >
-                    {unifiedDiff}
-                  </SyntaxHighlighter>
-                </ScrollArea>
-              </div>
-            </TabsContent>
-          </Tabs>
+  return (
+    <div className="mt-3 space-y-3 rounded-lg border border-border/60 bg-card/60 p-3 md:p-4 shadow-sm">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-sm font-semibold text-foreground">
+          Request & Response Diff
         </div>
-      </DialogContent>
-    </Dialog>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] uppercase text-muted-foreground">
+              Base
+            </span>
+            <Select
+              value={baseId || ''}
+              onValueChange={(val) => onBaseChange(val)}
+            >
+              <SelectTrigger className="h-9 w-[200px]">
+                <SelectValue placeholder="Select base" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[260px]">
+                {webhooks.map((w) => (
+                  <SelectItem key={w.id} value={w.id}>
+                    <div className="flex items-center gap-2 text-xs">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] px-1.5 py-0 bg-primary/5 border-border/40"
+                      >
+                        {w.method}
+                      </Badge>
+                      <span className="text-[10px] uppercase text-muted-foreground">
+                        {w.direction === 'incoming' ? 'IN' : 'OUT'}
+                      </span>
+                      <span className="font-mono text-[10px] text-foreground/80">
+                        {w.id.slice(0, 6)}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground truncate">
+                        {new Date(w.timestamp).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] uppercase text-muted-foreground">
+              Compare
+            </span>
+            <Select
+              value={compareId || ''}
+              onValueChange={(val) => onCompareChange(val)}
+            >
+              <SelectTrigger className="h-9 w-[200px]">
+                <SelectValue placeholder="Select compare" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[260px]">
+                {webhooks.map((w) => (
+                  <SelectItem key={w.id} value={w.id}>
+                    <div className="flex items-center gap-2 text-xs">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] px-1.5 py-0 bg-primary/5 border-border/40"
+                      >
+                        {w.method}
+                      </Badge>
+                      <span className="text-[10px] uppercase text-muted-foreground">
+                        {w.direction === 'incoming' ? 'IN' : 'OUT'}
+                      </span>
+                      <span className="font-mono text-[10px] text-foreground/80">
+                        {w.id.slice(0, 6)}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground truncate">
+                        {new Date(w.timestamp).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+
+      <Tabs
+        defaultValue="unified"
+        className="flex flex-col gap-2"
+        activationMode="manual"
+      >
+        <TabsList className="w-full justify-start">
+          <TabsTrigger value="unified">Unified</TabsTrigger>
+          <TabsTrigger value="side-by-side">Side by side</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="unified" className="m-0">
+          {base && compare ? (
+            <ScrollArea className="max-h-[480px] md:max-h-[640px]">
+              <DiffLines diff={unifiedDiff} />
+            </ScrollArea>
+          ) : (
+            <div className="rounded-lg border border-dashed border-border/40 p-4 text-sm text-muted-foreground">
+              Select a base and compare webhook to view the diff.
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="side-by-side" className="m-0">
+          {base && compare ? (
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="space-y-2">
+                <div className="text-xs font-semibold text-muted-foreground">
+                  Base request
+                </div>
+                <PrettyCode value={oldValue} changedLines={changedOld} />
+              </div>
+              <div className="space-y-2">
+                <div className="text-xs font-semibold text-muted-foreground">
+                  Compare request
+                </div>
+                <PrettyCode value={newValue} changedLines={changedNew} />
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-lg border border-dashed border-border/40 p-4 text-sm text-muted-foreground">
+              Select a base and compare webhook to view the diff.
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

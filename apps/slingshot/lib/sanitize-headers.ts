@@ -1,4 +1,5 @@
 const SENSITIVE_HEADERS = [
+  'authorization',
   'x-vercel-oidc-token',
   'x-github-token',
   'x-gitlab-token',
@@ -6,10 +7,9 @@ const SENSITIVE_HEADERS = [
   'x-azure-devops-token',
   'x-aws-secret-key',
   'x-aws-access-key',
-  'Authorization',
 ] as const;
 
-const SENSITIVE_HEADER_PLACEHOLDER = '🤡';
+const SENSITIVE_HEADER_PLACEHOLDER = '[redacted]';
 
 const SENSITIVE_ENV_VARS = [
   'VERCEL_OIDC_TOKEN',
@@ -33,7 +33,7 @@ const SENSITIVE_ENV_VARS = [
   'PASSWORD',
 ] as const;
 
-const SENSITIVE_ENV_PLACEHOLDER = '🤡';
+const SENSITIVE_ENV_PLACEHOLDER = '[redacted]';
 
 /**
  * Sanitizes headers by replacing sensitive header values with a placeholder
@@ -46,13 +46,15 @@ export function sanitizeHeaders(
   const sanitized: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(headers)) {
+    const normalizedKey = key.toLowerCase();
+
     // Replace sensitive header values with a placeholder string
     if (
       SENSITIVE_HEADERS.includes(
-        key.toLowerCase() as (typeof SENSITIVE_HEADERS)[number],
+        normalizedKey as (typeof SENSITIVE_HEADERS)[number],
       )
     ) {
-      sanitized[key] = SENSITIVE_HEADER_PLACEHOLDER.toLowerCase();
+      sanitized[key] = SENSITIVE_HEADER_PLACEHOLDER;
     } else {
       sanitized[key] = value;
     }
