@@ -51,12 +51,6 @@ const codeStyle = {
     background: 'transparent',
     display: 'block',
   },
-  'span[class*="token-line"]': {
-    display: 'block',
-    whiteSpace: 'pre-wrap',
-    overflowWrap: 'anywhere',
-    wordBreak: 'break-word',
-  },
 };
 
 const codeCustomStyle: CSSProperties = {

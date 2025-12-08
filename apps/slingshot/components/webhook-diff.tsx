@@ -178,13 +178,6 @@ function PrettyCode({
       background: 'transparent',
       display: 'block',
     },
-    'span[class*="token-line"]': {
-      display: 'block',
-      whiteSpace: 'pre-wrap',
-      overflowWrap: 'anywhere',
-      wordBreak: 'break-word',
-      backgroundColor: 'transparent',
-    },
   };
 
   return (
