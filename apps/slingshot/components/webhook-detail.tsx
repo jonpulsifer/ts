@@ -1,6 +1,7 @@
 'use client';
 
-import { Copy, FileJson, Send } from 'lucide-react';
+import { Copy, FileJson, GitCompare, Send } from 'lucide-react';
+import type { CSSProperties } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -17,7 +18,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Webhook } from '@/lib/types';
-import { WebhookDiffInline } from './webhook-diff';
 
 // Format time consistently (client-side only to avoid hydration issues)
 function formatTime(timestamp: number): string {
@@ -49,10 +49,17 @@ const codeStyle = {
   'code[class*="language-"]': {
     ...(dracula['code[class*="language-"]'] as object),
     background: 'transparent',
+    display: 'block',
+  },
+  'span[class*="token-line"]': {
+    display: 'block',
+    whiteSpace: 'pre-wrap',
+    overflowWrap: 'anywhere',
+    wordBreak: 'break-word',
   },
 };
 
-const codeCustomStyle = {
+const codeCustomStyle: CSSProperties = {
   background: 'transparent',
   height: '100%',
   margin: 0,
@@ -61,22 +68,21 @@ const codeCustomStyle = {
   lineHeight: '22px',
   borderRadius: 0,
   fontFamily: 'var(--font-geist-mono), "Courier New", monospace',
+  overflowX: 'hidden',
 };
 
 interface WebhookDetailProps {
   webhook: Webhook | null;
   onResend?: (webhook: Webhook) => void;
-  compareWebhook?: Webhook | null;
-  activeTabExternal?: 'headers' | 'body' | 'response' | 'raw' | 'diff';
-  onActiveTabChange?: (
-    tab: 'headers' | 'body' | 'response' | 'raw' | 'diff',
-  ) => void;
+  onOpenDiffModal?: () => void;
+  activeTabExternal?: 'headers' | 'body' | 'response' | 'raw';
+  onActiveTabChange?: (tab: 'headers' | 'body' | 'response' | 'raw') => void;
 }
 
 export function WebhookDetail({
   webhook,
   onResend,
-  compareWebhook,
+  onOpenDiffModal,
   activeTabExternal,
   onActiveTabChange,
 }: WebhookDetailProps) {
@@ -97,7 +103,7 @@ export function WebhookDetail({
     <WebhookDetailContent
       webhook={webhook}
       onResend={onResend}
-      compareWebhook={compareWebhook}
+      onOpenDiffModal={onOpenDiffModal}
       activeTabExternal={activeTabExternal}
       onActiveTabChange={onActiveTabChange}
     />
@@ -133,20 +139,18 @@ function _WebhookDetailSkeleton() {
 function WebhookDetailContent({
   webhook,
   onResend,
-  compareWebhook,
+  onOpenDiffModal,
   activeTabExternal,
   onActiveTabChange,
 }: {
   webhook: Webhook;
   onResend?: (webhook: Webhook) => void;
-  compareWebhook?: Webhook | null;
-  activeTabExternal?: 'headers' | 'body' | 'response' | 'raw' | 'diff';
-  onActiveTabChange?: (
-    tab: 'headers' | 'body' | 'response' | 'raw' | 'diff',
-  ) => void;
+  onOpenDiffModal?: () => void;
+  activeTabExternal?: 'headers' | 'body' | 'response' | 'raw';
+  onActiveTabChange?: (tab: 'headers' | 'body' | 'response' | 'raw') => void;
 }) {
   const [activeTab, setActiveTab] = useState<
-    'headers' | 'body' | 'response' | 'raw' | 'diff'
+    'headers' | 'body' | 'response' | 'raw'
   >('headers');
   const [time, setTime] = useState<string>('');
   const [date, setDate] = useState<string>('');
@@ -154,7 +158,6 @@ function WebhookDetailContent({
   const hasBody = Boolean(webhook.body);
   const hasResponse =
     webhook.direction === 'outgoing' && Boolean(webhook.responseBody);
-  const hasDiff = Boolean(compareWebhook);
 
   useEffect(() => {
     if (activeTabExternal) {
@@ -215,7 +218,7 @@ ${webhook.body || ''}`;
         style={codeStyle}
         customStyle={codeCustomStyle}
         showLineNumbers
-        wrapLongLines
+        wrapLongLines={false}
         lineNumberStyle={{ minWidth: '2ch', color: '#6272a4', opacity: 0.8 }}
         codeTagProps={{
           style: {
@@ -249,8 +252,8 @@ ${webhook.body || ''}`;
   }, [webhook]);
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-6 border-b border-border/50 space-y-4 bg-muted/20">
+    <div className="h-full flex flex-col overflow-hidden w-full">
+      <div className="p-6 border-b border-border/50 space-y-4 bg-muted/20 shrink-0">
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 flex-wrap">
@@ -342,6 +345,17 @@ ${webhook.body || ''}`;
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+              {onOpenDiffModal && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onOpenDiffModal}
+                  className="gap-2"
+                >
+                  <GitCompare className="h-4 w-4" />
+                  Compare
+                </Button>
+              )}
               {onResend && (
                 <Button
                   variant="default"
@@ -365,43 +379,36 @@ ${webhook.body || ''}`;
             }}
             className="w-full flex flex-col gap-4"
           >
-            <TabsList className="flex w-full justify-start overflow-x-auto">
+            <TabsList className="flex w-full justify-start overflow-x-auto gap-1 bg-muted/30 border border-border/60 rounded-md p-1">
               <TabsTrigger
                 value="headers"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=inactive]:text-foreground data-[state=inactive]:hover:bg-primary/10 data-[state=inactive]:hover:text-primary"
               >
                 Headers
               </TabsTrigger>
               <TabsTrigger
                 value="body"
                 disabled={!hasBody}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground data-[state=inactive]:hover:bg-primary/10 data-[state=inactive]:hover:text-primary data-[disabled]:opacity-60 data-[disabled]:cursor-not-allowed data-[disabled]:bg-muted/40"
               >
                 Body
               </TabsTrigger>
               <TabsTrigger
                 value="response"
                 disabled={!hasResponse}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground data-[state=inactive]:hover:bg-primary/10 data-[state=inactive]:hover:text-primary data-[disabled]:opacity-60 data-[disabled]:cursor-not-allowed data-[disabled]:bg-muted/40"
               >
                 Response
               </TabsTrigger>
               <TabsTrigger
                 value="raw"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-foreground data-[state=inactive]:hover:bg-primary/10 data-[state=inactive]:hover:text-primary"
               >
                 Raw
               </TabsTrigger>
-              <TabsTrigger
-                value="diff"
-                disabled={!hasDiff}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
-              >
-                Diff
-              </TabsTrigger>
             </TabsList>
 
-            <div className="relative flex-1 min-h-[360px] max-h-[70vh] overflow-hidden group/editor pt-2">
+            <div className="relative flex-1 min-h-[360px] max-h-[70vh] overflow-auto group/editor pt-2 w-full">
               {(activeTab === 'body' ||
                 activeTab === 'response' ||
                 activeTab === 'raw') && (
@@ -437,8 +444,11 @@ ${webhook.body || ''}`;
                 </Button>
               )}
 
-              <TabsContent value="headers" className="m-0 h-full">
-                <ScrollArea className="h-full">
+              <TabsContent
+                value="headers"
+                className="m-0 h-full overflow-hidden"
+              >
+                <ScrollArea className="h-full w-full">
                   <div className="p-2 sm:p-4 space-y-2">
                     {Object.entries(webhook.headers).map(([key, value]) => (
                       <div
@@ -465,54 +475,44 @@ ${webhook.body || ''}`;
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="body" className="m-0 h-full">
-                <div className="h-full">
-                  {hasBody && renderCodeBlock(formattedBody || webhook.body!)}
-                </div>
+              <TabsContent value="body" className="m-0 h-full overflow-hidden">
+                <ScrollArea className="h-full w-full">
+                  <div className="min-h-full">
+                    {hasBody && renderCodeBlock(formattedBody || webhook.body!)}
+                  </div>
+                </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="response" className="m-0 h-full">
-                <div className="h-full">
-                  {hasResponse &&
-                    renderCodeBlock(
-                      (() => {
-                        try {
-                          return JSON.stringify(
-                            JSON.parse(webhook.responseBody || ''),
-                            null,
-                            2,
-                          );
-                        } catch {
-                          return webhook.responseBody || '';
-                        }
-                      })(),
-                    )}
-                </div>
+              <TabsContent
+                value="response"
+                className="m-0 h-full overflow-hidden"
+              >
+                <ScrollArea className="h-full w-full">
+                  <div className="min-h-full">
+                    {hasResponse &&
+                      renderCodeBlock(
+                        (() => {
+                          try {
+                            return JSON.stringify(
+                              JSON.parse(webhook.responseBody || ''),
+                              null,
+                              2,
+                            );
+                          } catch {
+                            return webhook.responseBody || '';
+                          }
+                        })(),
+                      )}
+                  </div>
+                </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="raw" className="m-0 h-full">
-                <div className="h-full">
-                  {renderCodeBlock(JSON.stringify(webhook, null, 2))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="diff" className="m-0 h-full">
-                <div className="h-full overflow-auto pr-1">
-                  {hasDiff && compareWebhook && (
-                    <WebhookDiffInline
-                      webhooks={[webhook, compareWebhook]}
-                      baseId={webhook.id}
-                      compareId={compareWebhook.id}
-                      onBaseChange={() => {}}
-                      onCompareChange={() => {}}
-                    />
-                  )}
-                  {!hasDiff && (
-                    <div className="rounded-lg border border-dashed border-border/50 p-4 text-sm text-muted-foreground">
-                      Select another webhook to compare.
-                    </div>
-                  )}
-                </div>
+              <TabsContent value="raw" className="m-0 h-full overflow-hidden">
+                <ScrollArea className="h-full w-full">
+                  <div className="min-h-full">
+                    {renderCodeBlock(JSON.stringify(webhook, null, 2))}
+                  </div>
+                </ScrollArea>
               </TabsContent>
             </div>
           </Tabs>

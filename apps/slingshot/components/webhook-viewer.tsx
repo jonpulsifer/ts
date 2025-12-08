@@ -33,6 +33,7 @@ import {
   setCachedWebhooks,
 } from '@/lib/webhook-cache';
 import { WebhookDetail } from './webhook-detail';
+import { WebhookDiffModal } from './webhook-diff-modal';
 import { WebhookList } from './webhook-list';
 
 const methodBadge = (method: string) => {
@@ -95,9 +96,11 @@ export function WebhookViewer({
     }
     return webhooksToUse[0];
   });
-  const [diffTarget, setDiffTarget] = useState<Webhook | null>(null);
+  const [diffModalOpen, setDiffModalOpen] = useState(false);
+  const [diffBaseId, setDiffBaseId] = useState<string | null>(null);
+  const [diffCompareId, setDiffCompareId] = useState<string | null>(null);
   const [detailTab, setDetailTab] = useState<
-    'headers' | 'body' | 'response' | 'raw' | 'diff'
+    'headers' | 'body' | 'response' | 'raw'
   >('headers');
 
   // SWR for polling updates (uses etag for efficient checks)
@@ -222,7 +225,6 @@ export function WebhookViewer({
   // Update URL when webhook is selected
   const handleSelectWebhook = useCallback((webhook: Webhook) => {
     setSelectedWebhook(webhook);
-    setDiffTarget(null);
     setDetailTab('headers');
 
     if (typeof window !== 'undefined') {
@@ -233,17 +235,32 @@ export function WebhookViewer({
     }
   }, []);
 
+  const handleOpenDiffModal = useCallback(() => {
+    if (selectedWebhook) {
+      // Set current webhook as base, and find another webhook for compare
+      setDiffBaseId(selectedWebhook.id);
+      const otherWebhook = webhooks.find((w) => w.id !== selectedWebhook.id);
+      setDiffCompareId(otherWebhook?.id || null);
+      setDiffModalOpen(true);
+    }
+  }, [selectedWebhook, webhooks]);
+
   const handleCompare = useCallback(
     (webhook: Webhook) => {
+      // When comparing from list, use the clicked webhook as compare
       if (selectedWebhook && webhook.id !== selectedWebhook.id) {
-        setDiffTarget(webhook);
-        setDetailTab('diff');
-        if (typeof window !== 'undefined') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        setDiffBaseId(selectedWebhook.id);
+        setDiffCompareId(webhook.id);
+        setDiffModalOpen(true);
+      } else if (!selectedWebhook) {
+        // If no webhook selected, use clicked one as base
+        setDiffBaseId(webhook.id);
+        const otherWebhook = webhooks.find((w) => w.id !== webhook.id);
+        setDiffCompareId(otherWebhook?.id || null);
+        setDiffModalOpen(true);
       }
     },
-    [selectedWebhook],
+    [selectedWebhook, webhooks],
   );
 
   // Manual refresh with transition
@@ -376,11 +393,7 @@ export function WebhookViewer({
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-2 pb-3">
-                  <WebhookDetail
-                    webhook={webhook}
-                    onResend={onResend}
-                    compareWebhook={null}
-                  />
+                  <WebhookDetail webhook={webhook} onResend={onResend} />
                 </AccordionContent>
               </AccordionItem>
             ))}
@@ -400,10 +413,10 @@ export function WebhookViewer({
         <Panel
           id={listPanelId}
           ref={listPanelRef}
-          defaultSize={28}
-          minSize={18}
-          maxSize={50}
-          className="min-h-0"
+          defaultSize={26}
+          minSize={22}
+          maxSize={34}
+          className="min-h-0 overflow-hidden min-w-[220px] max-w-[360px]"
         >
           <WebhookList
             webhooks={webhooks}
@@ -424,17 +437,24 @@ export function WebhookViewer({
           ref={detailPanelRef}
           defaultSize={70}
           minSize={50}
-          className="min-h-0"
+          className="min-h-0 overflow-hidden min-w-0"
         >
           <WebhookDetail
             webhook={selectedWebhook}
             onResend={onResend}
-            compareWebhook={diffTarget}
+            onOpenDiffModal={handleOpenDiffModal}
             activeTabExternal={detailTab as any}
             onActiveTabChange={setDetailTab as any}
           />
         </Panel>
       </PanelGroup>
+      <WebhookDiffModal
+        open={diffModalOpen}
+        onOpenChange={setDiffModalOpen}
+        webhooks={webhooks}
+        initialBaseId={diffBaseId}
+        initialCompareId={diffCompareId}
+      />
     </div>
   );
 }
