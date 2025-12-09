@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { sendTestWebhookAction } from '@/lib/actions';
+import { getWebhooksWithCache, sendTestWebhookAction } from '@/lib/actions';
 import type { Webhook } from '@/lib/types';
 import { CopyButton } from './copy-button';
 import { OutgoingWebhook } from './outgoing-webhook';
@@ -17,21 +17,28 @@ import { WebhookViewer } from './webhook-viewer';
 interface WebhookSectionProps {
   projectSlug: string;
   webhookUrl: string;
-  initialWebhooks: Webhook[];
+  initialWebhooks?: Webhook[];
   initialEtag?: string | null;
   initialMaxSize?: number;
 }
 
 export function WebhookSection({
   projectSlug,
-  webhookUrl,
-  initialWebhooks,
+  initialWebhooks = [],
   initialEtag: _initialEtag,
   initialMaxSize: _initialMaxSize,
 }: WebhookSectionProps) {
+  const webhookUrl = `/api/${projectSlug}`;
   const [activeTab, setActiveTab] = useState('incoming');
   const [webhookToResend, setWebhookToResend] = useState<Webhook | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [hydratedWebhooks, setHydratedWebhooks] = useState<Webhook[] | null>(
+    null,
+  );
+  const [_hydratedEtag, setHydratedEtag] = useState<string | null>(null);
+  const [_hydratedMaxSize, setHydratedMaxSize] = useState<number | undefined>(
+    undefined,
+  );
   const [elementRef, bounds] = useMeasure();
   const [displayUrl, setDisplayUrl] = useState(webhookUrl);
 
@@ -41,7 +48,35 @@ export function WebhookSection({
       const origin = window.location.origin;
       const apiPath = `/api/${projectSlug}`;
       setDisplayUrl(`${origin}${apiPath}`);
+    } else {
+      setDisplayUrl(`/api/${projectSlug}`);
     }
+  }, [projectSlug]);
+
+  // Client-side hydrate initial webhooks from cache/server to avoid server streaming
+  useEffect(() => {
+    let cancelled = false;
+    async function hydrate() {
+      try {
+        const result = await getWebhooksWithCache(projectSlug);
+        if (!cancelled) {
+          const { webhooks, etag, maxSize } = result;
+          setHydratedWebhooks(webhooks);
+          setHydratedEtag(etag ?? null);
+          setHydratedMaxSize(maxSize);
+          if (webhooks?.length) {
+            setRefreshKey((k) => k + 1); // trigger SWR refresh path
+          }
+        }
+      } catch (error) {
+        console.error('Failed to hydrate webhooks:', error);
+      }
+    }
+    hydrate();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectSlug]);
 
   const handleResend = (webhook: Webhook) => {
@@ -219,7 +254,7 @@ export function WebhookSection({
       <div className="flex-1 min-h-0">
         <WebhookViewer
           projectSlug={projectSlug}
-          initialWebhooks={initialWebhooks}
+          initialWebhooks={hydratedWebhooks ?? initialWebhooks}
           onResend={handleResend}
           refreshTrigger={refreshKey}
         />

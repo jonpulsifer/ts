@@ -1,5 +1,3 @@
-'use client';
-
 import { Clock, FileJson, Hash, Timer } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import {

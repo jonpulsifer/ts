@@ -1,4 +1,4 @@
-import { cache } from 'react';
+import { cacheTag } from 'next/cache';
 import {
   getFirestore,
   isFirestoreUnavailableError,
@@ -162,15 +162,30 @@ async function _getAllProjectsUncached(): Promise<
 }
 
 /**
- * Get all projects as a list
- * Cached per request using React's cache() to prevent duplicate fetches
- * Pins "slingshot" to the top, sorts the rest alphabetically
+ * Get all projects as a list with cross-request caching.
+ * - Caches using Cache Components so pre-rendered pages don't refetch on every
+ *   render/navigation.
+ * - Always returns at least the default project so static pages render a list.
  */
-export const getAllProjects = cache(
-  async (): Promise<Array<{ slug: string; createdAt: number }>> => {
-    return _getAllProjectsUncached();
-  },
-);
+export async function getAllProjects(): Promise<
+  Array<{ slug: string; createdAt: number }>
+> {
+  'use cache';
+  cacheTag('projects');
+
+  const projects = await _getAllProjectsUncached();
+
+  if (!projects.length) {
+    return [
+      {
+        slug: 'slingshot',
+        createdAt: 0,
+      },
+    ];
+  }
+
+  return projects;
+}
 
 /**
  * Delete a project by slug
@@ -190,6 +205,13 @@ export async function deleteProject(slug: string): Promise<void> {
 
   if (!snap.exists) {
     throw new Error('Project not found');
+  }
+
+  // Prevent deleting the final remaining project
+  const mappings = await getProjectMappings();
+  const totalProjects = Object.keys(mappings).length;
+  if (totalProjects <= 1) {
+    throw new Error('Cannot delete the last remaining project');
   }
 
   // Delete webhooks subcollection

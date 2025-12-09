@@ -2,7 +2,7 @@
 
 import { Check, ExternalLink, Loader2, Plus, Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { CodeBlock } from '@/components/code-block';
 import { CreateProjectModal } from '@/components/create-project-modal';
@@ -17,15 +17,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sendTestWebhookAction } from '@/lib/actions';
+import { BASE_URL } from '@/lib/base-url';
 
 interface HowToUseExamplesProps {
-  baseUrl: string;
   projects: Array<{ slug: string }>;
   defaultProject: string;
 }
 
 export function HowToUseExamples({
-  baseUrl,
   projects,
   defaultProject,
 }: HowToUseExamplesProps) {
@@ -35,18 +34,7 @@ export function HowToUseExamples({
   const [isSending, setIsSending] = useState(false);
   const [lastSent, setLastSent] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const endpointUrl = `${baseUrl}/api/${selectedProject}`;
-
-  // Prevent hydration mismatch by only rendering Select after mount
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Prevent hydration mismatch by only rendering Select after mount
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const endpointUrl = `${BASE_URL}/api/${selectedProject}`;
 
   const httpieExample =
     method === 'POST'
@@ -118,42 +106,33 @@ export function HowToUseExamples({
                 >
                   Project:
                 </Label>
-                {mounted ? (
-                  <>
-                    <Select
-                      value={selectedProject}
-                      onValueChange={setSelectedProject}
-                    >
-                      <SelectTrigger id="project-select" className="w-[200px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {projects.map((project) => (
-                          <SelectItem key={project.slug} value={project.slug}>
-                            {project.slug}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      value={method}
-                      onValueChange={(v) => setMethod(v as 'GET' | 'POST')}
-                    >
-                      <SelectTrigger className="w-[100px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="GET">GET</SelectItem>
-                        <SelectItem value="POST">POST</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </>
-                ) : (
-                  <>
-                    <div className="h-9 w-[200px] bg-muted rounded-md animate-pulse" />
-                    <div className="h-9 w-[100px] bg-muted rounded-md animate-pulse" />
-                  </>
-                )}
+                <Select
+                  value={selectedProject}
+                  onValueChange={setSelectedProject}
+                >
+                  <SelectTrigger id="project-select" className="w-[200px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.map((project) => (
+                      <SelectItem key={project.slug} value={project.slug}>
+                        {project.slug}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={method}
+                  onValueChange={(v) => setMethod(v as 'GET' | 'POST')}
+                >
+                  <SelectTrigger className="w-[100px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="GET">GET</SelectItem>
+                    <SelectItem value="POST">POST</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex-1 text-sm text-muted-foreground min-w-0">
                 <span className="font-medium">Endpoint: </span>

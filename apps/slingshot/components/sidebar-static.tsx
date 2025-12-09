@@ -9,10 +9,12 @@ import {
   Terminal,
   Webhook,
 } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { CreateProjectModal } from './create-project-modal';
+import { NavProjectsSkeleton } from './projects-list-skeleton';
 import { Button } from './ui/button';
 import {
   Sidebar,
@@ -56,7 +58,7 @@ export function SidebarStatic({ children }: SidebarStaticProps) {
               tooltip="Slingshot - Webhook Testing Platform"
               className={isCollapsed ? 'justify-center' : ''}
             >
-              <a href="/" className="group">
+              <Link href="/" className="group">
                 <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-sm shadow-violet-500/20 transition-all group-hover:scale-105">
                   <Webhook className="size-5" />
                 </div>
@@ -68,7 +70,7 @@ export function SidebarStatic({ children }: SidebarStaticProps) {
                     </span>
                   </div>
                 )}
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -99,10 +101,10 @@ export function SidebarStatic({ children }: SidebarStaticProps) {
                     'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm',
                 )}
               >
-                <a href="/">
+                <Link href="/">
                   <BookOpen className="size-4" />
                   {!isCollapsed && <span>Quick Start</span>}
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -132,10 +134,10 @@ export function SidebarStatic({ children }: SidebarStaticProps) {
                         'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm',
                     )}
                   >
-                    <a href={tool.url}>
+                    <Link href={tool.url}>
                       <tool.icon className="size-4" />
                       {!isCollapsed && <span>{tool.name}</span>}
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );
@@ -162,7 +164,7 @@ export function SidebarStatic({ children }: SidebarStaticProps) {
               </Button>
             )}
           </div>
-          {children}
+          <Suspense fallback={<NavProjectsSkeleton />}>{children}</Suspense>
         </SidebarGroup>
       </SidebarContent>
 

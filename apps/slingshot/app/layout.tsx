@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import './globals.css';
+import { NavProjectsSkeleton } from '@/components/projects-list-skeleton';
 import { SidebarShell } from '@/components/sidebar-shell';
 import {
   SidebarInset,
@@ -36,7 +38,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SidebarProvider defaultOpen={true}>
-          <SidebarShell />
+          <Suspense fallback={<NavProjectsSkeleton />}>
+            <SidebarShell />
+          </Suspense>
           <SidebarInset>
             <div
               className="flex min-h-svh flex-col bg-background"
@@ -54,6 +58,7 @@ export default function RootLayout({
                 </div>
               </div>
               <main className="flex-1 overflow-auto px-4 pb-6 pt-4 md:px-6 md:pt-6">
+                {/* Keep the previous route visible during client transitions to avoid flashes */}
                 {children}
               </main>
             </div>

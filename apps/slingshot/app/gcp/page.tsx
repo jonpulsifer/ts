@@ -1,5 +1,6 @@
-import { Loader2 } from 'lucide-react';
+import { headers } from 'next/headers';
 import { Suspense } from 'react';
+import { LoadingState } from '@/components/loading-state';
 import { PageHeader } from '@/components/page-header';
 import {
   getFirestore,
@@ -7,23 +8,24 @@ import {
 } from '@/lib/firestore-client';
 import FirestoreCollections from './_components/firestore-collections';
 
-// Force dynamic rendering since this page requires runtime GCP authentication
-export const dynamic = 'force-dynamic';
+async function CollectionsContent() {
+  // Touch request data before Firestore (satisfies random-bytes guard)
+  await headers();
 
-export default async function GcpPage() {
-  let results: {
-    success: boolean;
-    collections?: Array<{
-      name: string;
-      documentCount: number;
-      sampleDocuments?: Array<{
-        id: string;
-        type?: string;
-        updatedAt?: string;
-      }>;
-    }>;
-    error?: string;
-  };
+  let results:
+    | {
+        success: true;
+        collections: Array<{
+          name: string;
+          documentCount: number;
+          sampleDocuments?: Array<{
+            id: string;
+            type?: string;
+            updatedAt?: string;
+          }>;
+        }>;
+      }
+    | { success: false; error: string };
 
   try {
     if (shouldSkipFirestoreOperations()) {
@@ -87,30 +89,18 @@ export default async function GcpPage() {
     };
   }
 
+  return <FirestoreCollections collectionsData={results} />;
+}
+
+export default async function GcpPage() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <PageHeader
         title="Firestore Collections"
         description="View collections and documents from your Firestore database"
       />
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center py-12">
-            <div className="flex flex-col items-center gap-4">
-              <div className="relative">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <div className="absolute inset-0 h-8 w-8 animate-spin text-primary/20">
-                  <Loader2 className="h-8 w-8" />
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Loading collections...
-              </p>
-            </div>
-          </div>
-        }
-      >
-        <FirestoreCollections collectionsData={results} />
+      <Suspense fallback={<LoadingState label="Loading collections..." />}>
+        <CollectionsContent />
       </Suspense>
     </div>
   );

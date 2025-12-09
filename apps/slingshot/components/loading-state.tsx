@@ -1,8 +1,20 @@
+'use client';
+
 import { Loader2 } from 'lucide-react';
 
-export default function Loading() {
+interface LoadingStateProps {
+  label?: string;
+  className?: string;
+}
+
+export function LoadingState({
+  label = 'Loading...',
+  className = '',
+}: LoadingStateProps) {
   return (
-    <div className="flex items-center justify-center py-12">
+    <div
+      className={`flex items-center justify-center py-12 text-sm text-muted-foreground ${className}`}
+    >
       <div className="flex flex-col items-center gap-4">
         <div className="relative">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -10,7 +22,7 @@ export default function Loading() {
             <Loader2 className="h-8 w-8" />
           </div>
         </div>
-        <p className="text-sm text-muted-foreground">Loading...</p>
+        <p>{label}</p>
       </div>
     </div>
   );

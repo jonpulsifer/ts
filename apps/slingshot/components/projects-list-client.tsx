@@ -1,6 +1,7 @@
 'use client';
 
 import { Plus, Trash2, Webhook } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   useEffect,
@@ -187,7 +188,7 @@ export function ProjectsListClient({
                           'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm',
                       )}
                     >
-                      <a href={`/${project.slug}`}>
+                      <Link href={`/${project.slug}`}>
                         <Webhook className="size-4 shrink-0" />
                         {!isCollapsed && (
                           <>
@@ -202,7 +203,7 @@ export function ProjectsListClient({
                             )}
                           </>
                         )}
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                     {canDelete && !isCollapsed && (
                       <Button

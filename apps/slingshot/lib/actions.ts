@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { createProject, getAllProjects } from './projects-storage';
 import { sanitizeHeaders } from './sanitize-headers';
 import { slugSchema } from './slug-schema';
@@ -22,6 +22,7 @@ export async function createProjectAction(slug: string) {
     // Revalidate the home page and layout (for sidebar)
     revalidatePath('/');
     revalidatePath('/', 'layout');
+    revalidateTag('projects', 'default');
 
     return {
       success: true,
@@ -488,6 +489,7 @@ export async function deleteProjectAction(slug: string) {
     // Revalidate paths and layout (for sidebar)
     revalidatePath('/');
     revalidatePath('/', 'layout');
+    revalidateTag('projects', 'default');
 
     return { success: true };
   } catch (error: any) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { Webhook } from 'lucide-react';
+import Link from 'next/link';
 import { Badge } from './ui/badge';
 import {
   SidebarMenu,
@@ -24,7 +25,7 @@ export function NavProjectsSkeleton() {
           tooltip="slingshot"
           className="transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex-1 opacity-60 animate-pulse"
         >
-          <a href="/slingshot">
+          <Link href="/slingshot">
             <Webhook className="size-4 shrink-0" />
             {!isCollapsed && (
               <>
@@ -37,7 +38,7 @@ export function NavProjectsSkeleton() {
                 </Badge>
               </>
             )}
-          </a>
+          </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
 
