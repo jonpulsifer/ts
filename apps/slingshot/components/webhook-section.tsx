@@ -16,7 +16,6 @@ import { WebhookViewer } from './webhook-viewer';
 
 interface WebhookSectionProps {
   projectSlug: string;
-  webhookUrl: string;
   initialWebhooks?: Webhook[];
   initialEtag?: string | null;
   initialMaxSize?: number;
