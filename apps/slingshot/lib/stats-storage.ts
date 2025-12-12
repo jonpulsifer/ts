@@ -1,8 +1,5 @@
-import {
-  getFirestore,
-  isFirestoreUnavailableError,
-  shouldSkipFirestoreOperations,
-} from './firestore-client';
+import { FIRESTORE_COLLECTION_NAME } from './constants';
+import { getFirestore, isFirestoreUnavailableError } from './firestore-client';
 
 export interface ProjectStats {
   webhookCount: number;
@@ -38,9 +35,6 @@ export async function checkStatsChanged(): Promise<{
   etag: string | null;
   updated: number | null;
 }> {
-  if (shouldSkipFirestoreOperations()) {
-    return { changed: false, etag: null, updated: null };
-  }
   try {
     const firestore = await getFirestore();
     const metaDoc = await firestore.collection('slingshot').doc('_meta').get();
@@ -63,14 +57,11 @@ export async function checkStatsChanged(): Promise<{
 export async function getStats(
   knownEtag?: string | null,
 ): Promise<{ data: StatsData; etag: string | null }> {
-  if (shouldSkipFirestoreOperations()) {
-    return { data: DEFAULT_STATS, etag: null };
-  }
   try {
     const firestore = await getFirestore();
     const metaDoc = await firestore.collection('slingshot').doc('_meta').get();
     const projectsSnap = await firestore
-      .collection('slingshot')
+      .collection(FIRESTORE_COLLECTION_NAME)
       .where('type', '==', 'project')
       .get();
 
@@ -111,10 +102,6 @@ export async function incrementWebhookCount(
   slug: string,
   timestamp: number,
 ): Promise<void> {
-  if (shouldSkipFirestoreOperations()) {
-    return;
-  }
-
   const firestore = await getFirestore();
   const projectRef = firestore.collection('slingshot').doc(slug);
   const metaRef = firestore.collection('slingshot').doc('_meta');
@@ -186,10 +173,6 @@ export async function incrementWebhookCount(
  * Reset project stats when webhooks are cleared
  */
 export async function resetProjectStats(slug: string): Promise<void> {
-  if (shouldSkipFirestoreOperations()) {
-    return;
-  }
-
   const firestore = await getFirestore();
   const projectRef = firestore.collection('slingshot').doc(slug);
   const metaRef = firestore.collection('slingshot').doc('_meta');
@@ -230,10 +213,6 @@ export async function resetProjectStats(slug: string): Promise<void> {
  * Silently fails if GCS is unavailable (non-critical operation)
  */
 export async function updateProjectCount(count?: number): Promise<void> {
-  if (shouldSkipFirestoreOperations()) {
-    return;
-  }
-
   const firestore = await getFirestore();
   const metaRef = firestore.collection('slingshot').doc('_meta');
 
@@ -243,7 +222,7 @@ export async function updateProjectCount(count?: number): Promise<void> {
         ? count
         : (
             await firestore
-              .collection('slingshot')
+              .collection(FIRESTORE_COLLECTION_NAME)
               .where('type', '==', 'project')
               .get()
           ).docs.length;

@@ -1,9 +1,9 @@
 import { cacheTag } from 'next/cache';
 import {
-  getFirestore,
-  isFirestoreUnavailableError,
-  shouldSkipFirestoreOperations,
-} from './firestore-client';
+  FIRESTORE_COLLECTION_NAME,
+  WEBHOOKS_SUBCOLLECTION_NAME,
+} from './constants';
+import { getFirestore, isFirestoreUnavailableError } from './firestore-client';
 import { updateProjectCount } from './stats-storage';
 
 /**
@@ -21,18 +21,10 @@ export interface ProjectMapping {
  * Returns empty object if GCS operation fails
  */
 export async function getProjectMappings(): Promise<ProjectMapping> {
-  if (shouldSkipFirestoreOperations()) {
-    return {
-      slingshot: {
-        slug: 'slingshot',
-        createdAt: Date.now(),
-      },
-    };
-  }
   try {
     const firestore = await getFirestore();
     const snapshot = await firestore
-      .collection('slingshot')
+      .collection(FIRESTORE_COLLECTION_NAME)
       .where('type', '==', 'project')
       .get();
 
@@ -58,9 +50,6 @@ export async function getProjectMappings(): Promise<ProjectMapping> {
  * Check if project exists by slug (slug is the ID)
  */
 export async function projectExists(slug: string): Promise<boolean> {
-  if (shouldSkipFirestoreOperations()) {
-    return slug === 'slingshot';
-  }
   const firestore = await getFirestore();
   const doc = await firestore.collection('slingshot').doc(slug).get();
   return doc.exists && (doc.data()?.type || 'project') === 'project';
@@ -74,10 +63,6 @@ export async function projectExists(slug: string): Promise<boolean> {
  * This ensures fresh data after mutations
  */
 export async function createProject(slug: string): Promise<{ slug: string }> {
-  if (shouldSkipFirestoreOperations()) {
-    return { slug };
-  }
-
   const firestore = await getFirestore();
   const docRef = firestore.collection('slingshot').doc(slug);
   const snap = await docRef.get();
@@ -114,9 +99,6 @@ export async function createProject(slug: string): Promise<{ slug: string }> {
 export async function getProjectBySlug(
   slug: string,
 ): Promise<{ slug: string; createdAt: number } | null> {
-  if (shouldSkipFirestoreOperations()) {
-    return slug === 'slingshot' ? { slug, createdAt: Date.now() } : null;
-  }
   const firestore = await getFirestore();
   const doc = await firestore.collection('slingshot').doc(slug).get();
   if (!doc.exists || (doc.data()?.type || 'project') !== 'project') {
@@ -195,10 +177,6 @@ export async function deleteProject(slug: string): Promise<void> {
     throw new Error('Cannot delete the default project');
   }
 
-  if (shouldSkipFirestoreOperations()) {
-    return;
-  }
-
   const firestore = await getFirestore();
   const docRef = firestore.collection('slingshot').doc(slug);
   const snap = await docRef.get();
@@ -215,7 +193,9 @@ export async function deleteProject(slug: string): Promise<void> {
   }
 
   // Delete webhooks subcollection
-  const webhooksSnap = await docRef.collection('webhooks').get();
+  const webhooksSnap = await docRef
+    .collection(WEBHOOKS_SUBCOLLECTION_NAME)
+    .get();
   const batch = firestore.batch();
   for (const doc of webhooksSnap.docs) {
     batch.delete(doc.ref);
@@ -240,9 +220,6 @@ export async function deleteProject(slug: string): Promise<void> {
  */
 export async function ensureDefaultProject(): Promise<{ slug: string }> {
   const defaultSlug = 'slingshot';
-  if (shouldSkipFirestoreOperations()) {
-    return { slug: defaultSlug };
-  }
   const firestore = await getFirestore();
   const docRef = firestore.collection('slingshot').doc(defaultSlug);
   const snap = await docRef.get();

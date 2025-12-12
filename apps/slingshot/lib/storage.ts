@@ -1,13 +1,14 @@
 import type { Firestore } from '@google-cloud/firestore';
 import {
-  getFirestore,
-  shouldSkipFirestoreOperations,
-} from './firestore-client';
+  FIRESTORE_COLLECTION_NAME,
+  WEBHOOKS_SUBCOLLECTION_NAME,
+} from './constants';
+import { getFirestore } from './firestore-client';
 import { resetProjectStats } from './stats-storage';
 import type { Webhook, WebhookHistory } from './types';
 
 const MAX_WEBHOOKS = 100;
-const COLLECTION = 'slingshot';
+const COLLECTION = FIRESTORE_COLLECTION_NAME;
 
 const ensureProjectDoc = async (firestore: Firestore, slug: string) => {
   const docRef = firestore.collection(COLLECTION).doc(slug);
@@ -30,9 +31,6 @@ const ensureProjectDoc = async (firestore: Firestore, slug: string) => {
 export async function checkWebhooksChanged(
   slug: string,
 ): Promise<{ changed: boolean; etag: string | null; updated: number | null }> {
-  if (shouldSkipFirestoreOperations()) {
-    return { changed: false, etag: null, updated: null };
-  }
   try {
     const firestore = await getFirestore();
     const docRef = firestore.collection(COLLECTION).doc(slug);
@@ -59,9 +57,6 @@ export async function getWebhooks(
   slug: string,
   _knownEtag?: string | null,
 ): Promise<{ data: WebhookHistory | null; etag: string | null }> {
-  if (shouldSkipFirestoreOperations()) {
-    return { data: null, etag: null };
-  }
   try {
     const firestore = await getFirestore();
     const docRef = await ensureProjectDoc(firestore, slug);
@@ -72,7 +67,7 @@ export async function getWebhooks(
       : null;
 
     const webhooksSnap = await docRef
-      .collection('webhooks')
+      .collection(WEBHOOKS_SUBCOLLECTION_NAME)
       .orderBy('timestamp', 'desc')
       .limit(MAX_WEBHOOKS)
       .get();
@@ -98,11 +93,6 @@ export async function appendWebhook(
   slug: string,
   webhook: Webhook,
 ): Promise<void> {
-  if (shouldSkipFirestoreOperations()) {
-    console.log('[Firestore] Skipping appendWebhook - CI environment detected');
-    return;
-  }
-
   const firestore = await getFirestore();
   const docRef = firestore.collection(COLLECTION).doc(slug);
   const webhooksRef = docRef.collection('webhooks');
@@ -155,11 +145,6 @@ export async function saveWebhooks(
   slug: string,
   webhooks: Webhook[],
 ): Promise<string> {
-  if (shouldSkipFirestoreOperations()) {
-    console.log('[Firestore] Skipping saveWebhooks - CI environment detected');
-    return '';
-  }
-
   const firestore = await getFirestore();
   const docRef = await ensureProjectDoc(firestore, slug);
   const webhooksRef = docRef.collection('webhooks');
@@ -197,11 +182,6 @@ export async function saveWebhooks(
 }
 
 export async function clearWebhooks(slug: string): Promise<void> {
-  if (shouldSkipFirestoreOperations()) {
-    console.log('[Firestore] Skipping clearWebhooks - CI environment detected');
-    return;
-  }
-
   const firestore = await getFirestore();
   const docRef = firestore.collection(COLLECTION).doc(slug);
   const webhooksRef = docRef.collection('webhooks');

@@ -4,30 +4,27 @@ import {
   ExternalAccountClient,
   type ExternalAccountClientOptions,
 } from 'google-auth-library';
-
-const GCP_PROJECT_ID = 'homelab-ng';
-const GCP_PROJECT_NUMBER = '629296473058';
-const GCP_WORKLOAD_IDENTITY_POOL = 'homelab';
-const GCP_WORKLOAD_IDENTITY_PROVIDER = 'vercel';
-const GCP_WORKLOAD_IDENTITY_AUDIENCE = `//iam.googleapis.com/projects/${GCP_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${GCP_WORKLOAD_IDENTITY_POOL}/providers/${GCP_WORKLOAD_IDENTITY_PROVIDER}`;
-const _GCP_SERVICE_ACCOUNT_EMAIL =
-  'slingshot@homelab-ng.iam.gserviceaccount.com';
-const IS_CI = !!process.env.CI;
+import {
+  GCP_PROJECT_ID,
+  GCP_WORKLOAD_IDENTITY_AUDIENCE,
+  IS_VERCEL,
+  OAUTH_SUBJECT_TOKEN_TYPE,
+  OAUTH_TOKEN_URL,
+} from './constants';
 
 const GCP_WORKLOAD_IDENTITY_EXTERNAL_ACCOUNT_CONFIG = {
   type: 'external_account',
   audience: GCP_WORKLOAD_IDENTITY_AUDIENCE,
-  subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
-  token_url: 'https://sts.googleapis.com/v1/token',
+  subject_token_type: OAUTH_SUBJECT_TOKEN_TYPE,
+  token_url: OAUTH_TOKEN_URL,
   // service_account_impersonation_url: `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_SERVICE_ACCOUNT_EMAIL}:generateAccessToken`,
   subject_token_supplier: { getSubjectToken: getVercelOidcToken },
 } as ExternalAccountClientOptions;
 
 // Cache for auth client and Firestore instance (useful for containerized environments)
 let cachedAuthClient: ExternalAccountClient | null = null;
-let cachedFirestore: Firestore | null = null;
-
-export const shouldSkipFirestoreOperations = () => IS_CI;
+let cachedDefaultFirestore: Firestore | null = null;
+let cachedExternalFirestore: Firestore | null = null;
 
 export const isFirestoreUnavailableError = (error: unknown) => {
   const err = error as { code?: number | string; message?: string };
@@ -62,15 +59,23 @@ function getAuthClient(): ExternalAccountClient {
 
 /**
  * Get or create a cached Firestore instance
- * Reuses the cached auth client for better performance in containerized environments
+ * Uses default client in non-production, external auth client in production
  */
 export async function getFirestore(): Promise<Firestore> {
-  if (!cachedFirestore) {
-    const authClient = getAuthClient();
-    cachedFirestore = new Firestore({
-      authClient,
+  if (IS_VERCEL) {
+    if (!cachedExternalFirestore) {
+      const authClient = getAuthClient();
+      cachedExternalFirestore = new Firestore({
+        authClient,
+        projectId: GCP_PROJECT_ID,
+      });
+    }
+    return cachedExternalFirestore;
+  }
+  if (!cachedDefaultFirestore) {
+    cachedDefaultFirestore = new Firestore({
       projectId: GCP_PROJECT_ID,
     });
   }
-  return cachedFirestore;
+  return cachedDefaultFirestore;
 }
