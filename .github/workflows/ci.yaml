@@ -7,6 +7,7 @@ on:
     types: [opened, synchronize]
 
 permissions:
+  id-token: write
   contents: read
 
 jobs:
@@ -54,6 +55,11 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+
+      - uses: google-github-actions/auth@v3
+        with:
+          project_id: homelab-ng
+          workload_identity_provider: projects/629296473058/locations/global/workloadIdentityPools/homelab/providers/github
 
       # - name: Prepare db & env files
       #   env:
