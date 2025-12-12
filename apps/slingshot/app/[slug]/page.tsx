@@ -6,9 +6,15 @@ import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { WebhookSection } from '@/components/webhook-section';
+import { FIRESTORE_COLLECTION_NAME } from '@/lib/constants';
+import { getFirestore } from '@/lib/firestore-client';
 
 export async function generateStaticParams() {
-  return [{ slug: 'slingshot' }];
+  const firestore = await getFirestore();
+  const slingshotCollection = firestore.collection(FIRESTORE_COLLECTION_NAME);
+  const snapshot = await slingshotCollection.limit(100).get();
+  const slugs = snapshot.docs.map((doc) => doc.id);
+  return slugs.map((slug) => ({ slug }));
 }
 
 async function ProjectContent({ slug }: { slug: string }) {
