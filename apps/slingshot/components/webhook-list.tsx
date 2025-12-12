@@ -8,15 +8,30 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Webhook } from '@/lib/types';
 import { CopyButton } from './copy-button';
 
-// Format time consistently (client-side only to avoid hydration issues)
-function formatTime(timestamp: number): string {
-  const date = new Date(timestamp);
-  const hours = date.getHours();
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  const seconds = date.getSeconds().toString().padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const displayHours = hours % 12 || 12;
-  return `${displayHours}:${minutes}:${seconds} ${ampm}`;
+// Client-side component to avoid hydration mismatch
+function WebhookLinkCopyButton({
+  projectSlug,
+  webhookId,
+}: {
+  projectSlug: string;
+  webhookId: string;
+}) {
+  const [url, setUrl] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUrl(`${window.location.origin}/${projectSlug}?webhook=${webhookId}`);
+    }
+  }, [projectSlug, webhookId]);
+
+  return (
+    <CopyButton
+      text={url}
+      size="icon"
+      variant="outline"
+      title="Copy link to webhook"
+    />
+  );
 }
 
 interface WebhookListProps {
@@ -27,25 +42,7 @@ interface WebhookListProps {
   isConnected: boolean;
   projectSlug: string;
   onCompare?: (webhook: Webhook) => void;
-  collapsed?: boolean;
-  onToggleCollapse?: () => void;
-}
-
-// Client-side only time display to avoid hydration issues
-function _TimeDisplay({ timestamp }: { timestamp: number }) {
-  const [mounted, setMounted] = useState(false);
-  const [time, setTime] = useState('');
-
-  useEffect(() => {
-    setMounted(true);
-    setTime(formatTime(timestamp));
-  }, [timestamp]);
-
-  if (!mounted) {
-    return <span className="font-mono opacity-70">--:--:-- --</span>;
-  }
-
-  return <span className="font-mono opacity-70">{time}</span>;
+  isLoading?: boolean;
 }
 
 const getMethodColor = (method: string) => {
@@ -175,11 +172,9 @@ const WebhookListItem = memo(function WebhookListItem({
             </div>
           </button>
           <div className="flex items-center gap-1 shrink-0 transition-opacity opacity-70 group-hover:opacity-100">
-            <CopyButton
-              text={`${typeof window !== 'undefined' ? window.location.origin : ''}/${projectSlug}?webhook=${webhook.id}`}
-              size="icon"
-              variant="outline"
-              title="Copy link to webhook"
+            <WebhookLinkCopyButton
+              projectSlug={projectSlug}
+              webhookId={webhook.id}
             />
             <Button
               variant="outline"
@@ -209,6 +204,7 @@ export function WebhookList({
   isConnected,
   projectSlug,
   onCompare,
+  isLoading = false,
 }: WebhookListProps) {
   const selectedId = selectedWebhook?.id;
 
@@ -224,7 +220,11 @@ export function WebhookList({
       <div className="p-4 border-b border-border/50 flex items-center justify-between bg-muted/20 shrink-0">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold text-foreground">Webhooks</h2>
-          <Badge variant="secondary" className="text-xs bg-primary/10">
+          <Badge
+            variant="secondary"
+            className="text-xs bg-primary/10"
+            suppressHydrationWarning
+          >
             {webhooks.length}
           </Badge>
           <div className="flex items-center gap-1.5">
@@ -237,20 +237,24 @@ export function WebhookList({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {webhooks.length > 0 && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClearHistory}
-              className="hover:bg-destructive/10 hover:text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClearHistory}
+            disabled={webhooks.length === 0}
+            className="hover:bg-destructive/10 hover:text-destructive disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       </div>
       <ScrollArea className="flex-1 min-h-[200px]">
-        {webhooks.length === 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4 bg-muted/20">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+            <p className="text-sm text-muted-foreground">Loading webhooks...</p>
+          </div>
+        ) : webhooks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 bg-muted/20">
             <Circle className="h-20 w-20 text-primary mb-4 drop-shadow-[0_0_6px_rgba(139,92,246,0.4)] fill-primary/50" />
             <h3 className="text-xl font-bold mb-2 text-foreground">

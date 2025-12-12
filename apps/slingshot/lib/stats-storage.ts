@@ -212,20 +212,17 @@ export async function resetProjectStats(slug: string): Promise<void> {
  * Update global project count
  * Silently fails if GCS is unavailable (non-critical operation)
  */
-export async function updateProjectCount(count?: number): Promise<void> {
+export async function updateProjectCount(): Promise<void> {
   const firestore = await getFirestore();
   const metaRef = firestore.collection('slingshot').doc('_meta');
 
   try {
-    const total =
-      typeof count === 'number'
-        ? count
-        : (
-            await firestore
-              .collection(FIRESTORE_COLLECTION_NAME)
-              .where('type', '==', 'project')
-              .get()
-          ).docs.length;
+    const total = (
+      await firestore
+        .collection(FIRESTORE_COLLECTION_NAME)
+        .where('type', '==', 'project')
+        .get()
+    ).docs.length;
 
     await metaRef.set(
       {

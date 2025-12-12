@@ -159,7 +159,7 @@ function WebhookDetailContent({
     }
   }, [activeTabExternal]);
 
-  const handleCopy = async (text: string, label?: string) => {
+  const handleCopy = async (text: string, label: string) => {
     await navigator.clipboard.writeText(text);
     toast.success(label ? `${label} copied` : 'Copied to clipboard');
   };

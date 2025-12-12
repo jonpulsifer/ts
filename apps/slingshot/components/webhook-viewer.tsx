@@ -50,8 +50,8 @@ interface WebhookViewerProps {
   initialWebhooks: Webhook[];
   onResend?: (webhook: Webhook) => void;
   refreshTrigger?: number;
-  initialEtag?: string | null;
   initialMaxSize?: number;
+  isLoadingWebhooks?: boolean;
 }
 
 export function WebhookViewer({
@@ -59,8 +59,8 @@ export function WebhookViewer({
   initialWebhooks,
   onResend,
   refreshTrigger,
-  initialEtag,
   initialMaxSize = 100,
+  isLoadingWebhooks = false,
 }: WebhookViewerProps) {
   const searchParams = useSearchParams();
   const webhookIdFromQuery = searchParams.get('webhook');
@@ -100,6 +100,29 @@ export function WebhookViewer({
   const [detailTab, setDetailTab] = useState<
     'headers' | 'body' | 'response' | 'raw'
   >('headers');
+
+  // Clear webhook query parameters when switching projects to prevent navigation conflicts
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const currentParams = new URLSearchParams(window.location.search);
+      const hasWebhookParam = currentParams.has('webhook');
+
+      if (hasWebhookParam) {
+        // Remove webhook parameter when switching projects
+        currentParams.delete('webhook');
+        const newUrl = currentParams.toString()
+          ? `${window.location.pathname}?${currentParams.toString()}`
+          : window.location.pathname;
+        window.history.replaceState(null, '', newUrl);
+      }
+    }
+  }, [projectSlug]);
+
+  // Reset selected webhook when project changes
+  useEffect(() => {
+    setSelectedWebhook(null);
+    setDetailTab('headers');
+  }, [projectSlug]);
 
   // SWR for polling updates (uses etag for efficient checks)
   const {
@@ -159,11 +182,11 @@ export function WebhookViewer({
     }
 
     // Persist initial server data to cache
-    if (initialWebhooks.length > 0 || initialEtag) {
+    if (initialWebhooks.length > 0) {
       setCachedWebhooks(
         projectSlug,
         initialWebhooks,
-        initialEtag || undefined,
+        undefined,
         initialMaxSize,
       );
     }
@@ -220,18 +243,28 @@ export function WebhookViewer({
     }
   }, [webhookIdFromQuery, webhooks, selectedWebhook]);
 
-  // Update URL when webhook is selected
-  const handleSelectWebhook = useCallback((webhook: Webhook) => {
-    setSelectedWebhook(webhook);
-    setDetailTab('headers');
+  // Update URL when webhook is selected (only for same project navigation)
+  const handleSelectWebhook = useCallback(
+    (webhook: Webhook) => {
+      setSelectedWebhook(webhook);
+      setDetailTab('headers');
 
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      params.set('webhook', webhook.id);
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.replaceState(null, '', newUrl);
-    }
-  }, []);
+      // Only update URL if we're staying on the same project page
+      // Avoid URL manipulation during project navigation to prevent conflicts
+      if (typeof window !== 'undefined') {
+        const currentPathname = window.location.pathname;
+        const expectedPathname = `/${projectSlug}`;
+
+        if (currentPathname === expectedPathname) {
+          const params = new URLSearchParams(window.location.search);
+          params.set('webhook', webhook.id);
+          const newUrl = `${window.location.pathname}?${params.toString()}`;
+          window.history.replaceState(null, '', newUrl);
+        }
+      }
+    },
+    [projectSlug],
+  );
 
   const handleOpenDiffModal = useCallback(() => {
     if (selectedWebhook) {
@@ -302,7 +335,10 @@ export function WebhookViewer({
         <div className="p-3 border-b border-border/50 flex items-center justify-between gap-2 bg-muted/20">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-foreground">Webhooks</h2>
-            <span className="text-xs text-muted-foreground">
+            <span
+              className="text-xs text-muted-foreground"
+              suppressHydrationWarning
+            >
               {webhooks.length}
             </span>
           </div>
@@ -424,6 +460,7 @@ export function WebhookViewer({
             isConnected={!swrError}
             projectSlug={projectSlug}
             onCompare={handleCompare}
+            isLoading={isLoadingWebhooks}
           />
         </Panel>
         <PanelResizeHandle
@@ -437,13 +474,22 @@ export function WebhookViewer({
           minSize={50}
           className="min-h-0 overflow-hidden min-w-0"
         >
-          <WebhookDetail
-            webhook={selectedWebhook}
-            onResend={onResend}
-            onOpenDiffModal={handleOpenDiffModal}
-            activeTabExternal={detailTab as any}
-            onActiveTabChange={setDetailTab as any}
-          />
+          {isLoadingWebhooks && !selectedWebhook ? (
+            <div className="flex flex-col items-center justify-center h-full py-16 px-4 bg-muted/20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+              <p className="text-sm text-muted-foreground">
+                Loading webhook details...
+              </p>
+            </div>
+          ) : (
+            <WebhookDetail
+              webhook={selectedWebhook}
+              onResend={onResend}
+              onOpenDiffModal={handleOpenDiffModal}
+              activeTabExternal={detailTab as any}
+              onActiveTabChange={setDetailTab as any}
+            />
+          )}
         </Panel>
       </PanelGroup>
       <WebhookDiffModal

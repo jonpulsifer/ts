@@ -10,23 +10,16 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getWebhooksWithCache, sendTestWebhookAction } from '@/lib/actions';
 import type { Webhook } from '@/lib/types';
+import { getCachedWebhooksEntry } from '@/lib/webhook-cache';
 import { CopyButton } from './copy-button';
 import { OutgoingWebhook } from './outgoing-webhook';
 import { WebhookViewer } from './webhook-viewer';
 
 interface WebhookSectionProps {
   projectSlug: string;
-  initialWebhooks?: Webhook[];
-  initialEtag?: string | null;
-  initialMaxSize?: number;
 }
 
-export function WebhookSection({
-  projectSlug,
-  initialWebhooks = [],
-  initialEtag: _initialEtag,
-  initialMaxSize: _initialMaxSize,
-}: WebhookSectionProps) {
+export function WebhookSection({ projectSlug }: WebhookSectionProps) {
   const webhookUrl = `/api/${projectSlug}`;
   const [activeTab, setActiveTab] = useState('incoming');
   const [webhookToResend, setWebhookToResend] = useState<Webhook | null>(null);
@@ -38,6 +31,8 @@ export function WebhookSection({
   const [_hydratedMaxSize, setHydratedMaxSize] = useState<number | undefined>(
     undefined,
   );
+  const [isLoadingWebhooks, setIsLoadingWebhooks] = useState(false);
+  const [isTestingWebhook, setIsTestingWebhook] = useState(false);
   const [elementRef, bounds] = useMeasure();
   const [displayUrl, setDisplayUrl] = useState(webhookUrl);
 
@@ -52,11 +47,24 @@ export function WebhookSection({
     }
   }, [projectSlug]);
 
+  // Reset tab state when switching projects
+  useEffect(() => {
+    setActiveTab('incoming');
+    setWebhookToResend(null);
+    setRefreshKey(0);
+    setHydratedWebhooks(null);
+    setIsLoadingWebhooks(false);
+  }, [projectSlug]);
+
   // Client-side hydrate initial webhooks from cache/server to avoid server streaming
+  // Add a small delay to prevent race conditions during navigation
   useEffect(() => {
     let cancelled = false;
+    let timeoutId: NodeJS.Timeout;
+
     async function hydrate() {
       try {
+        setIsLoadingWebhooks(true);
         const result = await getWebhooksWithCache(projectSlug);
         if (!cancelled) {
           const { webhooks, etag, maxSize } = result;
@@ -69,11 +77,31 @@ export function WebhookSection({
         }
       } catch (error) {
         console.error('Failed to hydrate webhooks:', error);
+      } finally {
+        if (!cancelled) {
+          setIsLoadingWebhooks(false);
+        }
       }
     }
-    hydrate();
+
+    // Start loading immediately if we don't have cached data
+    const cachedEntry = getCachedWebhooksEntry(projectSlug);
+    const hasCachedData =
+      cachedEntry?.webhooks && cachedEntry.webhooks.length > 0;
+    if (!hasCachedData) {
+      setIsLoadingWebhooks(true);
+    }
+
+    // Small delay to allow navigation to settle before hydrating
+    timeoutId = setTimeout(() => {
+      if (!cancelled) {
+        hydrate();
+      }
+    }, 50);
+
     return () => {
       cancelled = true;
+      clearTimeout(timeoutId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectSlug]);
@@ -109,12 +137,15 @@ export function WebhookSection({
                   >
                     {isActive && (
                       <motion.div
-                        layoutId="activeTab"
+                        layoutId={`activeTab-${projectSlug}`}
                         className="absolute inset-0 bg-primary rounded-sm shadow-sm"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
                         transition={{
                           type: 'spring',
-                          bounce: 0.2,
-                          duration: 0.6,
+                          bounce: 0.15,
+                          duration: 0.3,
                         }}
                       />
                     )}
@@ -173,8 +204,12 @@ export function WebhookSection({
                           <CopyButton text={displayUrl} />
                           <Button
                             variant="outline"
-                            size="icon-lg"
+                            size="icon"
+                            disabled={isTestingWebhook}
                             onClick={async () => {
+                              if (isTestingWebhook) return;
+
+                              setIsTestingWebhook(true);
                               try {
                                 const result = await sendTestWebhookAction(
                                   displayUrl,
@@ -189,12 +224,22 @@ export function WebhookSection({
                                 toast.error(
                                   `Failed to send test webhook: ${error instanceof Error ? error.message : 'Unknown error'}`,
                                 );
+                              } finally {
+                                setIsTestingWebhook(false);
                               }
                             }}
                             className="shrink-0"
-                            title="Send GET request"
+                            title={
+                              isTestingWebhook
+                                ? 'Sending test request...'
+                                : 'Send GET request'
+                            }
                           >
-                            <Send className="h-4 w-4" />
+                            {isTestingWebhook ? (
+                              <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                            ) : (
+                              <Send className="h-4 w-4" />
+                            )}
                           </Button>
                         </div>
                         <div className="text-xs text-muted-foreground flex items-center gap-2">
@@ -253,9 +298,10 @@ export function WebhookSection({
       <div className="flex-1 min-h-0">
         <WebhookViewer
           projectSlug={projectSlug}
-          initialWebhooks={hydratedWebhooks ?? initialWebhooks}
+          initialWebhooks={hydratedWebhooks ?? []}
           onResend={handleResend}
           refreshTrigger={refreshKey}
+          isLoadingWebhooks={isLoadingWebhooks}
         />
       </div>
     </div>

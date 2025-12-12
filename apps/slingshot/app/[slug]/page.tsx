@@ -20,7 +20,10 @@ export async function generateStaticParams() {
     const slugs = snapshot.docs.map((doc) => doc.id);
     return slugs.map((slug) => ({ slug }));
   } catch (error) {
-    console.warn('Failed to generate static params for projects, falling back to dynamic generation:', error);
+    console.warn(
+      'Failed to generate static params for projects, falling back to dynamic generation:',
+      error,
+    );
     // Return default slug to disable static generation for this route
     return [{ slug: FIRESTORE_COLLECTION_NAME }];
   }
