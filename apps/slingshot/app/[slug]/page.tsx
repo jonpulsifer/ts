@@ -10,11 +10,20 @@ import { FIRESTORE_COLLECTION_NAME } from '@/lib/constants';
 import { getFirestore } from '@/lib/firestore-client';
 
 export async function generateStaticParams() {
-  const firestore = await getFirestore();
-  const slingshotCollection = firestore.collection(FIRESTORE_COLLECTION_NAME);
-  const snapshot = await slingshotCollection.limit(100).get();
-  const slugs = snapshot.docs.map((doc) => doc.id);
-  return slugs.map((slug) => ({ slug }));
+  // During static generation, avoid Firestore calls that may fail due to
+  // google-auth-library compatibility issues. Return empty array to let pages
+  // be generated dynamically instead.
+  try {
+    const firestore = await getFirestore();
+    const slingshotCollection = firestore.collection(FIRESTORE_COLLECTION_NAME);
+    const snapshot = await slingshotCollection.limit(100).get();
+    const slugs = snapshot.docs.map((doc) => doc.id);
+    return slugs.map((slug) => ({ slug }));
+  } catch (error) {
+    console.warn('Failed to generate static params for projects, falling back to dynamic generation:', error);
+    // Return empty array to disable static generation for this route
+    return [];
+  }
 }
 
 async function ProjectContent({ slug }: { slug: string }) {
