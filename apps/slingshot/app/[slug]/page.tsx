@@ -21,8 +21,8 @@ export async function generateStaticParams() {
     return slugs.map((slug) => ({ slug }));
   } catch (error) {
     console.warn('Failed to generate static params for projects, falling back to dynamic generation:', error);
-    // Return empty array to disable static generation for this route
-    return [];
+    // Return default slug to disable static generation for this route
+    return [{ slug: FIRESTORE_COLLECTION_NAME }];
   }
 }
 
