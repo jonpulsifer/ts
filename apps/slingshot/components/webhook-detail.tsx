@@ -259,25 +259,23 @@ ${webhook.body || ''}`;
               </Badge>
               <Badge
                 variant="outline"
-                className={`text-xs ${
-                  webhook.direction === 'incoming'
+                className={`text-xs ${webhook.direction === 'incoming'
                     ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
                     : 'bg-purple-500/10 text-purple-400 border-purple-500/30'
-                }`}
+                  }`}
               >
                 {webhook.direction === 'incoming' ? 'Incoming' : 'Outgoing'}
               </Badge>
               {webhook.direction === 'outgoing' && webhook.responseStatus && (
                 <Badge
                   variant="outline"
-                  className={`text-xs font-semibold ${
-                    webhook.responseStatus >= 200 &&
-                    webhook.responseStatus < 300
+                  className={`text-xs font-semibold ${webhook.responseStatus >= 200 &&
+                      webhook.responseStatus < 300
                       ? 'bg-green-500/10 text-green-400 border-green-500/30'
                       : webhook.responseStatus >= 400
                         ? 'bg-red-500/10 text-red-400 border-red-500/30'
                         : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30'
-                  }`}
+                    }`}
                 >
                   {webhook.responseStatus}
                 </Badge>
@@ -406,37 +404,37 @@ ${webhook.body || ''}`;
               {(activeTab === 'body' ||
                 activeTab === 'response' ||
                 activeTab === 'raw') && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="absolute top-1 right-2 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
-                  onClick={() => {
-                    let text = '';
-                    if (activeTab === 'body' && webhook.body) {
-                      text = formattedBody || webhook.body;
-                    } else if (
-                      activeTab === 'response' &&
-                      webhook.responseBody
-                    ) {
-                      try {
-                        text = JSON.stringify(
-                          JSON.parse(webhook.responseBody),
-                          null,
-                          2,
-                        );
-                      } catch {
-                        text = webhook.responseBody;
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="absolute top-1 right-2 z-10 gap-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover/editor:opacity-100 transition-opacity"
+                    onClick={() => {
+                      let text = '';
+                      if (activeTab === 'body' && webhook.body) {
+                        text = formattedBody || webhook.body;
+                      } else if (
+                        activeTab === 'response' &&
+                        webhook.responseBody
+                      ) {
+                        try {
+                          text = JSON.stringify(
+                            JSON.parse(webhook.responseBody),
+                            null,
+                            2,
+                          );
+                        } catch {
+                          text = webhook.responseBody;
+                        }
+                      } else if (activeTab === 'raw') {
+                        text = JSON.stringify(webhook, null, 2);
                       }
-                    } else if (activeTab === 'raw') {
-                      text = JSON.stringify(webhook, null, 2);
-                    }
-                    if (text) handleCopy(text, 'Content copied');
-                  }}
-                >
-                  <Copy className="h-4 w-4" />
-                  Copy
-                </Button>
-              )}
+                      if (text) handleCopy(text, 'Content copied');
+                    }}
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </Button>
+                )}
 
               <TabsContent
                 value="headers"
@@ -459,7 +457,7 @@ ${webhook.body || ''}`;
                           variant="ghost"
                           size="icon-sm"
                           className="shrink-0 opacity-0 group-hover:opacity-100 hover:bg-primary/10 transition-all"
-                          onClick={() => handleCopy(`${key}: ${value}`)}
+                          onClick={() => handleCopy(`${key}: ${value}`, key)}
                         >
                           <Copy className="h-4 w-4" />
                         </Button>
