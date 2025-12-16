@@ -30,7 +30,7 @@ jobs:
   deploy:
     needs: [containerize]
     name: "🐙 Deploy"
-    runs-on: arc-ts
+    runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.app }}
       url: https://${{inputs.app}}.lolwtf.ca
