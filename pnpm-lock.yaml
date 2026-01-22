@@ -414,8 +414,8 @@ importers:
         specifier: ^0.31.8
         version: 0.31.8
       esbuild:
-        specifier: ^0.25.0
-        version: 0.25.5
+        specifier: ^0.27.0
+        version: 0.27.2
       tailwindcss:
         specifier: 4.1.18
         version: 4.1.18
