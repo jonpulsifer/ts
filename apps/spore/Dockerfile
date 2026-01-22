@@ -3,7 +3,7 @@
 # Simple Dockerfile for React Router 7 with WebSocket terminal
 # ============================================================================
 
-FROM node:22-alpine
+FROM node:24-alpine@sha256:931d7d57f8c1fd0e2179dbff7cc7da4c9dd100998bc2b32afc85142d8efbc213
 
 WORKDIR /app
 
