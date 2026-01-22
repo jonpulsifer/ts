@@ -6,29 +6,18 @@
     "npm_package_version",
     "npm_package_name"
   ],
-  "globalDependencies": [
-    "**/.env.*local"
-  ],
+  "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**",
-        "build/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
     },
     "lint": {},
     "lint:fix": {
       "cache": false
     },
     "slingshot#build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "env": [
         "NEXT_PUBLIC_BASE_URL",
         "NODE_IP",
@@ -44,28 +33,17 @@
         "WEBHOOK_ALLOWED_OUTGOING_DOMAINS",
         "GOOGLE_APPLICATION_CREDENTIALS"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**",
-        "build/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
     },
     "test": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "inputs": [
         "src/**/*.tsx",
         "src/**/*.ts",
         "test/**/*.ts",
         "test/**/*.tsx"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {
       "cache": false,

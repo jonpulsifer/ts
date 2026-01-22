@@ -2,6 +2,11 @@ packages:
   - apps/*
   - packages/*
 
+ignoredBuiltDependencies:
+  - protobufjs
+  - sharp
+
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
+  - better-sqlite3
   - esbuild
