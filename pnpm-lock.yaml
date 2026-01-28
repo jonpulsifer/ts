@@ -73,10 +73,10 @@ importers:
         specifier: ^24.0.0
         version: 24.10.9
       '@types/react':
-        specifier: ^19.1.2
+        specifier: 19.2.10
         version: 19.2.10
       '@types/react-dom':
-        specifier: ^19.1.2
+        specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.10)
       '@types/ws':
         specifier: 8.18.1
@@ -402,10 +402,10 @@ importers:
         specifier: ^24.0.0
         version: 24.10.9
       '@types/react':
-        specifier: ^19.1.2
+        specifier: 19.2.10
         version: 19.2.10
       '@types/react-dom':
-        specifier: ^19.1.2
+        specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.10)
       '@types/ws':
         specifier: 8.18.1
