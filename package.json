@@ -18,8 +18,8 @@
     "turbo": "2.7.6"
   },
   "engines": {
-    "node": ">=22.*.*",
-    "npm": ">=10.*.*"
+    "node": "v25.5.0",
+    "npm": "11.8.0"
   },
   "packageManager": "pnpm@10.28.2",
   "pnpm": {
