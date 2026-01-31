@@ -47,6 +47,20 @@ This repository uses [Turborepo](https://turbo.build/) for build orchestration a
 
 **Deployment**: Kubernetes in home lab (runs on Raspberry Pi devices)
 
+### [Spore](./apps/spore/)
+
+**Spore** - A personal cloud storage and sharing platform.
+
+- **Framework**: React Router 7
+- **Styling**: Tailwind CSS
+- **Storage**: SQLite with Litestream for persistence
+- **Features**:
+  - File upload and sharing
+  - Cloud sync capabilities
+  - Web interface for file management
+
+**Deployment**: Kubernetes in home lab (runs on Raspberry Pi devices)
+
 ## Packages
 
 ### [@repo/typescript-config](./packages/typescript-config/)
@@ -93,6 +107,7 @@ To run a specific app:
 ```bash
 pnpm --filter slingshot dev
 pnpm --filter hub dev
+pnpm --filter spore dev
 ```
 
 ### Building
@@ -107,6 +122,8 @@ Build a specific app:
 
 ```bash
 pnpm --filter slingshot build
+pnpm --filter hub build
+pnpm --filter spore build
 ```
 
 ### Linting
@@ -145,7 +162,8 @@ pnpm clean
 ts/
 ├── apps/
 │   ├── slingshot/          # Webhook testing platform
-│   └── hub/                # Weather dashboard
+│   ├── hub/                # Weather dashboard
+│   └── spore/              # Cloud storage and sharing
 ├── packages/
 │   ├── typescript-config/  # Shared TS config
 │   └── k6/                 # Load testing scripts
@@ -160,8 +178,8 @@ ts/
 The repository uses GitHub Actions for continuous integration and deployment:
 
 - **CI**: Runs linting, type checking, and tests on pull requests
-- **Containerization**: Builds Docker images for applications
-- **Deployment**: Automated deployments to Vercel (Slingshot) and Kubernetes (Hub)
+- **Containerization**: Builds Docker images for applications (slingshot, hub, spore)
+- **Deployment**: Automated deployments to Vercel (Slingshot) and Kubernetes (Hub, Spore)
 - **Attestation**: Generates SLSA attestations for container images
 
 See `.github/workflows/` for workflow definitions.
@@ -190,6 +208,7 @@ Each application may require specific environment variables. See individual app 
 
 - [Slingshot Environment Setup](./apps/slingshot/README.md#getting-started)
 - [Hub Environment Setup](./apps/hub/README.md#getting-started)
+- [Spore Environment Setup](./apps/spore/README.md#getting-started)
 
 ## Contributing
 
