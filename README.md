@@ -49,19 +49,19 @@ This repository uses [Turborepo](https://turbo.build/) for build orchestration a
 
 ### [Spore](./apps/spore/)
 
-**Spore** - iPXE Boot Manager UI for homelab network infrastructure.
+**iPXE Boot Manager** - A web UI for managing iPXE network boot profiles and hosts.
 
-- **Framework**: React Router 7 (Remix)
+- **Framework**: Next.js 15 (App Router)
 - **Database**: SQLite with Drizzle ORM
 - **Features**:
-  - Host management: Auto-registers PXE booting hosts by MAC address
+  - Host management: Track hosts by MAC address, assign boot profiles
   - Boot profiles: Create and manage iPXE boot scripts with template variables
-  - ISO management: Upload ISOs or use external URLs for network booting
-  - TFTP file browser: Browse and manage TFTP boot files
-  - Web terminal: SSH-like access to the server from the browser
-  - Template system: Dynamic variable substitution in iPXE scripts
+  - Chainable scripts: Organize sub-scripts for modular boot configurations
+  - Template system: Dynamic variable substitution (hostname, MAC, server IP)
+  - TFTP server: Built-in dnsmasq TFTP for serving iPXE binaries
+  - Auto-registration: Optionally register unknown hosts on first boot
 
-**Deployment**: Kubernetes in home lab (runs on Raspberry Pi devices)
+**Deployment**: Kubernetes or Docker (runs on Raspberry Pi 5)
 
 ## Packages
 
@@ -165,7 +165,7 @@ ts/
 ├── apps/
 │   ├── slingshot/          # Webhook testing platform
 │   ├── hub/                # Weather dashboard
-│   └── spore/              # iPXE Boot Manager UI
+│   └── spore/              # iPXE Boot Manager
 ├── packages/
 │   ├── typescript-config/  # Shared TS config
 │   └── k6/                 # Load testing scripts

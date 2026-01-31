@@ -1,6 +1,9 @@
-.react-router
-build
+Dockerfile
+.dockerignore
 node_modules
-README.md
-storage/
-.turbo
+.next
+.git
+*.md
+*.db
+*.db-journal
+drizzle/

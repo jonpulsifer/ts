@@ -1,49 +1,61 @@
-# ============================================================================
-# Spore - iPXE Boot Manager
-# Simple Dockerfile for React Router 7 with WebSocket terminal
-# ============================================================================
+# syntax=docker/dockerfile:1
+FROM node:22-alpine AS base
 
-FROM node:24-alpine@sha256:cd6fb7efa6490f039f3471a189214d5f548c11df1ff9e5b181aa49e22c14383e
-
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
-# Install runtime dependencies for terminal
-RUN apk add --no-cache dnsmasq bash python3 make g++
-
-# Install pnpm
-RUN npm install -g pnpm@latest
-
-# Copy workspace config files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Install dependencies based on the preferred package manager
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
 COPY apps/spore/package.json ./apps/spore/
+COPY packages/typescript-config/package.json ./packages/typescript-config/
 
-# Install all dependencies
-RUN pnpm install --frozen-lockfile
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
-# Copy source code
-COPY apps/spore ./apps/spore
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/spore/node_modules ./apps/spore/node_modules
+COPY . .
 
-WORKDIR /app/apps/spore
+# Build the application
+RUN corepack enable pnpm && pnpm --filter spore build
 
-# Build the React Router app
-RUN pnpm react-router build
+# Production image with dnsmasq for TFTP
+FROM node:22-alpine AS runner
+WORKDIR /app
 
-# Create storage directories
-RUN mkdir -p /app/storage/isos /app/storage/tftpboot /app/data
+# Install dnsmasq for TFTP support and supervisor
+RUN apk add --no-cache dnsmasq supervisor
 
-# Environment
 ENV NODE_ENV=production
-ENV DATABASE_URL=/app/data/sqlite.db
-ENV ISO_STORAGE_DIR=/app/storage/isos
-ENV TFTP_ROOT_DIR=/app/storage/tftpboot
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Create directories
+RUN mkdir -p /var/lib/tftpboot /app/data /var/log/supervisor
+RUN chown -R nextjs:nodejs /app /var/lib/tftpboot /var/log/supervisor
+
+# Copy dnsmasq config
+COPY --chown=nextjs:nodejs apps/spore/docker/dnsmasq.conf /etc/dnsmasq.conf
+COPY --chown=nextjs:nodejs apps/spore/docker/supervisord.conf /etc/supervisord.conf
+
+# Copy Next.js standalone build
+COPY --from=builder --chown=nextjs:nodejs /app/apps/spore/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/spore/.next/static ./apps/spore/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/spore/public ./apps/spore/public
+
+# Default environment
 ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV DATABASE_URL="file:/app/data/spore.db"
 
-# Expose port
+# Expose ports: HTTP (3000), TFTP (69/udp)
 EXPOSE 3000
+EXPOSE 69/udp
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
-
-# Start the server using tsx in production mode
-CMD ["pnpm", "tsx", "server.ts"]
+# Use supervisor to run both Next.js and dnsmasq
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
