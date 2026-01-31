@@ -49,3 +49,9 @@ yarn-error.log*
 .env*.local
 
 apps/spore/storage
+
+# local tooling
+.agent/
+.cursor/
+.gemini/
+.opencode/
