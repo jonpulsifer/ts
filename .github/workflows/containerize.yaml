@@ -28,6 +28,7 @@ on:
         options:
           - slingshot
           - hub
+          - spore
 
 jobs:
   build:
@@ -41,17 +42,6 @@ jobs:
       image: ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
       digest: ${{ steps.docker-build.outputs.digest }}
     services:
-      postgres:
-        image: postgres:18@sha256:5773fe724c49c42a7a9ca70202e11e1dff21fb7235b335a73f39297d200b73a2
-        env:
-          POSTGRES_PASSWORD: postgres
-        # options: >-
-        #   --health-cmd pg_isready
-        #   --health-interval 10s
-        #   --health-timeout 5s
-        #   --health-retries 5
-        ports:
-          - 5432:5432
       redis:
         image: redis:alpine@sha256:4eec4565e45aa0b3966554c866bc73211e281b0b3d89fe9a33c982e6faca809d
         # options: >-
@@ -67,16 +57,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Prepare db & env files
-        if: ${{ inputs.app == 'wishlist' }}
-        env:
-          PGPASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_MULTIPLE_DATABASES: wishlist
-        run: |
-          ./.github/scripts/create-multiple-postgresql-databases.sh
-          find . -type f -name '.env.example' -execdir cp -v {} .env \;
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
@@ -109,6 +90,8 @@ jobs:
         run: |
           if [[ "${{ inputs.app }}" == "hub" ]]; then
             echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
+          elif [[ "${{ inputs.app }}" == "spore" ]]; then
+            echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
           else
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
           fi
@@ -117,6 +100,8 @@ jobs:
         id: platforms
         run: |
           if [[ "${{ inputs.app }}" == "hub" ]]; then
+            echo "value=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
+          elif [[ "${{ inputs.app }}" == "spore" ]]; then
             echo "value=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
           else
             echo "value=linux/amd64" >> $GITHUB_OUTPUT
@@ -132,7 +117,7 @@ jobs:
             TURBO_TEAM=${{ secrets.VERCEL_ID }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
             DATABASE_URL=postgresql://postgres:postgres@localhost:5432/${{ inputs.app }}
-            REDIS_URL=redis://localhost:6379
+            REDIS_URL=redis://redis:6379
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -47,6 +47,22 @@ This repository uses [Turborepo](https://turbo.build/) for build orchestration a
 
 **Deployment**: Kubernetes in home lab (runs on Raspberry Pi devices)
 
+### [Spore](./apps/spore/)
+
+**Spore** - iPXE Boot Manager UI for homelab network infrastructure.
+
+- **Framework**: React Router 7 (Remix)
+- **Database**: SQLite with Drizzle ORM
+- **Features**:
+  - Host management: Auto-registers PXE booting hosts by MAC address
+  - Boot profiles: Create and manage iPXE boot scripts with template variables
+  - ISO management: Upload ISOs or use external URLs for network booting
+  - TFTP file browser: Browse and manage TFTP boot files
+  - Web terminal: SSH-like access to the server from the browser
+  - Template system: Dynamic variable substitution in iPXE scripts
+
+**Deployment**: Kubernetes in home lab (runs on Raspberry Pi devices)
+
 ## Packages
 
 ### [@repo/typescript-config](./packages/typescript-config/)
@@ -93,6 +109,7 @@ To run a specific app:
 ```bash
 pnpm --filter slingshot dev
 pnpm --filter hub dev
+pnpm --filter spore dev
 ```
 
 ### Building
@@ -107,6 +124,8 @@ Build a specific app:
 
 ```bash
 pnpm --filter slingshot build
+pnpm --filter hub build
+pnpm --filter spore build
 ```
 
 ### Linting
@@ -145,7 +164,8 @@ pnpm clean
 ts/
 ├── apps/
 │   ├── slingshot/          # Webhook testing platform
-│   └── hub/                # Weather dashboard
+│   ├── hub/                # Weather dashboard
+│   └── spore/              # iPXE Boot Manager UI
 ├── packages/
 │   ├── typescript-config/  # Shared TS config
 │   └── k6/                 # Load testing scripts
@@ -160,8 +180,8 @@ ts/
 The repository uses GitHub Actions for continuous integration and deployment:
 
 - **CI**: Runs linting, type checking, and tests on pull requests
-- **Containerization**: Builds Docker images for applications
-- **Deployment**: Automated deployments to Vercel (Slingshot) and Kubernetes (Hub)
+- **Containerization**: Builds Docker images for applications (slingshot, hub, spore)
+- **Deployment**: Automated deployments to Vercel (Slingshot) and Kubernetes (Hub, Spore)
 - **Attestation**: Generates SLSA attestations for container images
 
 See `.github/workflows/` for workflow definitions.
@@ -190,6 +210,7 @@ Each application may require specific environment variables. See individual app 
 
 - [Slingshot Environment Setup](./apps/slingshot/README.md#getting-started)
 - [Hub Environment Setup](./apps/hub/README.md#getting-started)
+- [Spore Environment Setup](./apps/spore/README.md#getting-started)
 
 ## Contributing
 
