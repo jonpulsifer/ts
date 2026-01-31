@@ -49,15 +49,17 @@ This repository uses [Turborepo](https://turbo.build/) for build orchestration a
 
 ### [Spore](./apps/spore/)
 
-**Spore** - A personal cloud storage and sharing platform.
+**Spore** - iPXE Boot Manager UI for homelab network infrastructure.
 
-- **Framework**: React Router 7
-- **Styling**: Tailwind CSS
-- **Storage**: SQLite with Litestream for persistence
+- **Framework**: React Router 7 (Remix)
+- **Database**: SQLite with Drizzle ORM
 - **Features**:
-  - File upload and sharing
-  - Cloud sync capabilities
-  - Web interface for file management
+  - Host management: Auto-registers PXE booting hosts by MAC address
+  - Boot profiles: Create and manage iPXE boot scripts with template variables
+  - ISO management: Upload ISOs or use external URLs for network booting
+  - TFTP file browser: Browse and manage TFTP boot files
+  - Web terminal: SSH-like access to the server from the browser
+  - Template system: Dynamic variable substitution in iPXE scripts
 
 **Deployment**: Kubernetes in home lab (runs on Raspberry Pi devices)
 
@@ -163,7 +165,7 @@ ts/
 ├── apps/
 │   ├── slingshot/          # Webhook testing platform
 │   ├── hub/                # Weather dashboard
-│   └── spore/              # Cloud storage and sharing
+│   └── spore/              # iPXE Boot Manager UI
 ├── packages/
 │   ├── typescript-config/  # Shared TS config
 │   └── k6/                 # Load testing scripts
