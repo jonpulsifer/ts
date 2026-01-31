@@ -91,7 +91,7 @@ jobs:
           if [[ "${{ inputs.app }}" == "hub" ]]; then
             echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
           elif [[ "${{ inputs.app }}" == "spore" ]]; then
-            echo "path=k8s/docker/remix.Dockerfile" >> $GITHUB_OUTPUT
+            echo "path=apps/spore/Dockerfile" >> $GITHUB_OUTPUT
           else
             echo "path=k8s/docker/nextjs.Dockerfile" >> $GITHUB_OUTPUT
           fi
@@ -99,9 +99,7 @@ jobs:
       - name: Compute platforms
         id: platforms
         run: |
-          if [[ "${{ inputs.app }}" == "hub" ]]; then
-            echo "value=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
-          elif [[ "${{ inputs.app }}" == "spore" ]]; then
+          if [[ "${{ inputs.app }}" == "hub" ]] || [[ "${{ inputs.app }}" == "spore" ]]; then
             echo "value=linux/amd64,linux/arm64" >> $GITHUB_OUTPUT
           else
             echo "value=linux/amd64" >> $GITHUB_OUTPUT

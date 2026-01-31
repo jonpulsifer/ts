@@ -48,4 +48,6 @@ yarn-error.log*
 **/.cache
 .env*.local
 
-apps/spore/storage
+# spore
+apps/spore/*.db
+apps/spore/*.db-journal
