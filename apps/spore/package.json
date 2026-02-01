@@ -38,7 +38,7 @@
     "@types/node": "22.15.21",
     "@types/react": "19.2.10",
     "@types/react-dom": "19.2.3",
-    "drizzle-kit": "0.31.0",
+    "drizzle-kit": "0.31.8",
     "postcss": "8.5.4",
     "tailwindcss": "4.1.8",
     "typescript": "5.8.3"

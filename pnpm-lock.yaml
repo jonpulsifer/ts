@@ -375,8 +375,8 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(@types/react@19.2.10)
       drizzle-kit:
-        specifier: 0.31.0
-        version: 0.31.0
+        specifier: 0.31.8
+        version: 0.31.8
       postcss:
         specifier: 8.5.4
         version: 8.5.4
@@ -2826,8 +2826,8 @@ packages:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
 
-  drizzle-kit@0.31.0:
-    resolution: {integrity: sha512-pcKVT+GbfPA+bUovPIilgVOoq+onNBo/YQBG86sf3/GFHkN6lRJPm1l7dKN0IMAk57RQoIm4GUllRrasLlcaSg==}
+  drizzle-kit@0.31.8:
+    resolution: {integrity: sha512-O9EC/miwdnRDY10qRxM8P3Pg8hXe3LyU4ZipReKOgTwn4OqANmftj8XJz1UPUAS6NMHf0E2htjsbQujUTkncCg==}
     hasBin: true
 
   drizzle-orm@0.44.2:
@@ -6520,7 +6520,7 @@ snapshots:
 
   diff@4.0.2: {}
 
-  drizzle-kit@0.31.0:
+  drizzle-kit@0.31.8:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
       '@esbuild-kit/esm-loader': 2.6.5
