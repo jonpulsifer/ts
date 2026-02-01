@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,13 +15,12 @@ import { getHost, getProfiles } from '@/lib/actions';
 import { formatDate } from '@/lib/utils';
 import { HostEditForm } from './_components/host-edit-form';
 
-export const dynamic = 'force-dynamic';
-
 interface HostPageProps {
   params: Promise<{ mac: string }>;
 }
 
 export default async function HostPage({ params }: HostPageProps) {
+  await connection();
   const { mac } = await params;
   const decodedMac = decodeURIComponent(mac);
 

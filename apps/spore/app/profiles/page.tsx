@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,9 +13,8 @@ import {
 import { getHosts, getProfiles } from '@/lib/actions';
 import { timeAgo } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic';
-
 export default async function ProfilesPage() {
+  await connection();
   const [profiles, hosts] = await Promise.all([getProfiles(), getHosts()]);
 
   return (

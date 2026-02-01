@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -13,13 +14,12 @@ import { getScriptByPath } from '@/lib/actions';
 import { formatDate } from '@/lib/utils';
 import { ScriptEditForm } from './_components/script-edit-form';
 
-export const dynamic = 'force-dynamic';
-
 interface ScriptPageProps {
   params: Promise<{ path: string[] }>;
 }
 
 export default async function ScriptPage({ params }: ScriptPageProps) {
+  await connection();
   const { path: pathSegments } = await params;
   const scriptPath = pathSegments.join('/');
 

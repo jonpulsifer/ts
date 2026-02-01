@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,9 +15,8 @@ import { timeAgo } from '@/lib/utils';
 import { HostActions } from './_components/host-actions';
 import { NewHostDialog } from './_components/new-host-dialog';
 
-export const dynamic = 'force-dynamic';
-
 export default async function HostsPage() {
+  await connection();
   const [hosts, profiles] = await Promise.all([getHosts(), getProfiles()]);
 
   const profileMap = new Map(profiles.map((p) => [p.id, p]));

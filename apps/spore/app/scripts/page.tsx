@@ -1,5 +1,6 @@
 import { FileCode, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,9 +13,8 @@ import { getScripts } from '@/lib/actions';
 import { timeAgo } from '@/lib/utils';
 import { NewScriptDialog } from './_components/new-script-dialog';
 
-export const dynamic = 'force-dynamic';
-
 export default async function ScriptsPage() {
+  await connection();
   const scripts = await getScripts();
 
   // Group scripts by top-level directory

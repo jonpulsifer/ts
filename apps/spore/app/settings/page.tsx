@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import {
   Card,
   CardContent,
@@ -8,9 +9,8 @@ import {
 import { getSettings } from '@/lib/actions';
 import { SettingsForm } from './_components/settings-form';
 
-export const dynamic = 'force-dynamic';
-
 export default async function SettingsPage() {
+  await connection();
   const settings = await getSettings();
 
   return (

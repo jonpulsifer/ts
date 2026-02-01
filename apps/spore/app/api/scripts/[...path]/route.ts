@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 import { db, scripts, settings } from '@/lib/db';
 import { buildTemplateContext, processTemplate } from '@/lib/ipxe';
 
-export const dynamic = 'force-dynamic';
 
 async function getSetting(key: string): Promise<string | null> {
   const result = await db

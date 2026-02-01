@@ -9,7 +9,6 @@ import {
   unregisteredHostScript,
 } from '@/lib/ipxe';
 
-export const dynamic = 'force-dynamic';
 
 async function getSetting(key: string): Promise<string | null> {
   const result = await db
@@ -41,8 +40,14 @@ export async function GET(
     });
   }
 
-  // Get server origin for template variables
-  const configuredOrigin = await getSetting('serverOrigin');
+  // Parallelize independent data fetches
+  const [configuredOrigin, initialHost] = await Promise.all([
+    getSetting('serverOrigin'),
+    db.select().from(hosts).where(eq(hosts.macAddress, mac)).get(),
+  ]);
+
+  let host = initialHost;
+
   const serverOrigin =
     configuredOrigin ||
     request.headers.get('x-forwarded-host') ||
@@ -50,13 +55,6 @@ export async function GET(
     'localhost:3000';
   const protocol = request.headers.get('x-forwarded-proto') || 'http';
   const baseUrl = configuredOrigin || `${protocol}://${serverOrigin}`;
-
-  // Look up the host
-  let host = await db
-    .select()
-    .from(hosts)
-    .where(eq(hosts.macAddress, mac))
-    .get();
 
   const now = new Date().toISOString();
 

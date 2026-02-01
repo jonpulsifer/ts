@@ -1,5 +1,6 @@
 import { Clock, FileCode, ScrollText, Server } from 'lucide-react';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -11,9 +12,8 @@ import {
 import { getHosts, getProfiles, getScripts, getSetting } from '@/lib/actions';
 import { timeAgo } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic';
-
 export default async function DashboardPage() {
+  await connection();
   const [hosts, profiles, scripts, serverOrigin] = await Promise.all([
     getHosts(),
     getProfiles(),

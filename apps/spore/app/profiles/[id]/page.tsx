@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,13 +15,12 @@ import { getHosts, getProfile } from '@/lib/actions';
 import { formatDate } from '@/lib/utils';
 import { ProfileEditForm } from './_components/profile-edit-form';
 
-export const dynamic = 'force-dynamic';
-
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
+  await connection();
   const { id } = await params;
   const profileId = Number.parseInt(id, 10);
 

@@ -6,6 +6,9 @@ import { getFirestore } from '@/lib/firestore-client';
 import FirestoreCollections from './_components/firestore-collections';
 
 async function CollectionsContent() {
+  // Start Firestore initialization early
+  const firestorePromise = getFirestore();
+
   // Touch request data before Firestore (satisfies random-bytes guard)
   await headers();
 
@@ -25,7 +28,7 @@ async function CollectionsContent() {
     | { success: false; error: string };
 
   try {
-    const firestore = await getFirestore();
+    const firestore = await firestorePromise;
 
     // Get the main 'slingshot' collection
     const slingshotCollection = firestore.collection('slingshot');

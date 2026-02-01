@@ -87,8 +87,10 @@ async function handleWebhook(request: NextRequest, slug: string) {
   };
 
   try {
-    await appendWebhook(slug, webhook);
-    await incrementWebhookCount(slug, webhook.timestamp);
+    await Promise.all([
+      appendWebhook(slug, webhook),
+      incrementWebhookCount(slug, webhook.timestamp),
+    ]);
 
     return NextResponse.json(
       {

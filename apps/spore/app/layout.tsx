@@ -1,8 +1,11 @@
 import { GeistMono } from 'geist/font/mono';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { lazy, Suspense } from 'react';
 import './globals.css';
 import { Nav } from '@/components/nav';
+
+const Loading = lazy(() => import('./loading'));
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,7 +28,9 @@ export default function RootLayout({
         className={`${inter.variable} ${GeistMono.variable} min-h-screen antialiased font-sans`}
       >
         <div className="flex min-h-screen">
-          <Nav />
+          <Suspense fallback={<Loading />}>
+            <Nav />
+          </Suspense>
           <main className="flex-1 overflow-auto p-8">{children}</main>
         </div>
       </body>
