@@ -38,9 +38,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SidebarProvider defaultOpen={true}>
-          <Suspense fallback={<NavProjectsSkeleton />}>
-            <SidebarShell />
-          </Suspense>
           <SidebarInset>
             <div
               className="flex min-h-svh flex-col bg-background max-w-screen-2xl mx-auto"
@@ -63,6 +60,7 @@ export default function RootLayout({
               </main>
             </div>
           </SidebarInset>
+          <SidebarShell />
         </SidebarProvider>
         <Toaster position="top-right" richColors theme="dark" />
       </body>
