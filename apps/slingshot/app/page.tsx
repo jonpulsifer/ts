@@ -13,7 +13,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col gap-6 p-6">
+    <div className="flex flex-1 flex-col gap-6 p-6 max-w-7xl mx-auto">
       <PageHeader
         title="Quick Start"
         description="Get started with Slingshot • Capture, inspect, diff, and replay webhooks safely"

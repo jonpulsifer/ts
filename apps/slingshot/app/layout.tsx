@@ -43,7 +43,7 @@ export default function RootLayout({
           </Suspense>
           <SidebarInset>
             <div
-              className="flex min-h-svh flex-col bg-background"
+              className="flex min-h-svh flex-col bg-background max-w-screen-2xl mx-auto"
               suppressHydrationWarning
             >
               <div className="md:hidden sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur">
@@ -57,7 +57,7 @@ export default function RootLayout({
                   </span>
                 </div>
               </div>
-              <main className="flex-1 overflow-auto px-4 pb-6 pt-4 md:px-6 md:pt-6">
+              <main className="flex-1 overflow-hidden px-4 pb-6 pt-4 md:px-6 md:pt-6 max-w-full">
                 {/* Keep the previous route visible during client transitions to avoid flashes */}
                 {children}
               </main>

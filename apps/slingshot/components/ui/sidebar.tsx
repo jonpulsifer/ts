@@ -238,7 +238,7 @@ function Sidebar({
             : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
           className,
         )}
-        {...props}
+        style={{ maxWidth: '100%' }} // Add this to prevent overflow
       >
         <div
           data-sidebar="sidebar"
