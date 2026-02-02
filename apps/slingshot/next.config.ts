@@ -8,20 +8,7 @@ const nextConfig: NextConfig = {
       hmrRefreshes: true,
     },
   },
-  output: process.env.STANDALONE ? 'standalone' : undefined,
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: "media-src 'self' data: blob:; default-src 'self';",
-          },
-        ],
-      },
-    ];
-  },
+  output: process.env.STANDALONE ? 'standalone' : undefined
 };
 
 export default nextConfig;
