@@ -103,8 +103,8 @@ importers:
   apps/slingshot:
     dependencies:
       '@google-cloud/firestore':
-        specifier: 8.2.0
-        version: 8.2.0
+        specifier: 8.3.0
+        version: 8.3.0
       '@hookform/resolvers':
         specifier: 5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.4))
@@ -1087,8 +1087,8 @@ packages:
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
-  '@google-cloud/firestore@8.2.0':
-    resolution: {integrity: sha512-dhpoNT+CcpHCiukuJPjGKH//WCicWPAPE5plOOQxDSGOzLuDzhOA7MNS+n69kA1FekHCpXKSPpSaCySz4t5ftQ==}
+  '@google-cloud/firestore@8.3.0':
+    resolution: {integrity: sha512-OYadXaHxx8J5GQtCwDNjaVu2+O9Ozdst4Iqi+vDTI/WmLTO56XX3QBOXp4T+qh3tyQzl9YzDBrmA7o8n1xTouA==}
     engines: {node: '>=18'}
 
   '@grpc/grpc-js@1.14.2':
@@ -3168,6 +3168,7 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   globrex@0.1.2:
@@ -4923,7 +4924,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@google-cloud/firestore@8.2.0':
+  '@google-cloud/firestore@8.3.0':
     dependencies:
       '@opentelemetry/api': 1.9.0
       fast-deep-equal: 3.1.3
