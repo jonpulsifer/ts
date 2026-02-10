@@ -393,8 +393,8 @@ importers:
         specifier: workspace*
         version: link:../typescript-config
       '@types/k6':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@types/node':
         specifier: 24.10.9
         version: 24.10.9
@@ -2444,8 +2444,8 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/k6@1.5.0':
-    resolution: {integrity: sha512-eQmSjjgYO1irlOmoZzGSuoYsK2uMrX3m/flcnqt5IDLA9D/vkPcRsAKfe9D6GrjXATD/Oo9ynQ6vc13V02WRmQ==}
+  '@types/k6@1.6.0':
+    resolution: {integrity: sha512-koixvaHqP241ymqEEgl068kkXek+LhM5YTjysI1ikKUAnmbIKbt8Lngw3nhMHmg3Cihh7viUP/WCIF+FKi4DYQ==}
 
   '@types/node@22.19.10':
     resolution: {integrity: sha512-tF5VOugLS/EuDlTBijk0MqABfP8UxgYazTLo3uIn3b4yJgg26QRbVYJYsDtHrjdDUIRfP70+VfhTTc+CE1yskw==}
@@ -6166,7 +6166,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/k6@1.5.0': {}
+  '@types/k6@1.6.0': {}
 
   '@types/node@22.19.10':
     dependencies:
