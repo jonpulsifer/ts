@@ -36,8 +36,8 @@ importers:
         specifier: 2.1.1
         version: 2.1.1
       isbot:
-        specifier: 5.1.34
-        version: 5.1.34
+        specifier: 5.1.35
+        version: 5.1.35
       lucide-react:
         specifier: 0.563.0
         version: 0.563.0(react@19.2.4)
@@ -3293,8 +3293,8 @@ packages:
   is-hexadecimal@2.0.1:
     resolution: {integrity: sha512-DgZQp241c8oO6cA1SbTEWiXeoxV42vlcJxgH+B3hi1AiqqKruZR3ZGF8In3fj4+/y/7rHvlOZLZtgJ/4ttYGZg==}
 
-  isbot@5.1.34:
-    resolution: {integrity: sha512-aCMIBSKd/XPRYdiCQTLC8QHH4YT8B3JUADu+7COgYIZPvkeoMcUHMRjZLM9/7V8fCj+l7FSREc1lOPNjzogo/A==}
+  isbot@5.1.35:
+    resolution: {integrity: sha512-waFfC72ZNfwLLuJ2iLaoVaqcNo+CAaLR7xCpAn0Y5WfGzkNHv7ZN39Vbi1y+kb+Zs46XHOX3tZNExroFUPX+Kg==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -5829,7 +5829,7 @@ snapshots:
       dedent: 1.6.0(babel-plugin-macros@3.1.0)
       es-module-lexer: 1.7.0
       exit-hook: 2.2.1
-      isbot: 5.1.34
+      isbot: 5.1.35
       jsesc: 3.0.2
       lodash: 4.17.21
       p-map: 7.0.3
@@ -7017,7 +7017,7 @@ snapshots:
 
   is-hexadecimal@2.0.1: {}
 
-  isbot@5.1.34: {}
+  isbot@5.1.35: {}
 
   isexe@2.0.0: {}
 
