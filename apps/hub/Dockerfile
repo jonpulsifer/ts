@@ -1,4 +1,4 @@
-FROM node:24-alpine@sha256:cd6fb7efa6490f039f3471a189214d5f548c11df1ff9e5b181aa49e22c14383e AS development-dependencies-env
+FROM node:24-alpine@sha256:4f696fbf39f383c1e486030ba6b289a5d9af541642fc78ab197e584a113b9c03 AS development-dependencies-env
 # renovate: datasource=npm depName=pnpm
 ARG PNPM_VERSION=10.28.2
 COPY . /app
@@ -6,7 +6,7 @@ WORKDIR /app
 RUN npm install -g pnpm@${PNPM_VERSION}
 RUN pnpm install --frozen-lockfile
 
-FROM node:24-alpine@sha256:cd6fb7efa6490f039f3471a189214d5f548c11df1ff9e5b181aa49e22c14383e AS production-dependencies-env
+FROM node:24-alpine@sha256:4f696fbf39f383c1e486030ba6b289a5d9af541642fc78ab197e584a113b9c03 AS production-dependencies-env
 # renovate: datasource=npm depName=pnpm
 ARG PNPM_VERSION=10.28.2
 COPY ./package.json pnpm-lock.yaml /app/
@@ -14,7 +14,7 @@ WORKDIR /app
 RUN npm install -g pnpm@${PNPM_VERSION}
 RUN pnpm install --prod --no-optional --frozen-lockfile
 
-FROM node:24-alpine@sha256:cd6fb7efa6490f039f3471a189214d5f548c11df1ff9e5b181aa49e22c14383e AS build-env
+FROM node:24-alpine@sha256:4f696fbf39f383c1e486030ba6b289a5d9af541642fc78ab197e584a113b9c03 AS build-env
 # renovate: datasource=npm depName=pnpm
 ARG PNPM_VERSION=10.28.2
 COPY . /app/
@@ -23,7 +23,7 @@ WORKDIR /app
 RUN npm install -g pnpm@${PNPM_VERSION}
 RUN pnpm run build
 
-FROM node:24-alpine@sha256:cd6fb7efa6490f039f3471a189214d5f548c11df1ff9e5b181aa49e22c14383e
+FROM node:24-alpine@sha256:4f696fbf39f383c1e486030ba6b289a5d9af541642fc78ab197e584a113b9c03
 # renovate: datasource=npm depName=pnpm
 ARG PNPM_VERSION=10.28.2
 COPY ./package.json pnpm-lock.yaml /app/
