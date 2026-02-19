@@ -54,8 +54,8 @@ importers:
         specifier: 7.13.0
         version: 7.13.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       tailwind-merge:
-        specifier: 3.4.1
-        version: 3.4.1
+        specifier: 3.5.0
+        version: 3.5.0
       ws:
         specifier: 8.19.0
         version: 8.19.0
@@ -265,8 +265,8 @@ importers:
         specifier: 2.4.0
         version: 2.4.0(react@19.2.4)
       tailwind-merge:
-        specifier: 3.4.1
-        version: 3.4.1
+        specifier: 3.5.0
+        version: 3.5.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -353,8 +353,8 @@ importers:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
       tailwind-merge:
-        specifier: 3.4.1
-        version: 3.4.1
+        specifier: 3.5.0
+        version: 3.5.0
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -3929,8 +3929,8 @@ packages:
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  tailwind-merge@3.4.1:
-    resolution: {integrity: sha512-2OA0rFqWOkITEAOFWSBSApYkDeH9t2B3XSJuI4YztKBzK3mX0737A2qtxDZ7xkw9Zfh0bWl+r34sF3HXV+Ig7Q==}
+  tailwind-merge@3.5.0:
+    resolution: {integrity: sha512-I8K9wewnVDkL1NTGoqWmVEIlUcB9gFriAEkXkfCjX5ib8ezGxtR3xD7iZIxrfArjEsH7F1CHD4RFUtxefdqV/A==}
 
   tailwindcss@4.2.0:
     resolution: {integrity: sha512-yYzTZ4++b7fNYxFfpnberEEKu43w44aqDMNM9MHMmcKuCH7lL8jJ4yJ7LGHv7rSwiqM0nkiobF9I6cLlpS2P7Q==}
@@ -7508,7 +7508,7 @@ snapshots:
       react: 19.2.4
       use-sync-external-store: 1.6.0(react@19.2.4)
 
-  tailwind-merge@3.4.1: {}
+  tailwind-merge@3.5.0: {}
 
   tailwindcss@4.2.0: {}
 
