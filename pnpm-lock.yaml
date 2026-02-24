@@ -378,8 +378,8 @@ importers:
         specifier: 0.31.9
         version: 0.31.9
       postcss:
-        specifier: 8.5.4
-        version: 8.5.4
+        specifier: 8.5.6
+        version: 8.5.6
       tailwindcss:
         specifier: 4.2.1
         version: 4.2.1
@@ -3553,10 +3553,6 @@ packages:
 
   postcss@8.4.31:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
-    engines: {node: ^10 || ^12 || >=14}
-
-  postcss@8.5.4:
-    resolution: {integrity: sha512-QSa9EBe+uwlGTFmHsPKokv3B/oEMQZxfqW0QqNCyhpa6mB1afzulwn8hihglqAb2pOw+BJgNlmXQ8la2VeHB7w==}
     engines: {node: ^10 || ^12 || >=14}
 
   postcss@8.5.6:
@@ -7052,12 +7048,6 @@ snapshots:
       pathe: 2.0.3
 
   postcss@8.4.31:
-    dependencies:
-      nanoid: 3.3.11
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
-  postcss@8.5.4:
     dependencies:
       nanoid: 3.3.11
       picocolors: 1.1.1
