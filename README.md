@@ -172,7 +172,6 @@ ts/
 │   └── k6/                 # Load testing scripts
 ├── turbo.json              # Turborepo configuration
 ├── bun.lock               # Bun lockfile
-├── pnpm-workspace.yaml     # Legacy pnpm workspace config (optional)
 ├── biome.json              # Biome linting/formatting config
 └── package.json            # Root package.json
 ```
