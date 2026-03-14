@@ -36,7 +36,7 @@ A modern, serverless webhook testing platform built with Next.js 16, Google Clou
 
 ### Prerequisites
 
-- Node.js 18+ and pnpm
+- Node.js 18+ and Bun
 - Google Cloud Project with Workload Identity Federation configured
 - Firestore database with appropriate permissions
 
@@ -45,7 +45,7 @@ A modern, serverless webhook testing platform built with Next.js 16, Google Clou
 1. Install dependencies:
 
 ```bash
-pnpm install
+bun install
 ```
 
 2. Set up environment variables:
@@ -62,7 +62,7 @@ USE_NANOID=false
 3. Run the development server:
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000)

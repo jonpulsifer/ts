@@ -15,19 +15,19 @@ A web-based iPXE boot manager for homelab network infrastructure. Manage hosts, 
 ### Prerequisites
 
 - Node.js 22+
-- pnpm
+- Bun
 
 ### Development
 
 ```bash
 # Install dependencies
-pnpm install
+bun install
 
 # Push database schema
-pnpm --filter spore db:push
+bun run db:push --filter=spore
 
 # Start development server
-pnpm --filter spore dev
+bun run dev --filter=spore
 ```
 
 The app will be available at http://localhost:3000
@@ -44,13 +44,13 @@ The app will be available at http://localhost:3000
 Spore uses SQLite with Drizzle ORM. To initialize or update the schema:
 
 ```bash
-pnpm --filter spore db:push
+bun run db:push --filter=spore
 ```
 
 To browse the database:
 
 ```bash
-pnpm --filter spore db:studio
+bun run db:studio --filter=spore
 ```
 
 ## Architecture

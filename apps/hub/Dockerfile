@@ -1,34 +1,28 @@
-FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS development-dependencies-env
-# renovate: datasource=npm depName=pnpm
-ARG PNPM_VERSION=10.28.2
+FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS base
+ARG BUN_VERSION=1.3.10
+RUN apk add --no-cache curl bash \
+  && curl -fsSL https://bun.sh/install | bash -s -- --version ${BUN_VERSION}
+ENV PATH="/root/.bun/bin:${PATH}"
+
+FROM base AS development-dependencies-env
 COPY . /app
 WORKDIR /app
-RUN npm install -g pnpm@${PNPM_VERSION}
-RUN pnpm install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
-FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS production-dependencies-env
-# renovate: datasource=npm depName=pnpm
-ARG PNPM_VERSION=10.28.2
-COPY ./package.json pnpm-lock.yaml /app/
+FROM base AS production-dependencies-env
+COPY ./package.json bun.lock /app/
 WORKDIR /app
-RUN npm install -g pnpm@${PNPM_VERSION}
-RUN pnpm install --prod --no-optional --frozen-lockfile
+RUN bun install --production --frozen-lockfile
 
-FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS build-env
-# renovate: datasource=npm depName=pnpm
-ARG PNPM_VERSION=10.28.2
+FROM base AS build-env
 COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
-RUN npm install -g pnpm@${PNPM_VERSION}
-RUN pnpm run build
+RUN bun run build
 
-FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114
-# renovate: datasource=npm depName=pnpm
-ARG PNPM_VERSION=10.28.2
-COPY ./package.json pnpm-lock.yaml /app/
+FROM base
+COPY ./package.json bun.lock /app/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 WORKDIR /app
-RUN npm install -g pnpm@${PNPM_VERSION}
-CMD ["pnpm", "run", "start"]
+CMD ["bun", "run", "start"]
