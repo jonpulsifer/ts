@@ -29,7 +29,7 @@ A weather station dashboard designed for the Raspberry Pi 4 display, powered by 
 1. Clone the repository.
 2. Install dependencies:
    ```bash
-   pnpm install
+   bun install
    ```
 3. Create a `.env` file with your TempestWx token:
    ```env
@@ -41,7 +41,7 @@ A weather station dashboard designed for the Raspberry Pi 4 display, powered by 
 Run the development server:
 
 ```bash
-pnpm run dev
+bun run dev
 ```
 
 ### Build
@@ -49,5 +49,5 @@ pnpm run dev
 Build for production:
 
 ```bash
-pnpm run build
+bun run build
 ```

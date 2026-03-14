@@ -1,5 +1,9 @@
 # syntax=docker/dockerfile:1@sha256:b6afd42430b15f2d2a4c5a02b919e98a525b785b1aaff16747d2f623364e39b6
 FROM node:22-alpine@sha256:8094c002d08262dba12645a3b4a15cd6cd627d30bc782f53229a2ec13ee22a00 AS base
+ARG BUN_VERSION=1.3.10
+RUN apk add --no-cache curl bash \
+  && curl -fsSL https://bun.sh/install | bash -s -- --version ${BUN_VERSION}
+ENV PATH="/root/.bun/bin:${PATH}"
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -7,11 +11,11 @@ RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+COPY package.json bun.lock ./
 COPY apps/spore/package.json ./apps/spore/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 
-RUN corepack enable pnpm && pnpm install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -21,7 +25,7 @@ COPY --from=deps /app/apps/spore/node_modules ./apps/spore/node_modules
 COPY . .
 
 # Build the application
-RUN corepack enable pnpm && pnpm --filter spore build
+RUN bun run build --filter=spore
 
 # Production image with dnsmasq for TFTP
 FROM node:22-alpine@sha256:8094c002d08262dba12645a3b4a15cd6cd627d30bc782f53229a2ec13ee22a00 AS runner

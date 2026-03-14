@@ -1,6 +1,10 @@
 FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo@2
+ARG BUN_VERSION=1.3.10
+RUN apk add --no-cache libc6-compat curl bash \
+  && curl -fsSL https://bun.sh/install | bash -s -- --version ${BUN_VERSION} \
+  && /root/.bun/bin/bun add -g turbo@2.8.16
+ENV PATH="/root/.bun/bin:${PATH}"
 
 FROM base AS pruner
 ENV TURBO_TELEMETRY_DISABLED=1
@@ -14,17 +18,14 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=pruner /app/out/json/ .
 ARG APP
-RUN pnpm install --frozen-lockfile --filter=${APP}...
+RUN bun install --frozen-lockfile
 
 FROM base AS production-dependencies
 WORKDIR /app
 ARG APP
-# https://pnpm.io/cli/prune
-# The prune command does not support recursive execution on a monorepo currently. To only install production-dependencies in a monorepo node_modules folders can be deleted and then re-installed with pnpm install --prod.
-# COPY --from=dependencies /app/node_modules ./node_modules
-# COPY --from=dependencies /app/apps/${APP}/node_modules ./apps/${APP}/node_modules
+# Install production dependencies from the pruned workspace
 COPY --from=pruner /app/out/json/ .
-RUN pnpm install --frozen-lockfile --prod --no-optional --filter=${APP}...
+RUN bun install --frozen-lockfile --production
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS builder
@@ -33,7 +34,7 @@ WORKDIR /app
 ARG APP
 
 COPY --from=pruner /app/out/full/ .
-COPY --from=pruner /app/out/json/pnpm-* ./
+COPY --from=pruner /app/out/bun.lock ./
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/${APP}/node_modules ./apps/${APP}/node_modules
 

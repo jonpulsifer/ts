@@ -1,17 +1,18 @@
 # TypeScript Monorepo
 
-A personal monorepo containing TypeScript applications and shared packages, managed with Turborepo and pnpm.
+A personal monorepo containing TypeScript applications and shared packages, managed with Turborepo and Bun.
 
 ## Overview
 
-This repository uses [Turborepo](https://turbo.build/) for build orchestration and [pnpm](https://pnpm.io/) for package management. It follows a monorepo structure with applications in `apps/` and shared packages in `packages/`.
+This repository uses [Turborepo](https://turbo.build/) for build orchestration and [Bun](https://bun.sh/) for package management. It follows a monorepo structure with applications in `apps/` and shared packages in `packages/`.
 
 ## Tech Stack
 
-- **Package Manager**: [pnpm](https://pnpm.io/) (v10.24.0)
-- **Build System**: [Turborepo](https://turbo.build/) (v2.6.3)
-- **Linting & Formatting**: [Biome](https://biomejs.dev/) (v2.3.8)
-- **Node.js**: >=22.x
+- **Package Manager**: [Bun](https://bun.sh/) (v1.3.10)
+- **Build System**: [Turborepo](https://turbo.build/) (v2.8.16)
+- **Linting & Formatting**: [Biome](https://biomejs.dev/) (v2.4.7)
+- **Node.js**: >=22.x (runtime)
+- **Bun**: >=1.3.10
 - **TypeScript**: Shared configuration via `@repo/typescript-config`
 
 ## Applications
@@ -77,8 +78,8 @@ Load testing scripts using [k6](https://k6.io/), a modern load testing tool writ
 
 ### Prerequisites
 
-- **Node.js**: >=22.x
-- **pnpm**: v10.24.0 (specified in `packageManager` field)
+- **Node.js**: >=22.x (runtime)
+- **Bun**: v1.3.10 (specified in `packageManager` field)
 - **Git**: For cloning the repository
 
 ### Installation
@@ -91,7 +92,7 @@ Load testing scripts using [k6](https://k6.io/), a modern load testing tool writ
 
 2. Install dependencies:
    ```bash
-   pnpm install
+   bun install
    ```
 
 ### Development
@@ -99,7 +100,7 @@ Load testing scripts using [k6](https://k6.io/), a modern load testing tool writ
 Run all applications in development mode:
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 This will start all apps concurrently using Turborepo's task orchestration.
@@ -107,9 +108,9 @@ This will start all apps concurrently using Turborepo's task orchestration.
 To run a specific app:
 
 ```bash
-pnpm --filter slingshot dev
-pnpm --filter hub dev
-pnpm --filter spore dev
+bun run dev --filter=slingshot
+bun run dev --filter=hub
+bun run dev --filter=spore
 ```
 
 ### Building
@@ -117,15 +118,15 @@ pnpm --filter spore dev
 Build all applications and packages:
 
 ```bash
-pnpm build
+bun run build
 ```
 
 Build a specific app:
 
 ```bash
-pnpm --filter slingshot build
-pnpm --filter hub build
-pnpm --filter spore build
+bun run build --filter=slingshot
+bun run build --filter=hub
+bun run build --filter=spore
 ```
 
 ### Linting
@@ -133,13 +134,13 @@ pnpm --filter spore build
 Lint all code:
 
 ```bash
-pnpm lint
+bun run lint
 ```
 
 Auto-fix linting issues:
 
 ```bash
-pnpm lint:fix
+bun run lint:fix
 ```
 
 ### Testing
@@ -147,7 +148,7 @@ pnpm lint:fix
 Run all tests:
 
 ```bash
-pnpm test
+bun run test
 ```
 
 ### Cleaning
@@ -155,7 +156,7 @@ pnpm test
 Remove all build artifacts:
 
 ```bash
-pnpm clean
+bun run clean
 ```
 
 ## Project Structure
@@ -170,7 +171,8 @@ ts/
 │   ├── typescript-config/  # Shared TS config
 │   └── k6/                 # Load testing scripts
 ├── turbo.json              # Turborepo configuration
-├── pnpm-workspace.yaml     # pnpm workspace configuration
+├── bun.lock               # Bun lockfile
+├── pnpm-workspace.yaml     # Legacy pnpm workspace config (optional)
 ├── biome.json              # Biome linting/formatting config
 └── package.json            # Root package.json
 ```
@@ -194,12 +196,12 @@ Turborepo supports remote caching to share build artifacts across machines and C
 
 1. Authenticate with Vercel:
    ```bash
-   pnpm dlx turbo login
+   bunx turbo login
    ```
 
 2. Link your repository to remote cache:
    ```bash
-   pnpm dlx turbo link
+   bunx turbo link
    ```
 
 Remote caching is automatically enabled once linked and will speed up builds in CI/CD and across team members' machines.
@@ -227,7 +229,7 @@ MIT
 ## Useful Links
 
 - [Turborepo Documentation](https://turbo.build/repo/docs)
-- [pnpm Documentation](https://pnpm.io/motivation)
+- [Bun Documentation](https://bun.sh/docs)
 - [Biome Documentation](https://biomejs.dev/)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [React Router Documentation](https://reactrouter.com/)

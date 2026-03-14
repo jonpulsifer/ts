@@ -16,7 +16,7 @@ Before proceeding, ensure that you have the following prerequisites:
 First, make sure that your k6 script runs successfully locally using the following command:
 
 ```shell
-pnpm build
+bun run build
 k6 run dist/example.js
 ```
 

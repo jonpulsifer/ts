@@ -1,6 +1,10 @@
 FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat && yarn global add pnpm turbo@2
+ARG BUN_VERSION=1.3.10
+RUN apk add --no-cache libc6-compat curl bash \
+  && curl -fsSL https://bun.sh/install | bash -s -- --version ${BUN_VERSION} \
+  && /root/.bun/bin/bun add -g turbo@2.8.16
+ENV PATH="/root/.bun/bin:${PATH}"
 
 FROM base AS builder
 ENV TURBO_TELEMETRY_DISABLED=1
@@ -20,8 +24,8 @@ WORKDIR /app
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-* ./
-RUN pnpm install --frozen-lockfile --prod --no-optional --filter=${APP}...
+COPY --from=builder /app/out/bun.lock ./
+RUN bun install --frozen-lockfile --production
 
 # Build the project
 COPY --from=builder /app/out/full/ .
