@@ -5,10 +5,10 @@ namespace: &app hub
 
 namePrefix: hub-
 
-# images:
-#   - name: jonpulsifer/does-not-exist
-#     newName: ghcr.io/jonpulsifer/hub
-#     newTag: latest
+images:
+  - name: ghcr.io/jonpulsifer/app
+    newName: ghcr.io/jonpulsifer/hub
+    newTag: latest
 
 labels:
   - includeSelectors: true
