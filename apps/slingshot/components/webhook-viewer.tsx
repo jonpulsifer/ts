@@ -9,10 +9,10 @@ import {
   useTransition,
 } from 'react';
 import {
-  type ImperativePanelHandle,
+  Group,
+  type PanelImperativeHandle,
   Panel,
-  PanelGroup,
-  PanelResizeHandle,
+  Separator,
 } from 'react-resizable-panels';
 import useSWR from 'swr';
 import {
@@ -66,8 +66,8 @@ export function WebhookViewer({
   const webhookIdFromQuery = searchParams.get('webhook');
   const [, startTransition] = useTransition();
   const isMobile = useIsMobile();
-  const listPanelRef = useRef<ImperativePanelHandle>(null);
-  const detailPanelRef = useRef<ImperativePanelHandle>(null);
+  const listPanelRef = useRef<PanelImperativeHandle>(null);
+  const detailPanelRef = useRef<PanelImperativeHandle>(null);
 
   // Local-first: Initialize from cache if available, otherwise use server data
   const [webhooks, setWebhooks] = useState<Webhook[]>(() => {
@@ -439,14 +439,14 @@ export function WebhookViewer({
 
   return (
     <div className="rounded-lg border border-border/50 shadow-md bg-card flex-1 overflow-hidden flex flex-col min-h-0">
-      <PanelGroup
+      <Group
         id={panelGroupId}
-        direction="horizontal"
+        orientation="horizontal"
         className="h-full min-h-0"
       >
         <Panel
           id={listPanelId}
-          ref={listPanelRef}
+          panelRef={listPanelRef}
           defaultSize={26}
           minSize={22}
           maxSize={34}
@@ -463,13 +463,13 @@ export function WebhookViewer({
             isLoading={isLoadingWebhooks}
           />
         </Panel>
-        <PanelResizeHandle
+        <Separator
           id={resizeHandleId}
           className="w-2 bg-border/50 hover:bg-primary/30 transition-colors"
         />
         <Panel
           id={detailPanelId}
-          ref={detailPanelRef}
+          panelRef={detailPanelRef}
           defaultSize={70}
           minSize={50}
           className="min-h-0 overflow-hidden min-w-0"
@@ -491,7 +491,7 @@ export function WebhookViewer({
             />
           )}
         </Panel>
-      </PanelGroup>
+      </Group>
       <WebhookDiffModal
         open={diffModalOpen}
         onOpenChange={setDiffModalOpen}
