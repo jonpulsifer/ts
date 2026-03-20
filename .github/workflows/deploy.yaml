@@ -71,5 +71,17 @@ jobs:
           else
             argocd app set "$APP" \
               --revision="$SHA" \
-              --kustomize-image="ghcr.io/jonpulsifer/app=${IMAGE}"
+              --kustomize-patch="$(cat <<PATCH
+          - target:
+              kind: Application
+              name: ${APP}
+            patch: |-
+              - op: replace
+                path: /spec/image
+                value: ${IMAGE}
+              - op: replace
+                path: /spec/version
+                value: "${SHA}"
+          PATCH
+          )"
           fi
