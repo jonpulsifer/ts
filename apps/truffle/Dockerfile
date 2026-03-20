@@ -31,14 +31,14 @@ RUN \
 FROM oven/bun:1-alpine@sha256:7ed9f74c326d1c260abe247ac423ccbf5ac92af62bb442d515d1f92f21e8ea9b AS runner
 WORKDIR /app
 
-COPY --from=installer --chown=1000:1000 /app/node_modules ./node_modules
-COPY --from=builder --chown=1000:1000 /app/apps/truffle/src ./src
-COPY --from=builder --chown=1000:1000 /app/apps/truffle/package.json ./package.json
+COPY --from=installer /app/node_modules ./node_modules
+COPY --from=builder /app/apps/truffle/src ./src
+COPY --from=builder /app/apps/truffle/package.json ./package.json
 
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# bun user (uid=1000, gid=1000) — explicit for Kubernetes runAsUser/runAsGroup
-USER 1000:1000
+# nonroot user (uid=65532) — matches RGD securityContext runAsUser
+USER 65532:65532
 EXPOSE 3000
 ENTRYPOINT ["bun", "run", "src/index.ts"]

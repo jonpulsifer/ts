@@ -42,7 +42,9 @@ async function run() {
   console.log('seeded initial data');
 }
 
-run().catch((error) => {
-  console.error('seed failed', error);
-  process.exitCode = 1;
-});
+run()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error('seed failed', error);
+    process.exit(1);
+  });

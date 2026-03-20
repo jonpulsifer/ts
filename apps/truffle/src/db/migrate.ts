@@ -52,7 +52,9 @@ async function run() {
   }
 }
 
-run().catch((error) => {
-  console.error('migration failed', error);
-  process.exitCode = 1;
-});
+run()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error('migration failed', error);
+    process.exit(1);
+  });
