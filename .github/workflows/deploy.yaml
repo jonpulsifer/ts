@@ -19,19 +19,19 @@ jobs:
     with:
       app: ${{ inputs.app }}
   
-  attest:
-    needs: [containerize]
-    name: "🔑 Attest"
-    uses: ./.github/workflows/attest.yaml
-    if: ${{ github.ref == 'refs/heads/main' }}
-    with:
-      image: ${{ needs.containerize.outputs.image }}
-      digest: ${{ needs.containerize.outputs.digest }}
+  # attest:
+  #   needs: [containerize]
+  #   name: "🔑 Attest"
+  #   uses: ./.github/workflows/attest.yaml
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   with:
+  #     image: ${{ needs.containerize.outputs.image }}
+  #     digest: ${{ needs.containerize.outputs.digest }}
 
   deploy:
     needs: [containerize]
     name: "🐙 Deploy"
-    runs-on: ubuntu-latest
+    runs-on: argocd-ts
     environment:
       name: ${{ inputs.app }}
       url: https://${{inputs.app}}.lolwtf.ca
