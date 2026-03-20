@@ -46,42 +46,14 @@ jobs:
       - name: Login to ArgoCD
         run: |
           echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
-      - name: Update application revision and image to ${{ github.sha }}
+      - name: Point Argo CD at ${{ github.sha }} and image
         run: |
           APP="${{ inputs.app }}"
           SHA="${{ github.sha }}"
-          IMAGE="ghcr.io/${{ github.repository_owner }}/${APP}:${SHA}"
+          OWNER="${{ github.repository_owner }}"
+          IMAGE="ghcr.io/${OWNER}/${APP}:${SHA}"
+          BASE_IMAGE_NAME="ghcr.io/${OWNER}/${APP}"
 
-          if [ "$APP" = "truffle" ]; then
-            argocd app set "$APP" \
-              --revision="$SHA" \
-              --kustomize-patch="$(cat <<PATCH
-          - target:
-              kind: Application
-              name: truffle
-            patch: |-
-              - op: replace
-                path: /spec/image
-                value: ${IMAGE}
-              - op: replace
-                path: /spec/version
-                value: "${SHA}"
-          PATCH
-          )"
-          else
-            argocd app set "$APP" \
-              --revision="$SHA" \
-              --kustomize-patch="$(cat <<PATCH
-          - target:
-              kind: Application
-              name: ${APP}
-            patch: |-
-              - op: replace
-                path: /spec/image
-                value: ${IMAGE}
-              - op: replace
-                path: /spec/version
-                value: "${SHA}"
-          PATCH
-          )"
-          fi
+          argocd app set "$APP" \
+            --revision="$SHA" \
+            --kustomize-image "${BASE_IMAGE_NAME}=${IMAGE}"
