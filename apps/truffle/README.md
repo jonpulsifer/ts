@@ -1,6 +1,6 @@
 # Truffle - Smoke Test Console
 
-Truffle is a tiny, deployable Bun + React app meant to smoke test an app + Postgres + migration workflow on Kubernetes. It records projects, deployments, and checks with a minimal dashboard and API.
+Truffle is a tiny, deployable Bun + React app meant to one-shot a demo deploy in the cloud and prove app + Postgres + migrations are alive. It records specimens (projects), deployments, and checks with a minimal dashboard and API.
 
 ## What It Exercises
 
