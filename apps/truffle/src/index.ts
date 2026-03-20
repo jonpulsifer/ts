@@ -1,146 +1,74 @@
 import { serve, sql } from 'bun';
 import {
-  createCheck,
-  createDeployment,
-  createProject,
-  getDashboard,
-  listChecks,
-  listDeployments,
-  listProjects,
+  contaminate,
+  getStats,
+  inoculate,
+  listSpecimens,
+  listTransmissions,
+  purgeDecomposed,
 } from './db/queries';
 import index from './index.html';
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), {
     status,
-    headers: {
-      'content-type': 'application/json',
-    },
+    headers: { 'content-type': 'application/json' },
   });
-
-const errorResponse = (status: number, message: string) =>
-  json({ error: message }, status);
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)+/g, '');
-
-const parseLimit = (req: Request, fallback = 12) => {
-  const url = new URL(req.url);
-  const limit = Number(url.searchParams.get('limit'));
-  return Number.isFinite(limit) && limit > 0 ? limit : fallback;
-};
 
 const server = serve({
   routes: {
     '/api/healthz': {
-      GET() {
-        return json({ status: 'ok', app: 'truffle' });
-      },
+      GET: () => json({ status: 'ok', app: 'truffle', version: '2.0.0-mold' }),
     },
     '/api/readyz': {
       async GET() {
         try {
           await sql`SELECT 1`;
-          return json({ status: 'ready' });
-        } catch (error) {
-          return json({ status: 'not-ready', error: 'db-unavailable' }, 503);
+          return json({ status: 'ready', substrate: 'connected' });
+        } catch {
+          return json({ status: 'not-ready', substrate: 'disconnected' }, 503);
         }
       },
     },
-    '/api/dashboard': {
+    '/api/stats': {
       async GET() {
-        const dashboard = await getDashboard();
-        return json(dashboard);
+        return json(await getStats());
       },
     },
-    '/api/projects': {
+    '/api/specimens': {
       async GET() {
-        const projects = await listProjects();
-        return json(projects);
-      },
-      async POST(req) {
-        const body = (await req.json()) as {
-          name?: string;
-          slug?: string;
-        };
-
-        if (!body?.name) {
-          return errorResponse(400, 'name is required');
-        }
-
-        const slug = body.slug?.trim() || slugify(body.name);
-        if (!slug) {
-          return errorResponse(400, 'slug is required');
-        }
-
-        try {
-          const project = await createProject({ name: body.name, slug });
-          return json(project, 201);
-        } catch (error) {
-          return errorResponse(409, 'project already exists');
-        }
+        return json(await listSpecimens());
       },
     },
-    '/api/deployments': {
+    '/api/inoculate': {
+      async POST(req) {
+        const body = await req.json().catch(() => ({})) as { name?: string };
+        const specimen = await inoculate(body?.name);
+        return json(specimen, 201);
+      },
+    },
+    '/api/contaminate': {
+      async POST() {
+        const result = await contaminate();
+        if (!result) {
+          return json({ error: 'no living specimens to contaminate' }, 404);
+        }
+        return json(result);
+      },
+    },
+    '/api/purge': {
+      async POST() {
+        return json(await purgeDecomposed());
+      },
+    },
+    '/api/transmissions': {
       async GET(req) {
-        const deployments = await listDeployments(parseLimit(req));
-        return json(deployments);
-      },
-      async POST(req) {
-        const body = (await req.json()) as {
-          projectId?: number;
-          version?: string;
-          environment?: string;
-          status?: string;
-        };
-
-        if (!body?.projectId || !body.version || !body.environment) {
-          return errorResponse(400, 'projectId, version, environment required');
-        }
-
-        const deployment = await createDeployment({
-          projectId: Number(body.projectId),
-          version: body.version,
-          environment: body.environment,
-          status: body.status ?? 'pending',
-        });
-
-        return json(deployment, 201);
-      },
-    },
-    '/api/checks': {
-      async GET(req) {
-        const checks = await listChecks(parseLimit(req));
-        return json(checks);
-      },
-      async POST(req) {
-        const body = (await req.json()) as {
-          deploymentId?: number;
-          name?: string;
-          status?: string;
-          message?: string;
-        };
-
-        if (!body?.deploymentId || !body.name || !body.status) {
-          return errorResponse(400, 'deploymentId, name, status required');
-        }
-
-        const check = await createCheck({
-          deploymentId: Number(body.deploymentId),
-          name: body.name,
-          status: body.status,
-          message: body.message ?? null,
-        });
-
-        return json(check, 201);
+        const url = new URL(req.url);
+        const limit = Number(url.searchParams.get('limit')) || 25;
+        return json(await listTransmissions(limit));
       },
     },
 
-    // Serve index.html for all unmatched routes.
     '/*': index,
   },
 
@@ -150,4 +78,4 @@ const server = serve({
   },
 });
 
-console.log(`🚀 Server running at ${server.url}`);
+console.log(`\x1b[32m🍄 truffle mold lab v2.0 running at ${server.url}\x1b[0m`);
