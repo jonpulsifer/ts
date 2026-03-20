@@ -20,6 +20,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=pruner /app/out/full/ .
+RUN bun install --frozen-lockfile
 RUN \
   --mount=type=secret,id=TURBO_TOKEN \
   --mount=type=secret,id=TURBO_TEAM \
