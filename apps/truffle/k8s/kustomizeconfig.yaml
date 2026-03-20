@@ -1,0 +1,7 @@
+# Teach the images transformer (and Argo CD --kustomize-image / .argocd-source) to rewrite
+# spec.image on sandbox Application CRs.
+images:
+  - path: spec/image
+    kind: Application
+    group: custom.sandboxes.x-k8s.io
+    version: v1alpha1
