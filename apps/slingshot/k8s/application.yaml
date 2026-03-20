@@ -1,0 +1,25 @@
+---
+apiVersion: custom.sandboxes.x-k8s.io/v1alpha1
+kind: Application
+metadata:
+  name: slingshot
+  namespace: default
+spec:
+  image: ghcr.io/jonpulsifer/slingshot:latest
+  version: "latest"
+  command: "node server.js"
+  hostname: slingshot.lolwtf.ca
+  port: 8080
+  replicas: 2
+  certIssuer: letsencrypt-production
+  ingress:
+    enabled: true
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  networkPolicy:
+    enabled: false
