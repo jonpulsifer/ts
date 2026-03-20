@@ -13,8 +13,8 @@ async function run() {
   await sql.begin(async (tx) => {
     const [project] = await tx<{ id: number }>`
       INSERT INTO projects ${sql({
-        name: 'Mold Garden',
-        slug: 'mold-garden',
+        name: 'Mushroom Icons',
+        slug: 'mushroom-icons',
       })}
       RETURNING id
     `;
@@ -22,9 +22,9 @@ async function run() {
     const [deployment] = await tx<{ id: number }>`
       INSERT INTO deployments ${sql({
         project_id: project.id,
-        version: '1.3.7-spore',
-        environment: 'cloud',
-        status: 'healthy',
+        version: '🍄🧫 icon pack',
+        environment: 'storage',
+        status: 'stored',
       })}
       RETURNING id
     `;
@@ -32,9 +32,9 @@ async function run() {
     await tx`
       INSERT INTO checks ${sql({
         deployment_id: deployment.id,
-        name: 'emoji-ping',
-        status: 'pass',
-        message: 'spores propagated 🍄✨',
+        name: 'preview',
+        status: 'stored',
+        message: 'saved molds: 🍄🪵🧫🟢',
       })}
     `;
   });
