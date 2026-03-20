@@ -129,7 +129,7 @@ export function App() {
 
   const runSmokeCheck = async () => {
     if (!projects[0]) {
-      setError('create a project before running a smoke check');
+      setError('create a specimen before running a smoke check');
       return;
     }
 
@@ -151,9 +151,9 @@ export function App() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           deploymentId: deployment.id,
-          name: 'readiness-probe',
+          name: 'spore-scan',
           status: 'pass',
-          message: 'db + api healthy',
+          message: 'db + api green 🍄',
         }),
       });
 
@@ -167,20 +167,21 @@ export function App() {
     <div className="min-h-screen bg-grid page-rise px-6 py-12 text-foreground">
       <div className="mx-auto max-w-5xl space-y-8">
         <header className="space-y-3">
-          <div className="terminal-title">truffle :: control room</div>
+          <div className="terminal-title">truffle :: mold lab</div>
           <h1 className="text-3xl tracking-tight">
-            molded for fast smoke tests
+            one-shot cloud smoke tests, now with spores
           </h1>
           <p className="text-sm text-muted-foreground max-w-2xl">
-            A smoke check is a quick, end-to-end pulse: create a deployment,
-            write a health check, and confirm the database is alive. It is the
-            smallest proof that app + DB + migrations are working.
+            Truffle is a tiny demo console for proving a deploy actually works.
+            It creates a deployment, writes a check, and confirms the database is
+            alive — the smallest possible proof that app + DB + migrations are
+            happy.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="outline" onClick={refresh}>
-              sync data
+              sync telemetry
             </Button>
-            <Button onClick={runSmokeCheck}>run smoke check</Button>
+            <Button onClick={runSmokeCheck}>one-shot smoke test</Button>
           </div>
         </header>
 
@@ -193,7 +194,7 @@ export function App() {
         <section className="grid gap-4 md:grid-cols-3">
           <Card className="terminal-panel">
             <CardHeader>
-              <CardDescription>projects</CardDescription>
+              <CardDescription>specimens (projects)</CardDescription>
               <CardTitle className="text-3xl text-truffle">
                 {dashboard?.counts.projects ?? 0}
               </CardTitle>
@@ -220,15 +221,15 @@ export function App() {
         <section className="grid gap-4 lg:grid-cols-2">
           <Card className="terminal-panel">
             <CardHeader>
-              <CardTitle>new project</CardTitle>
-              <CardDescription>register a service to deploy</CardDescription>
+              <CardTitle>new specimen</CardTitle>
+              <CardDescription>seed a project to one-shot</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="project-name">name</Label>
+                <Label htmlFor="project-name">specimen name</Label>
                 <Input
                   id="project-name"
-                  placeholder="Truffle API"
+                  placeholder="Spore Tracker ✨"
                   value={projectName}
                   onChange={(event) => setProjectName(event.target.value)}
                 />
@@ -237,13 +238,13 @@ export function App() {
                 <Label htmlFor="project-slug">slug</Label>
                 <Input
                   id="project-slug"
-                  placeholder="truffle-api"
+                  placeholder="spore-tracker"
                   value={projectSlug}
                   onChange={(event) => setProjectSlug(event.target.value)}
                 />
               </div>
               <Button className="w-full" onClick={createProject}>
-                create project
+                create specimen
               </Button>
             </CardContent>
           </Card>
@@ -251,15 +252,15 @@ export function App() {
           <Card className="terminal-panel">
             <CardHeader>
               <CardTitle>recent activity</CardTitle>
-              <CardDescription>latest deployments + checks</CardDescription>
+              <CardDescription>latest one-shots + checks</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               {loading && (
-                <p className="text-muted-foreground">loading telemetry…</p>
+                <p className="text-muted-foreground">sniffing telemetry…</p>
               )}
               {!loading && deployments.length === 0 && checks.length === 0 && (
                 <p className="text-muted-foreground">
-                  no activity recorded yet
+                  no spores detected yet
                 </p>
               )}
               {!loading && deployments.length > 0 && (
