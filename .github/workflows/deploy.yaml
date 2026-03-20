@@ -48,4 +48,28 @@ jobs:
           echo y | argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ env.ARGOCD_URL }}
       - name: Update application revision and image to ${{ github.sha }}
         run: |
-          argocd app set ${{ inputs.app }} --revision=${{ github.sha }} --kustomize-image=ghcr.io/jonpulsifer/does-not-exist=ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}:${{ github.sha }}
+          APP="${{ inputs.app }}"
+          SHA="${{ github.sha }}"
+          IMAGE="ghcr.io/${{ github.repository_owner }}/${APP}:${SHA}"
+
+          if [ "$APP" = "truffle" ]; then
+            argocd app set "$APP" \
+              --revision="$SHA" \
+              --kustomize-patch="$(cat <<PATCH
+          - target:
+              kind: Application
+              name: truffle
+            patch: |-
+              - op: replace
+                path: /spec/image
+                value: ${IMAGE}
+              - op: replace
+                path: /spec/version
+                value: "${SHA}"
+          PATCH
+          )"
+          else
+            argocd app set "$APP" \
+              --revision="$SHA" \
+              --kustomize-image="ghcr.io/jonpulsifer/app=${IMAGE}"
+          fi

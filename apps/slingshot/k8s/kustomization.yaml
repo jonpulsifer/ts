@@ -5,10 +5,10 @@ namespace: &app slingshot
 
 namePrefix: slingshot-
 
-# images:
-#   - name: jonpulsifer/does-not-exist
-#     newName: ghcr.io/jonpulsifer/slingshot
-#     newTag: latest
+images:
+  - name: ghcr.io/jonpulsifer/app
+    newName: ghcr.io/jonpulsifer/slingshot
+    newTag: latest
 
 labels:
   - includeSelectors: true
