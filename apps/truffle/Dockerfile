@@ -1,5 +1,5 @@
-# syntax=docker/dockerfile:1
-FROM oven/bun:1-alpine AS base
+# syntax=docker/dockerfile:1@sha256:4a43a54dd1fedceb30ba47e76cfcf2b47304f4161c0caeac2db1c61804ea3c91
+FROM oven/bun:1-alpine@sha256:7ed9f74c326d1c260abe247ac423ccbf5ac92af62bb442d515d1f92f21e8ea9b AS base
 ARG TURBO_VERSION=2.8.20
 ENV TURBO_TELEMETRY_DISABLED=1
 RUN bun add -g turbo@${TURBO_VERSION}
@@ -27,7 +27,7 @@ RUN \
   TURBO_TEAM=$(cat /run/secrets/TURBO_TEAM 2>/dev/null || true) \
   turbo run build --filter=truffle
 
-FROM oven/bun:1-alpine AS runner
+FROM oven/bun:1-alpine@sha256:7ed9f74c326d1c260abe247ac423ccbf5ac92af62bb442d515d1f92f21e8ea9b AS runner
 WORKDIR /app
 
 COPY --from=installer --chown=1000:1000 /app/node_modules ./node_modules
