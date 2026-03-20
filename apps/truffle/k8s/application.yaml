@@ -1,15 +1,17 @@
 ---
-apiVersion: custom.agents.x-k8s.io/v1alpha1
+apiVersion: custom.sandboxes.x-k8s.io/v1alpha1
 kind: Application
 metadata:
   name: truffle
   namespace: default
 spec:
   image: ghcr.io/jonpulsifer/truffle:latest
-  hostname: "truffle.${SECRET_DOMAIN}"
+  version: "latest"
+  command: "bun run src/index.ts"
+  hostname: truffle.lolwtf.ca
   port: 3000
   replicas: 1
-  certIssuer: "${CERT_CLUSTER_ISSUER}"
+  certIssuer: letsencrypt-production
   ingress:
     enabled: true
   resources:
