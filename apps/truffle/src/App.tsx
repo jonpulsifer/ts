@@ -62,9 +62,9 @@ const fetchJson = async <T,>(url: string, options?: RequestInit) => {
 const formatTime = (value: string) => new Date(value).toLocaleString();
 
 const defaultDeployment = {
-  version: '0.1.0',
-  environment: 'staging',
-  status: 'healthy',
+  version: '🍄🧫 icon pack',
+  environment: 'storage',
+  status: 'stored',
 };
 
 export function App() {
@@ -129,7 +129,7 @@ export function App() {
 
   const runSmokeCheck = async () => {
     if (!projects[0]) {
-      setError('create a specimen before running a smoke check');
+      setError('create a collection before inserting sample rows');
       return;
     }
 
@@ -151,9 +151,9 @@ export function App() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           deploymentId: deployment.id,
-          name: 'spore-scan',
-          status: 'pass',
-          message: 'db + api green 🍄',
+          name: 'icon-note',
+          status: 'stored',
+          message: 'saved emoji set 🍄🧫',
         }),
       });
 
@@ -167,21 +167,20 @@ export function App() {
     <div className="min-h-screen bg-grid page-rise px-6 py-12 text-foreground">
       <div className="mx-auto max-w-5xl space-y-8">
         <header className="space-y-3">
-          <div className="terminal-title">truffle :: mold lab</div>
+          <div className="terminal-title">truffle :: storage lab</div>
           <h1 className="text-3xl tracking-tight">
-            one-shot cloud smoke tests, now with spores
+            a tiny database demo for storing moldy emojis
           </h1>
           <p className="text-sm text-muted-foreground max-w-2xl">
-            Truffle is a tiny demo console for proving a deploy actually works.
-            It creates a deployment, writes a check, and confirms the database is
-            alive — the smallest possible proof that app + DB + migrations are
-            happy.
+            Truffle is a single-screen storage example. It writes a project,
+            inserts a sample record, adds a note, and shows the rows coming back
+            from Postgres — just enough to prove data in, data out.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="outline" onClick={refresh}>
-              sync telemetry
+              reload data
             </Button>
-            <Button onClick={runSmokeCheck}>one-shot smoke test</Button>
+            <Button onClick={runSmokeCheck}>insert sample rows</Button>
           </div>
         </header>
 
@@ -194,7 +193,7 @@ export function App() {
         <section className="grid gap-4 md:grid-cols-3">
           <Card className="terminal-panel">
             <CardHeader>
-              <CardDescription>specimens (projects)</CardDescription>
+              <CardDescription>collections (projects)</CardDescription>
               <CardTitle className="text-3xl text-truffle">
                 {dashboard?.counts.projects ?? 0}
               </CardTitle>
@@ -202,7 +201,7 @@ export function App() {
           </Card>
           <Card className="terminal-panel">
             <CardHeader>
-              <CardDescription>deployments</CardDescription>
+              <CardDescription>records</CardDescription>
               <CardTitle className="text-3xl text-truffle">
                 {dashboard?.counts.deployments ?? 0}
               </CardTitle>
@@ -210,7 +209,7 @@ export function App() {
           </Card>
           <Card className="terminal-panel">
             <CardHeader>
-              <CardDescription>checks</CardDescription>
+              <CardDescription>notes</CardDescription>
               <CardTitle className="text-3xl text-truffle">
                 {dashboard?.counts.checks ?? 0}
               </CardTitle>
@@ -221,15 +220,15 @@ export function App() {
         <section className="grid gap-4 lg:grid-cols-2">
           <Card className="terminal-panel">
             <CardHeader>
-              <CardTitle>new specimen</CardTitle>
-              <CardDescription>seed a project to one-shot</CardDescription>
+              <CardTitle>new collection</CardTitle>
+              <CardDescription>create a place to store emoji rows</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="project-name">specimen name</Label>
+                <Label htmlFor="project-name">collection name</Label>
                 <Input
                   id="project-name"
-                  placeholder="Spore Tracker ✨"
+                  placeholder="Mushroom Icons 🍄"
                   value={projectName}
                   onChange={(event) => setProjectName(event.target.value)}
                 />
@@ -238,13 +237,13 @@ export function App() {
                 <Label htmlFor="project-slug">slug</Label>
                 <Input
                   id="project-slug"
-                  placeholder="spore-tracker"
+                  placeholder="mushroom-icons"
                   value={projectSlug}
                   onChange={(event) => setProjectSlug(event.target.value)}
                 />
               </div>
               <Button className="w-full" onClick={createProject}>
-                create specimen
+                create collection
               </Button>
             </CardContent>
           </Card>
@@ -252,22 +251,22 @@ export function App() {
           <Card className="terminal-panel">
             <CardHeader>
               <CardTitle>recent activity</CardTitle>
-              <CardDescription>latest one-shots + checks</CardDescription>
+              <CardDescription>latest records + notes</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               {loading && (
-                <p className="text-muted-foreground">sniffing telemetry…</p>
+                <p className="text-muted-foreground">loading rows…</p>
               )}
               {!loading && deployments.length === 0 && checks.length === 0 && (
                 <p className="text-muted-foreground">
-                  no spores detected yet
+                  no rows stored yet
                 </p>
               )}
               {!loading && deployments.length > 0 && (
                 <div className="space-y-2">
                   {deployments.map((deployment) => (
                     <div key={deployment.id} className="terminal-row">
-                      <span className="text-truffle">DEPLOY</span>
+                      <span className="text-truffle">RECORD</span>
                       <span>
                         {deployment.projectName} · {deployment.version}
                       </span>
@@ -286,7 +285,7 @@ export function App() {
                 <div className="space-y-2">
                   {checks.map((check) => (
                     <div key={check.id} className="terminal-row">
-                      <span className="text-truffle">CHECK</span>
+                      <span className="text-truffle">NOTE</span>
                       <span>
                         {check.projectName} · {check.name}
                       </span>
