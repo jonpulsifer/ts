@@ -1,0 +1,25 @@
+---
+apiVersion: custom.sandboxes.x-k8s.io/v1alpha1
+kind: Application
+metadata:
+  name: hub
+  namespace: default
+spec:
+  image: ghcr.io/jonpulsifer/hub:latest
+  version: "latest"
+  command: "npm run start"
+  hostname: hub.lolwtf.ca
+  port: 8080
+  replicas: 1
+  certIssuer: letsencrypt-production
+  ingress:
+    enabled: true
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  networkPolicy:
+    enabled: false
