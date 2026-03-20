@@ -1,0 +1,31 @@
+---
+apiVersion: custom.agents.x-k8s.io/v1alpha1
+kind: Application
+metadata:
+  name: truffle
+  namespace: default
+spec:
+  image: ghcr.io/jonpulsifer/truffle:latest
+  hostname: "truffle.${SECRET_DOMAIN}"
+  port: 3000
+  replicas: 1
+  certIssuer: "${CERT_CLUSTER_ISSUER}"
+  ingress:
+    enabled: true
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  database:
+    enabled: true
+    instances: 1
+    size: "1Gi"
+    name: "truffle"
+    migration:
+      enabled: true
+      command: "bun run db:migrate && bun run db:seed"
+  networkPolicy:
+    enabled: false

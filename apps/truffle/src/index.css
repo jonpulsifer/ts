@@ -1,0 +1,73 @@
+@import "../styles/globals.css";
+
+@layer base {
+  :root {
+    @apply font-sans;
+  }
+
+  body {
+    @apply min-w-[320px] min-h-screen m-0 bg-background text-foreground;
+  }
+}
+
+.bg-grid {
+  background-color: var(--background);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-rise {
+  animation: rise 600ms ease-out;
+}
+
+.terminal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-truffle);
+}
+
+.terminal-title::before {
+  content: "[ok]";
+  font-size: 0.65rem;
+  color: var(--color-truffle);
+}
+
+.terminal-panel {
+  border: 1px solid oklch(0.7 0.2 145 / 0.3);
+  background: oklch(0.16 0.02 170 / 0.9);
+  box-shadow:
+    0 0 0 1px oklch(0.7 0.2 145 / 0.08),
+    0 24px 40px oklch(0 0 0 / 0.35);
+}
+
+.terminal-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid oklch(0.7 0.2 145 / 0.2);
+  background: oklch(0.14 0.02 170 / 0.9);
+}
+
+@media (prefers-reduced-motion) {
+  *,
+  ::before,
+  ::after {
+    animation: none !important;
+  }
+}
