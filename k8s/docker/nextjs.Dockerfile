@@ -2,7 +2,7 @@ FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 ARG BUN_VERSION=1.3.10
 RUN apk add --no-cache libc6-compat curl bash \
-  && curl -fsSL https://bun.sh/install | bash -s -- --version ${BUN_VERSION} \
+  && curl -fsSL https://bun.sh/install | bash -s -- ${BUN_VERSION} \
   && /root/.bun/bin/bun add -g turbo@2.8.16
 ENV PATH="/root/.bun/bin:${PATH}"
 
