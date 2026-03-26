@@ -1,4 +1,4 @@
-FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS base
+FROM node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 ARG BUN_VERSION=1.3.10
 RUN apk add --no-cache libc6-compat curl bash \
@@ -50,7 +50,7 @@ RUN \
   REDIS_URL=$(cat /run/secrets/REDIS_URL) \
   turbo run build --filter=${APP}...
 
-FROM node:24-alpine@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114
+FROM node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b
 ARG TARGETPLATFORM
 LABEL org.opencontainers.image.platform=$TARGETPLATFORM
 ARG APP
