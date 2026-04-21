@@ -33,14 +33,14 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "4.2.3",
+    "@tailwindcss/postcss": "4.2.4",
     "@types/better-sqlite3": "7.6.13",
     "@types/node": "25.6.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "drizzle-kit": "0.31.10",
     "postcss": "8.5.10",
-    "tailwindcss": "4.2.3",
+    "tailwindcss": "4.2.4",
     "typescript": "5.9.3"
   }
 }
