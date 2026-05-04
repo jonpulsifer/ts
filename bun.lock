@@ -104,7 +104,7 @@
         "tailwind-merge": "3.5.0",
         "typescript": "5.9.3",
         "vaul": "1.1.2",
-        "zod": "4.4.2",
+        "zod": "4.4.3",
       },
       "devDependencies": {
         "@biomejs/biome": "2.4.14",
@@ -140,7 +140,7 @@
         "react": "19.2.5",
         "react-dom": "19.2.5",
         "tailwind-merge": "3.5.0",
-        "zod": "4.4.2",
+        "zod": "4.4.3",
       },
       "devDependencies": {
         "@tailwindcss/postcss": "4.2.4",
@@ -1570,7 +1570,7 @@
 
     "yn": ["yn@3.1.1", "", {}, "sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q=="],
 
-    "zod": ["zod@4.4.2", "", {}, "sha512-IynmDyxsEsb9RKzO3J9+4SxXnl2FTFSzNBaKKaMV6tsSk0rw9gYw9gs+JFCq/qk2LCZ78KDwyj+Z289TijSkUw=="],
+    "zod": ["zod@4.4.3", "", {}, "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="],
 
     "@babel/core/semver": ["semver@6.3.1", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="],
 
