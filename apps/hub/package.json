@@ -23,7 +23,7 @@
     "react-dom": "19.2.6",
     "react-router": "7.15.0",
     "react-router-dom": "7.15.0",
-    "tailwind-merge": "3.5.0",
+    "tailwind-merge": "3.6.0",
     "ws": "8.20.0"
   },
   "devDependencies": {
