@@ -5,7 +5,7 @@
   "repository": "https://github.com/jonpulsifer/ts/tree/main/packages/k6-scripts",
   "private": true,
   "devDependencies": {
-    "@types/k6": "1.7.0",
+    "@types/k6": "2.0.0",
     "@types/node": "25.6.2",
     "ts-node": "10.9.2",
     "@repo/typescript-config": "workspace:*",
