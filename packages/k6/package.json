@@ -9,7 +9,7 @@
     "@types/node": "25.8.0",
     "ts-node": "10.9.2",
     "@repo/typescript-config": "workspace:*",
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
