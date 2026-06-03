@@ -90,7 +90,7 @@
         "nanoid": "5.1.11",
         "next": "16.2.7",
         "next-themes": "0.4.6",
-        "node-diff3": "3.2.0",
+        "node-diff3": "3.2.1",
         "react": "19.2.6",
         "react-day-picker": "10.0.1",
         "react-dom": "19.2.6",
@@ -1258,7 +1258,7 @@
 
     "node-abi": ["node-abi@3.87.0", "", { "dependencies": { "semver": "7.7.2" } }, "sha512-+CGM1L1CgmtheLcBuleyYOn7NWPVu0s0EJH2C4puxgEZb9h8QpR9G2dBfZJOAUhi7VQxuBPMd0hiISWcTyiYyQ=="],
 
-    "node-diff3": ["node-diff3@3.2.0", "", {}, "sha512-vLh2xJFSyniBLYDEDbXKqD32fQ5vAxmYT4hco8t0EHQ4CQ4BDHhshi7kdvDc6Y1MwGSi1Mhl4unUukPbCayZdw=="],
+    "node-diff3": ["node-diff3@3.2.1", "", {}, "sha512-eKZcJ8RtMQ3cIaA15EgmtwG927fYnRlhtdA4Q9HAcCpAZPQhhU2XptnTH9GeAkMiX2bAXxlJSAFa9shFbztPgw=="],
 
     "node-domexception": ["node-domexception@1.0.0", "", {}, "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="],
 
