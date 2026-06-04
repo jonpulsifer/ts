@@ -84,7 +84,7 @@
         "date-fns": "4.4.0",
         "embla-carousel-react": "8.6.0",
         "framer-motion": "12.40.0",
-        "google-auth-library": "10.6.2",
+        "google-auth-library": "10.7.0",
         "input-otp": "1.4.2",
         "lucide-react": "1.17.0",
         "nanoid": "5.1.11",
@@ -1094,7 +1094,7 @@
 
     "globrex": ["globrex@0.1.2", "", {}, "sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg=="],
 
-    "google-auth-library": ["google-auth-library@10.6.2", "", { "dependencies": { "base64-js": "^1.3.0", "ecdsa-sig-formatter": "^1.0.11", "gaxios": "^7.1.4", "gcp-metadata": "8.1.2", "google-logging-utils": "1.1.3", "jws": "^4.0.0" } }, "sha512-e27Z6EThmVNNvtYASwQxose/G57rkRuaRbQyxM2bvYLLX/GqWZ5chWq2EBoUchJbCc57eC9ArzO5wMsEmWftCw=="],
+    "google-auth-library": ["google-auth-library@10.7.0", "", { "dependencies": { "base64-js": "^1.3.0", "ecdsa-sig-formatter": "^1.0.11", "gaxios": "^7.1.4", "gcp-metadata": "8.1.2", "google-logging-utils": "1.1.3", "jws": "^4.0.0" } }, "sha512-QpTAbNJ36TliZLx3TTtahR8HG0hN9RllL1e3FymOvQSIKK8JmgV58H924ub2wa2DsS3ANjjP1Aw1N+Ramc8hqQ=="],
 
     "google-gax": ["google-gax@5.0.6", "", { "dependencies": { "@grpc/grpc-js": "1.14.2", "@grpc/proto-loader": "0.8.0", "duplexify": "4.1.3", "google-auth-library": "10.6.1", "google-logging-utils": "1.1.3", "node-fetch": "3.3.2", "object-hash": "3.0.0", "proto3-json-serializer": "3.0.4", "protobufjs": "7.5.4", "retry-request": "8.0.2", "rimraf": "5.0.10" } }, "sha512-1kGbqVQBZPAAu4+/R1XxPQKP0ydbNYoLAr4l0ZO2bMV0kLyLW4I1gAk++qBLWt7DPORTzmWRMsCZe86gDjShJA=="],
 
