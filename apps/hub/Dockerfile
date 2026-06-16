@@ -1,4 +1,4 @@
-FROM node:24-alpine@sha256:fb71d01345f11b708a3553c66e7c74074f2d506400ea81973343d915cb64eef0 AS base
+FROM node:24-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS base
 ARG BUN_VERSION=1.3.10
 RUN apk add --no-cache curl bash \
   && curl -fsSL https://bun.sh/install | bash -s -- --version ${BUN_VERSION}
