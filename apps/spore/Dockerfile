@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89
-FROM node:24-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS base
+FROM node:24-alpine@sha256:156b55f92e98ccd5ef49578a8cea0df4679826564bad1c9d4ef04462b9f0ded6 AS base
 ARG BUN_VERSION=1.3.10
 RUN apk add --no-cache curl bash \
   && curl -fsSL https://bun.sh/install | bash -s -- --version ${BUN_VERSION}
@@ -28,7 +28,7 @@ COPY . .
 RUN bun run build --filter=spore
 
 # Production image with dnsmasq for TFTP
-FROM node:24-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS runner
+FROM node:24-alpine@sha256:156b55f92e98ccd5ef49578a8cea0df4679826564bad1c9d4ef04462b9f0ded6 AS runner
 WORKDIR /app
 
 # Install dnsmasq for TFTP support and supervisor
